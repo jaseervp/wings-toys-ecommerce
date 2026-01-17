@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html id="html-root">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wings Admin | Product List</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --sidebar-width: 260px;
+            --main-bg: #F8F9FD;
+            --sidebar-bg: #ffffff;
+            --accent-blue: #6C8EEF;
+            --text-dark: #2D3748;
+            --text-gray: #A0AEC0;
+            --card-border: #EDF2F7;
+            --card-bg: #ffffff;
+            --input-bg: #F4F7FE;
+        }
+
+        [data-theme="dark"] {
+            --sidebar-bg: #1A202C;
+            --main-bg: #11141D;
+            --card-bg: #1A202C;
+            --text-dark: #E2E8F0;
+            --text-gray: #718096;
+            --card-border: #2D3748;
+            --input-bg: #2D3748;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--main-bg);
+            color: var(--text-dark);
+            margin: 0;
+            display: flex;
+            transition: 0.3s;
+            min-height: 100vh;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            border-right: 1px solid var(--card-border);
+            display: flex;
+            flex-direction: column;
+            z-index: 1050;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-scroll {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .sidebar-brand img {
+            height: 45px;
+            margin-bottom: 25px;
+        }
+
+        .menu-label {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            text-transform: capitalize;
+            margin: 20px 0 10px 10px;
+            font-weight: 500;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: var(--text-gray);
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+
+        .nav-item.active {
+            background: var(--accent-blue);
+            color: #fff;
+        }
+
+        .nav-item i {
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+
+        .nav-item:hover:not(.active) {
+            background: rgba(108, 142, 239, 0.1);
+            color: var(--accent-blue);
+        }
+
+        .admin-footer {
+            padding: 20px;
+            border-top: 1px solid var(--card-border);
+            background: var(--sidebar-bg);
+        }
+
+        .admin-profile-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .admin-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .admin-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .admin-email {
+            font-size: 0.7rem;
+            color: var(--text-gray);
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px;
+        }
+
+
+        /* Overlay */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1040;
+            display: none;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-wrapper {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            padding: 30px;
+            transition: 0.3s;
+        }
+
+        /* --- PRODUCT TABLE COMPONENTS --- */
+        .section-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .search-box {
+            position: relative;
+            max-width: 350px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-gray);
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            background: var(--input-bg);
+            border: 1px solid transparent;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+
+        .custom-table thead th {
+            background: var(--input-bg);
+            color: var(--text-gray);
+            border: none;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            padding: 15px;
+        }
+
+        .custom-table tbody td {
+            vertical-align: middle;
+            padding: 15px;
+            border-color: var(--card-border);
+            color: var(--text-dark);
+        }
+
+        .prod-img {
+            width: 45px;
+            height: 45px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+        }
+
+        /* Status Pills */
+        .status-pill {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+
+        .active-pill {
+            background: #E6F4EA;
+            color: #1E7E34;
+        }
+
+        .out-pill {
+            background: #FCE8E6;
+            color: #C5221F;
+        }
+
+
+       /* =========================
+   FORCE DARK MODE – PRODUCT TABLE
+========================= */
+
+[data-theme="dark"] .table-responsive {
+    background: var(--card-bg);
+}
+
+[data-theme="dark"] .custom-table {
+    background-color: var(--card-bg) !important;
+    color: var(--text-dark) !important;
+}
+
+[data-theme="dark"] .custom-table thead th {
+    background-color: #2b3445 !important;
+    color: #9aa4b2 !important;
+    border-bottom: 1px solid #3a4356 !important;
+}
+
+[data-theme="dark"] .custom-table tbody tr {
+    background-color: var(--card-bg) !important;
+}
+
+[data-theme="dark"] .custom-table tbody tr:hover {
+    background-color: #222635 !important;
+}
+
+[data-theme="dark"] .custom-table tbody td {
+    background-color: transparent !important;
+    color: var(--text-dark) !important;
+    border-color: #2f384b !important;
+}
+
+[data-theme="dark"] table.table > :not(caption) > * > * {
+    background-color: transparent !important;
+}
+
+[data-theme="dark"] .text-muted {
+    color: #9aa4b2 !important;
+}
+
+
+
+
+        /* Action Buttons */
+        .action-btns .btn {
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            color: var(--text-gray);
+            padding: 5px 10px;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+
+        .btn-view:hover {
+            color: #0d6efd !important;
+            background: rgba(13, 110, 253, 0.1) !important;
+            border-color: #0d6efd !important;
+        }
+
+        .btn-edit:hover {
+            color: #ffc107 !important;
+            background: rgba(255, 193, 7, 0.1) !important;
+            border-color: #ffc107 !important;
+        }
+
+        .btn-delete:hover {
+            color: #dc3545 !important;
+            background: rgba(220, 53, 69, 0.1) !important;
+            border-color: #dc3545 !important;
+        }
+
+        .btn-create {
+            background: var(--accent-blue);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-weight: 500;
+        }
+
+        .mobile-nav-btn {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-dark);
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 1200px) {
+            :root {
+                --sidebar-width: 80px;
+            }
+
+            .sidebar span,
+            .sidebar .menu-label {
+                display: none;
+            }
+
+            .sidebar .nav-item {
+                justify-content: center;
+            }
+
+            .sidebar i {
+                margin: 0;
+            }
+
+            .main-wrapper {
+                margin-left: 80px;
+                width: calc(100% - 80px);
+            }
+        }
+
+        @media (max-width: 991px) {
+            .mobile-nav-btn {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                width: 260px !important;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .sidebar span,
+            .sidebar .menu-label {
+                display: block !important;
+            }
+
+            .sidebar .nav-item {
+                justify-content: flex-start;
+            }
+
+            .main-wrapper {
+                margin-left: 0;
+                width: 100%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-scroll">
+            <div class="sidebar-brand"><img src="logo wings.png" alt="Wings"></div>
+            <p class="menu-label">Main menu</p>
+            <a href="Dashbord.html" class="nav-item"><i class="bi bi-grid"></i> Dashboard</a>
+            <a href="OrderMangement.html" class="nav-item"><i class="bi bi-cart"></i> Order Management</a>
+            <a href="Customers.html" class="nav-item"><i class="bi bi-people"></i> Customers</a>
+            <a href="Cuopon.html" class="nav-item"><i class="bi bi-ticket-perforated"></i> Coupon Code</a>
+            <a href="Categories.html" class="nav-item"><i class="bi bi-tags"></i> Categories</a>
+            <a href="Transaction.html" class="nav-item "><i class="bi bi-arrow-left-right"></i> Transaction</a>
+            <a href="Offers.html" class="nav-item "><i class="bi bi-megaphone"></i> Offers & Ads</a>
+
+            <p class="menu-label">Product</p>
+            <a href="AddProduct.html" class="nav-item"><i class="bi bi-plus-circle"></i> Add Products</a>
+            <a href="ProductList.html" class="nav-item active"><i class="bi bi-list-ul"></i> Product List</a>
+            <a href="ProductReviews.html" class="nav-item"><i class="bi bi-chat-left-text"></i> Product Reviews</a>
+        </div>
+
+        <div class="admin-footer">
+            <p class="menu-label" style="margin-left:0; margin-top:0">Admin</p>
+            <a href="AdminRole.html" class="nav-item p-0 mb-3"><i class="bi bi-person-gear"></i> Admin role</a>
+            <div class="admin-profile-box">
+                <img src="profile-pic.png" class="admin-avatar" alt="Admin">
+                <div class="admin-info">
+                    <p class="admin-name">Dealport</p>
+                    <p class="admin-email">Mark@thedesigner...</p>
+                </div>
+                <i class="bi bi-box-arrow-right text-gray" style="cursor: pointer; margin-left: auto;"></i>
+            </div>
+            <a href="#" class="nav-item p-0" style="color: var(--accent-blue); font-weight: 600;">
+                <i class="bi bi-shop"></i> Your Shop <i class="bi bi-box-arrow-up-right ms-auto small"></i>
+            </a>
+        </div>
+    </aside>
+
+    <main class="main-wrapper">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+            <div class="d-flex align-items-center">
+                <button class="mobile-nav-btn me-3" onclick="toggleSidebar()"><i class="bi bi-list"></i></button>
+                <h4 class="fw-semibold mb-0">Product Management</h4>
+            </div>
+            <div class="d-flex gap-2">
+                <div class="theme-toggle me-3 align-self-center" style="cursor:pointer" onclick="toggleTheme()">
+                    <i class="bi bi-moon-stars-fill" id="tIcon"></i>
+                </div>
+                <button class="btn-create shadow-sm"><i class="bi bi-plus-lg me-1"></i> Add Product</button>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="p-3 d-flex justify-content-between align-items-center border-bottom flex-wrap gap-3">
+                <div class="search-box">
+                    <i class="bi bi-search"></i>
+                    <input type="text" placeholder="Search product name or SKU...">
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-light border btn-sm"><i class="bi bi-filter"></i> Filter</button>
+                    <button class="btn btn-light border btn-sm"><i class="bi bi-download"></i> Export</button>
+                </div>
+            </div>
+
+            <div class="table-responsive "style="color: var(--card-bg);">
+                <table class="table custom-table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Product Details</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock Status</th>
+                            <th>Status</th>
+                            <th class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTableBody">
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">
+                                Loading products...
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </main>
+
+
+
+    <script>
+        // Toggle Sidebar and Overlay
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
+        }
+
+      
+function toggleTheme() {
+    const html = document.getElementById("html-root");
+    const icon = document.getElementById("tIcon");
+
+    if (html.getAttribute("data-theme") === "dark") {
+        // Switch back to LIGHT
+        html.removeAttribute("data-theme");
+        icon.classList.replace("bi-sun-fill", "bi-moon-stars-fill");
+    } else {
+        // Switch to DARK
+        html.setAttribute("data-theme", "dark");
+        icon.classList.replace("bi-moon-stars-fill", "bi-sun-fill");
+    }
+}
+</script>
+
+    <script>
+        async function loadProducts() {
+            try {
+                const res = await fetch("/api/admin/products", {
+                    credentials: "include"
+                });
+
+                if (!res.ok) {
+                    throw new Error("Failed to fetch products");
+                }
+
+                const products = await res.json();
+                const tbody = document.getElementById("productTableBody");
+
+                tbody.innerHTML = "";
+
+                if (products.length === 0) {
+                    tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">
+                        No products found
+                    </td>
+                </tr>`;
+                    return;
+                }
+
+                products.forEach(product => {
+                    const stockText =
+                        product.stockQuantity === 0
+                            ? "Unlimited"
+                            : `${product.stockQuantity} Items`;
+
+                    const stockBadge =
+                        product.stockStatus === "In Stock"
+                            ? `<span class="status-pill active-pill">Active</span>`
+                            : `<span class="status-pill out-pill">Out of Stock</span>`;
+
+                    tbody.innerHTML += `
+            <tr>
+                <td>
+                    <div class="d-flex align-items-center">
+                       <img src="${product.images?.[0] || 'https://via.placeholder.com/50'}"
+     class="prod-img me-3">
+
+
+                        <div>
+                            <div class="fw-600">${product.name}</div>
+                            <small class="text-gray">SKU: ${product.sku}</small>
+                        </div>
+                    </div>
+                </td>
+                <td>${product.category?.name || "-"}</td>
+                <td class="fw-semibold">₹${product.finalPrice}</td>
+                <td>${stockText}</td>
+                <td>${stockBadge}</td>
+                <td class="text-end pe-4">
+                    <div class="btn-group action-btns">
+                        <button class="btn btn-edit"><i class="bi bi-pencil-square"></i></button>
+                        <button class="btn btn-delete" onclick="deleteProduct('${product._id}')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>`;
+                });
+
+            } catch (error) {
+                console.error(error);
+                alert("Failed to load products");
+            }
+        }
+
+        /* =========================
+           DELETE PRODUCT
+        ========================= */
+        async function deleteProduct(id) {
+            if (!confirm("Are you sure you want to delete this product?")) return;
+
+            try {
+                const res = await fetch(`/api/admin/product/${id}`, {
+                    method: "DELETE",
+                    credentials: "include"
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    alert("Product deleted");
+                    loadProducts();
+                } else {
+                    alert(data.message || "Delete failed");
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", loadProducts);
+    </script>
+
+</body>
+
+</html>

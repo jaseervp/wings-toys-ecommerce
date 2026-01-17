@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Payment Options | ToyStore</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-bg: #FBEBB5;
+            --soft-bg: #FAF4F4;
+            --accent-blue: #7091E6;
+            --menu-hover: #F9F1E7;
+            --wallet-card-bg: #fdfdfd;
+        }
+
+        body { font-family: 'Poppins', sans-serif; color: #000; background-color: #fff; }
+        
+        /* --- NAVIGATION --- */
+        .nav-link { font-weight: 600; color: #000 !important; margin: 0 15px; }
+
+        /* --- HEADER BANNER --- */
+        .page-header {
+            background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), 
+                        url('https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=1200');
+            background-size: cover; background-position: center;
+            padding: 70px 0; text-align: center;
+        }
+        .page-header h1 { font-size: 3rem; font-weight: 600; margin-bottom: 5px; }
+
+        /* --- SIDEBAR MENU --- */
+        .sidebar-menu { padding-right: 30px; }
+        .menu-section-title { font-weight: 600; font-size: 1.1rem; margin-top: 25px; margin-bottom: 15px; }
+        .sidebar-link {
+            display: block; padding: 10px 15px; color: #888; text-decoration: none;
+            transition: 0.3s; border-radius: 5px; margin-bottom: 5px;
+        }
+        .sidebar-link:hover, .sidebar-link.active { background-color: var(--menu-hover); color: #B88E2F; }
+
+        /* --- WALLET DESIGN (FROM REFERENCE IMAGE) --- */
+        .wallet-balance-card {
+            background-color: var(--wallet-card-bg);
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
+            padding: 35px 30px;
+        }
+        
+        .add-funds-container .input-group-text {
+            background-color: #fff;
+            border-color: #dee2e6;
+            color: #444;
+            font-size: 1.1rem;
+        }
+
+        .add-funds-container .form-control {
+            border-color: #dee2e6;
+            height: 48px;
+            font-size: 0.95rem;
+        }
+
+        .add-funds-container .form-control:focus {
+            box-shadow: none;
+            border-color: #dee2e6;
+        }
+
+        .btn-add-funds {
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            padding: 0 25px;
+            font-weight: 500;
+            height: 48px;
+            border-radius: 0 8px 8px 0;
+            transition: 0.3s;
+        }
+
+        .btn-add-funds:hover {
+            background-color: #0b5ed7;
+        }
+
+        /* --- TABLE STYLES --- */
+        .custom-table thead th {
+            background-color: #fcfcfc;
+            border-bottom: 1px solid #eee;
+            color: #000;
+            font-weight: 600;
+            padding: 15px;
+        }
+
+        .custom-table tbody td {
+            padding: 20px 15px;
+            color: #666;
+        }
+                /* Custom Logout Styling */
+.logout-link {
+    color: #dc3545 !important; /* Standard Bootstrap Red */
+    transition: 0.3s ease;
+}
+
+.logout-link:hover {
+    background-color: #fff5f5 !important; /* Very light red background */
+    color: #a71d2a !important;
+}
+
+.sidebar-link i {
+    font-size: 1.1rem;
+    vertical-align: middle;
+}
+
+        /* --- FEATURES & FOOTER --- */
+        .features { background: var(--soft-bg); padding: 80px 0; margin-top: 60px; }
+        footer { background: #000; color: #fff; padding: 80px 0 20px; }
+        footer a { color: #9F9F9F; display: block; margin-bottom: 12px; text-decoration: none; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="/Images/logo wings.png" alt="Logo" style="height: 40px;">
+            </a>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="d-flex gap-3 align-items-center">
+                <a href="#"><i class="bi bi-person fs-5 text-dark"></i></a>
+                <a href="#"><i class="bi bi-heart fs-5 text-dark"></i></a>
+                <a href="#"><i class="bi bi-cart fs-5 text-dark"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h1>My Payment Options</h1>
+            <p class="text-muted">Home <i class="bi bi-chevron-right mx-2"></i> My Payment Options</p>
+        </div>
+    </header>
+
+    <main class="container py-5">
+        <div class="row">
+            <div class="col-lg-3">
+    <div class="sidebar-menu">
+        <p class="text-muted small">Account Details</p>
+        
+        <div class="menu-section-title">Manage My Account</div>
+        <a href="my-account.html" class="sidebar-link ">My Profile</a>
+        <a href="address-book.html" class="sidebar-link">Address Book</a>
+        <a href="MyPaymentOption.html" class="sidebar-link active">My Payment Options</a>
+        
+        <div class="menu-section-title">My Orders</div>
+        <a href="MyReturns.html" class="sidebar-link">My Returns</a>
+        <a href="MyCancellations.html" class="sidebar-link ">My Cancellations</a>
+        
+        <div class="menu-section-title">My Wishlist</div>
+        <a href="wishlist.html" class="sidebar-link">My Wishlist</a>
+
+        <div class="menu-section-title mt-4">Account Actions</div>
+        <a href="logout.php" class="sidebar-link logout-link">
+            <i class="bi bi-box-arrow-right me-2"></i> Logout
+        </a>
+    </div>
+</div>
+
+
+            <div class="col-lg-9">
+                <h5 class="fw-bold mb-3">My Wallet</h5>
+                <div class="wallet-balance-card mb-5">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="fw-bold mb-0">₹0.00</h2>
+                            <p class="text-muted small mb-0">Available Balance</p>
+                        </div>
+                        <div class="wallet-icon">
+                            <i class="bi bi-wallet2 fs-1 text-secondary opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <h5 class="fw-bold mb-3">Add Money</h5>
+                <div class="add-funds-container mb-5">
+                    <form class="input-group" style="max-width: 500px;">
+                        <span class="input-group-text">₹</span>
+                        <input type="number" class="form-control" placeholder="Enter amount (e.g. 500)" required>
+                        <button type="submit" class="btn btn-add-funds">Add Funds</button>
+                    </form>
+                </div>
+
+                <hr class="my-5" style="opacity: 0.1;">
+
+                <h5 class="fw-bold mb-3">Transaction History</h5>
+                <div class="table-responsive">
+                    <table class="table custom-table">
+                        <thead>
+                            <tr>
+                                <th class="border-0">Date</th>
+                                <th class="border-0">Description</th>
+                                <th class="border-0 text-end">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="3" class="text-center py-5 text-muted">
+                                    No transactions yet.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section class="features">
+        <div class="container">
+            <div class="row text-center text-md-start">
+                <div class="col-md-4 mb-4">
+                    <h3 class="fw-bold">Free Delivery</h3>
+                    <p class="text-muted mb-0">For all orders over $50, consectetur adipim scing elit.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h3 class="fw-bold">90 Days Return</h3>
+                    <p class="text-muted mb-0">If goods have problems, consectetur adipim scing elit.</p>
+                </div>
+                <div class="col-md-4">
+                    <h3 class="fw-bold">Secure Payment</h3>
+                    <p class="text-muted mb-0">100% secure payment, consectetur adipim scing elit.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container text-center text-md-start">
+            <div class="row g-5">
+                <div class="col-lg-4">
+                    <p style="color: #9F9F9F; line-height: 2;">400 University Drive Suite 200 Coral Gables, <br>FL 33134 USA</p>
+                </div>
+                <div class="col-lg-2 col-6">
+                    <h6 class="mb-4 text-white">Links</h6>
+                    <a href="#">Home</a><a href="#">Shop</a><a href="#">About</a><a href="#">Contact</a>
+                </div>
+                <div class="col-lg-2 col-6">
+                    <h6 class="mb-4 text-white">Help</h6>
+                    <a href="#">Payment Options</a><a href="#">Returns</a><a href="#">Privacy Policies</a>
+                </div>
+                <div class="col-lg-4">
+                    <h6 class="mb-4 text-white">Newsletter</h6>
+                    <div class="d-flex gap-2">
+                        <input type="email" class="form-control bg-transparent border-0 border-bottom rounded-0 text-white p-0" placeholder="Enter Your Email Address">
+                        <button class="btn btn-link text-white fw-bold p-0 border-bottom border-white rounded-0 text-decoration-none">SUBSCRIBE</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wings Admin | Admin Role</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --sidebar-width: 260px;
+            --main-bg: #F8F9FD;
+            --sidebar-bg: #ffffff;
+            --accent-blue: #6C8EEF;
+            --text-dark: #2D3748;
+            --text-gray: #A0AEC0;
+            --card-border: #EDF2F7;
+            --card-bg: #ffffff;
+            --input-bg: #F4F7FE;
+        }
+        
+        [data-theme="dark"] {
+            --sidebar-bg: #1A202C;
+            --main-bg: #11141D;
+            --card-bg: #1A202C;
+            --text-dark: #E2E8F0;
+            --text-gray: #718096;
+            --card-border: #2D3748;
+            --table-header: #212936;
+            --input-bg: #2D3748;
+        }
+
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background-color: var(--main-bg); 
+            color: var(--text-dark); 
+            margin: 0; 
+            display: flex; 
+            min-height: 100vh;
+            overflow-x: hidden; 
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid var(--card-border);
+            display: flex;
+            flex-direction: column;
+            z-index: 1100; /* Increased to stay above overlay */
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-scroll {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .sidebar-brand img { height: 45px; margin-bottom: 25px; transition: 0.3s; }
+        .menu-label { font-size: 0.75rem; color: var(--text-gray); text-transform: capitalize; margin: 20px 0 10px 10px; font-weight: 500; }
+
+        .nav-item {
+            display: flex; align-items: center; padding: 12px 15px;
+            color: var(--text-gray); text-decoration: none; border-radius: 10px;
+            margin-bottom: 5px; font-size: 0.9rem; transition: 0.2s;
+            white-space: nowrap; 
+        }
+
+        .nav-item.active { background: var(--accent-blue); color: #fff; }
+        .nav-item i { margin-right: 12px; font-size: 1.1rem; min-width: 20px; }
+        .nav-item:hover:not(.active) { background: rgba(108, 142, 239, 0.1); color: var(--accent-blue); }
+
+        .admin-footer { padding: 20px; border-top: 1px solid var(--card-border); background: var(--sidebar-bg); }
+        .admin-profile-box { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .admin-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; }
+        .admin-name { font-size: 0.85rem; font-weight: 600; color: var(--text-dark); margin: 0; }
+        .admin-email { font-size: 0.7rem; color: var(--text-gray); margin: 0; }
+
+        /* --- MAIN WRAPPER --- */
+        .main-wrapper { 
+            margin-left: var(--sidebar-width); 
+            width: calc(100% - var(--sidebar-width)); 
+            padding: 30px; 
+            transition: all 0.3s ease; 
+        }
+
+        /* --- ADMIN ROLE SPECIFIC STYLES --- */
+        .section-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 25px; margin-bottom: 25px; height: 100%; }
+        .section-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; color: var(--text-dark); }
+        .form-label { font-size: 0.85rem; font-weight: 500; color: var(--text-dark); margin-bottom: 8px; }
+        .custom-input { background: var(--input-bg); border: 1px solid transparent; border-radius: 10px; padding: 12px 15px; font-size: 0.9rem; color: var(--text-dark); width: 100%; transition: 0.2s; }
+        
+        .profile-pic-large { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; }
+        .btn-blue { background: var(--accent-blue); color: #fff; border: none; border-radius: 8px; padding: 10px 20px; font-size: 0.9rem; font-weight: 500; }
+        .btn-outline { background: #fff; border: 1px solid var(--card-border); color: var(--text-dark); border-radius: 8px; padding: 10px 20px; font-size: 0.9rem; }
+        
+ .btn-glass-delete {
+    background: #fff;
+    color: #FF4D4D;
+    border: 1px solid #EDF2F7;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.2s;
+}
+
+.btn-glass-delete i {
+    font-size: 1.1rem;
+}
+
+.btn-glass-delete:hover {
+    border-color: #FF4D4D;
+    background: #FFF5F5;
+    transform: translateY(-1px);
+}
+
+        .hamburger-btn { display: none; background: none; border: none; font-size: 1.5rem; margin-bottom: 20px; cursor: pointer; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 1000; }
+        .overlay.active { display: block; }
+
+        @media (max-width: 992px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-wrapper { margin-left: 0; width: 100%; padding: 20px; }
+            .hamburger-btn { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="overlay" id="sidebarOverlay" onclick="toggleMenu()"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-scroll">
+            <div class="sidebar-brand"><img src="logo wings.png" alt="Wings"></div>
+            <p class="menu-label">Main menu</p>
+            <a href="Dashbord.html" class="nav-item "><i class="bi bi-grid"></i> Dashboard</a>
+            <a href="OrderMangement.html" class="nav-item"><i class="bi bi-cart"></i> Order Management</a>
+            <a href="Customers.html" class="nav-item "><i class="bi bi-people"></i> Customers</a>
+            <a href="Cuopon.html" class="nav-item"><i class="bi bi-ticket-perforated"></i> Coupon Code</a>
+            <a href="Categories.html" class="nav-item "><i class="bi bi-tags"></i> Categories</a>
+            <a href="Transaction.html" class="nav-item"><i class="bi bi-arrow-left-right"></i> Transaction</a>
+          <a href="Offers.html" class="nav-item "><i class="bi bi-megaphone"></i> Offers & Ads</a>
+            <p class="menu-label">Product</p>
+            <a href="AddProduct.html" class="nav-item"><i class="bi bi-plus-circle"></i> Add Products</a>
+           
+            <a href="ProductList.html" class="nav-item"><i class="bi bi-list-ul"></i> Product List</a>
+            <a href="ProductReviews.html" class="nav-item"><i class="bi bi-chat-left-text"></i> Product Reviews</a>
+        </div>
+
+        <div class="admin-footer">
+            <p class="menu-label" style="margin-left:0; margin-top:0">Admin</p>
+            <a href="AdminRole.html" class="nav-item p-0 mb-3"><i class="bi bi-person-gear"></i> Admin role</a>
+            <div class="admin-profile-box">
+                <img src="logo wings.png" class="admin-avatar" alt="Admin">
+                <div class="admin-info">
+                    <p class="admin-name">Dealport</p>
+                    <p class="admin-email">Mark@thedesigner...</p>
+                </div>
+                <i class="bi bi-box-arrow-right text-gray" style="cursor: pointer; margin-left: auto;"></i>
+            </div>
+            <a href="#" class="nav-item p-0" style="color: var(--accent-blue); font-weight: 600;">
+                <i class="bi bi-shop"></i> Your Shop <i class="bi bi-box-arrow-up-right ms-auto small"></i>
+            </a>
+        </div>
+    </aside>
+
+    <main class="main-wrapper">
+        <button class="hamburger-btn" onclick="toggleMenu()"><i class="bi bi-list"></i></button>
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold">Admin role</h4>
+            <div class="d-flex gap-3 align-items-center">
+                <div class="bg-white border rounded-pill px-3 py-1 d-flex align-items-center" style="width: 250px;">
+                    <i class="bi bi-search text-muted me-2"></i>
+                    <input type="text" placeholder="Search data, users..." class="border-0 w-100 small" style="outline:none;">
+                </div>
+                <!-- <i class="bi bi-bell fs-5 text-muted"></i>
+                <i class="bi bi-brightness-high fs-5 text-muted"></i> -->
+                <div class="theme-toggle" style="cursor:pointer" onclick="toggleTheme()"><i class="bi bi-moon-stars-fill" id="tIcon"></i></div>
+            </div>
+        </div>
+
+        <h5 class="mb-4 fw-semibold">About section</h5>
+
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="section-card">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h6 class="fw-bold mb-0">Change Password</h6>
+                        <a href="#" class="text-decoration-none small text-primary">Need help?</a>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Current Password</label>
+                        <div class="position-relative">
+                            <input type="password" class="custom-input" placeholder="Enter password">
+                            <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 text-muted"></i>
+                        </div>
+                        <a href="#" class="tiny text-primary text-decoration-none mt-1 d-block" style="font-size: 0.75rem;">Forgot Current Password? Click here</a>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">New Password</label>
+                        <div class="position-relative">
+                            <input type="password" class="custom-input" placeholder="Enter password">
+                            <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 text-muted"></i>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Re-enter Password</label>
+                        <div class="position-relative">
+                            <input type="password" class="custom-input" placeholder="Enter password">
+                            <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 text-muted"></i>
+                        </div>
+                    </div>
+
+                    <button class="btn-blue w-100 py-2">Save Change</button>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="section-card">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h6 class="fw-bold mb-0">Profile Update</h6>
+                        <button class="btn btn-sm btn-light border px-3"><i class="bi bi-pencil me-1"></i> Edit</button>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <img src="logo wings.png" class="profile-pic-large" alt="Profile">
+                        <button class="btn-blue btn-sm">Upload New</button>
+   <button class="btn-glass-delete btn-sm">
+    <i class="bi bi-trash3"></i> Delete
+</button>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">First Name</label>
+                            <input type="text" class="custom-input" value="Wade">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" class="custom-input" value="Warren">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Password</label>
+                            <div class="position-relative">
+                                <input type="password" class="custom-input" value="**********">
+                                <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 text-muted"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phone Number</label>
+                            <input type="text" class="custom-input" placeholder="Enter number">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">E-mail</label>
+                            <input type="email" class="custom-input" value="wade.warren@example.com">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Date of Birth</label>
+                            <div class="position-relative">
+                                <input type="text" class="custom-input" value="12- January- 1999">
+                                <i class="bi bi-calendar3 position-absolute top-50 end-0 translate-middle-y me-3 text-muted"></i>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Location</label>
+                            <input type="text" class="custom-input" value="2972 Westheimer Rd. Santa Ana, Illinois 85486">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Biography</label>
+                            <textarea class="custom-input" rows="4" placeholder="Enter a biography about you"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
+        }
+
+        function toggleTheme() {
+            const html = document.getElementById('html-root');
+            const icon = document.getElementById('tIcon');
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.removeAttribute('data-theme');
+                icon.classList.replace('bi-sun-fill', 'bi-moon-stars-fill');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                icon.classList.replace('bi-moon-stars-fill', 'bi-sun-fill');
+            }
+        }
+    </script>
+</body>
+</html>

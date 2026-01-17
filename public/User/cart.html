@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - Meubel House</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --cream-bg: #FFF9E5;
+            --text-muted: #9F9F9F;
+            --black: #000000;
+            --soft-pink: #FAF4F4;
+        }
+
+        body { font-family: 'Poppins', sans-serif; color: var(--black); overflow-x: hidden; }
+
+       /* --- NAVIGATION --- */
+        .nav-link { font-weight: 600; color: #000 !important; margin: 0 15px; }
+        
+        .search-input-desktop {
+            width: 0; opacity: 0; border: none; border-bottom: 2px solid #000;
+            outline: none; transition: all 0.4s ease; padding: 0; background: transparent;
+        }
+
+        .search-input-desktop.active { width: 200px; opacity: 1; padding: 0 10px; margin-right: 10px; }
+
+        .search-input-mobile {
+            width: 100%; height: 0; opacity: 0; padding: 0; border: none;
+            border-bottom: 2px solid #000; transition: all 0.3s ease; outline: none; overflow: hidden;
+        }
+
+        .search-input-mobile.active { height: 45px; opacity: 1; padding: 10px 0; margin-top: 15px; }
+
+        /* --- HERO BANNER --- */
+        .cart-hero {
+            background: linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), 
+                        url('https://images.unsplash.com/photo-1532330393533-443990a51d10?q=80&w=1500');
+            background-size: cover; background-position: center;
+            height: 250px; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            text-align: center;
+        }
+        .hero-logo { width: 40px; margin-bottom: 10px; }
+        .hero-title { font-size: 2.5rem; font-weight: 500; margin: 0; }
+
+        /* --- CART TABLE --- */
+        .cart-section { padding: 40px 0; }
+        .cart-table-head { background-color: var(--cream-bg); padding: 15px; border-radius: 5px; font-weight: 500; }
+        .cart-item-row { margin-top: 30px; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+        
+        .cart-item-img { 
+            width: 80px; height: 80px; background-color: var(--cream-bg); 
+            border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            margin: 0 auto;
+        }
+        .cart-item-img img { width: 80%; height: auto; }
+        
+        .qty-input {
+            width: 45px; height: 35px; border: 1px solid #D9D9D9;
+            border-radius: 5px; text-align: center; font-size: 0.9rem;
+        }
+        .trash-icon { color: #B88E2F; cursor: pointer; font-size: 1.2rem; }
+
+        /* --- CART TOTALS CARD --- */
+        .totals-card {
+            background-color: var(--cream-bg); border-radius: 15px;
+            padding: 30px; text-align: center; margin-top: 30px;
+        }
+        .totals-card h2 { font-size: 1.8rem; font-weight: 600; margin-bottom: 30px; }
+        .subtotal-row, .total-row { display: flex; justify-content: space-between; margin-bottom: 20px; }
+        .total-price { color: #B88E2F; font-weight: 600; font-size: 1.2rem; }
+        
+        .btn-checkout {
+    background: transparent; 
+    border: 1px solid #000; 
+    border-radius: 12px;
+    /* Reduced padding: 8px top/bottom, 30px left/right */
+    padding: 8px 30px; 
+    /* Slightly smaller font */
+    font-size: 0.9rem; 
+    transition: 0.3s; 
+    /* Changed from 100% to auto to shrink-to-fit the text */
+    width: auto; 
+    /* Ensures it stays centered if inside a flex container */
+    display: inline-block; 
+}
+
+.btn-checkout:hover { 
+    background: #000; 
+    color: #fff; 
+}
+        /* --- FEATURES SECTION --- */
+        .features-section { background-color: var(--soft-pink); padding: 60px 0; }
+        .feature-box { margin-bottom: 30px; text-align: center; }
+        .feature-box h3 { font-size: 1.5rem; font-weight: 500; }
+
+        footer a:hover { 
+    color: #fff; 
+    padding-left: 5px; 
+}
+
+/* --- FOOTER SECTIONS --- */
+        .features { background-color: var(--soft-bg); padding: 80px 0; }
+        footer { background: #000; color: #fff; padding: 80px 0 20px; }
+        footer a { color: #9F9F9F; text-decoration: none; display: block; margin-bottom: 12px; transition: 0.3s; }
+        footer a:hover { color: #fff; padding-left: 5px; }
+        .footer-input { background: transparent; border: none; border-bottom: 1px solid #fff; color: #fff; border-radius: 0; width: 100%; }
+        .btn-subscribe { border: none; border-bottom: 2px solid #fff; background: transparent; color: #fff; font-weight: 700; padding: 5px 0; }
+        /* --- RESPONSIVE MEDIA QUERIES --- */
+        @media (max-width: 991px) {
+            .cart-table-head { display: none; } /* Hide headers on tablet/mobile */
+            .cart-item-row { text-align: center; }
+            .cart-item-row > div { margin-bottom: 15px; }
+            .cart-item-img { margin-bottom: 10px; }
+            .totals-card { margin-top: 50px; }
+        }
+
+        @media (max-width: 576px) {
+            .hero-title { font-size: 2rem; }
+            .features-section { padding: 40px 0; }
+            .feature-box h3 { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+     <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+        <div class="container d-flex align-items-center flex-wrap">
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <a class="navbar-brand ms-2" href="index.html">
+                <img src="/Images/logo wings.png" alt="Logo" style="height: 40px;">
+            </a>
+
+            <div class="d-flex gap-3 align-items-center ms-auto order-lg-3">
+                <a href="#"><i class="bi bi-person fs-5 text-dark"></i></a>
+                
+                <div class="search-container d-flex align-items-center">
+                    <input type="text" id="search-desktop" class="search-input-desktop d-none d-lg-block" placeholder="Search...">
+                    <button id="search-trigger" class="btn p-0 border-0 shadow-none">
+                        <i class="bi bi-search fs-5 text-dark"></i>
+                    </button>
+                </div>
+
+                <a href="wishlist.html"><i class="bi bi-heart fs-5 text-dark"></i></a>
+                <a href="cart.html"><i class="bi bi-cart fs-5 text-dark"></i></a>
+            </div>
+
+            <div class="search-full-width-wrapper w-100 order-4 d-lg-none">
+                 <input type="text" id="search-input-mobile" class="search-input-mobile" placeholder="Search toys...">
+            </div>
+
+            <div class="collapse navbar-collapse justify-content-center order-lg-2" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="cart-hero">
+        <img src="https://cdn-icons-png.flaticon.com/512/3081/3081840.png" class="hero-logo" alt="logo"> 
+        <h1 class="hero-title">Cart</h1>
+        <div class="hero-bc"><strong>Home</strong> <i class="bi bi-chevron-right mx-2 small"></i> <span>Cart</span></div>
+    </div>
+
+    <div class="container cart-section">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="row cart-table-head text-center d-none d-lg-flex">
+                    <div class="col-lg-4">Product</div>
+                    <div class="col-lg-2">Price</div>
+                    <div class="col-lg-2">Quantity</div>
+                    <div class="col-lg-3">Subtotal</div>
+                    <div class="col-lg-1"></div>
+                </div>
+
+                <div class="row cart-item-row text-center text-lg-start">
+                    <div class="col-lg-4">
+                        <div class="d-flex flex-column flex-lg-row align-items-center gap-3">
+                            <div class="cart-item-img"><img src="/Images/Pop_Race_1_64_Darwin_PRO_66G_WBK_Supra__A90__-_1087X_LION_DANCE_Pink_-_PR64-0285-removebg-preview.png" alt="Supra"></div>
+                            <span class="text-muted fw-bold d-lg-none">Product:</span>
+                            <span class="text-muted">Pop Race Supra</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 text-center py-lg-4">
+                        <span class="fw-bold d-lg-none">Price: </span> Rs. 2,000.00
+                    </div>
+                    <div class="col-lg-2 text-center py-lg-4">
+                        <span class="fw-bold d-lg-none">Qty: </span>
+                        <input type="number" class="qty-input" value="1">
+                    </div>
+                    <div class="col-lg-3 text-center py-lg-4">
+                        <span class="fw-bold d-lg-none">Subtotal: </span> Rs. 2,000.00
+                    </div>
+                    <div class="col-lg-1 text-center py-lg-4">
+                        <i class="bi bi-trash-fill trash-icon"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="totals-card">
+                    <h2>Cart Totals</h2>
+                    <div class="subtotal-row">
+                        <strong>Subtotal</strong>
+                        <span class="text-muted">Rs. 2,000.00</span>
+                    </div>
+                    <div class="total-row">
+                        <strong>Total</strong>
+                        <span class="total-price">Rs. 2,000.00</span>
+                    </div>
+                   <a href="checkout.html"> <button class="btn-checkout">Check Out</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="features-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 feature-box">
+                    <h3>Free Delivery</h3>
+                    <p>For all orders over $50, consectetur adipim scing elit.</p>
+                </div>
+                <div class="col-md-4 feature-box">
+                    <h3>90 Days Return</h3>
+                    <p>If goods have problems, consectetur adipim scing elit.</p>
+                </div>
+                <div class="col-md-4 feature-box">
+                    <h3>Secure Payment</h3>
+                    <p>100% secure payment, consectetur adipim scing elit.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-5">
+                    <p class="text-secondary">400 University Drive Suite 200 Coral Gables, FL 33134 USA</p>
+                </div>
+                <div class="col-md-2 mb-5">
+                    <h6 class="fw-bold mb-4">Links</h6>
+                    <a href="#">Home</a><a href="#">Shop</a><a href="#">About</a><a href="#">Contact</a>
+                </div>
+                <div class="col-md-2 mb-5">
+                    <h6 class="fw-bold mb-4">Help</h6>
+                    <a href="#">Payment Options</a><a href="#">Returns</a><a href="#">Privacy Policies</a>
+                </div>
+                <div class="col-md-4 mb-5">
+                    <h6 class="fw-bold mb-4">Newsletter</h6>
+                    <div class="d-flex gap-3">
+                        <input type="email" class="footer-input" placeholder="Enter Your Email Address">
+                        <button class="btn-subscribe">SUBSCRIBE</button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-top border-secondary pt-4 text-secondary small">
+                2022 Meubel House. All rights reserved
+            </div>
+        </div>
+    </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('search-trigger').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (window.innerWidth < 992) {
+                const mobileInput = document.getElementById('search-input-mobile');
+                mobileInput.classList.toggle('active');
+                if (mobileInput.classList.contains('active')) mobileInput.focus();
+            } else {
+                const desktopInput = document.getElementById('search-desktop');
+                desktopInput.classList.toggle('active');
+                if (desktopInput.classList.contains('active')) desktopInput.focus();
+            }
+        });
+    </script>
+</body>
+</html>

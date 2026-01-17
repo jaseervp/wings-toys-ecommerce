@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToyStore | Premium Collection</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <style>
+        :root {
+            --primary-bg: #FBEBB5;
+            --soft-bg: #FAF4F4;
+            --light-accent: #FFF9E5;
+            --accent-gold: #B88E2F;
+        }
+
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Poppins', sans-serif; color: #000; overflow-x: hidden; background-color: #fff; }
+
+        /* --- NAVIGATION --- */
+        .nav-link { font-weight: 600; color: #000 !important; margin: 0 15px; }
+        
+        .search-input-desktop {
+            width: 0; opacity: 0; border: none; border-bottom: 2px solid #000;
+            outline: none; transition: all 0.4s ease; padding: 0; background: transparent;
+        }
+        .search-input-desktop.active { width: 200px; opacity: 1; padding: 0 10px; margin-right: 10px; }
+
+        .search-input-mobile {
+            width: 100%; height: 0; opacity: 0; padding: 0; border: none;
+            border-bottom: 2px solid #000; transition: all 0.3s ease; outline: none; overflow: hidden;
+        }
+        .search-input-mobile.active { height: 45px; opacity: 1; padding: 10px 0; margin-top: 15px; }
+
+        /* --- SHOP BANNER --- */
+        .shop-banner {
+            background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), 
+                        url('https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=1200');
+            background-size: cover; background-position: center;
+            height: 300px; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center;
+        }
+
+        /* --- FILTER BAR --- */
+        .filter-bar { background-color: var(--soft-bg); padding: 20px 0; border-bottom: 1px solid #eee; margin-bottom: 40px; }
+
+        /* --- PRODUCT CARDS (MATCHING HOME PAGE) --- */
+        .product-card {
+            border: 1px solid #f2f2f2; 
+            background: #fff; 
+            border-radius: 20px;
+            padding: 12px; 
+            transition: 0.3s;
+            height: 100%; 
+            overflow: hidden; 
+            cursor: pointer;
+            text-align: center;
+            position: relative;
+        }
+        .product-card:hover {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+            transform: translateY(-5px);
+        }
+
+        .img-container {
+            background-color: #F9F9F9; 
+            border-radius: 15px;
+            height: 220px;
+            display: flex; 
+            align-items: center;
+            justify-content: center; 
+            position: relative; 
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+        .img-container img {
+            max-width: 80%;
+            max-height: 80%;
+            transition: 0.5s ease;
+        }
+        .product-card:hover img { transform: scale(1.1); }
+
+        /* --- ACTION BUTTONS --- */
+        .card-actions {
+            position: absolute;
+            top: 10px;
+            right: -60px; /* Hidden on Desktop */
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 5;
+        }
+
+        .action-btn {
+            width: 38px; height: 38px; border-radius: 50%;
+            background: #fff; color: #000; border: none;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+        .action-btn:hover { background: #000; color: #fff; }
+
+        /* Desktop Hover Trigger */
+        @media (min-width: 992px) {
+            .product-card:hover .card-actions { right: 10px; }
+        }
+
+        /* Mobile View Visibility */
+        @media (max-width: 991px) {
+            .card-actions { right: 10px; } /* Always show on mobile */
+            .img-container { height: 180px; }
+        }
+
+        .product-info h6 { font-weight: 600; font-size: 1rem; color: #1a1a1a; margin-bottom: 4px; }
+        .price { font-weight: 700; font-size: 1.1rem; color: var(--accent-gold); }
+
+        /* --- PAGINATION --- */
+        .pagination-custom .page-link {
+            border: none; background-color: var(--light-accent);
+            color: #000; margin: 0 8px; border-radius: 10px !important;
+            padding: 12px 20px; font-weight: 500;
+        }
+        .pagination-custom .active .page-link { background-color: var(--primary-bg); }
+
+        /* --- FOOTER SECTIONS --- */
+        .features { background-color: var(--soft-bg); padding: 60px 0; margin-top: 50px; }
+        footer { background: #000; color: #fff; padding: 60px 0 20px; }
+        footer a { color: #9F9F9F; text-decoration: none; display: block; margin-bottom: 12px; font-size: 0.9rem; }
+        .footer-input { background: transparent; border: none; border-bottom: 1px solid #fff; color: #fff; border-radius: 0; width: 100%; padding: 5px 0; }
+        .btn-subscribe { border: none; border-bottom: 2px solid #fff; background: transparent; color: #fff; font-weight: 700; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 shadow-sm">
+        <div class="container d-flex align-items-center flex-wrap">
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <a class="navbar-brand ms-2" href="index.html">
+                <img src="/Images/logo wings.png" alt="Logo" style="height: 40px;">
+            </a>
+
+            <div class="d-flex gap-3 align-items-center ms-auto order-lg-3">
+                <a href="#"><i class="bi bi-person fs-5 text-dark"></i></a>
+                <div class="search-container d-flex align-items-center">
+                    <input type="text" id="search-desktop" class="search-input-desktop d-none d-lg-block" placeholder="Search...">
+                    <button id="search-trigger" class="btn p-0 border-0 shadow-none">
+                        <i class="bi bi-search fs-5 text-dark"></i>
+                    </button>
+                </div>
+                <a href="wishlist.html"><i class="bi bi-heart fs-5 text-dark"></i></a>
+                <a href="cart.html"><i class="bi bi-cart fs-5 text-dark"></i></a>
+            </div>
+
+            <div class="search-full-width-wrapper w-100 order-4 d-lg-none">
+                 <input type="text" id="search-input-mobile" class="search-input-mobile" placeholder="Search toys...">
+            </div>
+
+            <div class="collapse navbar-collapse justify-content-center order-lg-2" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="shop-banner animate__animated animate__fadeIn">
+        <h1 class="display-4 fw-bold">Shop</h1>
+        <p class="fw-bold">Home <i class="bi bi-chevron-right mx-2"></i> <span class="fw-normal text-muted">Shop</span></p>
+    </header>
+
+    <section class="filter-bar">
+        <div class="container d-flex flex-wrap justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-3">
+                <span><i class="bi bi-sliders me-2"></i> Filter</span>
+                <span class="border-start ps-3 text-muted small">Showing 1–12 of 32 results</span>
+            </div>
+            <div class="d-flex align-items-center gap-3 mt-3 mt-md-0">
+                <span class="small">Sort by</span>
+                <select class="form-select form-select-sm" style="width: 150px;">
+                    <option>Default</option>
+                    <option>Price: Low to High</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <main class="container">
+       <div class="row g-4" id="shopProducts">
+    <div class="text-center text-muted py-5 w-100">
+        Loading products...
+    </div>
+</div>
+
+
+        <nav class="mt-5">
+            <ul class="pagination pagination-custom justify-content-center">
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+        </nav>
+    </main>
+
+    <section class="features">
+        <div class="container">
+            <div class="row g-4 text-center text-md-start">
+                <div class="col-md-4">
+                    <h4 class="fw-bold">Free Delivery</h4>
+                    <p class="text-secondary mb-0">For all orders over $50</p>
+                </div>
+                <div class="col-md-4">
+                    <h4 class="fw-bold">90 Days Return</h4>
+                    <p class="text-secondary mb-0">If goods have problems</p>
+                </div>
+                <div class="col-md-4">
+                    <h4 class="fw-bold">Secure Payment</h4>
+                    <p class="text-secondary mb-0">100% secure payment</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-5">
+                    <p class="text-secondary" style="max-width: 250px;">400 University Drive Suite 200 Coral Gables, FL 33134 USA</p>
+                </div>
+                <div class="col-md-2 col-6 mb-5">
+                    <h6 class="fw-bold mb-4">Links</h6>
+                    <a href="index.html">Home</a><a href="shop.html">Shop</a><a href="about.html">About</a><a href="contact.html">Contact</a>
+                </div>
+                <div class="col-md-2 col-6 mb-5">
+                    <h6 class="fw-bold mb-4">Help</h6>
+                    <a href="#">Payment Options</a><a href="#">Returns</a><a href="#">Privacy Policies</a>
+                </div>
+                <div class="col-md-4 mb-5">
+                    <h6 class="fw-bold mb-4">Newsletter</h6>
+                    <div class="d-flex gap-2">
+                        <input type="email" class="footer-input" placeholder="Email Address">
+                        <button class="btn-subscribe">SUBSCRIBE</button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-top border-secondary pt-4 text-secondary small">
+                2026 ToyStore. All rights reserved
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Search Logic
+        document.getElementById('search-trigger').addEventListener('click', function(e) {
+            e.preventDefault();
+            const isMobile = window.innerWidth < 992;
+            const input = document.getElementById(isMobile ? 'search-input-mobile' : 'search-desktop');
+            input.classList.toggle('active');
+            if (input.classList.contains('active')) input.focus();
+        });
+
+        // Entrance Animation for Products
+        window.addEventListener('load', () => {
+            const cards = document.querySelectorAll('.product-card');
+            cards.forEach((card, i) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = '0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, i * 100);
+            });
+        });
+    </script>
+    <script>
+async function loadShopProducts() {
+    try {
+        const res = await fetch("/api/products");
+        const products = await res.json();
+
+        const container = document.getElementById("shopProducts");
+        container.innerHTML = "";
+
+        if (products.length === 0) {
+            container.innerHTML = `
+                <div class="text-center text-muted py-5 w-100">
+                    No products available
+                </div>`;
+            return;
+        }
+
+        products.forEach(p => {
+            container.innerHTML += `
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="product-card"
+                         onclick="window.location.href='single_product.html?id=${p._id}'">
+
+                        <div class="img-container">
+                           <img src="${p.images?.[0] || 'https://via.placeholder.com/200'}"
+     alt="${p.name}">
+
+
+                            <div class="card-actions">
+                                <button class="action-btn"
+                                    onclick="event.stopPropagation();">
+                                    <i class="bi bi-heart"></i>
+                                </button>
+
+                                <button class="action-btn"
+                                    onclick="event.stopPropagation();">
+                                    <i class="bi bi-cart-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="product-info">
+                            <p class="text-muted small mb-0">
+                                ${p.category?.name || ""}
+                            </p>
+                            <h6 class="text-truncate px-2">${p.name}</h6>
+                            <div class="price">Rs. ${p.finalPrice}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+    } catch (error) {
+        console.error(error);
+        document.getElementById("shopProducts").innerHTML = `
+            <div class="text-danger text-center py-5 w-100">
+                Failed to load products
+            </div>`;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", loadShopProducts);
+</script>
+
+</body>
+</html>

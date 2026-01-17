@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wings Admin | Create Coupon</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --sidebar-width: 260px;
+            --main-bg: #F8F9FD;
+            --sidebar-bg: #ffffff;
+            --accent-blue: #6C8EEF;
+            --text-dark: #2D3748;
+            --text-gray: #A0AEC0;
+            --card-border: #EDF2F7;
+            --card-bg: #ffffff;
+            --input-bg: #F4F7FE;
+        }
+
+        [data-theme="dark"] {
+            --sidebar-bg: #1A202C;
+            --main-bg: #11141D;
+            --card-bg: #1A202C;
+            --text-dark: #E2E8F0;
+            --text-gray: #718096;
+            --card-border: #2D3748;
+            --input-bg: #2D3748;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--main-bg);
+            color: var(--text-dark);
+            margin: 0;
+            display: flex;
+            transition: 0.3s;
+            min-height: 100vh;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            border-right: 1px solid var(--card-border);
+            display: flex;
+            flex-direction: column;
+            z-index: 1050;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-scroll {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .sidebar-brand img {
+            height: 45px;
+            margin-bottom: 25px;
+        }
+
+        .menu-label {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            text-transform: capitalize;
+            margin: 20px 0 10px 10px;
+            font-weight: 500;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: var(--text-gray);
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+
+        .nav-item.active {
+            background: var(--accent-blue);
+            color: #fff;
+        }
+
+        .nav-item i {
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+
+        .nav-item:hover:not(.active) {
+            background: rgba(108, 142, 239, 0.1);
+            color: var(--accent-blue);
+        }
+
+        .admin-footer {
+            padding: 20px;
+            border-top: 1px solid var(--card-border);
+            background: var(--sidebar-bg);
+        }
+
+        .admin-profile-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .admin-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .admin-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .admin-email {
+            font-size: 0.7rem;
+            color: var(--text-gray);
+            margin: 0;
+        }
+
+
+        /* --- MAIN WRAPPER --- */
+        .main-wrapper {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            padding: 30px;
+            transition: 0.3s;
+        }
+
+        /* --- FORM COMPONENTS --- */
+        .section-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .custom-input {
+            background: var(--input-bg);
+            border: 1px solid transparent;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            width: 100%;
+            transition: 0.2s;
+        }
+
+        .custom-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            background: var(--card-bg);
+        }
+
+        .coupon-preview-box {
+            background: linear-gradient(135deg, #6C8EEF 0%, #4A69BD 100%);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* --- BUTTONS --- */
+        .btn-create {
+            background: var(--accent-blue);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 500;
+        }
+
+        .mobile-nav-btn {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-dark);
+        }
+        /* --- CUSTOM GENERATE BUTTON --- */
+.btn-generate {
+    background: var(--card-bg);
+    color: var(--accent-blue);
+    border: 1px solid var(--card-border);
+    border-left: none; /* Merges cleanly with the input */
+    padding: 0 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border-radius: 0 10px 10px 0;
+}
+
+.btn-generate:hover {
+    background: var(--accent-blue);
+    color: #ffffff;
+    border-color: var(--accent-blue);
+}
+
+.btn-generate:active {
+    transform: scale(0.95); /* Slight "click" animation */
+}
+
+/* Dark mode adjustment for the button border */
+[data-theme="dark"] .btn-generate {
+    border-color: var(--card-border);
+}
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 1200px) {
+            :root {
+                --sidebar-width: 80px;
+            }
+
+            .sidebar span,
+            .sidebar .menu-label,
+            .sidebar .admin-info {
+                display: none;
+            }
+
+            .sidebar .nav-item {
+                justify-content: center;
+                padding: 15px 0;
+            }
+
+            .sidebar i {
+                margin: 0;
+                font-size: 1.4rem;
+            }
+
+            .main-wrapper {
+                margin-left: 80px;
+                width: calc(100% - 80px);
+            }
+        }
+
+        @media (max-width: 991px) {
+            .mobile-nav-btn {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                width: 260px !important;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .sidebar span,
+            .sidebar .menu-label {
+                display: block !important;
+            }
+
+            .sidebar .nav-item {
+                justify-content: flex-start;
+                padding: 12px 15px;
+            }
+
+            .main-wrapper {
+                margin-left: 0;
+                width: 100%;
+                padding: 20px;
+            }
+
+
+        }
+
+        /* --- OVERLAY SYSTEM --- */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            /* Dim the background */
+            z-index: 1040;
+            /* Just below the sidebar */
+            display: none;
+            /* Hidden by default */
+        }
+
+        /* Show the overlay only when it has the .active class */
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        @media (max-width: 991px) {
+            .sidebar {
+                z-index: 1050;
+            }
+
+            /* Ensure sidebar is above overlay */
+
+            /* Force labels to show on mobile when active */
+            .sidebar.active span,
+            .sidebar.active .menu-label,
+            .sidebar.active .admin-info {
+                display: block !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-scroll">
+            <div class="sidebar-brand"><img src="logo wings.png" alt="Wings"></div>
+            <p class="menu-label">Main menu</p>
+            <a href="Dashbord.html" class="nav-item "><i class="bi bi-grid"></i> Dashboard</a>
+            <a href="OrderMangement.html" class="nav-item"><i class="bi bi-cart"></i> Order Management</a>
+            <a href="Customers.html" class="nav-item "><i class="bi bi-people"></i> Customers</a>
+            <a href="Cuopon.html" class="nav-item active"><i class="bi bi-ticket-perforated"></i> Coupon Code</a>
+            <a href="Categories.html" class="nav-item "><i class="bi bi-tags"></i> Categories</a>
+            <a href="Transaction.html" class="nav-item"><i class="bi bi-arrow-left-right"></i> Transaction</a>
+            <a href="Offers.html" class="nav-item "><i class="bi bi-megaphone"></i> Offers & Ads</a>
+
+            <p class="menu-label">Product</p>
+            <a href="AddProduct.html" class="nav-item"><i class="bi bi-plus-circle"></i> Add Products</a>
+        
+            <a href="ProductList.html" class="nav-item"><i class="bi bi-list-ul"></i> Product List</a>
+            <a href="ProductReviews.html" class="nav-item"><i class="bi bi-chat-left-text"></i> Product Reviews</a>
+        </div>
+
+        <div class="admin-footer">
+            <p class="menu-label" style="margin-left:0; margin-top:0">Admin</p>
+            <a href="AdminRole.html" class="nav-item p-0 mb-3"><i class="bi bi-person-gear"></i> Admin role</a>
+            <div class="admin-profile-box">
+                <img src="profile-pic.png" class="admin-avatar" alt="Admin">
+                <div class="admin-info">
+                    <p class="admin-name">Dealport</p>
+                    <p class="admin-email">Mark@thedesigner...</p>
+                </div>
+                <i class="bi bi-box-arrow-right text-gray" style="cursor: pointer; margin-left: auto;"></i>
+            </div>
+            <a href="#" class="nav-item p-0" style="color: var(--accent-blue); font-weight: 600;">
+                <i class="bi bi-shop"></i> Your Shop <i class="bi bi-box-arrow-up-right ms-auto small"></i>
+            </a>
+        </div>
+    </aside>
+
+
+
+    <main class="main-wrapper">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+            <div class="d-flex align-items-center">
+                <button class="mobile-nav-btn me-3" onclick="toggleSidebar()"><i class="bi bi-list"></i></button>
+                <h4 class="fw-semibold mb-0">Create New Coupon</h4>
+            </div>
+            <div class="d-flex gap-2">
+                <div class="theme-toggle me-3 align-self-center" style="cursor:pointer" onclick="toggleTheme()">
+                    <i class="bi bi-moon-stars-fill" id="tIcon"></i>
+                </div>
+                <button class="btn btn-outline-secondary border-0" onclick="history.back()">Discard</button>
+                <button class="btn-create shadow-sm">Create Coupon</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="section-card">
+                    <h5 class="section-title">General Information</h5>
+                    <div class="mb-4">
+                        <label class="form-label">Coupon Code</label>
+                        <div class="input-group">
+    <input type="text" id="couponCodeInput" class="custom-input" placeholder="e.g. SUMMER25"
+        style="border-top-right-radius:0; border-bottom-right-radius:0; flex: 1;">
+    
+    <button class="btn-generate" onclick="generateCode()">
+        <i class="bi bi-magic me-1"></i> Generate
+    </button>
+</div>
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label">Description (Optional)</label>
+                        <textarea class="custom-input" rows="3"
+                            placeholder="Explain what this coupon provides..."></textarea>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h5 class="section-title">Discount Settings</h5>
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label class="form-label">Discount Type</label>
+                            <select class="custom-input">
+                                <option>Percentage (%)</option>
+                                <option>Fixed Amount ($)</option>
+                                <option>Free Shipping</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Discount Value</label>
+                            <input type="number" class="custom-input" placeholder="10">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label class="form-label">Start Date</label>
+                            <input type="date" class="custom-input">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">End Date</label>
+                            <input type="date" class="custom-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="section-card" style="border: 1px solid var(--accent-blue);">
+                    <h5 class="section-title">Coupon Preview</h5>
+                    <div class="coupon-preview-box">
+                        <small class="opacity-75">YOU SAVE</small>
+                        <h2 class="fw-bold mb-1">10% OFF</h2>
+                        <div class="py-2 px-3 my-2 bg-white text-dark rounded-pill d-inline-block fw-bold border"
+                            id="previewCode">
+                            COUPON_CODE
+                        </div>
+                        <p class="small mb-0 mt-2 opacity-75">Valid until Dec 31, 2025</p>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h5 class="section-title">Usage Restrictions</h5>
+                    <div class="mb-4">
+                        <label class="form-label">Minimum Spend</label>
+                        <input type="number" class="custom-input" placeholder="0.00">
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Maximum Uses (Total)</label>
+                        <input type="number" class="custom-input" placeholder="Unlimited">
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="userLimit">
+                        <label class="form-check-label ms-2 small text-muted" for="userLimit">Limit to one use per
+                            customer</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function toggleSidebar() {
+            // Toggles the sidebar sliding in/out
+            document.getElementById('sidebar').classList.toggle('active');
+            // Toggles the dark background overlay
+            document.getElementById('sidebarOverlay').classList.toggle('active');
+        }
+
+        function toggleTheme() {
+            const html = document.getElementById('html-root');
+            const icon = document.getElementById('tIcon');
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.removeAttribute('data-theme');
+                icon.classList.replace('bi-sun-fill', 'bi-moon-stars-fill');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                icon.classList.replace('bi-moon-stars-fill', 'bi-sun-fill');
+            }
+        }
+
+        function generateCode() {
+            const code = 'WINGS-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+            document.getElementById('couponCodeInput').value = code;
+            document.getElementById('previewCode').innerText = code;
+        }
+
+        // Live update preview
+        document.getElementById('couponCodeInput').addEventListener('input', function (e) {
+            document.getElementById('previewCode').innerText = e.target.value || 'COUPON_CODE';
+        });
+
+    </script>
+</body>
+
+</html>

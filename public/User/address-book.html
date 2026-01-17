@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Address Book | ToyStore</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-bg: #FBEBB5;
+            --soft-bg: #FAF4F4;
+            --accent-blue: #7091E6;
+            --menu-hover: #F9F1E7;
+        }
+
+        body { font-family: 'Poppins', sans-serif; color: #000; background-color: #fff; }
+        
+        /* --- NAVIGATION --- */
+        .nav-link { font-weight: 600; color: #000 !important; margin: 0 15px; }
+        .search-input-desktop {
+            width: 0; opacity: 0; border: none; border-bottom: 2px solid #000;
+            outline: none; transition: all 0.4s ease; padding: 0; background: transparent;
+        }
+        .search-input-desktop.active { width: 200px; opacity: 1; padding: 0 10px; margin-right: 10px; }
+        .search-input-mobile {
+            width: 100%; height: 0; opacity: 0; padding: 0; border: none;
+            border-bottom: 2px solid #000; transition: all 0.3s ease; outline: none; overflow: hidden;
+        }
+        .search-input-mobile.active { height: 45px; opacity: 1; padding: 10px 0; margin-top: 15px; }
+
+        /* --- HEADER BANNER --- */
+        .page-header {
+            background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), 
+                        url('https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=1200');
+            background-size: cover; background-position: center;
+            padding: 70px 0; text-align: center;
+        }
+        .page-header h1 { font-size: 3rem; font-weight: 600; margin-bottom: 5px; }
+
+        /* --- SIDEBAR MENU --- */
+        .sidebar-menu { padding-right: 30px; }
+        .menu-section-title { font-weight: 600; font-size: 1.1rem; margin-top: 25px; margin-bottom: 15px; }
+        .sidebar-link {
+            display: block; padding: 10px 15px; color: #888; text-decoration: none;
+            transition: 0.3s; border-radius: 5px; margin-bottom: 5px;
+        }
+        .sidebar-link:hover, .sidebar-link.active { background-color: var(--menu-hover); color: #B88E2F; }
+
+        /* --- ADDRESS BOOK SPECIFIC STYLES --- */
+        .address-card {
+            background: #fff; border: 1px solid #E5E5E5; border-radius: 10px;
+            padding: 25px; transition: 0.3s; height: 100%;
+        }
+        .address-card:hover { border-color: var(--accent-blue); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .badge-default { background-color: #E8F0FE; color: var(--accent-blue); font-size: 0.75rem; padding: 4px 10px; border-radius: 50px; font-weight: 500; }
+        .address-actions a { color: var(--accent-blue); text-decoration: none; font-size: 0.9rem; margin-right: 15px; font-weight: 500; }
+        .address-actions a.delete { color: #DC3545; }
+        
+        .btn-add-new {
+            border: 2px dashed #D9D9D9; background: transparent; width: 100%;
+            height: 100%; min-height: 180px; border-radius: 10px; color: #888;
+            transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .btn-add-new:hover { border-color: var(--accent-blue); color: var(--accent-blue); background: var(--soft-bg); }
+
+        /* --- FEATURES & FOOTER --- */
+        .features { background: var(--soft-bg); padding: 80px 0; margin-top: 60px; }
+        footer { background: #000; color: #fff; padding: 80px 0 20px; }
+        footer a { color: #9F9F9F; display: block; margin-bottom: 12px; text-decoration: none; font-size: 0.9rem; }
+        .footer-input { background: transparent; border: none; border-bottom: 1px solid #fff; color: #fff; width: 100%; padding-bottom: 5px; outline: none; }
+
+        /* --- ENHANCED ADDRESS CARDS --- */
+.address-card {
+    background: #fff;
+    border: 1px solid #eeeeee;
+    border-radius: 12px;
+    padding: 24px;
+    transition: all 0.3s ease;
+    height: 100%;
+    position: relative;
+}
+
+.address-card:hover {
+    border-color: var(--accent-blue);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+    transform: translateY(-4px);
+}
+
+.badge-default {
+    background-color: #f0f4ff;
+    color: var(--accent-blue);
+    font-size: 0.7rem;
+    padding: 4px 12px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.address-actions {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #f5f5f5;
+}
+
+.address-actions a {
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-right: 15px;
+    transition: 0.2s;
+}
+
+.address-actions a:not(.delete) { color: var(--accent-blue); }
+.address-actions a.delete { color: #ff6b6b; }
+.address-actions a:hover { opacity: 0.7; }
+
+/* --- PREMIUM ADD NEW BUTTON --- */
+.btn-add-new {
+    border: 2px dashed #dcdcdc;
+    background: #fafafa;
+    width: 100%;
+    height: 100%;
+    min-height: 180px;
+    border-radius: 12px;
+    color: #888;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-add-new:hover {
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(112, 145, 230, 0.1);
+}
+
+/* --- REFINED MODAL FORM --- */
+#addressModal .modal-content {
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+#addressModal .form-control, 
+#addressModal .form-select {
+    border: 1.5px solid #ececec;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+#addressModal .form-control:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 4px rgba(112, 145, 230, 0.1);
+}
+
+#addressModal .form-label {
+    margin-bottom: 6px;
+    color: #444;
+}
+
+.btn-save-address {
+    background-color: var(--accent-blue);
+    color: white;
+    border-radius: 8px;
+    padding: 10px 25px;
+    border: none;
+    transition: 0.3s;
+}
+
+.btn-save-address:hover {
+    background-color: #5b79c7;
+    box-shadow: 0 4px 12px rgba(112, 145, 230, 0.3);
+}
+
+/* Custom Logout Styling */
+.logout-link {
+    color: #dc3545 !important; /* Standard Bootstrap Red */
+    transition: 0.3s ease;
+}
+
+.logout-link:hover {
+    background-color: #fff5f5 !important; /* Very light red background */
+    color: #a71d2a !important;
+}
+
+.sidebar-link i {
+    font-size: 1.1rem;
+    vertical-align: middle;
+}
+
+        @media (max-width: 992px) {
+            .sidebar-menu { margin-bottom: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+        <div class="container d-flex align-items-center flex-wrap">
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand ms-2" href="index.html">
+                <img src="/Images/logo wings.png" alt="Logo" style="height: 40px;">
+            </a>
+            <div class="d-flex gap-3 align-items-center ms-auto order-lg-3">
+                <a href="#"><i class="bi bi-person fs-5 text-dark"></i></a>
+                <div class="search-container d-flex align-items-center">
+                    <input type="text" id="search-desktop" class="search-input-desktop d-none d-lg-block" placeholder="Search...">
+                    <button id="search-trigger" class="btn p-0 border-0 shadow-none"><i class="bi bi-search fs-5 text-dark"></i></button>
+                </div>
+                <a href="wishlist.html"><i class="bi bi-heart fs-5 text-dark"></i></a>
+                <a href="cart.html"><i class="bi bi-cart fs-5 text-dark"></i></a>
+            </div>
+            <div class="search-full-width-wrapper w-100 order-4 d-lg-none">
+                 <input type="text" id="search-input-mobile" class="search-input-mobile" placeholder="Search toys...">
+            </div>
+            <div class="collapse navbar-collapse justify-content-center order-lg-2" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h1>Address Book</h1>
+            <p class="text-muted">Home <i class="bi bi-chevron-right mx-2"></i> Address Book</p>
+        </div>
+    </header>
+
+    <main class="container py-5">
+        <div class="row">
+            <div class="col-lg-3">
+    <div class="sidebar-menu">
+        <p class="text-muted small">Account Details</p>
+        
+        <div class="menu-section-title">Manage My Account</div>
+        <a href="my-account.html" class="sidebar-link ">My Profile</a>
+        <a href="address-book.html" class="sidebar-link active">Address Book</a>
+        <a href="MyPaymentOption.html" class="sidebar-link">My Payment Options</a>
+        
+        <div class="menu-section-title">My Orders</div>
+        <a href="MyReturns.html" class="sidebar-link">My Returns</a>
+        <a href="MyCancellations.html" class="sidebar-link">My Cancellations</a>
+        
+        <div class="menu-section-title">My Wishlist</div>
+        <a href="wishlist.html" class="sidebar-link">My Wishlist</a>
+
+        <div class="menu-section-title mt-4">Account Actions</div>
+        <a href="logout.php" class="sidebar-link logout-link">
+            <i class="bi bi-box-arrow-right me-2"></i> Logout
+        </a>
+    </div>
+</div>
+
+            <div class="col-lg-9">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="fw-bold mb-0">My Addresses</h4>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="address-card">
+                            <div class="d-flex justify-content-between mb-3">
+                                <h6 class="fw-bold mb-0">Mohamed Rimzan</h6>
+                                <span class="badge-default">Default Shipping</span>
+                            </div>
+                            <p class="text-muted small mb-1">123 Business Avenue, Suite 456</p>
+                            <p class="text-muted small mb-1">Colombo 00700, Sri Lanka</p>
+                            <p class="text-muted small mb-3">(+94) 77 123 4567</p>
+                            <div class="address-actions">
+                                <a href="#">Edit Address</a>
+                                <a href="#" class="delete">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <button class="btn-add-new" data-bs-toggle="modal" data-bs-target="#addressModal">
+                            <i class="bi bi-plus-lg fs-2 mb-2"></i>
+                            <span class="fw-500">Add New Address</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
+                <div class="modal-header border-0 pt-4 px-4">
+                    <h5 class="modal-title fw-bold" id="addressModalLabel">Add New Address</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="newAddressForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small fw-bold">Full Name</label>
+                                <input type="text" class="form-control py-2" placeholder="e.g. Mohamed Rimzan" required style="border-color: #D9D9D9;">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small fw-bold">Phone Number</label>
+                                <input type="tel" class="form-control py-2" placeholder="e.g. +94 77 123 4567" required style="border-color: #D9D9D9;">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Street Address</label>
+                            <input type="text" class="form-control py-2 mb-2" placeholder="House number and street name" required style="border-color: #D9D9D9;">
+                            <input type="text" class="form-control py-2" placeholder="Apartment, suite, unit, etc. (optional)" style="border-color: #D9D9D9;">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label small fw-bold">City</label>
+                                <input type="text" class="form-control py-2" required style="border-color: #D9D9D9;">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label small fw-bold">Region / State</label>
+                                <select class="form-select py-2" style="border-color: #D9D9D9;">
+                                    <option selected>Western Province</option>
+                                    <option>Central Province</option>
+                                    <option>Southern Province</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label small fw-bold">Postcode / ZIP</label>
+                                <input type="text" class="form-control py-2" required style="border-color: #D9D9D9;">
+                            </div>
+                        </div>
+
+                        <div class="form-check mt-2 mb-4">
+                            <input class="form-check-input" type="checkbox" id="defaultAddress">
+                            <label class="form-check-label small text-muted" for="defaultAddress">
+                                Set as default shipping address
+                            </label>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 border-top pt-4">
+                            <button type="button" class="btn px-4" data-bs-dismiss="modal" style="font-weight: 500;">Cancel</button>
+                            <button type="submit" class="btn text-white px-4" style="background-color: var(--accent-blue); font-weight: 500;">Save Address</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="features">
+        <div class="container">
+            <div class="row text-center text-md-start">
+                <div class="col-md-4 mb-4">
+                    <h3 class="fw-bold">Free Delivery</h3>
+                    <p class="text-muted mb-0">For all orders over $50, consectetur adipim scing elit.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h3 class="fw-bold">90 Days Return</h3>
+                    <p class="text-muted mb-0">If goods have problems, consectetur adipim scing elit.</p>
+                </div>
+                <div class="col-md-4">
+                    <h3 class="fw-bold">Secure Payment</h3>
+                    <p class="text-muted mb-0">100% secure payment, consectetur adipim scing elit.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-4">
+                    <p style="color: #9F9F9F; line-height: 2;">400 University Drive Suite 200 Coral Gables, <br>FL 33134 USA</p>
+                </div>
+                <div class="col-lg-2 col-6">
+                    <h6 class="mb-4 text-white">Links</h6>
+                    <a href="#">Home</a><a href="#">Shop</a><a href="#">About</a><a href="#">Contact</a>
+                </div>
+                <div class="col-lg-2 col-6">
+                    <h6 class="mb-4 text-white">Help</h6>
+                    <a href="#">Payment Options</a><a href="#">Returns</a><a href="#">Privacy Policies</a>
+                </div>
+                <div class="col-lg-4">
+                    <h6 class="mb-4 text-white">Newsletter</h6>
+                    <div class="d-flex gap-2">
+                        <input type="email" class="footer-input" placeholder="Enter Your Email Address">
+                        <button class="btn btn-link text-white fw-bold p-0 border-bottom border-white rounded-0">SUBSCRIBE</button>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-5 border-secondary">
+            <div class="pt-2 small text-center text-md-start" style="color: #9F9F9F;">
+                2022 Meubel House. All rights reserved
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('search-trigger').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (window.innerWidth < 992) {
+                const mobileInput = document.getElementById('search-input-mobile');
+                mobileInput.classList.toggle('active');
+                if (mobileInput.classList.contains('active')) mobileInput.focus();
+            } else {
+                const desktopInput = document.getElementById('search-desktop');
+                desktopInput.classList.toggle('active');
+                if (desktopInput.classList.contains('active')) desktopInput.focus();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgot Password | Wings Kids Toys</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --accent-blue: #6C8EEF; 
+            --border-gray: #D9D9D9;
+            --text-gray: #9F9F9F;
+        }
+
+        body { font-family: 'Poppins', sans-serif; color: #000; margin: 0; background-color: #fff; overflow-x: hidden; }
+
+        /* --- NAVIGATION --- */
+        .nav-link { font-weight: 600; color: #000 !important; margin: 0 15px; }
+        
+        .search-input-desktop {
+            width: 0; opacity: 0; border: none; border-bottom: 2px solid #000;
+            outline: none; transition: all 0.4s ease; padding: 0; background: transparent;
+        }
+
+        .search-input-desktop.active { width: 200px; opacity: 1; padding: 0 10px; margin-right: 10px; }
+
+        .search-input-mobile {
+            width: 100%; height: 0; opacity: 0; padding: 0; border: none;
+            border-bottom: 2px solid #000; transition: all 0.3s ease; outline: none; overflow: hidden;
+        }
+
+        .search-input-mobile.active { height: 45px; opacity: 1; padding: 10px 0; margin-top: 15px; }
+
+        /* --- MAIN SECTION --- */
+        .auth-container {
+            min-height: 75vh;
+            display: flex;
+            align-items: center;
+            padding: 60px 0;
+        }
+
+        .logo-placeholder {
+            max-width: 100%;
+            height: auto;
+            content: url('../Images/logo\ wings.png'); /* Ensure path is correct */
+            border-radius: 20px;
+        }
+
+        .auth-form-box h1 {
+            font-size: 2.3rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: var(--text-gray);
+            margin-bottom: 40px;
+        }
+
+        .underline-input {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid var(--border-gray);
+            padding: 12px 0;
+            margin-bottom: 35px;
+            outline: none;
+            font-size: 0.95rem;
+            background: transparent;
+            transition: border-color 0.3s;
+        }
+
+        .underline-input:focus { border-bottom: 1px solid #000; }
+
+        .btn-wings {
+            background-color: var(--accent-blue);
+            color: #fff;
+            padding: 12px 0;
+            width: 100%;
+            border: none;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-wings:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        /* --- FOOTER --- */
+        footer { background: #000; color: #fff; padding: 80px 0 30px; }
+        .footer-link { color: #fff; text-decoration: none; display: block; margin-bottom: 15px; font-size: 0.95rem; }
+        .footer-text { color: var(--text-gray); font-size: 0.95rem; line-height: 1.8; }
+        
+        .newsletter-input {
+            background: transparent; border: none; border-bottom: 1px solid #fff;
+            color: #fff; outline: none; padding-bottom: 5px; width: 200px; font-size: 0.85rem;
+        }
+        
+        .subscribe-btn {
+            background: transparent; border: none; color: #fff;
+            font-weight: 600; text-transform: uppercase; font-size: 0.85rem; margin-left: 15px;
+        }
+
+        @media (max-width: 991px) {
+            .auth-container { padding: 40px 0; }
+            .auth-form-box { padding-left: 0; margin-top: 50px; text-align: center; }
+            .logo-placeholder { max-width: 280px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+        <div class="container d-flex align-items-center flex-wrap">
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <a class="navbar-brand ms-2" href="index.html">
+                <img src="/Images/logo wings.png" alt="Logo" style="height: 40px;">
+            </a>
+
+            <div class="d-flex gap-3 align-items-center ms-auto order-lg-3">
+                <a href="#"><i class="bi bi-person fs-5 text-dark"></i></a>
+                
+                <div class="search-container d-flex align-items-center">
+                    <input type="text" id="search-desktop" class="search-input-desktop d-none d-lg-block" placeholder="Search...">
+                    <button id="search-trigger" class="btn p-0 border-0 shadow-none">
+                        <i class="bi bi-search fs-5 text-dark"></i>
+                    </button>
+                </div>
+
+                <a href="wishlist.html"><i class="bi bi-heart fs-5 text-dark"></i></a>
+                <a href="cart.html"><i class="bi bi-cart fs-5 text-dark"></i></a>
+            </div>
+
+            <div class="search-full-width-wrapper w-100 order-4 d-lg-none">
+                 <input type="text" id="search-input-mobile" class="search-input-mobile" placeholder="Search toys...">
+            </div>
+
+            <div class="collapse navbar-collapse justify-content-center order-lg-2" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container auth-container">
+        <div class="row align-items-center">
+            <div class="col-lg-7 brand-illustration">
+                <div class="logo-placeholder"></div>
+            </div>
+
+            <div class="col-lg-4 offset-lg-1">
+                <div class="auth-form-box">
+                    <h1>Forgot Password?</h1>
+                    <p class="subtitle">Enter your email and we'll send you a code to reset your password.</p>
+                    
+                    <form id="otpForm">
+    <input 
+        type="text"
+        id="otp"
+        class="underline-input text-center"
+        placeholder="Enter 6-digit OTP"
+        maxlength="6"
+        required
+    >
+    <button type="submit" class="btn-wings">Verify Code</button>
+</form>
+
+                    
+                    <div class="mt-4 text-center">
+                        <a href="login.html" class="text-decoration-none text-dark small fw-medium">Back to Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <p class="footer-text">400 University Drive Suite 200 Coral Gables, <br>FL 33134 USA</p>
+                </div>
+                <div class="col-lg-2 col-6 mb-4">
+                    <span class="footer-title">Links</span>
+                    <a href="index.html" class="footer-link">Home</a>
+                    <a href="shop.html" class="footer-link">Shop</a>
+                </div>
+                <div class="col-lg-2 col-6 mb-4">
+                    <span class="footer-title">Help</span>
+                    <a href="#" class="footer-link">Returns</a>
+                    <a href="#" class="footer-link">Privacy Policies</a>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <span class="footer-title">Newsletter</span>
+                    <div class="d-flex align-items-end border-bottom pb-1" style="max-width: 300px;">
+                        <input type="email" class="newsletter-input" placeholder="Enter Your Email Address">
+                        <button class="subscribe-btn">SUBSCRIBE</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Responsive Search Logic
+        document.getElementById('search-trigger').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (window.innerWidth < 992) {
+                const mobileInput = document.getElementById('search-input-mobile');
+                mobileInput.classList.toggle('active');
+                if (mobileInput.classList.contains('active')) mobileInput.focus();
+            } else {
+                const desktopInput = document.getElementById('search-desktop');
+                desktopInput.classList.toggle('active');
+                if (desktopInput.classList.contains('active')) desktopInput.focus();
+            }
+        });
+    </script>
+    <script>
+document.getElementById('otpForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const otp = document.getElementById('otp').value.trim();
+
+    try {
+        const response = await fetch('/api/verify-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ otp })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert("✅ OTP verified successfully");
+            window.location.href = "changepassword.html";
+        } else {
+            alert("❌ " + result.message);
+        }
+
+    } catch (error) {
+        alert("Server error");
+    }
+});
+</script>
+
+</body>
+</html>

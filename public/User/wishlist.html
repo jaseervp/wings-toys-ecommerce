@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist | ToyStore</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --soft-bg: #FAF4F4;
+            --price-red: #FF6464;
+        }
+
+        body { font-family: 'Poppins', sans-serif; color: #000; margin: 0; background-color: #fff; }
+        
+       
+        /* --- NAVIGATION --- */
+        .nav-link { font-weight: 600; color: #000 !important; margin: 0 15px; }
+        
+        .search-input-desktop {
+            width: 0; opacity: 0; border: none; border-bottom: 2px solid #000;
+            outline: none; transition: all 0.4s ease; padding: 0; background: transparent;
+        }
+
+        .search-input-desktop.active { width: 200px; opacity: 1; padding: 0 10px; margin-right: 10px; }
+
+        .search-input-mobile {
+            width: 100%; height: 0; opacity: 0; padding: 0; border: none;
+            border-bottom: 2px solid #000; transition: all 0.3s ease; outline: none; overflow: hidden;
+        }
+
+        .search-input-mobile.active { height: 45px; opacity: 1; padding: 10px 0; margin-top: 15px; }
+
+
+        /* --- HERO BANNER --- */
+        .page-header {
+            background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), 
+                        url('https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?q=80&w=1200');
+            background-size: cover; background-position: center;
+            padding: 80px 0; text-align: center;
+        }
+        .page-header h1 { font-size: 3rem; font-weight: 500; margin: 0; }
+
+        /* --- WISHLIST GRID --- */
+        .wishlist-container { padding: 80px 0; }
+        .wishlist-title { font-size: 1.2rem; font-weight: 500; margin-bottom: 40px; }
+
+        .product-card {
+            border: none;
+            background: #F9F9F9;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            transition: 0.3s;
+            height: 300px; /* Fixed height for image area */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .img-container img {
+            max-width: 180px;
+            max-height: 180px;
+            object-fit: contain;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #000;
+            z-index: 10;
+        }
+
+        /* --- HOVER ADD TO CART BUTTON --- */
+        .add-to-cart-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            background: #000;
+            color: #fff;
+            text-align: center;
+            padding: 12px 0;
+            font-size: 0.9rem;
+            width: 100%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            /* Hidden state */
+            opacity: 0;
+            transform: translateY(100%);
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Show button on hover */
+        .product-card:hover .add-to-cart-bar {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .product-info {
+            padding: 15px 0;
+            background: #fff;
+        }
+
+        .product-name { font-weight: 500; margin-bottom: 5px; font-size: 1rem; }
+        .product-price { color: var(--price-red); font-weight: 600; font-size: 0.9rem; }
+
+        /* --- FEATURES & FOOTER (Consistent with design) --- */
+        .features { background: var(--soft-bg); padding: 80px 0; margin-top: 40px; }
+        footer { background: #000; color: #fff; padding: 80px 0 30px; }
+        footer a { color: #fff; display: block; margin-bottom: 20px; text-decoration: none; font-size: 0.9rem; }
+        .footer-title { color: #9F9F9F; font-weight: 400; margin-bottom: 40px; display: block; font-size: 0.9rem; }
+        .footer-address { color: #9F9F9F; line-height: 2; font-size: 0.85rem; margin-bottom: 40px; }
+        .newsletter-form { display: flex; border-bottom: 1px solid #fff; padding-bottom: 5px; width: fit-content; }
+        .newsletter-input { background: transparent; border: none; color: #fff; font-size: 0.85rem; outline: none; width: 200px; }
+        .newsletter-btn { background: transparent; border: none; color: #fff; font-weight: 600; font-size: 0.8rem; padding-left: 15px; }
+        .copyright { border-top: 1px solid #222; margin-top: 60px; padding-top: 30px; font-size: 0.85rem; color: #9F9F9F; }
+    </style>
+</head>
+<body>
+
+     <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+        <div class="container d-flex align-items-center flex-wrap">
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <a class="navbar-brand ms-2" href="index.html">
+                <img src="/Images/logo wings.png" alt="Logo" style="height: 40px;">
+            </a>
+
+            <div class="d-flex gap-3 align-items-center ms-auto order-lg-3">
+                <a href="#"><i class="bi bi-person fs-5 text-dark"></i></a>
+                
+                <div class="search-container d-flex align-items-center">
+                    <input type="text" id="search-desktop" class="search-input-desktop d-none d-lg-block" placeholder="Search...">
+                    <button id="search-trigger" class="btn p-0 border-0 shadow-none">
+                        <i class="bi bi-search fs-5 text-dark"></i>
+                    </button>
+                </div>
+
+                <a href="wishlist.html"><i class="bi bi-heart fs-5 text-dark"></i></a>
+                <a href="cart.html"><i class="bi bi-cart fs-5 text-dark"></i></a>
+            </div>
+
+            <div class="search-full-width-wrapper w-100 order-4 d-lg-none">
+                 <input type="text" id="search-input-mobile" class="search-input-mobile" placeholder="Search toys...">
+            </div>
+
+            <div class="collapse navbar-collapse justify-content-center order-lg-2" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h1>Wish List</h1>
+        </div>
+    </header>
+
+    <main class="container wishlist-container">
+        <h2 class="wishlist-title">Wishlist (3)</h2>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="product-card">
+                    <button class="delete-btn"><i class="bi bi-trash"></i></button>
+                    <div class="img-container">
+                        <img src="/Images/11314863.png" alt="Teddy Bear">
+                    </div>
+                    <button class="add-to-cart-bar">
+                        <i class="bi bi-cart3"></i> Add To Cart
+                    </button>
+                </div>
+                <div class="product-info text-start">
+                    <div class="product-name">Teddy Bear</div>
+                    <div class="product-price">Rs.500</div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="product-card">
+                    <button class="delete-btn"><i class="bi bi-trash"></i></button>
+                    <div class="img-container">
+                        <img src="/Images/fab4ed68-614d-492a-9ed4-8ba885a7060e-removebg-preview.png" alt="Supra Toy Car">
+                    </div>
+                    <button class="add-to-cart-bar">
+                        <i class="bi bi-cart3"></i> Add To Cart
+                    </button>
+                </div>
+                <div class="product-info text-start">
+                    <div class="product-name">Supra Toy Car</div>
+                    <div class="product-price">Rs.600</div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="product-card">
+                    <button class="delete-btn"><i class="bi bi-trash"></i></button>
+                    <div class="img-container">
+                        <img src="/Images/Pop_Race_1_64_Darwin_PRO_66G_WBK_Supra__A90__-_1087X_LION_DANCE_Pink_-_PR64-0285-removebg-preview.png" alt="Puzzle">
+                    </div>
+                    <button class="add-to-cart-bar">
+                        <i class="bi bi-cart3"></i> Add To Cart
+                    </button>
+                </div>
+                <div class="product-info text-start">
+                    <div class="product-name">Puzzle</div>
+                    <div class="product-price">Rs.700</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section class="features">
+        <div class="container">
+            <div class="row text-start">
+                <div class="col-md-4"><h3>Free Delivery</h3><p>For all orders over $50...</p></div>
+                <div class="col-md-4"><h3>90 Days Return</h3><p>If goods have problems...</p></div>
+                <div class="col-md-4"><h3>Secure Payment</h3><p>100% secure payment...</p></div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4"><p class="footer-address">400 University Drive Suite 200...</p></div>
+                <div class="col-lg-4"><span class="footer-title">Links</span><a href="#">Home</a><a href="#">Shop</a></div>
+                <div class="col-lg-4"><span class="footer-title">Newsletter</span><div class="newsletter-form"><input type="email" class="newsletter-input" placeholder="Email"><button class="newsletter-btn">SUBSCRIBE</button></div></div>
+            </div>
+            <div class="copyright">2022 Meubel House. All rights reserved</div>
+        </div>
+    </footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('search-trigger').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (window.innerWidth < 992) {
+                const mobileInput = document.getElementById('search-input-mobile');
+                mobileInput.classList.toggle('active');
+                if (mobileInput.classList.contains('active')) mobileInput.focus();
+            } else {
+                const desktopInput = document.getElementById('search-desktop');
+                desktopInput.classList.toggle('active');
+                if (desktopInput.classList.contains('active')) desktopInput.focus();
+            }
+        });
+    </script>
+</body>
+</html>

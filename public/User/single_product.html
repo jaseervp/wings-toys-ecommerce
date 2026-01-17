@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pop Race Supra - Product Detail</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --accent-bg: #FFF9E5;
+            --text-muted: #9F9F9F;
+            --black: #000000;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--black);
+            background-color: #fff;
+            margin: 0;
+        }
+
+        .search-container {
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .search-input {
+            width: 0;
+            padding: 0;
+            border: none;
+            border-bottom: 2px solid #000;
+            outline: none;
+            background: transparent;
+            transition: width 0.4s ease, padding 0.4s ease;
+            font-size: 14px;
+        }
+
+        /* This class will be toggled by JavaScript */
+        .search-input.active {
+            width: 200px;
+            /* Adjust width as needed */
+            padding: 0 10px;
+            margin-right: 10px;
+        }
+
+        #search-trigger {
+            cursor: pointer;
+            background: none;
+        }
+
+      
+        /* --- NAVIGATION --- */
+        .nav-link { font-weight: 600; color: #000 !important; margin: 0 15px; }
+        
+        .search-input-desktop {
+            width: 0; opacity: 0; border: none; border-bottom: 2px solid #000;
+            outline: none; transition: all 0.4s ease; padding: 0; background: transparent;
+        }
+
+        .search-input-desktop.active { width: 200px; opacity: 1; padding: 0 10px; margin-right: 10px; }
+
+        .search-input-mobile {
+            width: 100%; height: 0; opacity: 0; padding: 0; border: none;
+            border-bottom: 2px solid #000; transition: all 0.3s ease; outline: none; overflow: hidden;
+        }
+
+        .search-input-mobile.active { height: 45px; opacity: 1; padding: 10px 0; margin-top: 15px; }
+
+        /* --- BREADCRUMB --- */
+        .breadcrumb-section {
+            padding: 30px 0;
+        }
+
+        .breadcrumb-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+        }
+
+        .bc-muted {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .bc-active {
+            color: var(--black);
+            font-weight: 500;
+            border-left: 2px solid #D9D9D9;
+            padding-left: 20px;
+        }
+
+        /* --- PRODUCT GALLERY --- */
+        .thumb-col img {
+            width: 76px;
+            height: 80px;
+            object-fit: contain;
+            background: var(--accent-bg);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .main-img-container {
+            width: 100%;
+            height: 500px;
+            background: var(--accent-bg);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-img-container img {
+            max-width: 85%;
+            object-fit: contain;
+        }
+
+        /* --- PRODUCT INFORMATION --- */
+        .product-title {
+            font-size: 2.8rem;
+            font-weight: 400;
+            margin: 0;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .review-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            color: #FFDA5B;
+            font-size: 0.85rem;
+        }
+
+        .review-count {
+            color: var(--text-muted);
+            border-left: 1px solid #D9D9D9;
+            padding-left: 15px;
+        }
+
+        .opt-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .size-box {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            background: #FAF4F4;
+            border-radius: 5px;
+            margin-right: 12px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .size-box.active {
+            background: #FBEBB5;
+        }
+
+        .color-dot {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        .qty-group {
+            border: 1px solid var(--text-muted);
+            border-radius: 10px;
+            width: 120px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+        }
+
+        .btn-add {
+            border: 1px solid var(--black);
+            background: transparent;
+            padding: 12px 50px;
+            border-radius: 15px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .btn-add:hover {
+            background: var(--black);
+            color: #fff;
+        }
+
+        .prod-meta {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 2.2;
+            border-top: 1px solid #f4f4f4;
+            padding-top: 30px;
+            margin-top: 30px;
+        }
+
+        .prod-meta strong {
+            color: var(--text-muted);
+            font-weight: 400;
+            width: 80px;
+            display: inline-block;
+        }
+
+        /* --- DESCRIPTION TABS --- */
+        .nav-tabs {
+            border: none;
+            justify-content: center;
+            gap: 50px;
+            margin-top: 60px;
+            border-top: 1px solid #f4f4f4;
+            padding-top: 40px;
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.3rem;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: var(--black);
+            font-weight: 500;
+            background: none;
+        }
+
+        .tab-desc {
+            max-width: 900px;
+            margin: 30px auto;
+            text-align: left;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .tab-img-bg {
+            background: var(--accent-bg);
+            border-radius: 10px;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* --- RELATED PRODUCTS GRID --- */
+        .product-card {
+            border: none;
+            background: #fff;
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 40px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            transform: translateY(-10px);
+        }
+
+        .img-container {
+            background-color: var(--soft-bg);
+            border-radius: 15px;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* .product-card img {
+            max-width: 80%; transition: transform 0.5s ease;
+        } */
+        /* .product-card:hover img { transform: scale(1.1) rotate(2deg); } */
+
+        /* Hover Overlay Actions */
+        .card-actions {
+            position: absolute;
+            bottom: -60px;
+            left: 0;
+            right: 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            transition: bottom 0.3s ease;
+        }
+
+        .product-card:hover .card-actions {
+            bottom: 0;
+        }
+
+        .action-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #000;
+            color: #fff;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-bg);
+            color: #000;
+        }
+
+        .product-info {
+            margin-top: 15px;
+        }
+
+        .product-info p {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 5px;
+        }
+
+        .product-info h5 {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #1a1a1a;
+        }
+
+        .price {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #000;
+        }
+
+        /* --- VIEW MORE BUTTON STYLE --- */
+        .view-more-container {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 60px;
+        }
+
+        .view-more-btn {
+            display: inline-block;
+            color: #000;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.2rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #000;
+            /* The signature underline */
+            transition: all 0.3s ease;
+        }
+
+        .view-more-btn:hover {
+            color: var(--text-muted);
+            border-bottom-color: var(--text-muted);
+            transform: translateY(-2px);
+        }
+
+        /* --- FOOTER SECTIONS --- */
+        .features {
+            background-color: var(--soft-bg);
+            padding: 80px 0;
+        }
+
+        footer {
+            background: #000;
+            color: #fff;
+            padding: 80px 0 20px;
+        }
+
+        footer a {
+            color: #9F9F9F;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 12px;
+            transition: 0.3s;
+        }
+
+        footer a:hover {
+            color: #fff;
+            padding-left: 5px;
+        }
+
+        .footer-input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #fff;
+            color: #fff;
+            border-radius: 0;
+            width: 100%;
+        }
+
+        .btn-subscribe {
+            border: none;
+            border-bottom: 2px solid #fff;
+            background: transparent;
+            color: #fff;
+            font-weight: 700;
+            padding: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+       <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+        <div class="container d-flex align-items-center flex-wrap">
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <a class="navbar-brand ms-2" href="index.html">
+                <img src="/Images/logo wings.png" alt="Logo" style="height: 40px;">
+            </a>
+
+            <div class="d-flex gap-3 align-items-center ms-auto order-lg-3">
+                <a href="#"><i class="bi bi-person fs-5 text-dark"></i></a>
+                
+                <div class="search-container d-flex align-items-center">
+                    <input type="text" id="search-desktop" class="search-input-desktop d-none d-lg-block" placeholder="Search...">
+                    <button id="search-trigger" class="btn p-0 border-0 shadow-none">
+                        <i class="bi bi-search fs-5 text-dark"></i>
+                    </button>
+                </div>
+
+                <a href="wishlist.html"><i class="bi bi-heart fs-5 text-dark"></i></a>
+                <a href="cart.html"><i class="bi bi-cart fs-5 text-dark"></i></a>
+            </div>
+
+            <div class="search-full-width-wrapper w-100 order-4 d-lg-none">
+                 <input type="text" id="search-input-mobile" class="search-input-mobile" placeholder="Search toys...">
+            </div>
+
+            <div class="collapse navbar-collapse justify-content-center order-lg-2" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container breadcrumb-section">
+        <div class="breadcrumb-container">
+            <a href="index.html" class="bc-muted">Home</a> <i class="bi bi-chevron-right small"></i>
+            <a href="shop.html" class="bc-muted">Shop</a> <i class="bi bi-chevron-right small"></i>
+            <span class="bc-active">Pop Race Supra</span>
+        </div>
+    </div>
+
+    <div class="container py-4">
+        <div class="row">
+           <div class="col-md-1 d-none d-md-block thumb-col" id="thumbContainer">
+  <!-- thumbnails injected here -->
+</div>
+            <div class="col-md-5">
+  <div class="main-img-container">
+    <img id="mainProductImage" src="" alt="Product Image">
+  </div>
+</div>
+
+         
+            <div class="col-md-6 ps-md-5">
+
+  <h1 class="product-title" id="productName"></h1>
+
+  <div class="product-price" id="productPrice"></div>
+
+  <p class="text-muted small mb-4" id="productDescription"></p>
+
+  <!-- ADD TO CART AREA -->
+  <div class="d-flex align-items-center gap-3 mb-4">
+
+    <!-- Quantity Selector -->
+    <div class="qty-group">
+      <button class="btn btn-sm btn-light" onclick="changeQty(-1)">−</button>
+      <span id="productQty">1</span>
+      <button class="btn btn-sm btn-light" onclick="changeQty(1)">+</button>
+    </div>
+
+    <!-- Add to Cart Button -->
+    <button class="btn btn-add" onclick="addToCart()">
+      <i class="bi bi-cart-plus me-2"></i> Add to Cart
+    </button>
+
+  </div>
+
+  <div class="prod-meta">
+    <div><strong>SKU</strong>: <span id="productSKU"></span></div>
+    <div><strong>Category</strong>: <span id="productCategory"></span></div>
+  </div>
+
+</div>
+
+
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        <ul class="nav nav-tabs">
+            <li class="nav-item"><a class="nav-link active" href="#">Description</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Additional Information</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Reviews [5]</a></li>
+        </ul>
+        <div class="tab-desc">
+            <p>This toy sports car features a bold racing design with vibrant, eye-catching graphics that instantly grab
+                attention. Its sleek aerodynamic body, detailed exterior, and sporty wheels give it a realistic
+                racing-car feel. Built with a durable and sturdy structure, the car is made to withstand regular play
+                while providing smooth and effortless rolling action on different surfaces.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="tab-img-bg"><img src="/Images/tumbnail2.png" class="img-fluid" alt="Detail View 1"></div>
+            </div>
+            <div class="col-md-6">
+                <div class="tab-img-bg"><img src="/Images/tumbnail2.png" class="img-fluid" alt="Detail View 2"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="related-section">
+        <div class="container text-center">
+            <h2 class="related-title">Related Products</h2>
+            <div class="row g-4 text-start">
+                <div class="col-md-3">
+                    <div class="product-card">
+                        <div class="img-container">
+                            <img src="/Images/Pop_Race_1_64_Darwin_PRO_66G_WBK_Supra__A90__-_1087X_LION_DANCE_Pink_-_PR64-0285-removebg-preview.png"
+                                alt="Toy Bike">
+                            <div class="card-actions">
+                                <button class="action-btn"><i class="bi bi-cart-plus"></i></button>
+                                <button class="action-btn"><i class="bi bi-heart"></i></button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <p>Models</p>
+                            <h5>Green toy bicycle model</h5>
+                            <div class="price">Rs. 2,500.00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="product-card">
+                        <div class="img-container">
+                            <img src="/Images/11314863.png"
+                                alt="Jeep">
+                            <div class="card-actions">
+                                <button class="action-btn"><i class="bi bi-cart-plus"></i></button>
+                                <button class="action-btn"><i class="bi bi-heart"></i></button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <p>Off-Road</p>
+                            <h5>Large off-road toy jeep</h5>
+                            <div class="price">Rs. 2,000.00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="product-card">
+                        <div class="img-container">
+                            <img src="/Images/images.jpg"
+                                alt="Jeep">
+                            <div class="card-actions">
+                                <button class="action-btn"><i class="bi bi-cart-plus"></i></button>
+                                <button class="action-btn"><i class="bi bi-heart"></i></button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <p>Off-Road</p>
+                            <h5>Large off-road toy jeep</h5>
+                            <div class="price">Rs. 2,000.00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="product-card">
+                        <div class="img-container">
+                            <img src="/Images/mink-mingle-Riz1qAplMQk-unsplash (1).jpg"
+                                alt="Supra">
+                            <div class="card-actions">
+                                <button class="action-btn"><i class="bi bi-cart-plus"></i></button>
+                                <button class="action-btn"><i class="bi bi-heart"></i></button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <p>Racing</p>
+                            <h5>Pop Race Supra Edition</h5>
+                            <div class="price">Rs. 2,000.00</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="view-more-container">
+            <a href="shop.html" class="view-more-btn">View More</a>
+        </div>
+    </div>
+    </div>
+
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-5">
+                    <p class="text-secondary">400 University Drive Suite 200 Coral Gables, FL 33134 USA</p>
+                </div>
+                <div class="col-md-2 mb-5">
+                    <h6 class="fw-bold mb-4">Links</h6>
+                    <a href="#">Home</a><a href="#">Shop</a><a href="#">About</a><a href="#">Contact</a>
+                </div>
+                <div class="col-md-2 mb-5">
+                    <h6 class="fw-bold mb-4">Help</h6>
+                    <a href="#">Payment Options</a><a href="#">Returns</a><a href="#">Privacy Policies</a>
+                </div>
+                <div class="col-md-4 mb-5">
+                    <h6 class="fw-bold mb-4">Newsletter</h6>
+                    <div class="d-flex gap-3">
+                        <input type="email" class="footer-input" placeholder="Enter Your Email Address">
+                        <button class="btn-subscribe">SUBSCRIBE</button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-top border-secondary pt-4 text-secondary small">
+                2022 Meubel House. All rights reserved
+            </div>
+        </div>
+    </footer>
+
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+            const searchTrigger = document.getElementById('search-trigger');
+            const searchInput = document.getElementById('search-input');
+
+            searchTrigger.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                // Toggle the 'active' class to swipe it out
+                searchInput.classList.toggle('active');
+
+                // If it's active, put the cursor inside the box
+                if (searchInput.classList.contains('active')) {
+                    searchInput.focus();
+                } else {
+                    // If user types something and closes it, you could trigger search here
+                    if (searchInput.value !== "") {
+                        console.log("Searching for: " + searchInput.value);
+                    }
+                }
+            });
+
+            // Optional: Close search if user clicks anywhere else on the screen
+            document.addEventListener('click', (e) => {
+                if (!searchTrigger.contains(e.target) && !searchInput.contains(e.target)) {
+                    searchInput.classList.remove('active');
+                }
+            });
+        });
+</script>
+<script>
+        document.getElementById('search-trigger').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (window.innerWidth < 992) {
+                const mobileInput = document.getElementById('search-input-mobile');
+                mobileInput.classList.toggle('active');
+                if (mobileInput.classList.contains('active')) mobileInput.focus();
+            } else {
+                const desktopInput = document.getElementById('search-desktop');
+                desktopInput.classList.toggle('active');
+                if (desktopInput.classList.contains('active')) desktopInput.focus();
+            }
+        });
+    </script>
+<script>
+async function loadSingleProduct() {
+  const id = new URLSearchParams(window.location.search).get("id");
+  if (!id) return;
+
+  const res = await fetch(`/api/products/${id}`);
+  const product = await res.json();
+
+  // Main image
+  const mainImg = document.getElementById("mainProductImage");
+  mainImg.src = product.images?.[0] || "/placeholder.png";
+
+  // Thumbnails
+  const thumbContainer = document.getElementById("thumbContainer");
+  thumbContainer.innerHTML = "";
+
+  product.images.forEach(img => {
+    const thumb = document.createElement("img");
+    thumb.src = img;
+    thumb.onclick = () => (mainImg.src = img);
+    thumbContainer.appendChild(thumb);
+  });
+
+  // Info
+  document.getElementById("productName").textContent = product.name;
+  document.getElementById("productPrice").textContent = `Rs. ${product.finalPrice}.00`;
+  document.getElementById("productDescription").textContent = product.description;
+  document.getElementById("productSKU").textContent = product.sku;
+  document.getElementById("productCategory").textContent =
+    product.category?.name || "Uncategorized";
+}
+
+document.addEventListener("DOMContentLoaded", loadSingleProduct);
+
+</script>
+
+</html>
