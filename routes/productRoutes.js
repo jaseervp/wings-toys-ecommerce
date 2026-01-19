@@ -5,7 +5,8 @@ const {
   addProduct,
   getAllProducts,
   deleteProduct,
-  getSingleProduct
+  getSingleProduct,
+  getRelatedProducts
 } = require("../controllers/productController");
 
 
@@ -81,6 +82,13 @@ router.get("/products", async (req, res) => {
 ========================= */
 router.get("/products/:id", getSingleProduct);
 
+/* =========================
+   🔁 GET RELATED PRODUCTS (PUBLIC)
+========================= */
+router.get(
+  "/products/:id/related",
+  getRelatedProducts
+);
 
 module.exports = router;
 

@@ -36,6 +36,8 @@ mongoose.connect(dbURI)
 app.use('/api', authRoutes);
 app.use("/api", categoryRoutes);
 app.use("/api", productRoutes);
+app.use("/api", require("./routes/cartRoutes"));
+
 
 // 3. START SERVER using ENV variable
 const PORT = process.env.PORT || 5000; // Use port from .env or default to 5000

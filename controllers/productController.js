@@ -116,4 +116,36 @@ exports.getSingleProduct = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+/* =========================
+   🔁 GET RELATED PRODUCTS (PUBLIC)
+   GET /api/products/:id/related
+========================= */
+exports.getRelatedProducts = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Current product
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Related products (same category, exclude itself)
+    const relatedProducts = await Product.find({
+      category: product.category,
+      _id: { $ne: id },
+      isActive: true
+    })
+      .limit(4)
+      .populate("category", "name")
+      .select("name finalPrice images category");
+
+    res.status(200).json(relatedProducts);
+
+  } catch (error) {
+    console.error("RELATED PRODUCTS ERROR:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 

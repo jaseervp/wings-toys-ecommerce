@@ -262,98 +262,111 @@
             justify-content: center;
         }
 
-        /* --- RELATED PRODUCTS GRID --- */
-        .product-card {
-            border: none;
-            background: #fff;
-            border-radius: 20px;
-            padding: 15px;
-            margin-bottom: 40px;
-            text-align: center;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-        }
+       /* ===============================
+   RELATED PRODUCTS – EXACT SHOP DESIGN
+================================ */
 
-        .product-card:hover {
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-            transform: translateY(-10px);
-        }
+/* CARD */
+.related-section .product-card {
+  background: #fff;
+  border-radius: 22px;
+  padding: 14px;
+  border: 1px solid #f1f1f1;
+  transition: all 0.3s ease;
+  height: 100%;
+  cursor: pointer;
+}
 
-        .img-container {
-            background-color: var(--soft-bg);
-            border-radius: 15px;
-            height: 250px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
+.related-section .product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 30px rgba(0,0,0,0.08);
+}
 
-        /* .product-card img {
-            max-width: 80%; transition: transform 0.5s ease;
-        } */
-        /* .product-card:hover img { transform: scale(1.1) rotate(2deg); } */
+/* IMAGE AREA */
+.related-section .img-container {
+  background: #F9F9F9;
+  border-radius: 18px;
+  height: 230px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
 
-        /* Hover Overlay Actions */
-        .card-actions {
-            position: absolute;
-            bottom: -60px;
-            left: 0;
-            right: 0;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.9);
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            transition: bottom 0.3s ease;
-        }
+.related-section .img-container img {
+  max-width: 85%;
+  max-height: 85%;
+  transition: transform 0.4s ease;
+}
 
-        .product-card:hover .card-actions {
-            bottom: 0;
-        }
+.related-section .product-card:hover .img-container img {
+  transform: scale(1.08);
+}
 
-        .action-btn {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: #000;
-            color: #fff;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-            cursor: pointer;
-        }
+/* FLOATING ACTION BUTTONS (RIGHT SIDE) */
+.related-section .card-actions {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-        .action-btn:hover {
-            background: var(--primary-bg);
-            color: #000;
-        }
+.related-section .action-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #fff;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.25s ease;
+  color: #000;
+}
 
-        .product-info {
-            margin-top: 15px;
-        }
+.related-section .action-btn:hover {
+  background: #000;
+  color: #fff;
+}
 
-        .product-info p {
-            font-size: 0.9rem;
-            color: #888;
-            margin-bottom: 5px;
-        }
+/* TEXT */
+.related-section .product-info {
+  padding-top: 14px;
+}
 
-        .product-info h5 {
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: #1a1a1a;
-        }
+.related-section .category {
+  font-size: 0.75rem;
+  color: #9F9F9F;
+  margin-bottom: 4px;
+}
 
-        .price {
-            font-weight: 700;
-            font-size: 1.2rem;
-            color: #000;
-        }
+.related-section .product-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 6px;
+}
+
+.related-section .price {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #B88E2F;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .related-section .img-container {
+    height: 180px;
+  }
+
+  .related-section .product-name {
+    font-size: 0.9rem;
+  }
+}
 
         /* --- VIEW MORE BUTTON STYLE --- */
         .view-more-container {
@@ -422,6 +435,36 @@
             font-weight: 700;
             padding: 5px 0;
         }
+
+     /* Tab image container */
+.tab-img-bg {
+  background: #F9F9F9;
+  border-radius: 12px;
+  padding: 12px;
+  height: 220px;          /* ⬅ reduce area height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Actual image */
+.tab-img-bg img {
+  max-width: 85%;         /* ⬅ reduce width */
+  max-height: 180px;      /* ⬅ reduce height */
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .tab-img-bg {
+    height: 180px;
+  }
+
+  .tab-img-bg img {
+    max-height: 140px;
+  }
+}
+
+
     </style>
 </head>
 
@@ -448,7 +491,15 @@
                 </div>
 
                 <a href="wishlist.html"><i class="bi bi-heart fs-5 text-dark"></i></a>
-                <a href="cart.html"><i class="bi bi-cart fs-5 text-dark"></i></a>
+               <a href="cart.html" class="position-relative">
+  <i class="bi bi-cart fs-5 text-dark"></i>
+  <span id="cartCount"
+        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+        style="font-size:0.65rem; display:none;">
+    0
+  </span>
+</a>
+
             </div>
 
             <div class="search-full-width-wrapper w-100 order-4 d-lg-none">
@@ -500,15 +551,20 @@
 
     <!-- Quantity Selector -->
     <div class="qty-group">
-      <button class="btn btn-sm btn-light" onclick="changeQty(-1)">−</button>
-      <span id="productQty">1</span>
-      <button class="btn btn-sm btn-light" onclick="changeQty(1)">+</button>
-    </div>
+  <button class="btn btn-sm btn-light" onclick="changeQty(-1)">−</button>
+  <span id="productQty">1</span>
+  <button class="btn btn-sm btn-light" onclick="changeQty(1)">+</button>
+</div>
+
+
 
     <!-- Add to Cart Button -->
-    <button class="btn btn-add" onclick="addToCart()">
-      <i class="bi bi-cart-plus me-2"></i> Add to Cart
-    </button>
+    <button class="btn btn-add" onclick="addToCartFromProduct()">
+  <i class="bi bi-cart-plus me-2"></i> Add to Cart
+</button>
+
+
+
 
   </div>
 
@@ -535,99 +591,51 @@
                 racing-car feel. Built with a durable and sturdy structure, the car is made to withstand regular play
                 while providing smooth and effortless rolling action on different surfaces.</p>
         </div>
-        <div class="row g-4">
-            <div class="col-md-6">
-                <div class="tab-img-bg"><img src="/Images/tumbnail2.png" class="img-fluid" alt="Detail View 1"></div>
-            </div>
-            <div class="col-md-6">
-                <div class="tab-img-bg"><img src="/Images/tumbnail2.png" class="img-fluid" alt="Detail View 2"></div>
-            </div>
+
+        <div class="row g-4" id="tabImages">
+    <div class="col-md-6">
+        <div class="tab-img-bg">
+            <img id="tabImg1" class="img-fluid" alt="Detail View 1">
         </div>
     </div>
-
-    <div class="related-section">
-        <div class="container text-center">
-            <h2 class="related-title">Related Products</h2>
-            <div class="row g-4 text-start">
-                <div class="col-md-3">
-                    <div class="product-card">
-                        <div class="img-container">
-                            <img src="/Images/Pop_Race_1_64_Darwin_PRO_66G_WBK_Supra__A90__-_1087X_LION_DANCE_Pink_-_PR64-0285-removebg-preview.png"
-                                alt="Toy Bike">
-                            <div class="card-actions">
-                                <button class="action-btn"><i class="bi bi-cart-plus"></i></button>
-                                <button class="action-btn"><i class="bi bi-heart"></i></button>
-                            </div>
-                        </div>
-                        <div class="product-info">
-                            <p>Models</p>
-                            <h5>Green toy bicycle model</h5>
-                            <div class="price">Rs. 2,500.00</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="product-card">
-                        <div class="img-container">
-                            <img src="/Images/11314863.png"
-                                alt="Jeep">
-                            <div class="card-actions">
-                                <button class="action-btn"><i class="bi bi-cart-plus"></i></button>
-                                <button class="action-btn"><i class="bi bi-heart"></i></button>
-                            </div>
-                        </div>
-                        <div class="product-info">
-                            <p>Off-Road</p>
-                            <h5>Large off-road toy jeep</h5>
-                            <div class="price">Rs. 2,000.00</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="product-card">
-                        <div class="img-container">
-                            <img src="/Images/images.jpg"
-                                alt="Jeep">
-                            <div class="card-actions">
-                                <button class="action-btn"><i class="bi bi-cart-plus"></i></button>
-                                <button class="action-btn"><i class="bi bi-heart"></i></button>
-                            </div>
-                        </div>
-                        <div class="product-info">
-                            <p>Off-Road</p>
-                            <h5>Large off-road toy jeep</h5>
-                            <div class="price">Rs. 2,000.00</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="product-card">
-                        <div class="img-container">
-                            <img src="/Images/mink-mingle-Riz1qAplMQk-unsplash (1).jpg"
-                                alt="Supra">
-                            <div class="card-actions">
-                                <button class="action-btn"><i class="bi bi-cart-plus"></i></button>
-                                <button class="action-btn"><i class="bi bi-heart"></i></button>
-                            </div>
-                        </div>
-                        <div class="product-info">
-                            <p>Racing</p>
-                            <h5>Pop Race Supra Edition</h5>
-                            <div class="price">Rs. 2,000.00</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        <div class="view-more-container">
-            <a href="shop.html" class="view-more-btn">View More</a>
+    <div class="col-md-6">
+        <div class="tab-img-bg">
+            <img id="tabImg2" class="img-fluid" alt="Detail View 2">
         </div>
     </div>
+</div>
+
     </div>
+
+    <div class="related-section py-5">
+  <div class="container">
+    <h2 class="related-title text-center mb-4">Related Products</h2>
+
+    <div class="row g-4" id="relatedProducts">
+      <div class="text-center text-muted py-4 w-100">
+        Loading related products...
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <a href="shop.html" class="view-more-btn">View More</a>
+    </div>
+  </div>
+</div>
+
+    </div>
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:9999">
+  <div id="cartToast" class="toast text-bg-dark border-0">
+    <div class="d-flex">
+      <div class="toast-body" id="toastMsg">
+        Added to cart
+      </div>
+      <button type="button"
+              class="btn-close btn-close-white me-2 m-auto"
+              data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
 
 
     <footer>
@@ -660,83 +668,227 @@
 
 </body>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-            const searchTrigger = document.getElementById('search-trigger');
-            const searchInput = document.getElementById('search-input');
+/* =====================================================
+   GLOBAL STATE
+===================================================== */
+let currentProductId = null;
+let qty = 1;
 
-            searchTrigger.addEventListener('click', (e) => {
-                e.preventDefault();
+/* =====================================================
+   TOAST (Bootstrap)
+S
+===================================================== */
+function showToast(message) {
+  const toastEl = document.getElementById("cartToast");
+  const toastMsg = document.getElementById("toastMsg");
 
-                // Toggle the 'active' class to swipe it out
-                searchInput.classList.toggle('active');
+  if (!toastEl || !toastMsg || typeof bootstrap === "undefined") {
+    alert(message); // fallback safety
+    return;
+  }
 
-                // If it's active, put the cursor inside the box
-                if (searchInput.classList.contains('active')) {
-                    searchInput.focus();
-                } else {
-                    // If user types something and closes it, you could trigger search here
-                    if (searchInput.value !== "") {
-                        console.log("Searching for: " + searchInput.value);
-                    }
-                }
-            });
+  toastMsg.innerText = message;
+  new bootstrap.Toast(toastEl, { delay: 2000 }).show();
+}
 
-            // Optional: Close search if user clicks anywhere else on the screen
-            document.addEventListener('click', (e) => {
-                if (!searchTrigger.contains(e.target) && !searchInput.contains(e.target)) {
-                    searchInput.classList.remove('active');
-                }
-            });
-        });
-</script>
-<script>
-        document.getElementById('search-trigger').addEventListener('click', function(e) {
-            e.preventDefault();
-            if (window.innerWidth < 992) {
-                const mobileInput = document.getElementById('search-input-mobile');
-                mobileInput.classList.toggle('active');
-                if (mobileInput.classList.contains('active')) mobileInput.focus();
-            } else {
-                const desktopInput = document.getElementById('search-desktop');
-                desktopInput.classList.toggle('active');
-                if (desktopInput.classList.contains('active')) desktopInput.focus();
-            }
-        });
-    </script>
-<script>
+/* =====================================================
+   CART BADGE
+===================================================== */
+async function updateCartBadge() {
+  try {
+    const res = await fetch("/api/cart", { credentials: "include" });
+    if (!res.ok) return;
+
+    const data = await res.json();
+    const count = data.items.reduce((sum, i) => sum + i.quantity, 0);
+
+    const badge = document.getElementById("cartCount");
+    if (!badge) return;
+
+    badge.style.display = count > 0 ? "inline-block" : "none";
+    badge.innerText = count;
+  } catch (err) {
+    console.warn("Cart badge failed");
+  }
+}
+
+/* =====================================================
+   SEARCH TOGGLE (DESKTOP + MOBILE)
+===================================================== */
+document.getElementById("search-trigger")?.addEventListener("click", e => {
+  e.preventDefault();
+  const isMobile = window.innerWidth < 992;
+  const input = document.getElementById(
+    isMobile ? "search-input-mobile" : "search-desktop"
+  );
+  input?.classList.toggle("active");
+  if (input?.classList.contains("active")) input.focus();
+});
+
+/* =====================================================
+   LOAD SINGLE PRODUCT
+===================================================== */
 async function loadSingleProduct() {
   const id = new URLSearchParams(window.location.search).get("id");
   if (!id) return;
 
-  const res = await fetch(`/api/products/${id}`);
-  const product = await res.json();
+  try {
+    const res = await fetch(`/api/products/${id}`);
+    const product = await res.json();
 
-  // Main image
-  const mainImg = document.getElementById("mainProductImage");
-  mainImg.src = product.images?.[0] || "/placeholder.png";
+    currentProductId = product._id;
 
-  // Thumbnails
-  const thumbContainer = document.getElementById("thumbContainer");
-  thumbContainer.innerHTML = "";
+    document.getElementById("mainProductImage").src =
+      product.images?.[0] || "/placeholder.png";
 
-  product.images.forEach(img => {
-    const thumb = document.createElement("img");
-    thumb.src = img;
-    thumb.onclick = () => (mainImg.src = img);
-    thumbContainer.appendChild(thumb);
-  });
+    const thumbContainer = document.getElementById("thumbContainer");
+    if (thumbContainer) {
+      thumbContainer.innerHTML = "";
+      (product.images || []).forEach(img => {
+        const t = document.createElement("img");
+        t.src = img;
+        t.onclick = () =>
+          (document.getElementById("mainProductImage").src = img);
+        thumbContainer.appendChild(t);
+      });
+    }
 
-  // Info
-  document.getElementById("productName").textContent = product.name;
-  document.getElementById("productPrice").textContent = `Rs. ${product.finalPrice}.00`;
-  document.getElementById("productDescription").textContent = product.description;
-  document.getElementById("productSKU").textContent = product.sku;
-  document.getElementById("productCategory").textContent =
-    product.category?.name || "Uncategorized";
+    document.getElementById("productName").innerText = product.name;
+    document.getElementById("productPrice").innerText =
+      `Rs. ${product.finalPrice}.00`;
+    document.getElementById("productDescription").innerText =
+      product.description;
+    document.getElementById("productSKU").innerText = product.sku;
+    document.getElementById("productCategory").innerText =
+      product.category?.name || "Uncategorized";
+
+    document.getElementById("tabImg1")?.setAttribute(
+      "src",
+      product.images?.[0] || "/placeholder.png"
+    );
+    document.getElementById("tabImg2")?.setAttribute(
+      "src",
+      product.images?.[1] || product.images?.[0] || "/placeholder.png"
+    );
+
+  } catch (err) {
+    console.error("Load product error", err);
+  }
 }
 
-document.addEventListener("DOMContentLoaded", loadSingleProduct);
+/* =====================================================
+   LOAD RELATED / SHOP PRODUCTS
+===================================================== */
+async function loadRelatedProducts() {
+  const id = new URLSearchParams(window.location.search).get("id");
+  if (!id) return;
 
+  try {
+    const res = await fetch(`/api/products/${id}/related`);
+    const products = await res.json();
+
+    const container = document.getElementById("relatedProducts");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    if (!products.length) {
+      container.innerHTML = `<div class="text-center text-muted w-100">
+        No related products
+      </div>`;
+      return;
+    }
+
+    products.forEach(p => {
+      container.innerHTML += `
+      <div class="col-6 col-md-3">
+        <div class="product-card"
+          onclick="window.location.href='single_product.html?id=${p._id}'">
+          <div class="img-container">
+            <img src="${p.images?.[0] || 'https://via.placeholder.com/200'}">
+            <div class="card-actions">
+              <button class="action-btn"
+                onclick="event.stopPropagation(); addToCartShop('${p._id}', 1)">
+                <i class="bi bi-cart-plus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="product-info text-center">
+            <p class="category">${p.category?.name || ""}</p>
+            <h6 class="product-name">${p.name}</h6>
+            <div class="price">Rs. ${p.finalPrice}</div>
+          </div>
+        </div>
+      </div>`;
+    });
+
+  } catch (err) {
+    console.error("Related products error", err);
+  }
+}
+
+/* =====================================================
+   QUANTITY CONTROL (SINGLE PRODUCT)
+===================================================== */
+function changeQty(val) {
+  qty = Math.max(1, qty + val);
+  document.getElementById("productQty").innerText = qty;
+}
+
+/* =====================================================
+   ADD TO CART – SINGLE PRODUCT
+===================================================== */
+async function addToCartFromProduct() {
+  if (!currentProductId) {
+    showToast("Product not loaded");
+    return;
+  }
+  await addToCartShop(currentProductId, qty);
+}
+
+/* =====================================================
+   ADD TO CART – SHOP / RELATED
+===================================================== */
+
+async function addToCartShop(productId, quantity = 1) {
+  try {
+    const res = await fetch("/api/cart", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ productId, quantity })
+    });
+
+    if (!res.ok) {
+      showToast("🔒 Please login");
+      return;
+    }
+
+    showToast("🛒 Added to cart");
+    updateCartBadge();
+
+    // ✅ Redirect to cart page after 1 second
+    setTimeout(() => {
+      window.location.href = "cart.html";
+    }, 1000);
+
+  } catch {
+    showToast("❌ Failed to add");
+  }
+}
+
+
+
+/* =====================================================
+   INIT
+===================================================== */
+document.addEventListener("DOMContentLoaded", () => {
+  loadSingleProduct();
+  loadRelatedProducts();
+  updateCartBadge();
+});
 </script>
+
+
 
 </html>
