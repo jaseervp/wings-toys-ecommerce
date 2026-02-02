@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <style>
-          :root {
+        :root {
             --sidebar-width: 260px;
             --main-bg: #F8F9FD;
             --sidebar-bg: #ffffff;
@@ -18,11 +18,10 @@
             --text-dark: #2D3748;
             --text-gray: #A0AEC0;
             --card-border: #EDF2F7;
-            --table-header: #F1F6FF;
+            --table-header: #F8FAFC;
             --card-bg: #ffffff;
         }
 
-        /* DARK MODE VARIABLES */
         [data-theme="dark"] {
             --sidebar-bg: #1A202C;
             --main-bg: #11141D;
@@ -32,109 +31,115 @@
             --card-border: #2D3748;
             --table-header: #2D3748;
         }
+
         body { font-family: 'Poppins', sans-serif; background-color: var(--main-bg); margin: 0; display: flex; color: var(--text-dark); }
 
-        /* --- SIDEBAR --- */
-        .sidebar { width: var(--sidebar-width); background: var(--sidebar-bg); height: 100vh; position: fixed; border-right: 1px solid var(--card-border); display: flex; flex-direction: column; z-index: 1050; }
-        .sidebar-scroll { flex-grow: 1; overflow-y: auto; padding: 20px; }
+         /* --- SIDEBAR (Left Side) --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid var(--card-border);
+            display: flex;
+            flex-direction: column;
+            z-index: 1050;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-scroll {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
         .sidebar-brand img { height: 45px; margin-bottom: 25px; }
-        .menu-label { font-size: 0.75rem; color: var(--text-gray); text-transform: capitalize; margin: 20px 0 10px 10px; font-weight: 500; }
-        .nav-item { display: flex; align-items: center; padding: 12px 15px; color: var(--text-gray); text-decoration: none; border-radius: 10px; margin-bottom: 5px; font-size: 0.9rem; transition: 0.3s; }
+
+        .menu-label { 
+            font-size: 0.75rem; color: var(--text-gray); 
+            text-transform: capitalize; margin: 20px 0 10px 10px; font-weight: 500;
+        }
+
+        .nav-item {
+            display: flex; align-items: center; padding: 12px 15px;
+            color: var(--text-gray); text-decoration: none; border-radius: 10px;
+            margin-bottom: 5px; font-size: 0.9rem; transition: 0.2s;
+        }
+
         .nav-item.active { background: var(--accent-blue); color: #fff; }
         .nav-item i { margin-right: 12px; font-size: 1.1rem; }
-        
-        .admin-footer { padding: 20px; border-top: 1px solid var(--card-border); }
-        .admin-profile { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .nav-item:hover:not(.active) { background: rgba(108, 142, 239, 0.1); color: var(--accent-blue); }
+
+        /* Sidebar Bottom (Admin Section) */
+        .admin-footer {
+            padding: 20px; border-top: 1px solid var(--card-border); background: var(--sidebar-bg);
+        }
+
+        .admin-profile-box { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
         .admin-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; }
+        .admin-name { font-size: 0.85rem; font-weight: 600; color: var(--text-dark); margin: 0; }
+        .admin-email { font-size: 0.7rem; color: var(--text-gray); margin: 0; }
+
 
         /* --- MAIN CONTENT --- */
         .main-wrapper { margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); padding: 30px; }
-        
-        /* Top Navigation Style */
         .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; }
 
-        /* THE UNIFIED SEARCH STYLE FOR ALL SEARCH BARS */
-        .search-box {
-            background: var(--card-bg); 
-            border-radius: 12px; 
-            padding: 8px 20px;
-            display: flex; 
-            align-items: center;
-            border: 1px solid var(--card-border);
-        }
-        .search-box input { 
-            border: none; 
-            outline: none; 
-            background: transparent; 
-            color: var(--text-dark); 
-            width: 100%; 
-            font-size: 0.9rem;
-        }
-        .search-box i { 
-            color: var(--text-gray); 
-        }
-/* STAT CARDS - FIXED BACKGROUND */
-.stat-card { 
-    background: var(--card-bg); 
-    border: 1px solid var(--card-border); 
-    border-radius: 16px; 
-    padding: 20px; 
-    transition: all 0.3s ease;
+        /* --- SEARCH & FILTERS (IMAGE 3 STYLE) --- */
+        .filter-card { background: var(--card-bg); border-radius: 15px; padding: 25px; margin-bottom: 30px; border: 1px solid var(--card-border); }
+        .search-box { background: var(--card-bg); border-radius: 10px; padding: 8px 15px; display: flex; align-items: center; border: 1px solid var(--card-border); }
+        .search-box input { border: none; outline: none; background: transparent; color: var(--text-dark); width: 100%; font-size: 0.9rem; }
+        .filter-input { border: 1px solid var(--card-border); background: var(--card-bg); color: var(--text-dark); border-radius: 10px; padding: 10px; font-size: 0.9rem; }
+
+        /* --- STAT CARDS --- */
+        .stat-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 20px; margin-bottom: 20px; }
+        .stat-card h3 { font-size: 1.8rem; font-weight: 700; margin: 5px 0; color: var(--text-dark); }
+        .trend { font-size: 0.8rem; color: #48BB78; }
+
+        /* --- TABLE (IMAGE 3 STYLE) --- */
+        .order-section { background: var(--card-bg); border-radius: 15px; border: 1px solid var(--card-border); padding: 0; overflow: hidden; }
+        .order-table { width: 100%; border-collapse: collapse; }
+        .order-table th { background: var(--table-header); padding: 15px; font-size: 0.75rem; text-transform: uppercase; color: var(--text-gray); font-weight: 600; border-bottom: 1px solid var(--card-border); }
+        .order-table td { padding: 15px; font-size: 0.85rem; border-bottom: 1px solid var(--card-border); vertical-align: middle; }
+
+        /* Status Badges */
+  .status-shipped {
+  background: #EBF8FF;
+  border: 1px solid #90CDF4;
 }
 
-.stat-card h3 { 
-    font-size: 1.8rem; 
-    font-weight: 700; 
-    margin: 5px 0; 
-    color: var(--text-dark); /* This switches with the theme */
+.status-delivered {
+  background: #E6FFFA;
+  border: 1px solid #81E6D9;
 }
 
-.stat-card .trend { 
-    font-size: 0.8rem; 
-    color: #48BB78; 
+.status-canceled {
+  background: #FFF5F5;
+  color: #C53030;
+  border: 1px solid #FEB2B2;
 }
 
-/* This replaces the 'text-muted' behavior and uses your variables */
-.stat-card p { 
-    color: var(--text-gray) !important; 
-    margin: 0;
-}
-         /* --- TABLE & FILTER STYLES --- */
-        .order-section { background: var(--card-bg); border-radius: 20px; border: 1px solid var(--card-border); padding: 25px; margin-top: 30px; }
-        
-        .filter-tab { background: var(--table-header); border-radius: 10px; padding: 5px; display: inline-flex; }
-        .filter-tab button { border: none; background: transparent; padding: 6px 15px; font-size: 0.85rem; border-radius: 8px; color: var(--text-gray); }
-        .filter-tab button.active { background: var(--card-bg); color: var(--accent-blue); font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
-        .tool-btn { border: 1px solid var(--card-border); background: var(--card-bg); border-radius: 8px; padding: 8px; color: var(--text-gray); display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; }
+        /* Payment Badges */
+        .pay-cod { color: #4A5568; font-weight: 700; font-size: 0.7rem; }
+        .pay-wallet { color: #38B2AC; font-weight: 700; font-size: 0.7rem; }
 
-        .order-table { width: 100%; margin-top: 20px; border-collapse: separate; border-spacing: 0; }
-        .order-table thead { background: var(--table-header); }
-        .order-table th { padding: 15px; text-align: left; font-size: 0.85rem; color: var(--text-dark); border: none; }
-        .order-table td { padding: 15px; vertical-align: middle; border-bottom: 1px solid var(--card-border); font-size: 0.85rem; color: var(--text-dark); }
+        /* --- MODAL (IMAGE 1 & 2 STYLE) --- */
+        .modal-content { border-radius: 20px; border: none; }
+        .product-row { border: 1px solid #EDF2F7; border-radius: 12px; padding: 12px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+        .summary-box { border-top: 1px solid #EDF2F7; padding-top: 15px; margin-top: 15px; }
+        .summary-item { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem; }
 
-        
-         /* Status Badges */
-        .badge-delivered { background: #E6FFFA; color: #38B2AC; padding: 5px 12px; border-radius: 6px; font-weight: 600; }
-        .badge-shipped { background: #EBF2FF; color: #6C8EEF; padding: 5px 12px; border-radius: 6px; font-weight: 600; }
-        .badge-pending { background: #FFFBEB; color: #F6AD55; padding: 5px 12px; border-radius: 6px; font-weight: 600; }
-        .badge-canceled { background: #FFF5F5; color: #F56565; padding: 5px 12px; border-radius: 6px; font-weight: 600; }
-        
-       
-        /* Pagination */
-        .pagination-container { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; }
-        .page-btn { border: 1px solid var(--card-border); background: var(--card-bg); padding: 6px 15px; border-radius: 8px; font-size: 0.85rem; color: var(--text-dark); cursor: pointer; }
-        .page-numbers .num { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; cursor: pointer; font-size: 0.85rem; margin: 0 2px; border: 1px solid transparent; }
-        .page-numbers .num.active { background: #EBF2FF; color: var(--accent-blue); font-weight: 600; }
+        .theme-toggle { cursor: pointer; font-size: 1.2rem; color: var(--text-gray); }
+        .mobile-toggle { display: none; cursor: pointer; font-size: 1.5rem; }
 
-        /* Responsive Mobile */
         @media (max-width: 992px) {
             .sidebar { transform: translateX(-100%); position: fixed; }
             .sidebar.active { transform: translateX(0); }
             .main-wrapper { margin-left: 0; width: 100%; }
-            .mobile-toggle { display: block !important; }
+            .mobile-toggle { display: block; }
         }
-        .mobile-toggle { display: none; cursor: pointer; font-size: 1.5rem; }
     </style>
 </head>
 <body>
@@ -143,43 +148,44 @@
         <div class="sidebar-scroll">
             <div class="sidebar-brand"><img src="logo wings.png" alt="Wings"></div>
             <p class="menu-label">Main menu</p>
-            <a href="Dashbord.html" class="nav-item"><i class="bi bi-grid"></i> Dashboard</a>
+            <a href="Dashboard.html" class="nav-item "><i class="bi bi-grid"></i> Dashboard</a>
             <a href="OrderMangement.html" class="nav-item active"><i class="bi bi-cart"></i> Order Management</a>
             <a href="Customers.html" class="nav-item"><i class="bi bi-people"></i> Customers</a>
             <a href="Cuopon.html" class="nav-item"><i class="bi bi-ticket-perforated"></i> Coupon Code</a>
             <a href="Categories.html" class="nav-item"><i class="bi bi-tags"></i> Categories</a>
             <a href="Transaction.html" class="nav-item"><i class="bi bi-arrow-left-right"></i> Transaction</a>
-           <a href="Offers.html" class="nav-item "><i class="bi bi-megaphone"></i> Offers & Ads</a>
+            <a href="Offers.html" class="nav-item "><i class="bi bi-megaphone"></i> Offers & Ads</a>
+           
 
             <p class="menu-label">Product</p>
             <a href="AddProduct.html" class="nav-item"><i class="bi bi-plus-circle"></i> Add Products</a>
-          
+           
             <a href="ProductList.html" class="nav-item"><i class="bi bi-list-ul"></i> Product List</a>
             <a href="ProductReviews.html" class="nav-item"><i class="bi bi-chat-left-text"></i> Product Reviews</a>
         </div>
+
         <div class="admin-footer">
-            <p class="menu-label" style="margin:0 0 10px 0">Admin</p>
+            <p class="menu-label" style="margin-left:0; margin-top:0">Admin</p>
             <a href="AdminRole.html" class="nav-item p-0 mb-3"><i class="bi bi-person-gear"></i> Admin role</a>
-            <div class="admin-profile">
-                <img src="profile-pic.png" class="admin-avatar">
-                <div><p class="m-0 fw-bold small">Dealport</p><p class="m-0 text-muted" style="font-size: 0.65rem;">Mark@thedesigner...</p></div>
-                <i class="bi bi-box-arrow-right ms-auto"></i>
+            <div class="admin-profile-box">
+                <img src="profile-pic.png" class="admin-avatar" alt="Admin">
+                <div class="admin-info">
+                    <p class="admin-name">Dealport</p>
+                    <p class="admin-email">Mark@thedesigner...</p>
+                </div>
+                <i class="bi bi-box-arrow-right text-gray" style="cursor: pointer;"></i>
             </div>
-            <a href="#" class="nav-item p-0 text-primary fw-bold" style="font-size:0.8rem">
-                <i class="bi bi-shop"></i> Your Shop <i class="bi bi-box-arrow-up-right ms-auto"></i>
+            <a href="#" class="nav-item p-0" style="color: var(--accent-blue); font-weight: 600;">
+                <i class="bi bi-shop"></i> Your Shop <i class="bi bi-box-arrow-up-right ms-auto small"></i>
             </a>
         </div>
     </aside>
 
     <main class="main-wrapper">
-         <div class="top-bar">
+        <div class="top-bar">
             <div class="d-flex align-items-center gap-3">
                 <i class="bi bi-list mobile-toggle" onclick="document.getElementById('sidebar').classList.toggle('active')"></i>
-                <h4 class="m-0 fw-semibold">Order Management</h4>
-            </div>
-            <div class="search-box d-none d-md-flex">
-                <input type="text" placeholder="Search data, reports...">
-                <i class="bi bi-search text-gray"></i>
+                <h4 class="m-0 fw-bold">Orders</h4>
             </div>
             <div class="d-flex align-items-center gap-3">
                 <div class="theme-toggle" onclick="toggleTheme()"><i class="bi bi-moon-stars-fill" id="tIcon"></i></div>
@@ -187,140 +193,92 @@
             </div>
         </div>
 
-        <div class="row g-4">
-    <div class="col-md-3">
-        <div class="stat-card">
-            <p class="small">Total Orders</p> <h3>1,240 <span class="trend">↑ 14.4%</span></h3>
-            <p style="font-size:0.7rem">Last 7 days</p> </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="stat-card">
-            <p class="small">New Orders</p>
-            <h3>240 <span class="trend">↑ 20%</span></h3>
-            <p style="font-size:0.7rem">Last 7 days</p>
+        <div class="filter-card">
+            <h6 class="fw-bold mb-4">Filter Orders</h6>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="small text-muted mb-1">Order ID</label>
+                    <div class="search-box">
+                        <i class="bi bi-hash me-2"></i>
+                        <input type="text" placeholder="Enter Order ID">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="small text-muted mb-1">Date Range</label>
+                    <input type="date" class="form-control filter-input">
+                </div>
+                <div class="col-md-2">
+                    <label class="small text-muted mb-1">Status</label>
+                    <select class="form-select filter-input">
+                        <option>All Status</option>
+                        <option>Confirmed</option>
+                        <option>Pending</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="small text-muted mb-1">Method</label>
+                    <select class="form-select filter-input">
+                        <option>All Methods</option>
+                        <option>COD</option>
+                        <option>Wallet</option>
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex gap-2 align-items-end">
+                    <button class="btn btn-dark w-100 py-2" style="border-radius: 10px;"><i class="bi bi-funnel"></i> Apply</button>
+                    <button class="btn btn-outline-secondary w-100 py-2" style="border-radius: 10px;"><i class="bi bi-arrow-counterclockwise"></i> Reset</button>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="stat-card">
-            <p class="small">Completed Orders</p>
-            <h3>960 <span class="trend" style="color:#38B2AC">85%</span></h3>
-            <p style="font-size:0.7rem">Last 7 days</p>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="stat-card">
-            <p class="small">Canceled Orders</p>
-            <h3>87 <span class="trend text-danger">↓ 5%</span></h3>
-            <p style="font-size:0.7rem">Last 7 days</p>
-        </div>
-    </div>
-</div>
 
         <div class="order-section">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <h5 class="fw-bold m-0">Order List</h5>
-                <div class="d-flex gap-2">
-                    <button class="btn btn-primary rounded-pill px-4" style="background:var(--accent-blue); border:none;"><i class="bi bi-plus"></i> Add Order</button>
-                    <button class="btn btn-light border rounded-pill">More Action <i class="bi bi-chevron-down"></i></button>
-                </div>
+            <div class="p-3 d-flex justify-content-between align-items-center bg-white border-bottom">
+                <h5 class="m-0 fw-bold">Orders List</h5>
+                <button class="btn btn-primary btn-sm rounded-pill px-3"><i class="bi bi-download"></i> Export</button>
             </div>
-
-            <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
-                <div class="filter-tab">
-                    <button class="active">All order (240)</button>
-                    <button>Completed</button>
-                    <button>Pending</button>
-                    <button>Canceled</button>
-                </div>
-                <div class="d-flex gap-2">
-                    <div class="search-box" style="width:250px;">
-                        <input type="text" placeholder="Search order report">
-                        <i class="bi bi-search"></i>
-                    </div>
-                    
-                    <button class="tool-btn"><i class="bi bi-filter"></i></button>
-                    <button class="tool-btn"><i class="bi bi-arrow-down-up"></i></button>
-                    <button class="tool-btn"><i class="bi bi-three-dots"></i></button>
-                </div>
-            </div>
-
             <div class="table-responsive">
                 <table class="order-table">
                     <thead>
                         <tr>
-                            <th><input type="checkbox"> No.</th>
-                            <th>Order Id</th>
-                            <th>Product</th>
+                            <th>#</th>
+                            <th>Order ID</th>
+                            <th>Customer</th>
                             <th>Date</th>
-                            <th>Price</th>
-                            <th>Payment</th>
                             <th>Status</th>
+                            <th>Update Status</th>
+                            <th>Payment</th>
+                            <th>Total</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
-                     <tbody>
-                        <tr>
-                            <td><input type="checkbox"> 1</td>
-                            <td class="fw-bold">#ORD0001</td>
-                            <td><img src="toy.png" width="30" class="me-2"> Red classic toy car</td>
-                            <td>01-01-2025</td>
-                            <td>499</td>
-                            <td style="color:#48BB78">● Paid</td>
-                            <td><span class="badge-delivered"><i class="bi bi-check-circle me-1"></i> Delivered</span></td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox"> 2</td>
-                            <td class="fw-bold">#ORD0002</td>
-                            <td><img src="toy2.png" width="30" class="me-2"> Green toy model</td>
-                            <td>01-01-2025</td>
-                            <td>499</td>
-                            <td style="color:#F6AD55">● Unpaid</td>
-                            <td><span class="badge-shipped"><i class="bi bi-truck me-1"></i> Shipped</span></td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox"> 3</td>
-                            <td class="fw-bold">#ORD0003</td>
-                            <td><img src="toy3.png" width="30" class="me-2"> Blue Racing Drone</td>
-                            <td>02-01-2025</td>
-                            <td>1200</td>
-                            <td style="color:#48BB78">● Paid</td>
-                            <td><span class="badge-pending"><i class="bi bi-clock me-1"></i> Pending</span></td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox"> 4</td>
-                            <td class="fw-bold">#ORD0004</td>
-                            <td><img src="toy4.png" width="30" class="me-2"> Wooden Train Set</td>
-                            <td>02-01-2025</td>
-                            <td>350</td>
-                            <td class="text-danger">● Failed</td>
-                            <td><span class="badge-canceled"><i class="bi bi-x-circle me-1"></i> Canceled</span></td>
-                        </tr>
-                    </tbody>
+                    <tbody id="orderTableBody">
+                        </tbody>
                 </table>
             </div>
-
-            <div class="pagination-container">
-                <button class="page-btn"><i class="bi bi-arrow-left"></i> Previous</button>
-                <div class="page-numbers">
-                    <span class="num active">1</span>
-                    <span class="num">2</span>
-                    <span class="num">3</span>
-                   
-                    <span class="num text-muted">....</span>
-                
-                </div>
-                <button class="page-btn">Next <i class="bi bi-arrow-right"></i></button>
-            </div>
-            
         </div>
     </main>
-<script>
+
+    <div class="modal fade" id="orderDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="fw-bold m-0">Order Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-0" id="modalContent">
+                    </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark px-4">Update Status</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
         function toggleTheme() {
             const html = document.documentElement;
             const icon = document.getElementById('tIcon');
-            
             if (html.getAttribute('data-theme') === 'dark') {
                 html.removeAttribute('data-theme');
                 icon.classList.replace('bi-sun-fill', 'bi-moon-stars-fill');
@@ -329,6 +287,119 @@
                 icon.classList.replace('bi-moon-stars-fill', 'bi-sun-fill');
             }
         }
-    </script>
+</script>
+       <script>
+/* ================= LOAD ORDERS ================= */
+
+const tableBody = document.getElementById("orderTableBody");
+let ALL_ORDERS = [];
+
+async function loadOrders() {
+  try {
+    const token = localStorage.getItem("adminToken");
+
+    const res = await fetch("/api/orders/admin", {
+      headers: {
+        Authorization: "Bearer " + token
+      }
+    });
+
+    if (!res.ok) throw new Error("Unauthorized");
+
+    const orders = await res.json();
+    ALL_ORDERS = orders;
+
+    tableBody.innerHTML = orders.map((o, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td class="fw-bold">#ORD-${o._id.slice(-6).toUpperCase()}</td>
+        <td>
+          ${o.user?.name || "Guest"}<br>
+          <small class="text-muted">${o.user?.email || ""}</small>
+        </td>
+        <td>${new Date(o.createdAt).toLocaleDateString()}</td>
+        <td>
+          <span class="status-pill status-${o.orderStatus}">
+            ${o.orderStatus}
+          </span>
+        </td>
+        <td>
+          <select class="form-select form-select-sm"
+            onchange="updateItemStatus('${o._id}', this.value)">
+            ${["pending","shipped","delivered","canceled"]
+              .map(s => `<option value="${s}" ${s===o.orderStatus?"selected":""}>${s}</option>`)
+              .join("")}
+          </select>
+        </td>
+        <td>${o.paymentMethod?.toUpperCase()}</td>
+        <td class="fw-bold">₹${Number(o.totalAmount).toFixed(2)}</td>
+        <td>
+          <button class="btn btn-dark btn-sm">View</button>
+        </td>
+      </tr>
+    `).join("");
+
+  } catch (err) {
+    console.error("Order load failed:", err);
+  }
+}
+
+
+
+/* ================= UPDATE STATUS ================= */
+
+async function updateItemStatus(orderId, status) {
+  const token = localStorage.getItem("adminToken");
+
+  await fetch(`/api/orders/admin/${orderId}/status`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token
+    },
+    body: JSON.stringify({ status })
+  });
+
+  loadOrders();
+}
+</script>
+
+<script>
+(async function checkAdminAuth() {
+  const token = localStorage.getItem("adminToken");
+  const role  = localStorage.getItem("adminRole");
+
+  if (!token || role !== "admin") {
+    window.location.href = "../User/login.html";
+    return;
+  }
+
+  try {
+    const res = await fetch("/api/check-auth", {
+      headers: {
+        Authorization: "Bearer " + token
+      }
+    });
+
+    if (!res.ok) throw new Error();
+
+    const data = await res.json();
+
+    if (!data.loggedIn || data.user.role !== "admin") {
+      window.location.href = "../User/login.html";
+      return;
+    }
+
+    // ✅ OK
+    loadOrders();
+
+  } catch {
+    window.location.href = "../User/login.html";
+  }
+})();
+</script>
+
+
+
 </body>
 </html>

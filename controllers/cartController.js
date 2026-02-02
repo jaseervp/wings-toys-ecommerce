@@ -29,10 +29,7 @@ exports.addToCart = async (req, res) => {
       await cart.save();
     }
 
-    res.status(200).json({
-      message: "Added to cart",
-      cart
-    });
+    res.status(200).json({ message: "Added to cart", cart });
 
   } catch (error) {
     console.error("ADD TO CART ERROR:", error);
@@ -48,12 +45,10 @@ exports.updateCartQty = async (req, res) => {
     const userId = req.user.id;
     let { productId, quantity } = req.body;
 
-    quantity = parseInt(quantity); // 🔥 FIX 1: ensure number
+    quantity = parseInt(quantity);
 
     const cart = await Cart.findOne({ user: userId });
-    if (!cart) {
-      return res.status(404).json({ message: "Cart not found" });
-    }
+    if (!cart) return res.status(404).json({ message: "Cart not found" });
 
     const itemIndex = cart.items.findIndex(
       i => i.product.toString() === productId
@@ -63,7 +58,6 @@ exports.updateCartQty = async (req, res) => {
       return res.status(404).json({ message: "Item not found" });
     }
 
-    // 🔥 FIX 2: remove item if qty < 1
     if (quantity < 1) {
       cart.items.splice(itemIndex, 1);
     } else {
@@ -72,10 +66,7 @@ exports.updateCartQty = async (req, res) => {
 
     await cart.save();
 
-    res.json({
-      message: "Cart updated successfully",
-      cart
-    });
+    res.json({ message: "Cart updated", cart });
 
   } catch (error) {
     console.error("UPDATE CART ERROR:", error);
@@ -97,15 +88,17 @@ exports.getCart = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+/* =========================
+   ❌ REMOVE ITEM
+========================= */
 exports.removeFromCart = async (req, res) => {
   try {
     const userId = req.user.id;
     const { productId } = req.params;
 
     const cart = await Cart.findOne({ user: userId });
-    if (!cart) {
-      return res.status(404).json({ message: "Cart not found" });
-    }
+    if (!cart) return res.status(404).json({ message: "Cart not found" });
 
     cart.items = cart.items.filter(
       item => item.product.toString() !== productId
@@ -114,9 +107,9 @@ exports.removeFromCart = async (req, res) => {
     await cart.save();
 
     res.json({ message: "Item removed", cart });
+
   } catch (error) {
-    console.error(error);
+    console.error("REMOVE CART ERROR:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
-

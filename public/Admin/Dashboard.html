@@ -267,13 +267,45 @@
             }
         });
     </script>
-    <script>
-    const role = localStorage.getItem("userRole");
-    if (role !== "admin") {
-        alert("Access denied");
-        window.location.href = "../User/login.html";
+    
+   <script>
+(async function checkAdmin() {
+  const token = localStorage.getItem("adminToken");
+  const role = localStorage.getItem("adminRole");
+
+  // Local check (fast)
+  if (!token || role !== "admin") {
+    window.location.href = "../User/login.html";
+    return;
+  }
+
+  // Backend verification (secure)
+  try {
+    const res = await fetch("/api/check-auth", {
+      headers: {
+        Authorization: "Bearer " + token
+      }
+    });
+
+    if (!res.ok) {
+      throw new Error("Unauthorized");
     }
+
+    const data = await res.json();
+
+    if (!data.loggedIn || data.user.role !== "admin") {
+      window.location.href = "../User/login.html";
+    }
+
+  } catch (err) {
+    window.location.href = "../User/login.html";
+  }
+})();
 </script>
+
+
+
+
 
 </body>
 </html>

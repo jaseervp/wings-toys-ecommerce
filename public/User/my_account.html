@@ -151,7 +151,7 @@
 
     <header class="page-header">
         <div class="container">
-            <h1>My Account</h1>
+          <h1>Welcome, <span id="userName">User</span></h1>
             <p class="text-muted">Home <i class="bi bi-chevron-right mx-2"></i> My Account</p>
         </div>
     </header>
@@ -175,9 +175,10 @@
         <a href="wishlist.html" class="sidebar-link">My Wishlist</a>
 
         <div class="menu-section-title mt-4">Account Actions</div>
-        <a href="logout.php" class="sidebar-link logout-link">
-            <i class="bi bi-box-arrow-right me-2"></i> Logout
-        </a>
+       <a href="#" id="logoutBtn" class="sidebar-link logout-link">
+    <i class="bi bi-box-arrow-right me-2"></i> Logout
+</a>
+
     </div>
 </div>
            
@@ -190,36 +191,39 @@
                         <div class="row">
                             <div class="col-md-6 form-group">
                                 <label>First Name</label>
-                                <input type="text" class="form-control-custom" placeholder="Mohamed">
+                               <input type="text" id="firstName" class="form-control-custom">
+                               
                             </div>
                             <div class="col-md-6 form-group">
                                 <label>Last Name</label>
-                                <input type="text" class="form-control-custom" placeholder="Rimzan">
+                                <input type="text" id="lastName" class="form-control-custom">
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6 form-group">
+                            <div class="col-md-12 form-group">
                                 <label>Email</label>
-                                <input type="email" class="form-control-custom" placeholder="rimzan@example.com">
+                               <input type="email" id="email" class="form-control-custom">
+
                             </div>
-                            <div class="col-md-6 form-group">
-                                <label>Address</label>
-                                <input type="text" class="form-control-custom" placeholder="123 Street, Colombo">
-                            </div>
+                            
                         </div>
 
-                        <h5 class="mt-4 mb-3 fw-bold">Password Changes</h5>
+                       <h5 class="mt-4 mb-3 fw-bold">Change Password</h5>   
                         
                         <div class="form-group">
-                            <input type="password" class="form-control-custom" placeholder="Current Password">
-                            <input type="password" class="form-control-custom" placeholder="New Password">
-                            <input type="password" class="form-control-custom" placeholder="Confirm New Password">
+                            <input type="password" id="currentPassword" class="form-control-custom" placeholder="Current Password">
+                           <input type="password" id="newPassword" class="form-control-custom" placeholder="New Password">
+                           <input type="password" id="confirmPassword" class="form-control-custom" placeholder="Confirm New Password">
                         </div>
+                        <button type="button" id="changePasswordBtn" class="btn-save mt-2">
+    Change Password
+</button>
 
                         <div class="d-flex justify-content-end align-items-center mt-4">
                             <button type="button" class="btn-cancel">Cancel</button>
-                            <button type="submit" class="btn-save">Save Changes</button>
+                           <button type="submit" id="saveProfileBtn" class="btn-save"> Save Changes</button>
+
                         </div>
                     </form>
                 </div>
@@ -291,5 +295,155 @@
             }
         });
     </script>
+    <script>
+document.getElementById("logoutBtn").addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    try {
+        await fetch("/api/logout", {
+            method: "POST",
+            credentials: "include" // 🔥 VERY IMPORTANT
+        });
+
+        // Optional UI cleanup
+        localStorage.removeItem("userName");
+
+        // Redirect after logout
+        window.location.href = "index.html";
+    } catch (err) {
+        alert("Logout failed. Please try again.");
+    }
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+    try {
+        const res = await fetch("/api/users/me", {
+            method: "GET",
+            credentials: "include" // VERY IMPORTANT for cookies
+        });
+
+        if (!res.ok) {
+            // Not logged in
+            window.location.href = "login.html";
+            return;
+        }
+
+        const data = await res.json();
+        const user = data.user;
+
+        // Header name
+        document.getElementById("userName").innerText = user.fullName || "User";
+
+        // Split name safely
+        const nameParts = user.fullName?.split(" ") || [];
+        document.getElementById("firstName").value = nameParts[0] || "";
+        document.getElementById("lastName").value = nameParts.slice(1).join(" ") || "";
+
+        // Other fields
+        document.getElementById("email").value = user.email || "";
+        document.getElementById("address").value = user.address || "";
+
+        // Optional localStorage
+        localStorage.setItem("userName", user.fullName);
+
+    } catch (error) {
+        console.error("Profile load failed", error);
+    }
+});
+</script>
+<script>
+document.querySelector("form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const firstName = document.getElementById("firstName").value.trim();
+    const lastName = document.getElementById("lastName").value.trim();
+    const email = document.getElementById("email").value.trim();
+   
+
+    try {
+        const res = await fetch("/api/users/me", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                firstName,
+                lastName,
+                email,
+              
+            })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.message || "Update failed");
+            return;
+        }
+
+        // Update UI instantly
+        document.getElementById("userName").innerText = data.user.fullName;
+        localStorage.setItem("userName", data.user.fullName);
+
+        alert("✅ Profile updated successfully!");
+
+    } catch (error) {
+        alert("Something went wrong. Try again.");
+    }
+});
+</script>
+<script>
+document.getElementById("changePasswordBtn").addEventListener("click", async () => {
+
+    const currentPassword = document.getElementById("currentPassword").value.trim();
+    const newPassword = document.getElementById("newPassword").value.trim();
+    const confirmPassword = document.getElementById("confirmPassword").value.trim();
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+        alert("Please fill all password fields");
+        return;
+    }
+
+    if (newPassword !== confirmPassword) {
+        alert("New password and confirm password do not match");
+        return;
+    }
+
+    try {
+        const res = await fetch("/api/users/change-password", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                currentPassword,
+                newPassword,
+                confirmPassword
+            })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.message);
+            return;
+        }
+
+        alert("🔐 Password changed successfully");
+
+        // Clear fields
+        document.getElementById("currentPassword").value = "";
+        document.getElementById("newPassword").value = "";
+        document.getElementById("confirmPassword").value = "";
+
+    } catch (error) {
+        alert("Something went wrong. Try again.");
+    }
+});
+</script>
+
 </body>
 </html> 

@@ -3,318 +3,432 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout | ToyStore</title>
-    
+    <title>Checkout | Wings Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
     <style>
-        :root {
-            --primary-bg: #FBEBB5;
-            --soft-bg: #FAF4F4;
-            --accent-light: #FFF9E5;
-            --gold-text: #B88E2F;
-        }
+        :root { --primary-color: #6366f1; --bg-light: #f9fafb; --text-muted: #898989; }
+        body { font-family: 'Poppins', sans-serif; background-color: #fff; color: #111; }
 
-        body { font-family: 'Poppins', sans-serif; color: #000; background-color: #fff; margin: 0; }
+        /* --- Global Components --- */
+        .card-custom { border: none; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); background: #fff; }
         
-        /* --- NAVIGATION --- */
-        .nav-link { font-weight: 600; color: #000 !important; margin: 0 15px; }
+        /* --- Hero Section --- */
+        .hero-section {
+            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), 
+                        url('https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=2043&auto=format&fit=crop');
+            background-size: cover; background-position: center; padding: 100px 0; text-align: center;
+        }
+
+        /* --- Checkout Layout --- */
+        .checkout-container { background-color: var(--bg-light); padding: 80px 0; }
         
-        .search-input-desktop {
-            width: 0; opacity: 0; border: none; border-bottom: 2px solid #000;
-            outline: none; transition: all 0.4s ease; padding: 0; background: transparent;
+        .payment-option {
+            cursor: pointer; border: 2px solid #eee; border-radius: 15px; transition: 0.3s; 
+            background: white; position: relative; padding: 25px; display: block;
+        }
+        .payment-input:checked + .payment-option { border-color: var(--primary-color); background-color: #f5f3ff; }
+        .payment-input:checked + .payment-option::after {
+            content: "\F272"; font-family: "bootstrap-icons"; position: absolute; top: 12px; right: 12px; color: var(--primary-color); font-size: 1.2rem;
         }
 
-        .search-input-desktop.active { width: 200px; opacity: 1; padding: 0 10px; margin-right: 10px; }
-
-        .search-input-mobile {
-            width: 100%; height: 0; opacity: 0; padding: 0; border: none;
-            border-bottom: 2px solid #000; transition: all 0.3s ease; outline: none; overflow: hidden;
-        }
-
-        .search-input-mobile.active { height: 40px; opacity: 1; padding: 10px 0; margin-top: 15px; }
-
-        /* --- HEADER BANNER --- */
-        .page-header {
-            background: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), 
-                        url('https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=1200');
-            background-size: cover; background-position: center;
-            padding: 80px 0; text-align: center;
-        }
-        .page-header h1 { font-size: 3rem; font-weight: 500; margin-bottom: 10px; }
-        .page-header p { font-weight: 500; }
-
-        /* --- BILLING FORM --- */
-        .billing-section h2 { font-size: 2.2rem; font-weight: 600; margin-bottom: 40px; }
-        .billing-form label { display: block; margin-bottom: 10px; font-weight: 500; margin-top: 25px; }
-        .billing-form input, .billing-form select { 
-            width: 100%; border: 1px solid #9F9F9F; border-radius: 10px; padding: 15px; outline: none; background: #fff;
-        }
+        /* --- Coupon Cards --- */
+        .coupon-list-container { display: flex; overflow-x: auto; gap: 12px; padding: 10px 0; scrollbar-width: none; }
+        .coupon-list-container::-webkit-scrollbar { display: none; }
         
-        /* --- ORDER SUMMARY SIDEBAR --- */
-        .order-summary { padding-left: 60px; }
-        .summary-table { width: 100%; margin-bottom: 30px; }
-        .summary-table th { font-size: 1.5rem; font-weight: 500; padding-bottom: 20px; }
-        .summary-table td { padding: 12px 0; border-bottom: 1px solid transparent; }
-        .total-price { color: var(--gold-text); font-size: 1.5rem; font-weight: 700; }
-
-        /* --- COUPON SECTION --- */
-        .coupon-container { display: flex; gap: 10px; margin-bottom: 30px; }
-        .coupon-input { 
-            flex: 1; border: 1px solid #000; border-radius: 10px; padding: 12px 20px; outline: none;
+        .coupon-card {
+            min-width: 140px; background: white; border: 2px dashed #d1d5db;
+            border-radius: 12px; padding: 12px; text-align: center; transition: 0.3s; cursor: pointer;
         }
-        .btn-apply-coupon {
-            border: 1px solid #000; border-radius: 10px; padding: 12px 25px;
-            background: #fff; font-weight: 500; transition: 0.3s;
-        }
-        .btn-apply-coupon:hover { background: #000; color: #fff; }
+        .coupon-card:hover, .coupon-card.active { border-color: var(--primary-color); background: #f5f3ff; transform: translateY(-3px); }
+        .coupon-code { font-weight: 700; color: var(--primary-color); font-size: 0.9rem; }
+        /* Upcoming coupon (fade + disable feel) */
+.coupon-card.upcoming {
+    opacity: 0.4;
+    pointer-events: none;
+    filter: grayscale(40%);
+}
 
-        /* --- PAYMENT SECTION --- */
-        .payment-box { margin-top: 30px; padding-top: 30px; border-top: 1px solid #D9D9D9; }
-        .radio-container { display: flex; align-items: center; margin-bottom: 15px; cursor: pointer; }
-        .radio-dot { 
-            width: 14px; height: 14px; border: 1px solid #000; border-radius: 50%; 
-            display: inline-block; margin-right: 12px; position: relative;
+       
+        /* --- Footer Black --- */
+        .footer-black { background-color: #000; color: #fff; padding: 80px 0 30px; }
+        .footer-black a { color: #fff; text-decoration: none; opacity: 0.7; transition: 0.3s; }
+        .footer-black a:hover { opacity: 1; text-decoration: underline; }
+        .newsletter-input { 
+            background: transparent; border: none; border-bottom: 2px solid #fff; 
+            color: #fff; width: 100%; padding: 8px 0; outline: none; 
         }
-        .radio-container.active .radio-dot::after {
-            content: ""; width: 8px; height: 8px; background: #000; 
-            border-radius: 50%; position: absolute; top: 2px; left: 2px;
-        }
-        .payment-desc { font-size: 0.9rem; color: #9F9F9F; line-height: 1.6; margin: 15px 0; }
+        .btn-subscribe { background: none; border: none; color: #fff; font-weight: 700; text-decoration: underline; }
 
-        .btn-place-order {
-            border: 1px solid #000; border-radius: 15px; padding: 15px 80px;
-            background: transparent; font-weight: 400; font-size: 1.2rem;
-            transition: 0.3s; margin-top: 20px; width: 100%;
-        }
-        .btn-place-order:hover { background: #000; color: #fff; }
-
-        /* --- FEATURES SECTION --- */
-        .features { background: var(--soft-bg); padding: 80px 0; margin-top: 80px; }
-
-        /* --- FOOTER --- */
-        footer { background: #000; color: #fff; padding: 80px 0 20px; }
-        footer a { color: #9F9F9F; display: block; margin-bottom: 15px; text-decoration: none; }
-        .footer-input { background: transparent; border: none; border-bottom: 1px solid #fff; color: #fff; width: 100%; padding-bottom: 5px; outline: none; }
-
-        /* --- RESPONSIVE --- */
-        @media (max-width: 992px) {
-            .order-summary { padding-left: 0; margin-top: 60px; }
-            .coupon-container { flex-direction: column; }
-        }
-        
+        /* --- Modal Custom --- */
+        .modal-content { border-radius: 25px; border: none; padding: 15px; }
+        .form-control-custom { background: #f3f4f6; border: none; padding: 12px 18px; border-radius: 12px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
-        <div class="container d-flex align-items-center flex-wrap">
-            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+<nav class="navbar navbar-expand-lg py-4">
+    <div class="container">
+        <a class="navbar-brand fw-bold fs-3" href="#">WINGS</a>
+        <div class="d-flex gap-4 fs-5 ms-auto">
+            <i class="bi bi-person"></i><i class="bi bi-search"></i><i class="bi bi-heart"></i><i class="bi bi-cart3"></i>
+        </div>
+    </div>
+</nav>
 
-            <a class="navbar-brand ms-2" href="index.html">
-                <img src="/Images/logo wings.png" alt="Logo" style="height: 40px;">
-            </a>
+<section class="hero-section">
+    <div class="container">
+        <i class="bi bi-cart-check-fill fs-1 text-primary"></i>
+        <h1 class="display-5 fw-bold mt-2">Checkout</h1>
+        <p class="text-muted fw-medium">Home <i class="bi bi-chevron-right mx-2 small"></i> Checkout</p>
+    </div>
+</section>
 
-            <div class="d-flex gap-3 align-items-center ms-auto order-lg-3">
-                <a href="#"><i class="bi bi-person fs-5 text-dark"></i></a>
-                
-                <div class="search-container d-flex align-items-center">
-                    <input type="text" id="search-desktop" class="search-input-desktop d-none d-lg-block" placeholder="Search...">
-                    <button id="search-trigger" class="btn p-0 border-0 shadow-none">
-                        <i class="bi bi-search fs-5 text-dark"></i>
+<section class="checkout-container">
+    <div class="container">
+        <div class="row g-4">
+            
+            <div class="col-lg-8">
+                <div class="card card-custom p-4 mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold m-0"><i class="bi bi-geo-alt me-2"></i>Shipping Details</h5>
+                        <button class="btn btn-outline-primary btn-sm fw-bold rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#addressPopup">
+                            + Add New
+                        </button>
+                    </div>
+                    <div class="border rounded-4 p-4 d-flex align-items-center bg-white shadow-sm">
+                        <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
+                            <i class="bi bi-house-door-fill text-primary h4 mb-0"></i>
+                        </div>
+                        <div>
+                            <p class="mb-0 fw-bold" id="displayUser">John Doe</p>
+                            <small class="text-muted" id="displayAddr">123 Tech Avenue, Silicon Valley, CA 94043</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-custom p-4">
+                    <h5 class="fw-bold mb-4"><i class="bi bi-credit-card me-2"></i>Payment Method</h5>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <input type="radio" name="p" id="pay-w" class="d-none payment-input" checked>
+                            <label for="pay-w" class="payment-option text-center">
+                                <i class="bi bi-wallet2 h2 mb-2 d-block"></i> <span class="fw-bold">Wallet</span>
+                            </label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="radio" name="p" id="pay-u" class="d-none payment-input">
+                            <label for="pay-u" class="payment-option text-center">
+                                <i class="bi bi-qr-code h2 mb-2 d-block"></i> <span class="fw-bold">UPI</span>
+                            </label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="radio" name="p" id="pay-c" class="d-none payment-input">
+                            <label for="pay-c" class="payment-option text-center">
+                                <i class="bi bi-truck h2 mb-2 d-block"></i> <span class="fw-bold">COD</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card card-custom p-4 sticky-top" style="top: 30px;">
+                    <h5 class="fw-bold mb-4">Order Summary</h5>
+                 <div id="checkoutItems"></div>
+
+                    <div class="mb-4">
+                        <label class="small fw-bold text-secondary mb-2">OFFERS FOR YOU</label>
+                        <div class="coupon-list-container" id="couponContainer"></div>
+
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2"><span>Subtotal</span><span class="fw-bold" id="checkoutSubtotal">₹0</span></div>
+                    <div class="d-flex justify-content-between mb-2 text-success"><span>Discount</span><span class="fw-bold" id="discAmount">-₹0.00</span></div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="h5 fw-bold">Total</span><span class="fw-bold" id="grandTotal">₹0</span>
+
+                    </div>
+
+                    <button class="btn btn-primary w-100 py-3 fw-bold rounded-pill shadow-lg border-0" onclick="finalCheck()">
+                        Complete Order <i class="bi bi-arrow-right ms-2"></i>
                     </button>
                 </div>
-
-                <a href="wishlist.html"><i class="bi bi-heart fs-5 text-dark"></i></a>
-                <a href="cart.html"><i class="bi bi-cart fs-5 text-dark"></i></a>
-            </div>
-
-            <div class="search-full-width-wrapper w-100 d-lg-none">
-                 <input type="text" id="search-input-mobile" class="search-input-mobile" placeholder="Search toys...">
-            </div>
-
-            <div class="collapse navbar-collapse justify-content-center order-lg-2" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
-                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="conatct.html">Contact</a></li>
-                </ul>
             </div>
         </div>
-    </nav>
+    </div>
+</section>
 
-    <header class="page-header">
-        <div class="container">
-            <img src="https://cdn-icons-png.flaticon.com/512/3081/3081986.png" width="50" class="mb-2" alt="Icon">
-            <h1>Checkout</h1>
-            <p>Home <i class="bi bi-chevron-right mx-2"></i> Checkout</p>
-        </div>
-    </header>
 
-    <main class="container py-5 billing-section">
-        <div class="row">
-            <div class="col-lg-6 billing-form">
-                <h2 class="fw-bold">Billing details</h2>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label>First Name</label>
-                        <input type="text">
-                    </div>
-                    <div class="col-md-6">
-                        <label>Last Name</label>
-                        <input type="text">
-                    </div>
-                </div>
-                
-                <label>Company Name (Optional)</label>
-                <input type="text">
 
-                <label>Country / Region</label>
-                <select>
-                    <option>Sri Lanka</option>
-                </select>
-
-                <label>Street address</label>
-                <input type="text">
-                
-                <label>Town / City</label>
-                <input type="text">
-
-                <label>Province</label>
-                <select>
-                    <option>Western Province</option>
-                </select>
-
-                <label>ZIP code</label>
-                <input type="text">
-
-                <label>Phone</label>
-                <input type="tel">
-
-                <label>Email address</label>
-                <input type="email">
-
-                <input type="text" placeholder="Additional information" class="mt-5">
+<footer class="footer-black">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-md-4">
+                <h3 class="fw-bold mb-4">WINGS.</h3>
+                <p class="opacity-50">400 University Drive Suite 200 Coral Gables, FL 33134 USA</p>
             </div>
-
-            <div class="col-lg-6 order-summary">
-                <table class="summary-table">
-                    <thead>
-                        <tr>
-                            <th class="text-start">Product</th>
-                            <th class="text-end">Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="text-muted">Asgaard sofa <span class="text-dark">X 1</span></td>
-                            <td class="text-end">Rs. 250,000.00</td>
-                        </tr>
-                        <tr>
-                            <td>Subtotal</td>
-                            <td class="text-end">Rs. 250,000.00</td>
-                        </tr>
-                        <tr class="border-bottom">
-                            <td class="pb-4">Total</td>
-                            <td class="text-end total-price pb-4">Rs. 250,000.00</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <div class="coupon-container">
-                    <input type="text" class="coupon-input" placeholder="Coupon Code">
-                    <button class="btn-apply-coupon">Apply Coupon</button>
-                </div>
-
-                <div class="payment-box">
-                    <div class="radio-container active">
-                        <span class="radio-dot"></span> <strong>Direct Bank Transfer</strong>
-                    </div>
-                    <p class="payment-desc">
-                        Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
-                    </p>
-                    
-             
-                    <div class="radio-container text-muted">
-                        <span class="radio-dot"></span> Cash On Delivery
-                    </div>
-                    
-                    <p class="small mt-4" style="font-weight: 300;">
-                        Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our <strong>privacy policy.</strong>
-                    </p>
-                    
-                    <div class="text-center mt-4">
-                        <button class="btn-place-order">Place order</button>
-                    </div>
+            <div class="col-md-2">
+                <h6 class="text-secondary mb-4 text-uppercase small fw-bold">Links</h6>
+                <p><a href="#">Home</a></p><p><a href="#">Shop</a></p><p><a href="#">About</a></p>
+            </div>
+            <div class="col-md-2">
+                <h6 class="text-secondary mb-4 text-uppercase small fw-bold">Help</h6>
+                <p><a href="#">Returns</a></p><p><a href="#">Privacy</a></p>
+            </div>
+            <div class="col-md-4">
+                <h6 class="text-secondary mb-4 text-uppercase small fw-bold">Newsletter</h6>
+                <div class="d-flex align-items-center">
+                    <input type="text" class="newsletter-input" placeholder="Enter Email">
+                    <button class="btn-subscribe ms-3">SUBSCRIBE</button>
                 </div>
             </div>
         </div>
-    </main>
+        <hr class="mt-5 mb-4 border-secondary opacity-25">
+        <p class="m-0 opacity-50 small">© 2026 Meubel House. All rights reserved</p>
+    </div>
+</footer>
 
-    <section class="features">
-        <div class="container">
-            <div class="row text-center text-md-start">
-                <div class="col-md-4 mb-4">
-                    <h3 class="fw-bold">Free Delivery</h3>
-                    <p class="text-muted mb-0">For all orders over $50, consectetur adipim scing elit.</p>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <h3 class="fw-bold">90 Days Return</h3>
-                    <p class="text-muted mb-0">If goods have problems, consectetur adipim scing elit.</p>
-                </div>
-                <div class="col-md-4">
-                    <h3 class="fw-bold">Secure Payment</h3>
-                    <p class="text-muted mb-0">100% secure payment, consectetur adipim scing elit.</p>
-                </div>
+<div class="modal fade" id="addressPopup" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="fw-bold">New Shipping Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-        </div>
-    </section>
-
-    <footer>
-        <div class="container">
-            <div class="row g-5">
-                <div class="col-lg-4">
-                    <p style="color: #9F9F9F; line-height: 2;">400 University Drive Suite 200 Coral Gables, <br>FL 33134 USA</p>
-                </div>
-                <div class="col-lg-2 col-6">
-                    <h6 class="mb-4 text-muted">Links</h6>
-                    <a href="#">Home</a><a href="#">Shop</a><a href="#">About</a><a href="#">Contact</a>
-                </div>
-                <div class="col-lg-2 col-6">
-                    <h6 class="mb-4 text-muted">Help</h6>
-                    <a href="#">Payment Options</a><a href="#">Returns</a><a href="#">Privacy Policies</a>
-                </div>
-                <div class="col-lg-4">
-                    <h6 class="mb-4 text-muted">Newsletter</h6>
-                    <div class="d-flex gap-2">
-                        <input type="email" class="footer-input" placeholder="Enter Your Email Address">
-                        <button class="btn btn-link text-white fw-bold p-0 border-bottom border-white rounded-0">SUBSCRIBE</button>
+            <div class="modal-body">
+                <form id="addrForm">
+                    <input type="text" id="in-name" class="form-control form-control-custom" placeholder="Full Name">
+                    <input type="text" id="in-phone" class="form-control form-control-custom" placeholder="Phone Number">
+                    <textarea id="in-street" class="form-control form-control-custom" rows="2" placeholder="Street Address"></textarea>
+                    <div class="row">
+                        <div class="col-6"><input type="text" id="in-city" class="form-control form-control-custom" placeholder="City"></div>
+                        <div class="col-6"><input type="text" id="in-pin" class="form-control form-control-custom" placeholder="Pincode"></div>
                     </div>
-                </div>
-            </div>
-            <div class="border-top border-secondary mt-5 pt-4 small text-center text-md-start">
-                2022 Meubel House. All rights reserved
+                    <button type="button" class="btn btn-primary w-100 py-3 rounded-pill fw-bold mt-2" onclick="saveAddress()">Deliver Here</button>
+                </form>
             </div>
         </div>
-    </footer>
- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.getElementById('search-trigger').addEventListener('click', function() {
-            if (window.innerWidth < 992) {
-                const mobileInput = document.getElementById('search-input-mobile');
-                mobileInput.classList.toggle('active');
-                if (mobileInput.classList.contains('active')) mobileInput.focus();
-            } else {
-                const desktopInput = document.getElementById('search-desktop');
-                desktopInput.classList.toggle('active');
-                if (desktopInput.classList.contains('active')) desktopInput.focus();
-            }
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+ 
+
+    function saveAddress() {
+        const name = document.getElementById('in-name').value;
+        const street = document.getElementById('in-street').value;
+        const city = document.getElementById('in-city').value;
+        
+        if(name && street) {
+            document.getElementById('displayUser').innerText = name;
+            document.getElementById('displayAddr').innerText = street + ", " + city;
+            bootstrap.Modal.getInstance(document.getElementById('addressPopup')).hide();
+        } else {
+            alert("Please fill name and address");
+        }
+    }
+
+    function finalCheck() {
+        alert("✨ Order Placed Successfully! Redirecting to tracking...");
+    }
+</script>
+<script>
+let subtotal = 0;
+let appliedDiscount = 0;
+let appliedCoupon = null;
+
+async function loadCheckoutCart() {
+    try {
+        const res = await fetch("/api/cart", {
+            credentials: "include"
         });
-    </script>
+
+        if (!res.ok) {
+            alert("Please login to continue checkout");
+            window.location.href = "/login.html";
+            return;
+        }
+
+        const data = await res.json();
+        const items = data.items || [];
+
+        const container = document.getElementById("checkoutItems");
+        container.innerHTML = "";
+        subtotal = 0;
+
+        if (items.length === 0) {
+            container.innerHTML = `<p class="text-muted">Your cart is empty</p>`;
+            updateTotals();
+            return;
+        }
+
+        items.forEach(item => {
+            const price = item.product.finalPrice;
+            const qty = item.quantity;
+            const itemTotal = price * qty;
+            subtotal += itemTotal;
+
+            container.innerHTML += `
+                <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
+                    <img src="${item.product.images[0]}" 
+                         class="rounded-3 me-3" width="65">
+                    <div class="flex-grow-1">
+                        <h6 class="mb-0 fw-bold">${item.product.name}</h6>
+                        <small class="text-muted">Qty: ${qty}</small>
+                    </div>
+                    <span class="fw-bold">₹${itemTotal}</span>
+                </div>
+            `;
+        });
+
+        updateTotals();
+
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+function updateTotals() {
+    document.getElementById("checkoutSubtotal").innerText = `₹${subtotal}`;
+    document.getElementById("discAmount").innerText = `-₹${appliedDiscount}`;
+    document.getElementById("grandTotal").innerText =
+        `₹${subtotal - appliedDiscount}`;
+}
+
+document.addEventListener("DOMContentLoaded", loadCheckoutCart);
+</script>
+
+<script>
+// 1️⃣ Load coupons from admin-created coupons
+async function loadCoupons() {
+    const res = await fetch("/api/coupons/checkout");
+
+    const coupons = await res.json();
+
+    const container = document.getElementById("couponContainer");
+    container.innerHTML = "";
+
+    const today = new Date();
+
+    coupons.forEach(coupon => {
+        const start = new Date(coupon.startDate);
+        const end = new Date(coupon.expiryDate);
+
+        // ❌ Hide expired coupons
+        if (today > end) return;
+
+        const div = document.createElement("div");
+        div.className = "coupon-card";
+
+        // 🟡 Upcoming → fade
+        if (today < start) {
+            div.classList.add("upcoming");
+        }
+
+        div.innerHTML = `
+            <span class="coupon-code">${coupon.code}</span><br>
+            <small class="text-muted d-block">
+                ${
+                    coupon.discountType === "percentage"
+                        ? `${coupon.discountValue}% OFF`
+                        : coupon.discountType === "flat"
+                        ? `₹${coupon.discountValue} OFF`
+                        : "FREE SHIPPING"
+                }
+            </small>
+            ${
+                coupon.description
+                    ? `<small class="text-secondary">${coupon.description}</small>`
+                    : ""
+            }
+        `;
+
+        // ✅ Only active coupons clickable
+        if (today >= start && today <= end) {
+            div.onclick = () => applyCoupon(div, coupon);
+        }
+
+        container.appendChild(div);
+    });
+}
+
+
+
+// 2️⃣ Apply coupon logic
+function applyCoupon(element, coupon) {
+
+    // 🔒 Safety: block upcoming coupons
+    const today = new Date();
+    if (today < new Date(coupon.startDate)) {
+        alert("⏳ This coupon is not active yet");
+        return;
+    }
+
+    if (subtotal < coupon.minCartValue) {
+        alert(`Minimum cart value ₹${coupon.minCartValue} required`);
+        return;
+    }
+
+    document.querySelectorAll(".coupon-card")
+        .forEach(c => c.classList.remove("active"));
+    element.classList.add("active");
+
+    appliedDiscount = 0;
+
+    if (coupon.discountType === "percentage") {
+        appliedDiscount = Math.floor((subtotal * coupon.discountValue) / 100);
+    }
+    else if (coupon.discountType === "flat") {
+        appliedDiscount = coupon.discountValue;
+    }
+    else if (coupon.discountType === "free_shipping") {
+        appliedDiscount = 0;
+        alert("🚚 Free Shipping Applied!");
+    }
+
+    appliedCoupon = coupon.code;
+
+    document.getElementById("discAmount").innerText =
+        appliedDiscount > 0 ? `-₹${appliedDiscount}` : `₹0`;
+
+    document.getElementById("grandTotal").innerText =
+        `₹${(subtotal - appliedDiscount).toFixed(2)}`;
+}
+
+
+// 3️⃣ Place order (send coupon to backend)
+function finalCheck() {
+    if (!appliedCoupon) {
+        alert("Please select a coupon or continue without coupon");
+        return;
+    }
+
+    fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+         credentials: "include",
+        body: JSON.stringify({
+            subtotal,
+            discount: appliedDiscount,
+            totalAmount: subtotal - appliedDiscount,
+            couponCode: appliedCoupon,
+            paymentMethod: document.querySelector('input[name="p"]:checked').id
+        })
+    });
+
+    alert("✨ Order Placed Successfully!");
+}
+
+
+
+// Load coupons on page load
+loadCoupons();
+</script>
+
 </body>
 </html>

@@ -16,53 +16,60 @@ exports.addProduct = async (req, res) => {
       category
     } = req.body;
 
-    // 🔴 VALIDATION
     if (!name || !sku || !price || !category) {
       return res.status(400).json({
         message: "Product name, SKU, price and category are required"
       });
     }
 
-    // 🔹 FINAL PRICE CALCULATION
     const finalPrice =
       discountPrice && Number(discountPrice) > 0
         ? Number(price) - Number(discountPrice)
         : Number(price);
 
     const images = req.files
-  ? req.files.map(file => `/uploads/products/${file.filename}`)
-  : [];
+      ? req.files.map(file => `/uploads/products/${file.filename}`)
+      : [];
 
-const product = await Product.create({
-  name,
-  sku,
-  description,
-  price,
-  discountPrice,
-  finalPrice,
-  stockQuantity,
-  stockStatus,
-  category,
-  images, 
-  createdBy: req.user.id
-});
-
+    const product = await Product.create({
+      name,
+      sku,
+      description,
+      price,
+      discountPrice,
+      finalPrice,
+      stockQuantity,
+      stockStatus,
+      category,
+      images,
+      createdBy: req.user.id
+    });
 
     res.status(201).json({
       message: "Product added successfully",
       product
     });
 
-  } catch (error) {
-    console.error("ADD PRODUCT ERROR:", error);
-    res.status(500).json({ message: "Server error" });
+ } catch (error) {
+  console.error("ADD PRODUCT ERROR:", error);
+
+  // ✅ HANDLE DUPLICATE SKU ERROR
+  if (error.code === 11000 && error.keyPattern?.sku) {
+    return res.status(400).json({
+      message: "SKU already exists. Please use a unique SKU."
+    });
   }
+
+  res.status(500).json({
+    message: "Server error"
+  });
+}
 };
 
 /* =========================
-   📋 GET ALL PRODUCTS (ADMIN)
+   📦 GET ALL PRODUCTS (ADMIN)
 ========================= */
-exports.getAllProducts = async (req, res) => {
+exports.getAllProductsAdmin = async (req, res) => {
   try {
     const products = await Product.find()
       .populate("category", "name")
@@ -75,6 +82,24 @@ exports.getAllProducts = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+/* =========================
+   🛒 GET ACTIVE PRODUCTS (PUBLIC)
+========================= */
+exports.getPublicProducts = async (req, res) => {
+  try {
+    const products = await Product.find({ isActive: true })
+      .populate("category", "name")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(products);
+
+  } catch (error) {
+    console.error("FETCH PRODUCTS ERROR:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 /* =========================
    🗑 DELETE PRODUCT (ADMIN)
 ========================= */
@@ -97,8 +122,9 @@ exports.deleteProduct = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 /* =========================
-   🔍 GET SINGLE PRODUCT (PUBLIC)
+   🔍 GET SINGLE PRODUCT
 ========================= */
 exports.getSingleProduct = async (req, res) => {
   try {
@@ -116,24 +142,21 @@ exports.getSingleProduct = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 /* =========================
-   🔁 GET RELATED PRODUCTS (PUBLIC)
-   GET /api/products/:id/related
+   🔁 GET RELATED PRODUCTS
 ========================= */
 exports.getRelatedProducts = async (req, res) => {
   try {
-    const { id } = req.params;
+    const product = await Product.findById(req.params.id);
 
-    // Current product
-    const product = await Product.findById(id);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    // Related products (same category, exclude itself)
     const relatedProducts = await Product.find({
       category: product.category,
-      _id: { $ne: id },
+      _id: { $ne: product._id },
       isActive: true
     })
       .limit(4)
@@ -147,5 +170,3 @@ exports.getRelatedProducts = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
-

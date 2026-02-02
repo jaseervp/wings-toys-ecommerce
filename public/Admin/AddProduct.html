@@ -304,6 +304,52 @@
             white-space: nowrap;
         }
 
+  .sku-container {
+  position: relative;
+  width: 100%;
+}
+
+.sku-container input {
+  width: 100%;
+  height: 48px;
+  padding: 0 120px 0 16px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #f8fafc;
+  font-size: 14px;
+  color: #111827;
+  outline: none;
+}
+
+.sku-container input::placeholder {
+  color: #9ca3af;
+}
+
+.sku-container button {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: #6366f1;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sku-container button:hover {
+  background: #eef2ff;
+}
+
+
+
         /* --- RESPONSIVE LOGIC --- */
         @media (max-width: 992px) {
             .sidebar {
@@ -436,12 +482,27 @@
                             placeholder="Enter Product Name (Min 3 Characters)">
 
                     </div>
-                    <div class="mb-4">
-                        <label class="form-label">
-                            Product SKU <span class="text-muted">(Unique ID)</span>
-                        </label>
-                        <input type="text" class="custom-input" id="productSKU" placeholder="e.g. WNG-TOY-001">
-                    </div>
+   <div class="mb-4">
+  <label class="form-label">Product SKU</label>
+
+  <div class="sku-container">
+    <input
+      type="text"
+      id="productSKU"
+      placeholder="e.g. SUMMER25"
+      readonly
+    />
+
+    <button type="button" onclick="generateSKU()">
+      ✨ Generate
+    </button>
+  </div>
+</div>
+
+
+
+
+
 
                     <div class="mb-3">
                         <label class="form-label">Product Description</label>
@@ -597,200 +658,178 @@
             </div>
         </div>
     </main>
+<script>
+function generateSKU() {
+  const sku =
+    "WINGS-" +
+    Math.random().toString(36).substring(2, 6).toUpperCase() +
+    "-" +
+    Date.now().toString().slice(-3);
+
+  document.getElementById("productSKU").value = sku;
+}
+</script>
 
    <script>
-/* =========================
-   GLOBAL STATE
-========================= */
-let selectedImages = []; // stores main + gallery images
+/* ================= ADMIN AUTH ================= */
+(async function checkAdminAuth() {
+  const token = localStorage.getItem("adminToken");
+  const role  = localStorage.getItem("adminRole");
 
-/* =========================
-   DOM READY
-========================= */
-document.addEventListener("DOMContentLoaded", () => {
-  loadCategoryDropdown();
-  updateStockUI();
+  if (!token || role !== "admin") {
+    window.location.href = "../User/login.html";
+    return;
+  }
 
-  document
-    .getElementById("unlimitedStock")
-    .addEventListener("change", updateStockUI);
-});
+  try {
+    const res = await fetch("/api/check-auth", {
+      headers: { Authorization: "Bearer " + token }
+    });
 
-/* =========================
-   IMAGE PREVIEW – MAIN IMAGE
-========================= */
+    if (!res.ok) throw new Error("Unauthorized");
+
+    const data = await res.json();
+
+    if (!data.loggedIn || data.user.role !== "admin") {
+      window.location.href = "../User/login.html";
+      return;
+    }
+
+    loadCategoryDropdown();
+    updateStockUI();
+
+    document
+      .getElementById("unlimitedStock")
+      .addEventListener("change", updateStockUI);
+
+  } catch {
+    window.location.href = "../User/login.html";
+  }
+})();
+
+/* ================= GLOBAL STATE ================= */
+let selectedImages = [];
+
+/* ================= SIDEBAR ================= */
+function toggleMenu() {
+  sidebar.classList.toggle("active");
+  sidebarOverlay.classList.toggle("active");
+}
+
+/* ================= MAIN IMAGE ================= */
 function loadMain(event) {
   const file = event.target.files[0];
   if (!file) return;
 
-  // Show preview
-  document.getElementById("mainDisplay").src =
-    URL.createObjectURL(file);
+  // Remove old main image
+  selectedImages = selectedImages.filter(img => img.isMain !== true);
 
-  // Put main image at FIRST index
+  file.isMain = true;
   selectedImages.unshift(file);
 
-  // Reset input
+  mainDisplay.src = URL.createObjectURL(file);
   event.target.value = "";
 }
 
-/* =========================
-   IMAGE PREVIEW – GALLERY
-========================= */
+/* ================= GALLERY IMAGES ================= */
 function loadThumb(event) {
   const files = Array.from(event.target.files);
-  if (!files.length) return;
+  const gallery = thumbGallery;
 
-  const gallery = document.getElementById("thumbGallery");
-
-  files.forEach((file) => {
+  files.forEach(file => {
     selectedImages.push(file);
+    const index = selectedImages.length - 1;
 
     const div = document.createElement("div");
     div.className = "thumb-box";
-
-    const index = selectedImages.length - 1;
-
     div.innerHTML = `
       <img src="${URL.createObjectURL(file)}">
       <button class="remove-thumb" onclick="removeImage(${index}, this)">×</button>
     `;
-
-    // Insert before the "Add Image" box
     gallery.insertBefore(div, gallery.lastElementChild);
   });
 
   event.target.value = "";
 }
 
-/* =========================
-   REMOVE IMAGE
-========================= */
+/* ================= REMOVE IMAGE ================= */
 function removeImage(index, btn) {
   selectedImages.splice(index, 1);
   btn.parentElement.remove();
 }
 
-/* =========================
-   SIDEBAR TOGGLE
-========================= */
-function toggleMenu() {
-  document.getElementById("sidebar").classList.toggle("active");
-  document.getElementById("sidebarOverlay").classList.toggle("active");
-}
-
-/* =========================
-   LOAD CATEGORIES
-========================= */
+/* ================= CATEGORY ================= */
 async function loadCategoryDropdown() {
-  try {
-    const res = await fetch("/api/categories", {
-      credentials: "include"
-    });
+  const token = localStorage.getItem("adminToken");
 
-    if (!res.ok) return;
+  const res = await fetch("/api/categories", {
+    headers: { Authorization: "Bearer " + token }
+  });
 
-    const categories = await res.json();
-    const select = document.getElementById("productCategory");
+  if (!res.ok) return;
 
-    select.innerHTML = `<option value="">Select Category</option>`;
+  const categories = await res.json();
+  productCategory.innerHTML = `<option value="">Select Category</option>`;
 
-    categories.forEach(cat => {
-      const option = document.createElement("option");
-      option.value = cat._id;
-      option.textContent = cat.name;
-      select.appendChild(option);
-    });
-
-  } catch (err) {
-    console.error("Category load error:", err);
-  }
+  categories.forEach(cat => {
+    productCategory.innerHTML += `
+      <option value="${cat._id}">${cat.name}</option>
+    `;
+  });
 }
 
-/* =========================
-   UNLIMITED STOCK LOGIC
-========================= */
+/* ================= STOCK ================= */
 function updateStockUI() {
-  const unlimitedCheckbox = document.getElementById("unlimitedStock");
-  const stockQuantityInput = document.getElementById("stockQuantity");
-
-  if (unlimitedCheckbox.checked) {
-    stockQuantityInput.value = "";
-    stockQuantityInput.placeholder = "Unlimited";
-    stockQuantityInput.disabled = true;
+  if (unlimitedStock.checked) {
+    stockQuantity.disabled = true;
+    stockQuantity.value = "";
+    stockQuantity.placeholder = "Unlimited";
   } else {
-    stockQuantityInput.disabled = false;
-    stockQuantityInput.placeholder = "Enter quantity";
+    stockQuantity.disabled = false;
+    stockQuantity.placeholder = "Enter quantity";
   }
 }
 
-/* =========================
-   ADD PRODUCT
-========================= */
+/* ================= ADD PRODUCT ================= */
 async function addProduct() {
-  const name = document.getElementById("productName").value.trim();
-  const sku = document.getElementById("productSKU").value.trim();
-  const description = document.getElementById("productDescription").value.trim();
-  const price = Number(document.getElementById("productPrice").value);
-  const discountPrice = Number(document.getElementById("discountPrice").value || 0);
-  const finalPrice = discountPrice > 0 ? price - discountPrice : price;
+  const token = localStorage.getItem("adminToken");
 
-  const unlimited = document.getElementById("unlimitedStock").checked;
-  const stockQuantity = unlimited
-    ? 0
-    : Number(document.getElementById("stockQuantity").value || 0);
-
-  const stockStatus = document.getElementById("stockStatus").value;
-  const category = document.getElementById("productCategory").value;
-
-  /* VALIDATION */
-  if (!name || !sku || !price || !category) {
-    alert("Product name, SKU, price and category are required");
+  if (!productName.value || !productSKU.value || !productPrice.value || !productCategory.value) {
+    alert("Required fields missing");
     return;
   }
 
   if (selectedImages.length === 0) {
-    alert("Please upload at least one product image");
+    alert("Upload at least one image");
     return;
   }
 
-  /* FORM DATA */
-  const formData = new FormData();
-  formData.append("name", name);
-  formData.append("sku", sku);
-  formData.append("description", description);
-  formData.append("price", price);
-  formData.append("discountPrice", discountPrice);
-  formData.append("finalPrice", finalPrice);
-  formData.append("stockQuantity", stockQuantity);
-  formData.append("stockStatus", stockStatus);
-  formData.append("category", category);
+  const fd = new FormData();
+  fd.append("name", productName.value);
+  fd.append("sku", productSKU.value);
+  fd.append("description", productDescription.value);
+  fd.append("price", productPrice.value);
+  fd.append("discountPrice", discountPrice.value || 0);
+  fd.append("finalPrice", finalPrice.value || productPrice.value);
+  fd.append("stockQuantity", unlimitedStock.checked ? 0 : stockQuantity.value);
+  fd.append("stockStatus", stockStatus.value);
+  fd.append("category", productCategory.value);
 
-  // ✅ MULTIPLE IMAGES
-  selectedImages.forEach(img => {
-    formData.append("images", img);
+  selectedImages.forEach(img => fd.append("images", img));
+
+  const res = await fetch("/api/admin/product", {
+    method: "POST",
+    headers: { Authorization: "Bearer " + token },
+    body: fd
   });
 
-  try {
-    const res = await fetch("/api/admin/product", {
-      method: "POST",
-      credentials: "include",
-      body: formData
-    });
+  const data = await res.json();
 
-    const data = await res.json();
-
-    if (res.ok) {
-      alert("✅ Product added successfully");
-      window.location.href = "ProductList.html";
-
-    } else {
-      alert(data.message || "Failed to add product");
-    }
-
-  } catch (error) {
-    console.error("Add product error:", error);
-    alert("Server error");
+  if (res.ok) {
+    alert("✅ Product added");
+    location.href = "ProductList.html";
+  } else {
+    alert(data.message || "Failed");
   }
 }
 </script>

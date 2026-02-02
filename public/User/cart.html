@@ -423,7 +423,33 @@ async function removeItem(productId) {
 
 
 
-document.addEventListener("DOMContentLoaded", loadCart);
+
+</script>
+<script>
+/* ================= USER AUTH (CART PAGE) ================= */
+(async function checkUserAuth() {
+  try {
+    const res = await fetch("/api/check-auth", {
+      credentials: "include"
+    });
+
+    if (!res.ok) throw new Error("Not logged in");
+
+    const data = await res.json();
+
+    if (!data.loggedIn || data.user.role !== "user") {
+      window.location.href = "login.html";
+      return;
+    }
+
+    // ✅ user verified
+    loadCart();
+
+  } catch (err) {
+    console.error("Auth failed:", err);
+    window.location.href = "login.html";
+  }
+})();
 </script>
 
 

@@ -246,42 +246,49 @@
  
 
 
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
 
-    try {
-        const response = await fetch('/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include', // ✅ VERY IMPORTANT (send cookies)
-            body: JSON.stringify({ email, password })
-        });
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-        const result = await response.json();
-        
-        if (response.ok) {
-    localStorage.setItem('userName', result.user.fullName);
-    localStorage.setItem('userRole', result.user.role);
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
 
-    alert("✅ Welcome back, " + result.user.fullName);
+  try {
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include", // ✅ allows cookie for users
+      body: JSON.stringify({ email, password })
+    });
 
-    // 🔥 ROLE-BASED REDIRECT
-    if (result.user.role === "admin") {
-        window.location.href = "../Admin/Dashboard.html";
-    } else {
-        window.location.href = "index.html";
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message || "Invalid credentials");
+      return;
     }
-}
-    } catch (error) {
-        console.error("Login Error:", error);
-        alert("❌ Server connection failed");
+
+    // 🔐 ADMIN LOGIN (keep localStorage – no breaking changes)
+    if (data.user.role === "admin") {
+      localStorage.setItem("adminToken", data.token); // only if backend sends it
+      localStorage.setItem("adminRole", "admin");
+      window.location.href = "../Admin/Dashboard.html";
+      return;
     }
+
+    // 👤 USER LOGIN (cookie-based)
+    window.location.href = "index.html";
+
+  } catch (err) {
+    console.error("Login error:", err);
+    alert("Server error");
+  }
 });
 
 
 </script>
+
+
+
 </body>
 </html>
