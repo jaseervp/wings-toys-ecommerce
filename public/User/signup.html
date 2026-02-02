@@ -325,8 +325,7 @@ document.getElementById('verifyOtpBtn').addEventListener('click', async () => {
     }
 
     try {
-        const res = await fetch('/api/verify-otp', {
- 
+        const res = await fetch('/api/verify-signup-otp', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId: createdUserId, otp })

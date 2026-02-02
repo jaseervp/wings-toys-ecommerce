@@ -1,156 +1,240 @@
-const User = require("../models/User");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const sendEmail = require("../utils/sendEmail");
+const User = require('../models/User');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const sendEmail = require('../utils/sendEmail');
+const generateToken = require("../utils/generateToken");
 
-/* =====================
-   SIGNUP (SEND OTP)
-===================== */
+
+// SIGNUP LOGIC
 exports.registerUser = async (req, res) => {
-  try {
-    const { fullName, email, password } = req.body;
+    try {
+        const { fullName, email, password } = req.body;
 
-    if (!fullName || !email || !password) {
-      return res.status(400).json({ message: "All fields required" });
+        if (!fullName || !email || !password) {
+            return res.status(400).json({ message: "All fields required" });
+        }
+
+        const userExists = await User.findOne({ email });
+        if (userExists) {
+            return res.status(400).json({ message: "User already exists" });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+        const user = await User.create({
+            fullName,
+            email,
+            password: hashedPassword,
+            emailOtp: otp,
+            emailOtpExpiry: Date.now() + 10 * 60 * 1000
+        });
+
+        await sendEmail(
+            email,
+            "Verify your email - Wings Toys",
+            `Your verification OTP is ${otp}`
+        );
+
+        res.status(201).json({
+            message: "OTP sent to email",
+            userId: user._id
+        });
+
+    } catch (err) {
+        res.status(500).json({ message: "Server error" });
     }
-
-    const exists = await User.findOne({ email });
-    if (exists) {
-      return res.status(400).json({ message: "User already exists" });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
-    const user = await User.create({
-      fullName,
-      email,
-      password: hashedPassword,
-      otp,
-      otpExpiry: Date.now() + 10 * 60 * 1000,
-      otpPurpose: "signup",
-      isVerified: false
-    });
-
-    await sendEmail(
-      email,
-      "Wings – Email Verification OTP",
-      `Your OTP is ${otp}`
-    );
-
-    res.status(201).json({
-      message: "OTP sent to email",
-      userId: user._id
-    });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
-  }
 };
-
-/* =====================
-   VERIFY OTP (SINGLE ROUTE)
-===================== */
-exports.verifyOtp = async (req, res) => {
-  try {
+exports.verifySignupOtp = async (req, res) => {
     const { userId, otp } = req.body;
 
     const user = await User.findOne({
-      _id: userId,
-      otp,
-      otpExpiry: { $gt: Date.now() }
+        _id: userId,
+        emailOtp: otp,
+        emailOtpExpiry: { $gt: Date.now() }
     });
 
     if (!user) {
-      return res.status(400).json({ message: "Invalid or expired OTP" });
+        return res.status(400).json({ message: "Invalid or expired OTP" });
     }
 
-    if (user.otpPurpose === "signup") {
-      user.isVerified = true;
-    }
-
-    user.otp = undefined;
-    user.otpExpiry = undefined;
-    user.otpPurpose = undefined;
+    user.isVerified = true;
+    user.emailOtp = undefined;
+    user.emailOtpExpiry = undefined;
     await user.save();
 
-    res.json({ message: "OTP verified successfully" });
+   res.status(201).json({
+    message: "OTP sent",
+    userId: user._id
+});
 
-  } catch (err) {
-    res.status(500).json({ message: "Server error" });
-  }
 };
 
-/* =====================
-   LOGIN
-===================== */
+
+// LOGIN LOGIC
+// controllers/authController.js
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
-  if (!user) return res.status(400).json({ message: "Invalid credentials" });
+  if (!user) {
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
 
-  const match = await bcrypt.compare(password, user.password);
-  if (!match) return res.status(400).json({ message: "Invalid credentials" });
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
 
-  const token = jwt.sign(
-    { id: user._id, role: user.role },
-    process.env.JWT_SECRET,
-    { expiresIn: "1d" }
-  );
+  const token = generateToken(user._id, user.role);
 
-  // 🔴 ADMIN → localStorage
+  // 👑 ADMIN → token in response
   if (user.role === "admin") {
     return res.json({
-      user: { role: "admin" },
+      user: {
+        id: user._id,
+        role: "admin"
+      },
       token
     });
   }
 
-  // 🔵 USER → cookie
-  res.cookie("wingsToken", token, {
+  // 👤 USER → token in cookie
+  res.cookie("token", token, {
     httpOnly: true,
-    sameSite: "Lax"
+    sameSite: "lax",
+    secure: false // true in production
   });
 
   res.json({
-    user: { role: "user" }
+    user: {
+      id: user._id,
+      role: "user"
+    }
   });
 };
 
-/* =====================
-   FORGOT PASSWORD (SEND OTP)
-===================== */
+
+
+
 exports.forgotPassword = async (req, res) => {
-  const { email } = req.body;
+    try {
+        const { email } = req.body;
 
-  const user = await User.findOne({ email });
-  if (!user) return res.status(404).json({ message: "User not found" });
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
 
-  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        // Generate 6-digit OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-  user.otp = otp;
-  user.otpExpiry = Date.now() + 10 * 60 * 1000;
-  user.otpPurpose = "reset";
-  await user.save();
+        // ✅ FIXED FIELD NAMES
+        user.resetOtp = otp;
+        user.resetOtpExpiry = Date.now() + 10 * 60 * 1000; // 10 mins
+        await user.save();
 
-  await sendEmail(email, "Password Reset OTP", `Your OTP is ${otp}`);
+        await sendEmail(
+            email,
+            "Wings Toys - Password Reset OTP",
+            `Your OTP is ${otp}. It is valid for 10 minutes.`
+        );
 
-  res.json({ message: "OTP sent" });
+        res.status(200).json({ message: "OTP sent to email" });
+
+    } catch (error) {
+        console.error("FORGOT PASSWORD ERROR:", error);
+        res.status(500).json({ message: "Server error" });
+    }
 };
+exports.verifyOtp = async (req, res) => {
+    try {
+        const { otp } = req.body;
 
-/* =====================
-   RESET PASSWORD
-===================== */
+        const user = await User.findOne({
+            resetOtp: otp,
+            resetOtpExpiry: { $gt: Date.now() }
+        });
+
+        if (!user) {
+            return res.status(400).json({ message: "Invalid or expired OTP" });
+        }
+
+        res.status(200).json({ message: "OTP verified", userId: user._id });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Server error" });
+    }
+};
 exports.resetPassword = async (req, res) => {
-  const { userId, newPassword } = req.body;
+    try {
+        const { newPassword } = req.body;
 
-  const user = await User.findById(userId);
-  if (!user) return res.status(400).json({ message: "Invalid request" });
+        // Find user who recently verified OTP
+        const user = await User.findOne({
+            resetOtpExpiry: { $gt: Date.now() }
+        });
 
-  user.password = await bcrypt.hash(newPassword, 10);
-  await user.save();
+        if (!user) {
+            return res.status(400).json({ message: "OTP session expired" });
+        }
 
-  res.json({ message: "Password reset successful" });
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(newPassword, salt);
+
+        // Clear OTP fields
+        user.resetOtp = undefined;
+        user.resetOtpExpiry = undefined;
+
+        await user.save();
+
+        res.status(200).json({ message: "Password reset successful" });
+
+    } catch (error) {
+        console.error("RESET PASSWORD ERROR:", error);
+        res.status(500).json({ message: "Server error" });
+    }
 };
+exports.checkAuth = async (req, res) => {
+  try {
+    let token;
+
+    if (req.headers.authorization?.startsWith("Bearer ")) {
+      token = req.headers.authorization.split(" ")[1];
+    }
+
+    if (!token && req.cookies?.token) {
+      token = req.cookies.token;
+    }
+
+    if (!token) return res.status(401).json({ loggedIn: false });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id).select("-password");
+
+    if (!user) return res.status(401).json({ loggedIn: false });
+
+    res.json({
+      loggedIn: true,
+      user: {
+        id: user._id,
+        fullName: user.fullName,
+        role: user.role
+      }
+    });
+  } catch {
+    res.status(401).json({ loggedIn: false });
+  }
+};
+
+
+exports.logoutUser = (req, res) => {
+  res.clearCookie("token");
+  res.json({ message: "Logged out" });
+};
+
+
+
+

@@ -1,38 +1,45 @@
+
 const jwt = require("jsonwebtoken");
-
-exports.protect = (req, res, next) => {
-  let token;
-
-  // 🔵 USER TOKEN (COOKIE)
-  if (req.cookies?.token) {
-    token = req.cookies.token;
-  }
-
-  // 🔴 ADMIN TOKEN (HEADER)
-  if (
-    !token &&
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    token = req.headers.authorization.split(" ")[1];
-  }
-
-  if (!token) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-
+const User = require("../models/User");
+exports.protect = async (req, res, next) => {
   try {
+    let token;
+
+    // 👑 Admin → header
+    if (req.headers.authorization?.startsWith("Bearer ")) {
+      token = req.headers.authorization.split(" ")[1];
+    }
+
+    // 👤 User → cookie
+    if (!token && req.cookies?.token) {
+      token = req.cookies.token;
+    }
+
+    if (!token) {
+      return res.status(401).json({ message: "Not authorized" });
+    }
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+    const user = await User.findById(decoded.id).select("-password");
+
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+
+    req.user = user;
     next();
-  } catch (err) {
-    return res.status(401).json({ message: "Invalid token" });
+  } catch {
+    res.status(401).json({ message: "Invalid token" });
   }
 };
+
+
 
 exports.adminOnly = (req, res, next) => {
-  if (req.user.role !== "admin") {
-    return res.status(403).json({ message: "Admin only" });
-  }
-  next();
+    if (req.user.role !== "admin") {
+        return res.status(403).json({ message: "Admin access only" });
+    }
+    next();
 };
+
+

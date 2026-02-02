@@ -253,42 +253,34 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
 
-  try {
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include", // ✅ allows cookie for users
-      body: JSON.stringify({ email, password })
-    });
+  const res = await fetch("/api/login", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ email, password }),
+  credentials: "include" // 🔥 REQUIRED
+});
 
-    const data = await res.json();
+  const data = await res.json();
 
-    if (!res.ok) {
-      alert(data.message || "Invalid credentials");
-      return;
-    }
-
-    // 🔐 ADMIN LOGIN (keep localStorage – no breaking changes)
-    if (data.user.role === "admin") {
-      localStorage.setItem("adminToken", data.token); // only if backend sends it
-      localStorage.setItem("adminRole", "admin");
-      window.location.href = "../Admin/Dashboard.html";
-      return;
-    }
-
-    // 👤 USER LOGIN (cookie-based)
-    window.location.href = "index.html";
-
-  } catch (err) {
-    console.error("Login error:", err);
-    alert("Server error");
+  if (!res.ok) {
+    alert(data.message || "Invalid credentials");
+    return;
   }
+
+  // 🔐 ADMIN
+  if (data.user.role === "admin") {
+    localStorage.setItem("adminToken", data.token);
+    localStorage.setItem("adminRole", "admin");
+    window.location.href = "../Admin/Dashboard.html";
+    return;
+  }
+
+  // 👤 USER
+  window.location.href = "index.html";
 });
 
 
+
 </script>
-
-
-
 </body>
 </html>
