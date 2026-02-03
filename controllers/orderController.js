@@ -1,21 +1,26 @@
 const Coupon = require("../models/Coupon");
 const Order = require("../models/Order");
+const Cart = require("../models/Cart");
 
 /* ================= CREATE ORDER ================= */
 exports.createOrder = async (req, res) => {
   try {
-    const { items, subtotal, paymentMethod, couponCode } = req.body;
+    const { subtotal, paymentMethod, couponCode } = req.body;
 
-    // 🔐 ENSURE USER EXISTS
-    if (!req.user) {
-  return res.status(401).json({
-    message: "Login required to place order"
-  });
-}
-console.log("USER IN ORDER:", req.user);
+    const cart = await Cart.findOne({ user: req.user.id })
+      .populate("items.product");
 
+    if (!cart || cart.items.length === 0) {
+      return res.status(400).json({ message: "Cart is empty" });
+    }
 
-    // ✅ PAYMENT METHOD FIX
+    const items = cart.items.map(item => ({
+      product: item.product._id,
+      quantity: item.quantity,
+      price: item.product.finalPrice,
+      itemStatus: "pending"
+    }));
+
     const paymentMap = {
       "pay-w": "wallet",
       "pay-u": "upi",
@@ -27,103 +32,80 @@ console.log("USER IN ORDER:", req.user);
       return res.status(400).json({ message: "Invalid payment method" });
     }
 
-    let coupon = null;
     let discount = 0;
-
     if (couponCode) {
-      coupon = await Coupon.findOne({ code: couponCode, isActive: true });
-      if (!coupon) return res.status(400).json({ message: "Invalid coupon" });
-
-      const today = new Date();
-      if (today < coupon.startDate)
-        return res.status(400).json({ message: "Coupon not active yet" });
-
-      if (today > coupon.expiryDate)
-        return res.status(400).json({ message: "Coupon expired" });
-
-      if (coupon.usageLimit && coupon.usedCount >= coupon.usageLimit)
-        return res.status(400).json({ message: "Coupon usage limit reached" });
-
-      if (coupon.discountType === "percentage") {
-        discount = Math.floor((subtotal * coupon.discountValue) / 100);
-        if (coupon.maxDiscount && discount > coupon.maxDiscount)
-          discount = coupon.maxDiscount;
-      } else if (coupon.discountType === "flat") {
-        discount = coupon.discountValue;
-      }
+      const coupon = await Coupon.findOne({ code: couponCode, isActive: true });
+      if (coupon) discount = coupon.discountAmount || 0;
     }
-
-    const totalAmount = subtotal - discount;
 
     const order = await Order.create({
       user: req.user.id,
       items,
       subtotal,
       discount,
-      totalAmount,
+      totalAmount: subtotal - discount,
       paymentMethod: normalizedPaymentMethod,
-      paymentStatus: normalizedPaymentMethod === "cod" ? "unpaid" : "paid",
-      couponCode: coupon ? coupon.code : null
+      paymentStatus: normalizedPaymentMethod === "cod" ? "unpaid" : "paid"
     });
 
-    if (coupon) {
-      coupon.usedCount += 1;
-      if (coupon.usageLimit && coupon.usedCount >= coupon.usageLimit) {
-        coupon.isActive = false;
-      }
-      await coupon.save();
-    }
+    cart.items = [];
+    await cart.save();
 
-    res.status(201).json({ message: "Order placed successfully", order });
-
+    res.status(201).json({ success: true, order });
   } catch (err) {
-    console.error("Create order error:", err);
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };
 
+/* ================= USER: GET MY ORDERS ================= */
+exports.getMyOrders = async (req, res) => {
+  const orders = await Order.find({ user: req.user.id })
+    .populate("items.product", "name images")
+    .sort({ createdAt: -1 });
 
-/* ================= ADMIN: GET ORDERS ================= */
+  res.json({ orders });
+};
+
+/* ================= USER: GET SINGLE ORDER ================= */
+exports.getMyOrderById = async (req, res) => {
+  const order = await Order.findOne({
+    _id: req.params.id,
+    user: req.user.id
+  }).populate("items.product", "name images");
+
+  if (!order) return res.status(404).json({ message: "Order not found" });
+
+  res.json({ order });
+};
+
+/* ================= ADMIN ================= */
 exports.getOrders = async (req, res) => {
-  try {
-    const orders = await Order.find()
-      .populate("user", "name email")
-      .populate("items.product", "name images")
-      .sort({ createdAt: -1 });
+  const orders = await Order.find()
+    .populate("user", "fullName email")
+    .populate("items.product", "name images");
 
-    res.json(orders);
-  } catch (err) {
-    res.status(500).json({ message: "Failed to fetch orders" });
-  }
+  res.json({ orders });
 };
 
-/* ================= ADMIN: UPDATE STATUS ================= */
 exports.updateOrderStatus = async (req, res) => {
-  try {
-    const { status } = req.body;
-
-    const order = await Order.findByIdAndUpdate(
-      req.params.id,
-      { orderStatus: status },
-      { new: true }
-    );
-
-    res.json(order);
-  } catch (err) {
-    res.status(500).json({ message: "Update failed" });
-  }
-};
-// ADMIN: UPDATE SINGLE PRODUCT STATUS IN ORDER
-exports.updateItemStatus = async (req, res) => {
-  const { orderId, itemId } = req.params;
-  const { status } = req.body;
-
-  const order = await Order.findOneAndUpdate(
-    { _id: orderId, "items._id": itemId },
-    { $set: { "items.$.itemStatus": status } },
+  const order = await Order.findByIdAndUpdate(
+    req.params.id,
+    { orderStatus: req.body.status },
     { new: true }
   );
 
   res.json(order);
 };
 
+exports.updateItemStatus = async (req, res) => {
+  const { orderId, itemId } = req.params;
+
+  const order = await Order.findOneAndUpdate(
+    { _id: orderId, "items._id": itemId },
+    { $set: { "items.$.itemStatus": req.body.status } },
+    { new: true }
+  );
+
+  res.json(order);
+};

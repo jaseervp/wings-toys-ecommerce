@@ -77,6 +77,7 @@ exports.verifySignupOtp = async (req, res) => {
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
 
+
   const user = await User.findOne({ email });
   if (!user) {
     return res.status(401).json({ message: "Invalid credentials" });
@@ -114,8 +115,6 @@ exports.loginUser = async (req, res) => {
     }
   });
 };
-
-
 
 
 exports.forgotPassword = async (req, res) => {

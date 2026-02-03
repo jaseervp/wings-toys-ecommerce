@@ -1,3 +1,4 @@
+// models/Order.js
 const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema(
@@ -22,51 +23,36 @@ const orderSchema = new mongoose.Schema(
         price: {
           type: Number,
           required: true
+        },
+        itemStatus: {
+          type: String,
+          enum: ["pending", "shipped", "delivered", "canceled"],
+          default: "pending"
         }
       }
-    ], itemStatus: {
-      type: String,
-      enum: ["pending", "shipped", "delivered", "canceled"],
-      default: "pending"
-    },
+    ],
 
-    subtotal: {
-      type: Number,
-      required: true
-    },
-
-    discount: {
-      type: Number,
-      default: 0
-    },
-
-    totalAmount: {
-      type: Number,
-      required: true
-    },
-
-    couponCode: {
-      type: String,
-      default: null
-    },
+    subtotal: Number,
+    discount: Number,
+    totalAmount: Number,
 
     paymentMethod: {
       type: String,
-      enum: ["wallet", "upi", "cod"],
-      required: true
+      enum: ["cod", "upi", "wallet"]
     },
 
     paymentStatus: {
       type: String,
-      enum: ["paid", "unpaid", "failed"],
-      default: "unpaid"
+      enum: ["paid", "unpaid"]
     },
 
     orderStatus: {
       type: String,
       enum: ["pending", "shipped", "delivered", "canceled"],
       default: "pending"
-    }
+    },
+
+    couponCode: String
   },
   { timestamps: true }
 );

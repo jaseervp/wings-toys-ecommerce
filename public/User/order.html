@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Orders</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: #f7f7f7;
+      font-family: 'Poppins', sans-serif;
+    }
+    .order-card {
+      border-radius: 14px;
+      border: none;
+    }
+    .order-img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    .badge-status {
+      font-size: 0.8rem;
+      padding: 6px 12px;
+      border-radius: 20px;
+    }
+    .details-box {
+      background: #f9f9f9;
+      border-radius: 12px;
+      padding: 15px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container py-5">
+
+  <!-- ================= ORDERS LIST ================= -->
+  <div id="ordersPage">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="fw-bold">My Orders</h2>
+        <p class="text-muted mb-0">Track, manage and view your order history.</p>
+      </div>
+    </div>
+
+    <div id="ordersContainer"></div>
+  </div>
+
+  <!-- ================= ORDER DETAILS ================= -->
+  <div id="orderDetailsPage" class="d-none">
+
+    <button class="btn btn-dark mb-4" onclick="showOrders()">
+      ← Back to Orders
+    </button>
+
+    <div id="orderDetails"></div>
+
+  </div>
+
+</div>
+
+<script>
+/* ================= GLOBAL ================= */
+let ALL_ORDERS = [];
+
+/* ================= LOAD ORDERS ================= */
+async function loadOrders() {
+  try {
+    const res = await fetch("/api/orders/my", {
+      credentials: "include"
+    });
+
+    if (!res.ok) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    const data = await res.json();
+    ALL_ORDERS = data.orders;
+
+    const container = document.getElementById("ordersContainer");
+
+    if (!ALL_ORDERS.length) {
+      container.innerHTML = "<p>No orders found.</p>";
+      return;
+    }
+
+    container.innerHTML = ALL_ORDERS.map(order => `
+      <div class="card order-card shadow-sm mb-4">
+        <div class="card-body">
+
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h5 class="mb-1">Order #${order._id.slice(-8).toUpperCase()}</h5>
+              <small class="text-muted">
+                Placed on: ${new Date(order.createdAt).toDateString()}
+              </small>
+            </div>
+
+            <span class="badge badge-status
+              ${order.orderStatus === "canceled" ? "bg-danger" :
+                order.orderStatus === "delivered" ? "bg-success" :
+                order.orderStatus === "shipped" ? "bg-primary" :
+                "bg-warning text-dark"}">
+              ${order.orderStatus}
+            </span>
+          </div>
+
+          <hr>
+
+          <div class="d-flex align-items-center">
+            <img
+              src="${order.items[0]?.product?.images?.[0] || 'https://via.placeholder.com/80'}"
+              class="order-img me-3"
+            >
+            <div>
+              <p class="fw-semibold mb-1">
+                ${order.items[0]?.product?.name || "Product"}
+              </p>
+              <p class="mb-1">Qty: ${order.items[0]?.quantity}</p>
+              <strong>₹${order.totalAmount}</strong>
+            </div>
+          </div>
+
+          <div class="text-end mt-3">
+            <button class="btn btn-primary"
+              onclick="viewOrderDetails('${order._id}')">
+              View Details
+            </button>
+          </div>
+
+        </div>
+      </div>
+    `).join("");
+
+  } catch (err) {
+    console.error("Failed to load orders", err);
+  }
+}
+
+/* ================= VIEW DETAILS ================= */
+function viewOrderDetails(orderId) {
+  const order = ALL_ORDERS.find(o => o._id === orderId);
+  if (!order) return;
+
+  document.getElementById("ordersPage").classList.add("d-none");
+  document.getElementById("orderDetailsPage").classList.remove("d-none");
+
+  document.getElementById("orderDetails").innerHTML = `
+    <div class="card shadow-sm">
+      <div class="card-body">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 class="fw-bold">
+            Order #${order._id.slice(-8).toUpperCase()}
+          </h4>
+          <span class="badge badge-status bg-secondary">
+            ${order.orderStatus}
+          </span>
+        </div>
+
+        <hr>
+
+        ${order.items.map(item => `
+          <div class="d-flex mb-3">
+            <img
+              src="${item.product?.images?.[0] || 'https://via.placeholder.com/80'}"
+              class="order-img me-3"
+            >
+            <div>
+              <p class="fw-semibold mb-1">
+                ${item.product?.name || "Product removed"}
+              </p>
+              <p class="mb-1">Qty: ${item.quantity}</p>
+              <strong>₹${item.price}</strong>
+            </div>
+          </div>
+        `).join("")}
+
+        <hr>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <div class="details-box">
+              <strong>Shipping Address</strong>
+              <p class="mb-0 mt-2">
+                ${order.shippingAddress || "Not available"}
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="details-box">
+              <strong>Payment Method</strong>
+              <p class="mb-0 mt-2 text-uppercase">
+                ${order.paymentMethod}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="text-end">
+          <p class="mb-1">Subtotal: ₹${order.subtotal || 0}</p>
+          <p class="mb-1">Shipping: ₹15</p>
+          <p class="mb-1">Tax: ₹0</p>
+          <h5 class="fw-bold mt-2">
+            Order Total: ₹${order.totalAmount}
+          </h5>
+        </div>
+
+      </div>
+    </div>
+  `;
+}
+
+/* ================= BACK TO LIST ================= */
+function showOrders() {
+  document.getElementById("orderDetailsPage").classList.add("d-none");
+  document.getElementById("ordersPage").classList.remove("d-none");
+}
+
+/* ================= INIT ================= */
+document.addEventListener("DOMContentLoaded", loadOrders);
+</script>
+
+</body>
+</html>
