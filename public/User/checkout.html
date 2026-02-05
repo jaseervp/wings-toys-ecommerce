@@ -238,9 +238,7 @@
         }
     }
 
-    function finalCheck() {
-        alert("✨ Order Placed Successfully! Redirecting to tracking...");
-    }
+  
 </script>
 <script>
 let subtotal = 0;
@@ -408,9 +406,34 @@ function applyCoupon(element, coupon) {
 
 // 3️⃣ Place order (send coupon to backend)
 
+
 async function finalCheck() {
   try {
-    const paymentMethod = document.querySelector('input[name="p"]:checked')?.id;
+   const paymentInput =
+  document.querySelector('input[name="p"]:checked');
+
+if (!paymentInput) {
+  Swal.fire({
+    icon: "warning",
+    title: "Select payment method"
+  });
+  return;
+}
+
+let paymentMethod;
+
+switch (paymentInput.id) {
+  case "pay-w":
+    paymentMethod = "wallet";
+    break;
+  case "pay-u":
+    paymentMethod = "upi";
+    break;
+  case "pay-c":
+    paymentMethod = "cod";
+    break;
+}
+
 
     if (!paymentMethod) {
       Swal.fire({
@@ -421,20 +444,28 @@ async function finalCheck() {
       return;
     }
 
+    const totalAmount = subtotal - appliedDiscount;
+
+    // 🟢 UPI → Razorpay TEST
+    if (paymentMethod === "upi") {
+      await startRazorpay(totalAmount);
+      return;
+    }
+
+    // 🟡 COD / Wallet → normal order flow
     const res = await fetch("/api/orders", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
       body: JSON.stringify({
         subtotal,
-        couponCode: appliedCoupon || null, // ✅ optional coupon
+        couponCode: appliedCoupon || null,
         paymentMethod
       })
     });
 
     if (!res.ok) throw new Error("Order failed");
 
-    // ✅ SUCCESS
     Swal.fire({
       icon: "success",
       title: "Order Placed!",
@@ -457,10 +488,60 @@ async function finalCheck() {
     });
   }
 }
-
 </script>
 
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+async function startRazorpay(amount) {
+  try {
+    // 1️⃣ Create Razorpay order (TEST)
+    const res = await fetch("/api/payment/create-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ amount })
+    });
+
+    const data = await res.json();
+    if (!data.success) throw new Error("Razorpay order failed");
+
+    // 2️⃣ Open Razorpay UPI checkout
+    const options = {
+      key: "rzp_test_SC1XM124Zf0QHK",// 🔑 TEST KEY ONLY
+      amount: data.order.amount,
+      currency: "INR",
+      name: "Wings Premium",
+      description: "Order Payment",
+      order_id: data.order.id,
+
+      method: {
+        upi: true,
+        card: false,
+        netbanking: false,
+        wallet: false
+      },
+
+      handler: async function (response) {
+        await savePaidOrder(response);
+      },
+
+      theme: { color: "#6366f1" }
+    };
+
+    new Razorpay(options).open();
+
+  } catch (err) {
+    Swal.fire({
+      icon: "error",
+      title: "Payment Failed",
+      text: err.message
+    });
+  }
+}
+</script>
+
 <script>
     let savedAddresses = [];
 let selectedAddress = null;
@@ -491,11 +572,13 @@ async function loadUserAddresses() {
 
 function showAddress(addr) {
   document.getElementById("displayUser").innerText =
-    addr.name || "John Doe";
+    addr.fullName || "—";
 
   document.getElementById("displayAddr").innerText =
-    `${addr.addressLine}, ${addr.pincode}`;
+    `${addr.addressLine} - ${addr.pincode}`;
 }
+
+
 
 
 document.addEventListener("DOMContentLoaded", loadUserAddresses);
@@ -528,5 +611,43 @@ function openAddressPopup() {
 }
 
 </script>
+<script>
+async function savePaidOrder(payment) {
+  try {
+    const res = await fetch("/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        subtotal,
+        couponCode: appliedCoupon || null,
+        paymentMethod: "upi",
+        razorpayPayment: payment
+      })
+    });
+
+    if (!res.ok) throw new Error("Order save failed");
+
+    Swal.fire({
+      icon: "success",
+      title: "Payment Successful 🎉",
+      confirmButtonColor: "#6366f1",
+      timer: 2500
+    }).then(() => {
+      window.location.href = "/orders.html";
+    });
+
+  } catch (err) {
+    Swal.fire({
+      icon: "error",
+      title: "Order Failed",
+      text: err.message
+    });
+  }
+}
+</script>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 </body>
 </html>

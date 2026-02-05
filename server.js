@@ -40,6 +40,7 @@ app.use("/api", require("./routes/couponRoutes"));
 app.use("/api/orders", orderRoutes);
 
 app.use("/api/users", userRoutes);
+app.use("/api/payment", require("./routes/paymentRoutes"));
 
 
 

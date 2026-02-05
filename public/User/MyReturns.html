@@ -125,28 +125,35 @@
 
     <main class="container py-5">
         <div class="row">
-           <div class="col-lg-3">
-    <div class="sidebar-menu">
-        <p class="text-muted small">Account Details</p>
-        
-        <div class="menu-section-title">Manage My Account</div>
-        <a href="my-account.html" class="sidebar-link ">My Profile</a>
-        <a href="address-book.html" class="sidebar-link">Address Book</a>
-        <a href="MyPaymentOption.html" class="sidebar-link ">My Payment Options</a>
-        
-        <div class="menu-section-title">My Orders</div>
-        <a href="MyReturns.html" class="sidebar-link active">My Returns</a>
-        <a href="MyCancellations.html" class="sidebar-link ">My Cancellations</a>
-        
-        <div class="menu-section-title">My Wishlist</div>
-        <a href="wishlist.html" class="sidebar-link">My Wishlist</a>
+                       <div class="col-lg-3">
+                <div class="sidebar-menu">
+                    <p class="text-muted small">Account Details</p>
 
-        <div class="menu-section-title mt-4">Account Actions</div>
-        <a href="logout.php" class="sidebar-link logout-link">
-            <i class="bi bi-box-arrow-right me-2"></i> Logout
-        </a>
-    </div>
-</div>
+                    <div class="menu-section-title">Manage My Account</div>
+                    <a href="#" class="sidebar-link " id="myProfileLink">
+                        My Profile
+                    </a>
+
+                    <a href="address-book.html" class="sidebar-link">Address Book</a>
+                    <a href="MyPaymentOption.html" class="sidebar-link">My Payment Options</a>
+
+                    <div class="menu-section-title">My Orders</div>
+                    <a href="order.html" class="sidebar-link" id="myOrdersLink">
+                        <i class="bi bi-bag-check me-2"></i> My Orders
+                    </a>
+                    <a href="MyReturns.html" class="sidebar-link active">My Returns</a>
+                    <a href="MyCancellations.html" class="sidebar-link">My Cancellations</a>
+
+                    <div class="menu-section-title">My Wishlist</div>
+                    <a href="wishlist.html" class="sidebar-link">My Wishlist</a>
+
+                    <div class="menu-section-title mt-4">Account Actions</div>
+                    <a href="#" id="logoutBtn" class="sidebar-link logout-link">
+                        <i class="bi bi-box-arrow-right me-2"></i> Logout
+                    </a>
+
+                </div>
+            </div>
 
             <div class="col-lg-9">
                 <div class="d-flex justify-content-between align-items-center mb-4">

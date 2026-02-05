@@ -14,23 +14,17 @@ exports.createOrder = async (req, res) => {
       return res.status(400).json({ message: "Cart is empty" });
     }
 
+    const allowedMethods = ["wallet", "upi", "cod"];
+    if (!allowedMethods.includes(paymentMethod)) {
+      return res.status(400).json({ message: "Invalid payment method" });
+    }
+
     const items = cart.items.map(item => ({
       product: item.product._id,
       quantity: item.quantity,
       price: item.product.finalPrice,
       itemStatus: "pending"
     }));
-
-    const paymentMap = {
-      "pay-w": "wallet",
-      "pay-u": "upi",
-      "pay-c": "cod"
-    };
-
-    const normalizedPaymentMethod = paymentMap[paymentMethod];
-    if (!normalizedPaymentMethod) {
-      return res.status(400).json({ message: "Invalid payment method" });
-    }
 
     let discount = 0;
     if (couponCode) {
@@ -39,14 +33,16 @@ exports.createOrder = async (req, res) => {
     }
 
     const order = await Order.create({
-      user: req.user.id,
-      items,
-      subtotal,
-      discount,
-      totalAmount: subtotal - discount,
-      paymentMethod: normalizedPaymentMethod,
-      paymentStatus: normalizedPaymentMethod === "cod" ? "unpaid" : "paid"
-    });
+  user: req.user.id,
+  items,
+  subtotal,
+  discount,
+  totalAmount: subtotal - discount,
+  paymentMethod,
+  paymentStatus: paymentMethod === "cod" ? "unpaid" : "paid",
+  orderStatus: "pending"   // ⭐ REQUIRED
+});
+
 
     cart.items = [];
     await cart.save();
@@ -58,14 +54,25 @@ exports.createOrder = async (req, res) => {
   }
 };
 
+
 /* ================= USER: GET MY ORDERS ================= */
 exports.getMyOrders = async (req, res) => {
   const orders = await Order.find({ user: req.user.id })
+  
     .populate("items.product", "name images")
     .sort({ createdAt: -1 });
 
   res.json({ orders });
 };
+exports.getAllOrdersAdmin = async (req, res) => {
+  const orders = await Order.find()
+    .populate("user", "name email")            // 👈 THIS FIXES "Guest"
+    .populate("items.product", "name images")
+    .sort({ createdAt: -1 });
+
+  res.json({ orders });
+};
+
 
 /* ================= USER: GET SINGLE ORDER ================= */
 exports.getMyOrderById = async (req, res) => {

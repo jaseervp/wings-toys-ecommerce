@@ -535,15 +535,20 @@
 
         if (!res.ok) throw new Error("Unauthorized");
 
-        const orders = await res.json();
-        ALL_ORDERS = orders;
+        const data = await res.json();
+const orders = data.orders;   // ✅ FIX
+
+ALL_ORDERS = orders;
+ renderOrders(ALL_ORDERS);
 
         tableBody.innerHTML = orders.map((o, i) => `
       <tr>
         <td>${i + 1}</td>
         <td class="fw-bold">#ORD-${o._id.slice(-6).toUpperCase()}</td>
         <td>
-          ${o.user?.name || "Guest"}<br>
+          - ${o.user?.name || "Guest"}<br>
++ ${o.user?.name || "Guest"}<br>
+
           <small class="text-muted">${o.user?.email || ""}</small>
         </td>
         <td>${new Date(o.createdAt).toLocaleDateString()}</td>
@@ -747,8 +752,11 @@ function applyFilters() {
 
     // Payment method filter
     if (method) {
-      match = match && o.paymentMethod === method;
-    }
+  match =
+    match &&
+    o.paymentMethod?.toLowerCase() === method.toLowerCase();
+}
+
 
     // Date filter
     if (date) {
@@ -805,6 +813,7 @@ function renderOrders(orders) {
     </tr>
   `).join("");
 }
+
 </script>
 
 
