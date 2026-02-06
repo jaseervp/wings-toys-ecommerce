@@ -75,7 +75,43 @@
             margin-top: 15px;
         }
 
-        /* --- SHOP BANNER --- */
+        /* NAV ICONS */
+        .navbar-logo {
+            height: 40px;
+        }
+
+        .nav-icon {
+            font-size: 1.4rem;
+            color: #000;
+            text-decoration: none;
+        }
+
+        .nav-search {
+            display: flex;
+            align-items: center;
+            background: #f5f5f5;
+            border-radius: 30px;
+            padding: 8px 16px;
+            width: 260px;
+        }
+
+        .nav-search input {
+            border: none;
+            outline: none;
+            background: transparent;
+            width: 100%;
+        }
+
+        @media (max-width: 991px) {
+            .navbar-logo {
+                height: 28px;
+            }
+
+            .nav-search {
+                width: 100%;
+            }
+        }
+
         .shop-banner {
             background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
                 url('https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=1200');
@@ -96,64 +132,74 @@
             margin-bottom: 40px;
         }
 
-        /* --- PRODUCT CARDS (MATCHING HOME PAGE) --- */
-        .product-card {
-            border: 1px solid #f2f2f2;
+        /* --- PRODUCT CARDS (UNIFIED DESIGN) --- */
+        .product-wrapper {
+            position: relative;
             background: #fff;
             border-radius: 20px;
             padding: 12px;
             transition: 0.3s;
             height: 100%;
+            border: 1px solid #f2f2f2;
             overflow: hidden;
             cursor: pointer;
-            text-align: center;
-            position: relative;
         }
 
-        .product-card:hover {
+        .product-wrapper:hover {
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
-            transform: translateY(-5px);
         }
 
-        .img-container {
+        .product-img-container {
             background-color: #F9F9F9;
             border-radius: 15px;
-            height: 220px;
+            height: 180px;
+            /* Adjusted for grid */
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
+            margin-bottom: 10px;
             overflow: hidden;
-            margin-bottom: 12px;
+            position: relative;
         }
 
-        .img-container img {
-            max-width: 80%;
-            max-height: 80%;
-            transition: 0.5s ease;
+        .product-img-container img {
+            max-width: 75%;
+            max-height: 75%;
+            transition: 0.5s;
         }
 
-        .product-card:hover img {
+        .product-wrapper:hover img {
             transform: scale(1.1);
         }
 
-        /* --- ACTION BUTTONS --- */
-        .card-actions {
+        /* FLOATING ACTION BUTTONS */
+        .action-buttons {
             position: absolute;
-            top: 10px;
+            top: 15px;
             right: -60px;
-            /* Hidden on Desktop */
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
             transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 5;
         }
 
-        .action-btn {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
+        .product-wrapper:hover .action-buttons {
+            right: 15px;
+        }
+
+        /* Mobile View Visibility */
+        @media (max-width: 991px) {
+            .action-buttons {
+                right: 15px;
+            }
+        }
+
+        .btn-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            /* New Shape */
             background: #fff;
             color: #000;
             border: none;
@@ -164,41 +210,24 @@
             transition: 0.3s;
         }
 
-        .action-btn:hover {
+        .btn-circle:hover {
             background: #000;
             color: #fff;
+            transform: scale(1.1);
         }
 
-        /* Desktop Hover Trigger */
-        @media (min-width: 992px) {
-            .product-card:hover .card-actions {
-                right: 10px;
-            }
-        }
-
-        /* Mobile View Visibility */
-        @media (max-width: 991px) {
-            .card-actions {
-                right: 10px;
-            }
-
-            /* Always show on mobile */
-            .img-container {
-                height: 180px;
-            }
-        }
-
-        .product-info h6 {
-            font-weight: 600;
-            font-size: 1rem;
-            color: #1a1a1a;
-            margin-bottom: 4px;
-        }
-
-        .price {
-            font-weight: 700;
-            font-size: 1.1rem;
+        .price-tag {
             color: var(--accent-gold);
+            font-weight: 700;
+            font-size: 0.9rem;
+            /* Adjusted size */
+        }
+
+        .product-name {
+            font-size: 1rem;
+            margin-bottom: 2px;
+            font-weight: 600;
+            color: #1a1a1a;
         }
 
         /* --- PAGINATION --- */
@@ -254,54 +283,115 @@
             color: #fff;
             font-weight: 700;
         }
+
+        /* --- CATEGORY PILLS --- */
+        .cat-pill {
+            cursor: pointer;
+            padding: 8px 20px;
+            border-radius: 30px;
+            background: #f5f5f5;
+            color: #555;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .cat-pill:hover {
+            background: #e9e9e9;
+        }
+
+        .cat-pill.active {
+            background: #000;
+            color: #fff;
+        }
     </style>
 </head>
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 shadow-sm">
-        <div class="container d-flex align-items-center flex-wrap">
-            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+    <nav class="navbar navbar-light bg-white py-3">
+        <div class="container">
 
-            <a class="navbar-brand ms-2" href="index.html">
-                <img src="/Images/logo wings.png" alt="Logo" style="height: 40px;">
-            </a>
+            <!-- TOP ROW -->
+            <div class="d-flex align-items-center w-100">
 
-            <div class="d-flex gap-3 align-items-center ms-auto order-lg-3">
-                <a href="#"><i class="bi bi-person fs-5 text-dark"></i></a>
-                <div class="search-container d-flex align-items-center">
-                    <input type="text" id="search-desktop" class="search-input-desktop d-none d-lg-block"
-                        placeholder="Search...">
-                    <button id="search-trigger" class="btn p-0 border-0 shadow-none">
-                        <i class="bi bi-search fs-5 text-dark"></i>
+                <!-- LOGO -->
+                <a class="navbar-brand" href="index.html">
+                    <img src="/Images/logo wings.png" class="navbar-logo" alt="Logo">
+                </a>
+
+                <!-- DESKTOP MENU (CENTER) -->
+                <ul class="navbar-nav flex-row gap-4 mx-auto d-none d-lg-flex">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item signup-link">
+                        <a class="nav-link" href="signup.html">Sign Up</a>
+                    </li>
+
+                </ul>
+
+                <!-- DESKTOP RIGHT -->
+                <div class="d-none d-lg-flex align-items-center gap-3">
+
+                    <div class="nav-search">
+                        <input type="text" placeholder="Search..." />
+                        <i class="bi bi-search"></i>
+                    </div>
+
+                    <a href="wishlist.html" class="nav-icon auth-protected" data-target="wishlist.html">
+                        <i class="bi bi-heart"></i>
+                    </a>
+
+                    <a href="cart.html" class="nav-icon auth-protected" data-target="cart.html">
+                        <i class="bi bi-cart"></i>
+                    </a>
+
+                    <div id="auth-nav"></div>
+
+                </div>
+
+                <!-- MOBILE RIGHT -->
+                <div class="d-flex align-items-center gap-3 d-lg-none ms-auto">
+                    <a href="wishlist.html" class="nav-icon auth-protected" data-target="wishlist.html">
+                        <i class="bi bi-heart"></i>
+                    </a>
+
+                    <a href="cart.html" class="nav-icon auth-protected" data-target="cart.html">
+                        <i class="bi bi-cart"></i>
+                    </a>
+
+                    <div id="auth-nav-mobile"></div>
+
+                    <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav">
+                        <span class="navbar-toggler-icon"></span>
                     </button>
                 </div>
-                <a href="wishlist.html"><i class="bi bi-heart fs-5 text-dark"></i></a>
-<a href="cart.html" class="position-relative">
-    <i class="bi bi-cart fs-5 text-dark"></i>
-    <span id="cartCount"
-          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-          style="font-size: 0.65rem; display: none;">
-        0
-    </span>
-</a>
+
             </div>
 
-            <div class="search-full-width-wrapper w-100 order-4 d-lg-none">
-                <input type="text" id="search-input-mobile" class="search-input-mobile" placeholder="Search toys...">
+            <!-- MOBILE SEARCH -->
+            <div class="nav-search w-100 mt-3 d-lg-none">
+                <input type="text" placeholder="Search..." />
+                <i class="bi bi-search"></i>
             </div>
 
-            <div class="collapse navbar-collapse justify-content-center order-lg-2" id="navbarNav">
-                <ul class="navbar-nav">
+            <!-- MOBILE MENU -->
+            <div class="collapse navbar-collapse d-lg-none mt-3" id="navbarNav">
+                <ul class="navbar-nav gap-3">
                     <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
-                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
                     <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item signup-link">
+                        <a class="nav-link" href="signup.html">Sign Up</a>
+                    </li>
+
                 </ul>
             </div>
+
         </div>
     </nav>
 
@@ -312,19 +402,40 @@
     </header>
 
     <section class="filter-bar">
-        <div class="container d-flex flex-wrap justify-content-between align-items-center">
-            <div class="d-flex align-items-center gap-3">
-                <span><i class="bi bi-sliders me-2"></i> Filter</span>
-                <span class="border-start ps-3 text-muted small">Showing 1–12 of 32 results</span>
+        <section class="filter-bar">
+            <div class="container">
+                <div class="d-flex flex-wrap justify-content-between align-items-center">
+                    <!-- Filter Toggle -->
+                    <div class="d-flex align-items-center gap-3" style="cursor: pointer;" onclick="toggleFilter()">
+                        <span><i class="bi bi-sliders me-2"></i> Filter</span>
+                        <span class="border-start ps-3 text-muted small" id="resultCount">Showing Results</span>
+                    </div>
+
+                    <!-- Sort Only (Category moved to filter section) -->
+                    <div class="d-flex align-items-center gap-3 mt-3 mt-md-0">
+                        <span class="small">Sort by</span>
+                        <select class="form-select form-select-sm" style="width: 150px;" id="sortSelect"
+                            onchange="loadShopProducts()">
+                            <option value="default">Default</option>
+                            <option value="price-asc">Price: Low to High</option>
+                            <option value="price-desc">Price: High to Low</option>
+                            <option value="newest">Newest</option>
+                            <option value="oldest">Oldest</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- COLLAPSIBLE FILTER SECTION -->
+                <div id="filterSection" class="mt-4 d-none animate__animated animate__fadeIn">
+                    <div class="bg-white p-4 rounded-4 shadow-sm border">
+                        <h6 class="fw-bold mb-3">Categories</h6>
+                        <div class="d-flex flex-wrap gap-2" id="categoryContainer">
+                            <!-- Dynamic Category Pills -->
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="d-flex align-items-center gap-3 mt-3 mt-md-0">
-                <span class="small">Sort by</span>
-                <select class="form-select form-select-sm" style="width: 150px;">
-                    <option>Default</option>
-                    <option>Price: Low to High</option>
-                </select>
-            </div>
-        </div>
+        </section>
     </section>
 
     <main class="container">
@@ -362,201 +473,440 @@
             </div>
         </div>
     </section>
-<!-- CART TOAST -->
-<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:9999">
-  <div id="cartToast" class="toast text-bg-dark border-0">
-    <div class="d-flex">
-      <div class="toast-body" id="toastMsg">
-        Added to cart
-      </div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    <!-- CART TOAST -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:9999">
+        <div id="cartToast" class="toast text-bg-dark border-0">
+            <div class="d-flex">
+                <div class="toast-body" id="toastMsg">
+                    Added to cart
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
     <footer>
         <div class="container">
             <div class="row">
-                <div class="col-md-4 mb-5">
-                    <p class="text-secondary" style="max-width: 250px;">400 University Drive Suite 200 Coral Gables, FL
-                        33134 USA</p>
+                <div class="col-lg-4 mb-4">
+                    <p class="footer-address">400 University Drive Suite 200 Coral Gables, <br>FL 33134 USA</p>
                 </div>
-                <div class="col-md-2 col-6 mb-5">
-                    <h6 class="fw-bold mb-4">Links</h6>
-                    <a href="index.html">Home</a><a href="shop.html">Shop</a><a href="about.html">About</a><a
-                        href="contact.html">Contact</a>
+                <div class="col-lg-2 col-6 mb-4">
+                    <span class="footer-title">Links</span>
+                    <a href="index.html">Home</a>
+                    <a href="shop.html">Shop</a>
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
                 </div>
-                <div class="col-md-2 col-6 mb-5">
-                    <h6 class="fw-bold mb-4">Help</h6>
-                    <a href="#">Payment Options</a><a href="#">Returns</a><a href="#">Privacy Policies</a>
+                <div class="col-lg-2 col-6 mb-4">
+                    <span class="footer-title">Help</span>
+                    <a href="#">Payment Options</a>
+                    <a href="#">Returns</a>
+                    <a href="#">Privacy Policies</a>
                 </div>
-                <div class="col-md-4 mb-5">
-                    <h6 class="fw-bold mb-4">Newsletter</h6>
-                    <div class="d-flex gap-2">
-                        <input type="email" class="footer-input" placeholder="Email Address">
-                        <button class="btn-subscribe">SUBSCRIBE</button>
+                <div class="col-lg-4 mb-4">
+                    <span class="footer-title">Newsletter</span>
+                    <div class="newsletter-form">
+                        <input type="email" class="newsletter-input" placeholder="Enter Your Email Address">
+                        <button class="newsletter-btn">SUBSCRIBE</button>
                     </div>
                 </div>
             </div>
-            <div class="border-top border-secondary pt-4 text-secondary small">
+            <div class="copyright">
                 2026 ToyStore. All rights reserved
             </div>
         </div>
     </footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- LOGIN REQUIRED MODAL -->
+    <div class="modal fade" id="loginRequiredModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4">
 
-<script>
-/* =========================
-   SEARCH TOGGLE
-========================= */
-document.getElementById('search-trigger').addEventListener('click', function (e) {
-    e.preventDefault();
-    const isMobile = window.innerWidth < 992;
-    const input = document.getElementById(
-        isMobile ? 'search-input-mobile' : 'search-desktop'
-    );
-    input.classList.toggle('active');
-    if (input.classList.contains('active')) input.focus();
-});
-
-/* =========================
-   PRODUCT ENTRANCE ANIMATION
-========================= */
-window.addEventListener('load', () => {
-    document.querySelectorAll('.product-card').forEach((card, i) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        setTimeout(() => {
-            card.style.transition = '0.4s ease';
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-        }, i * 80);
-    });
-});
-</script>
-
-<script>
-/* =========================
-   LOAD SHOP PRODUCTS
-========================= */
-async function loadShopProducts() {
-    try {
-        const res = await fetch("/api/products");
-        const products = await res.json();
-        const container = document.getElementById("shopProducts");
-        container.innerHTML = "";
-
-        if (!products.length) {
-            container.innerHTML = `
-              <div class="text-center text-muted py-5 w-100">
-                No products available
-              </div>`;
-            return;
-        }
-
-        products.forEach(p => {
-            container.innerHTML += `
-            <div class="col-6 col-md-4 col-lg-3">
-              <div class="product-card"
-                   onclick="window.location.href='single_product.html?id=${p._id}'">
-
-                <div class="img-container">
-                  <img src="${p.images?.[0] || 'https://via.placeholder.com/200'}"
-                       alt="${p.name}">
-
-                  <div class="card-actions">
-                    <button class="action-btn"
-                      onclick="event.stopPropagation();">
-                      <i class="bi bi-heart"></i>
-                    </button>
-
-                    <button class="action-btn"
-                      onclick="event.stopPropagation(); addToCart('${p._id}')">
-                      <i class="bi bi-cart-plus"></i>
-                    </button>
-                  </div>
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Login Required</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
-                <div class="product-info">
-                  <p class="text-muted small mb-0">${p.category?.name || ""}</p>
-                  <h6 class="text-truncate px-2">${p.name}</h6>
-                  <div class="price">Rs. ${p.finalPrice}</div>
+                <div class="modal-body text-center">
+                    <i class="bi bi-lock-fill fs-1 text-warning mb-3"></i>
+                    <p class="mb-3">
+                        You need to login to access your account.
+                    </p>
+                </div>
+
+                <div class="modal-footer border-0 justify-content-center gap-3">
+                    <a href="signup.html" class="btn btn-dark rounded-pill px-4">
+                        Login / Sign Up
+                    </a>
+                    <button class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            let isLoggedIn = false;
+
+            try {
+                const res = await fetch("/api/check-auth", {
+                    credentials: "include"
+                });
+                const data = await res.json();
+                isLoggedIn = data.loggedIn === true;
+            } catch {
+                isLoggedIn = false;
+            }
+
+            // 🔐 Protect Cart / Wishlist / Account
+            document.querySelectorAll(".auth-protected").forEach(link => {
+                link.addEventListener("click", e => {
+                    if (!isLoggedIn) {
+                        e.preventDefault();
+                        showLoginModal();
+                    }
+                });
+            });
+
+            // 👤 Account Icon Logic
+            const desktop = document.getElementById("auth-nav");
+            const mobile = document.getElementById("auth-nav-mobile");
+
+            if (isLoggedIn) {
+                const html = `
+      <a href="my_account.html" class="nav-icon" title="My Account">
+        <i class="bi bi-person-circle"></i>
+      </a>
+      <a href="order.html" class="nav-icon ms-2" title="My Orders">
+        <i class="bi bi-bag-check"></i>
+      </a>
+    `;
+                desktop.innerHTML = html;
+                mobile.innerHTML = html;
+
+                // ❌ REMOVE SIGNUP FROM NAV
+                document.querySelectorAll(".signup-link").forEach(el => el.remove());
+            } else {
+                const html = `
+      <a href="#" class="nav-icon login-required">
+        <i class="bi bi-person"></i>
+      </a>
+    `;
+                desktop.innerHTML = html;
+                mobile.innerHTML = html;
+
+                document.querySelectorAll(".login-required").forEach(el => {
+                    el.addEventListener("click", e => {
+                        e.preventDefault();
+                        showLoginModal();
+                    });
+                });
+            }
+        });
+
+        function showLoginModal() {
+            const modal = new bootstrap.Modal(
+                document.getElementById("loginRequiredModal")
+            );
+            modal.show();
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        /* =========================
+           SEARCH TOGGLE
+        ========================= */
+        document.getElementById('search-trigger').addEventListener('click', function (e) {
+            e.preventDefault();
+            const isMobile = window.innerWidth < 992;
+            const input = document.getElementById(
+                isMobile ? 'search-input-mobile' : 'search-desktop'
+            );
+            input.classList.toggle('active');
+            if (input.classList.contains('active')) input.focus();
+        });
+
+        /* =========================
+           PRODUCT ENTRANCE ANIMATION
+        ========================= */
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.product-card').forEach((card, i) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = '0.4s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, i * 80);
+            });
+        });
+    </script>
+
+    <script>
+        let selectedCategory = 'all';
+
+        /* =========================
+           TOGGLE FILTER SECTION
+        ========================= */
+        function toggleFilter() {
+            const section = document.getElementById("filterSection");
+            section.classList.toggle("d-none");
+        }
+
+        /* =========================
+           LOAD CATEGORIES (PILLS)
+        ========================= */
+        async function loadCategories() {
+            try {
+                const res = await fetch("/api/categories");
+                const categories = await res.json();
+                const container = document.getElementById("categoryContainer");
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const activeCat = urlParams.get('category') || 'all';
+
+                // Add 'All' pill
+                let html = `
+                    <div class="cat-pill ${activeCat === 'all' ? 'active' : ''}" onclick="selectCategory('all', this)">
+                        All Categories
+                    </div>`;
+
+                categories.forEach(cat => {
+                    const isActive = activeCat === cat._id ? 'active' : '';
+                    html += `
+                        <div class="cat-pill ${isActive}" onclick="selectCategory('${cat._id}', this)">
+                            ${cat.name}
+                        </div>`;
+                });
+
+                container.innerHTML = html;
+            } catch (err) {
+                console.error("Failed to load categories", err);
+            }
+        }
+
+        /* =========================
+           SELECT CATEGORY
+        ========================= */
+        function selectCategory(catId, element) {
+            selectedCategory = catId;
+
+            // Update UI
+            document.querySelectorAll(".cat-pill").forEach(el => el.classList.remove("active"));
+            element.classList.add("active");
+
+            // Fetch Products
+            loadShopProducts();
+        }
+
+        /* =========================
+           LOAD SHOP PRODUCTS
+        ========================= */
+        async function loadShopProducts() {
+            const sort = document.getElementById("sortSelect").value;
+
+            try {
+                // Show loading state
+                const container = document.getElementById("shopProducts");
+                container.innerHTML = `<div class="text-center text-muted py-5 w-100">Loading products...</div>`;
+
+                let url = `/api/products?sort=${sort}`;
+
+                if (selectedCategory && selectedCategory !== 'all') {
+                    url += `&category=${selectedCategory}`;
+                }
+
+                const res = await fetch(url);
+                const products = await res.json();
+
+                // Update showing results count if element exists (optional)
+                // document.getElementById("resultCount").innerText = `Showing ${products.length} results`;
+
+                container.innerHTML = "";
+
+                if (!products.length) {
+                    container.innerHTML = `
+              <div class="text-center text-muted py-5 w-100">
+                No products found
+              </div>`;
+                    return;
+                }
+
+                products.forEach(p => {
+                    container.innerHTML += `
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="product-wrapper"
+                   onclick="window.location.href='single_product.html?id=${p._id}'">
+
+                <div class="product-img-container">
+                  <div class="action-buttons">
+                    <button class="btn-circle" title="Add to Wishlist"
+                      onclick="event.stopPropagation(); addToWishlist('${p._id}')">
+                      <i class="bi bi-heart text-danger"></i>
+                    </button>
+
+                    <button class="btn-circle" title="Add to Cart"
+                      onclick="event.stopPropagation(); addToCart('${p._id}')">
+                      <i class="bi bi-cart-plus text-dark"></i>
+                    </button>
+                  </div>
+                  <img src="${p.images?.[0] || 'https://via.placeholder.com/200'}"
+                       alt="${p.name}">
+                </div>
+
+                <div class="text-center">
+                  <p class="small text-muted mb-0" style="font-size: 0.7rem;">${p.category?.name || "General"}</p>
+                  <h6 class="text-truncate px-2 product-name">${p.name}</h6>
+                  <div class="price-tag">Rs. ${p.finalPrice}</div>
                 </div>
               </div>
             </div>`;
-        });
+                });
 
-    } catch (err) {
-        document.getElementById("shopProducts").innerHTML = `
+            } catch (err) {
+                container.innerHTML = `
           <div class="text-danger text-center py-5 w-100">
             Failed to load products
           </div>`;
-    }
-}
-
-document.addEventListener("DOMContentLoaded", loadShopProducts);
-</script>
-
-<script>
-/* =========================
-   TOAST
-========================= */
-function showToast(msg) {
-    document.getElementById("toastMsg").innerText = msg;
-    new bootstrap.Toast(
-        document.getElementById("cartToast"),
-        { delay: 2000 }
-    ).show();
-}
-
-/* =========================
-   CART BADGE
-========================= */
-async function updateCartBadge() {
-    try {
-        const res = await fetch("/api/cart", { credentials: "include" });
-        if (!res.ok) return;
-
-        const data = await res.json();
-        const count = data.items.reduce((s, i) => s + i.quantity, 0);
-        const badge = document.getElementById("cartCount");
-
-        if (count > 0) {
-            badge.style.display = "inline-block";
-            badge.innerText = count;
-        } else {
-            badge.style.display = "none";
+            }
         }
-    } catch {}
-}
 
-/* =========================
-   ADD TO CART
-========================= */
-async function addToCart(productId, quantity = 1) {
-    try {
-        const res = await fetch("/api/cart", {
-            method: "POST",
-            credentials: "include",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ productId, quantity })
+        document.addEventListener("DOMContentLoaded", () => {
+            // Check URL Params for Category
+            const urlParams = new URLSearchParams(window.location.search);
+            const catParam = urlParams.get('category');
+
+            if (catParam) {
+                selectedCategory = catParam;
+                // Open filter section if a category is selected via URL
+                document.getElementById("filterSection").classList.remove("d-none");
+            }
+
+            loadShopProducts();
+            loadCategories();
         });
+    </script>
 
-        if (!res.ok) {
-            showToast("🔒 Please login first");
-            return;
+    <script>
+        /* =========================
+           TOAST
+        ========================= */
+        function showToast(msg) {
+            document.getElementById("toastMsg").innerText = msg;
+            new bootstrap.Toast(
+                document.getElementById("cartToast"),
+                { delay: 2000 }
+            ).show();
         }
 
-        showToast("🛒 Added to cart");
-        updateCartBadge();
+        /* =========================
+           CART BADGE
+        ========================= */
+        async function updateCartBadge() {
+            try {
+                const res = await fetch("/api/cart", { credentials: "include" });
+                if (!res.ok) return;
 
-    } catch {
-        showToast("❌ Failed to add to cart");
-    }
-}
+                const data = await res.json();
+                const count = data.items.reduce((s, i) => s + i.quantity, 0);
+                const badge = document.getElementById("cartCount");
 
-document.addEventListener("DOMContentLoaded", updateCartBadge);
-</script>
+                if (count > 0) {
+                    badge.style.display = "inline-block";
+                    badge.innerText = count;
+                } else {
+                    badge.style.display = "none";
+                }
+            } catch { }
+        }
+
+        /* =========================
+           ADD TO CART
+        ========================= */
+        async function addToCart(productId, quantity = 1) {
+            try {
+                const res = await fetch("/api/cart", {
+                    method: "POST",
+                    credentials: "include",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ productId, quantity })
+                });
+
+                if (!res.ok) {
+                    if (res.status === 401) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Login Required',
+                            text: 'Please login to add items to cart',
+                            confirmButtonColor: '#000'
+                        });
+                        return;
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Failed to add to cart',
+                        confirmButtonColor: '#000'
+                    });
+                    return;
+                }
+
+                updateCartBadge();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Product added to cart',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
+            } catch (err) {
+                console.error(err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Something went wrong',
+                    confirmButtonColor: '#000'
+                });
+            }
+        }
+
+        async function addToWishlist(productId) {
+            try {
+                const res = await fetch("/api/wishlist", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({ productId })
+                });
+
+                if (res.status === 401) {
+                    showToast("Please login first");
+                    return;
+                }
+
+                const data = await res.json();
+                if (res.ok) {
+                    showToast(data.message);
+                } else {
+                    showToast(data.message || "Failed to add");
+                }
+
+            } catch (e) {
+                console.error(e);
+                showToast("Error adding to wishlist");
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", updateCartBadge);
+    </script>
 
 
 </body>

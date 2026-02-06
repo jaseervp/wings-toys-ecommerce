@@ -1,52 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log in to Wings | Kids Toys Ecommerce</title>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --accent-blue: #6C8EEF; 
-            --accent-red: #FF6464;  
+            --accent-blue: #6C8EEF;
+            --accent-red: #FF6464;
             --border-gray: #D9D9D9;
             --text-gray: #9F9F9F;
         }
 
-        body { 
-            font-family: 'Poppins', sans-serif; 
-            color: #000; 
-            margin: 0; 
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #000;
+            margin: 0;
             background-color: #fff;
-            overflow-x: hidden; /* Prevent horizontal scroll */
+            overflow-x: hidden;
+            /* Prevent horizontal scroll */
         }
 
         /* --- NAVIGATION --- */
-        .nav-link { font-weight: 600; color: #000 !important; margin: 0 15px; }
-        
-        .search-input-desktop {
-            width: 0; opacity: 0; border: none; border-bottom: 2px solid #000;
-            outline: none; transition: all 0.4s ease; padding: 0; background: transparent;
+        .nav-link {
+            font-weight: 600;
+            color: #000 !important;
+            margin: 0 15px;
         }
 
-        .search-input-desktop.active { width: 200px; opacity: 1; padding: 0 10px; margin-right: 10px; }
+        .search-input-desktop {
+            width: 0;
+            opacity: 0;
+            border: none;
+            border-bottom: 2px solid #000;
+            outline: none;
+            transition: all 0.4s ease;
+            padding: 0;
+            background: transparent;
+        }
+
+        .search-input-desktop.active {
+            width: 200px;
+            opacity: 1;
+            padding: 0 10px;
+            margin-right: 10px;
+        }
 
         .search-input-mobile {
-            width: 100%; height: 0; opacity: 0; padding: 0; border: none;
-            border-bottom: 2px solid #000; transition: all 0.3s ease; outline: none; overflow: hidden;
+            width: 100%;
+            height: 0;
+            opacity: 0;
+            padding: 0;
+            border: none;
+            border-bottom: 2px solid #000;
+            transition: all 0.3s ease;
+            outline: none;
+            overflow: hidden;
         }
 
-        .search-input-mobile.active { height: 45px; opacity: 1; padding: 10px 0; margin-top: 15px; }
+        .search-input-mobile.active {
+            height: 45px;
+            opacity: 1;
+            padding: 10px 0;
+            margin-top: 15px;
+        }
 
 
         /* --- MAIN LOGIN SECTION --- */
         .login-container {
             /* Adjusted height to fill the screen properly */
-            min-height: 85vh; 
+            min-height: 85vh;
             display: flex;
             align-items: center;
             padding: 80px 0;
@@ -55,12 +84,12 @@
         .logo-placeholder {
             max-width: 100%;
             height: auto;
-            content: url('../Images/logo wings.png'); 
+            content: url('../Images/logo wings.png');
             border-radius: 20px;
         }
 
         .login-form-box {
-            padding-left: 60px; 
+            padding-left: 60px;
         }
 
         .login-form-box h1 {
@@ -88,7 +117,9 @@
             transition: border-color 0.3s;
         }
 
-        .underline-input:focus { border-bottom: 1px solid #000; }
+        .underline-input:focus {
+            border-bottom: 1px solid #000;
+        }
 
         .form-actions {
             display: flex;
@@ -108,39 +139,97 @@
             transition: 0.3s;
         }
 
-        .btn-login:hover { opacity: 0.9; transform: translateY(-1px); }
-        .forgot-pass { color: var(--accent-red); text-decoration: none; font-size: 0.95rem; }
+        .btn-login:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .forgot-pass {
+            color: var(--accent-red);
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
 
         /* --- FOOTER --- */
-        footer { background: #000; color: #fff; padding: 80px 0 30px; }
-        .footer-title { color: var(--text-gray); font-weight: 400; margin-bottom: 35px; display: block; }
-        .footer-link { color: #fff; text-decoration: none; display: block; margin-bottom: 15px; font-size: 0.95rem; }
-        .footer-text { color: var(--text-gray); font-size: 0.95rem; line-height: 1.8; }
-        
-        .newsletter-input {
-            background: transparent; border: none; border-bottom: 1px solid #fff;
-            color: #fff; outline: none; padding-bottom: 5px; width: 200px; font-size: 0.85rem;
+        footer {
+            background: #000;
+            color: #fff;
+            padding: 80px 0 30px;
         }
-        
+
+        .footer-title {
+            color: var(--text-gray);
+            font-weight: 400;
+            margin-bottom: 35px;
+            display: block;
+        }
+
+        .footer-link {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .footer-text {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .newsletter-input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #fff;
+            color: #fff;
+            outline: none;
+            padding-bottom: 5px;
+            width: 200px;
+            font-size: 0.85rem;
+        }
+
         .subscribe-btn {
-            background: transparent; border: none; color: #fff;
-            font-weight: 600; text-transform: uppercase; font-size: 0.85rem; margin-left: 15px;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            margin-left: 15px;
         }
 
         /* --- RESPONSIVE ADJUSTMENTS --- */
         @media (max-width: 991px) {
-            .login-container { padding: 40px 0; min-height: auto; }
-            .login-form-box { padding-left: 0; margin-top: 50px; text-align: center; }
-            .form-actions { flex-direction: column; gap: 20px; }
-            .logo-placeholder { max-width: 250px; }
+            .login-container {
+                padding: 40px 0;
+                min-height: auto;
+            }
+
+            .login-form-box {
+                padding-left: 0;
+                margin-top: 50px;
+                text-align: center;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .logo-placeholder {
+                max-width: 250px;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
         <div class="container d-flex align-items-center flex-wrap">
-            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -150,9 +239,10 @@
 
             <div class="d-flex gap-3 align-items-center ms-auto order-lg-3">
                 <a href="#"><i class="bi bi-person fs-5 text-dark"></i></a>
-                
+
                 <div class="search-container d-flex align-items-center">
-                    <input type="text" id="search-desktop" class="search-input-desktop d-none d-lg-block" placeholder="Search...">
+                    <input type="text" id="search-desktop" class="search-input-desktop d-none d-lg-block"
+                        placeholder="Search...">
                     <button id="search-trigger" class="btn p-0 border-0 shadow-none">
                         <i class="bi bi-search fs-5 text-dark"></i>
                     </button>
@@ -163,7 +253,7 @@
             </div>
 
             <div class="search-full-width-wrapper w-100 order-4 d-lg-none">
-                 <input type="text" id="search-input-mobile" class="search-input-mobile" placeholder="Search toys...">
+                <input type="text" id="search-input-mobile" class="search-input-mobile" placeholder="Search toys...">
             </div>
 
             <div class="collapse navbar-collapse justify-content-center order-lg-2" id="navbarNav">
@@ -188,18 +278,19 @@
                     <h1>Log in to Wings</h1>
                     <p class="subtitle">Enter your details below</p>
 
-                <form id="loginForm">
-    <input type="text" id="email" class="underline-input" placeholder="Email or Phone Number" required>
-    
-    <input type="password" id="password" class="underline-input" placeholder="Password" required>
+                    <form id="loginForm">
+                        <input type="text" id="email" class="underline-input" placeholder="Email or Phone Number"
+                            required>
 
-    <div class="form-actions">
-        <button type="submit" class="btn-login">Log In</button>
-        <a href="forgotpassword.html" class="forgot-pass">Forgot Password?</a>
-    </div>
-</form>
+                        <input type="password" id="password" class="underline-input" placeholder="Password" required>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-login">Log In</button>
+                            <a href="forgotpassword.html" class="forgot-pass">Forgot Password?</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
     </main>
 
     <footer>
@@ -231,7 +322,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.getElementById('search-trigger').addEventListener('click', function(e) {
+        document.getElementById('search-trigger').addEventListener('click', function (e) {
             e.preventDefault();
             if (window.innerWidth < 992) {
                 const mobileInput = document.getElementById('search-input-mobile');
@@ -243,44 +334,45 @@
                 if (desktopInput.classList.contains('active')) desktopInput.focus();
             }
         });
- 
 
 
 
-document.getElementById("loginForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
 
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
+        document.getElementById("loginForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
 
-  const res = await fetch("/api/login", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ email, password }),
-  credentials: "include" // 🔥 REQUIRED
-});
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
 
-  const data = await res.json();
+            const res = await fetch("/api/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+                credentials: "include" // 🔥 REQUIRED
+            });
 
-  if (!res.ok) {
-    alert(data.message || "Invalid credentials");
-    return;
-  }
+            const data = await res.json();
 
-  // 🔐 ADMIN
-  if (data.user.role === "admin") {
-    localStorage.setItem("adminToken", data.token);
-    localStorage.setItem("adminRole", "admin");
-    window.location.href = "../Admin/Dashboard.html";
-    return;
-  }
+            if (!res.ok) {
+                alert(data.message || "Invalid credentials");
+                return;
+            }
 
-  // 👤 USER
-  window.location.href = "index.html";
-});
+            // 🔐 ADMIN
+            if (data.user.role === "admin") {
+                localStorage.setItem("adminToken", data.token);
+                localStorage.setItem("adminRole", "admin");
+                window.location.href = "../Admin/Dashboard.html";
+                return;
+            }
+
+            // 👤 USER
+            window.location.href = "index.html";
+        });
 
 
 
-</script>
+    </script>
 </body>
+
 </html>

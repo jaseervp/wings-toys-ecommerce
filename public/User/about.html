@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About - ToyStore</title>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -15,103 +16,321 @@
             --primary-font: 'Poppins', sans-serif;
         }
 
-        body { font-family: var(--primary-font); color: #000; margin: 0; }
-        
-       /* --- NAVIGATION --- */
-        .nav-link { font-weight: 600; color: #000 !important; margin: 0 15px; }
-        
-        .search-input-desktop {
-            width: 0; opacity: 0; border: none; border-bottom: 2px solid #000;
-            outline: none; transition: all 0.4s ease; padding: 0; background: transparent;
+        body {
+            font-family: var(--primary-font);
+            color: #000;
+            margin: 0;
         }
 
-        .search-input-desktop.active { width: 200px; opacity: 1; padding: 0 10px; margin-right: 10px; }
+        /* --- NAVIGATION --- */
+        .nav-link {
+            font-weight: 600;
+            color: #000 !important;
+            margin: 0 15px;
+        }
+
+        .search-input-desktop {
+            width: 0;
+            opacity: 0;
+            border: none;
+            border-bottom: 2px solid #000;
+            outline: none;
+            transition: all 0.4s ease;
+            padding: 0;
+            background: transparent;
+        }
+
+        .search-input-desktop.active {
+            width: 200px;
+            opacity: 1;
+            padding: 0 10px;
+            margin-right: 10px;
+        }
 
         .search-input-mobile {
-            width: 100%; height: 0; opacity: 0; padding: 0; border: none;
-            border-bottom: 2px solid #000; transition: all 0.3s ease; outline: none; overflow: hidden;
+            width: 100%;
+            height: 0;
+            opacity: 0;
+            padding: 0;
+            border: none;
+            border-bottom: 2px solid #000;
+            transition: all 0.3s ease;
+            outline: none;
+            overflow: hidden;
         }
 
-        .search-input-mobile.active { height: 45px; opacity: 1; padding: 10px 0; margin-top: 15px; }
+        .search-input-mobile.active {
+            height: 45px;
+            opacity: 1;
+            padding: 10px 0;
+            margin-top: 15px;
+        }
+
+
+        /* NAV ICONS */
+        .navbar-logo {
+            height: 40px;
+        }
+
+        .nav-icon {
+            font-size: 1.4rem;
+            color: #000;
+            text-decoration: none;
+        }
+
+        .nav-search {
+            display: flex;
+            align-items: center;
+            background: #f5f5f5;
+            border-radius: 30px;
+            padding: 8px 16px;
+            width: 260px;
+        }
+
+        .nav-search input {
+            border: none;
+            outline: none;
+            background: transparent;
+            width: 100%;
+        }
+
+        @media (max-width: 991px) {
+            .navbar-logo {
+                height: 28px;
+            }
+
+            .nav-search {
+                width: 100%;
+            }
+        }
 
 
         /* --- HERO BANNER --- */
         .page-header {
-            background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), 
-                        url('https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?q=80&w=1200');
-            background-size: cover; background-position: center;
-            padding: 80px 0; text-align: center;
+            background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
+                url('https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?q=80&w=1200');
+            background-size: cover;
+            background-position: center;
+            padding: 80px 0;
+            text-align: center;
         }
-        .page-header h1 { font-size: 3rem; font-weight: 500; margin-bottom: 5px; }
-        .page-header p { font-size: 0.9rem; }
+
+        .page-header h1 {
+            font-size: 3rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .page-header p {
+            font-size: 0.9rem;
+        }
 
         /* --- OUR STORY SECTION --- */
-        .story-section { padding: 100px 0; }
-        .story-content h2 { font-size: 2.8rem; font-weight: 600; margin-bottom: 30px; }
-        .story-content p { font-size: 0.95rem; line-height: 1.8; color: #000; margin-bottom: 20px; }
-        .story-img { width: 100%; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .story-section {
+            padding: 100px 0;
+        }
+
+        .story-content h2 {
+            font-size: 2.8rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .story-content p {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: #000;
+            margin-bottom: 20px;
+        }
+
+        .story-img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
 
         /* --- FEATURES STRIP --- */
-        .features { background: var(--soft-bg); padding: 80px 0; }
-        .feature-box h3 { font-size: 1.5rem; font-weight: 500; margin-bottom: 10px; }
-        .feature-box p { color: #9F9F9F; font-size: 0.9rem; line-height: 1.6; }
+        .features {
+            background: var(--soft-bg);
+            padding: 80px 0;
+        }
+
+        .feature-box h3 {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .feature-box p {
+            color: #9F9F9F;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
 
         /* --- FOOTER --- */
-        footer { background: #000; color: #fff; padding: 80px 0 30px; }
-        footer a { color: #fff; display: block; margin-bottom: 20px; text-decoration: none; font-size: 0.9rem; }
-        .footer-title { color: #9F9F9F; font-weight: 400; margin-bottom: 40px; display: block; font-size: 0.9rem; }
-        .footer-address { color: #9F9F9F; line-height: 2; font-size: 0.85rem; margin-bottom: 40px; }
-        
-        .newsletter-form { display: flex; border-bottom: 1px solid #fff; padding-bottom: 5px; width: fit-content; }
-        .newsletter-input { background: transparent; border: none; color: #fff; font-size: 0.85rem; padding: 0; outline: none; width: 200px; }
-        .newsletter-input::placeholder { color: #9F9F9F; }
-        .newsletter-btn { background: transparent; border: none; color: #fff; font-weight: 600; font-size: 0.8rem; padding-left: 15px; }
+        footer {
+            background: #000;
+            color: #fff;
+            padding: 80px 0 30px;
+        }
 
-        .copyright { border-top: 1px solid #222; margin-top: 60px; padding-top: 30px; font-size: 0.85rem; color: #fff; }
+        footer a {
+            color: #fff;
+            display: block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .footer-title {
+            color: #9F9F9F;
+            font-weight: 400;
+            margin-bottom: 40px;
+            display: block;
+            font-size: 0.9rem;
+        }
+
+        .footer-address {
+            color: #9F9F9F;
+            line-height: 2;
+            font-size: 0.85rem;
+            margin-bottom: 40px;
+        }
+
+        .newsletter-form {
+            display: flex;
+            border-bottom: 1px solid #fff;
+            padding-bottom: 5px;
+            width: fit-content;
+        }
+
+        .newsletter-input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 0.85rem;
+            padding: 0;
+            outline: none;
+            width: 200px;
+        }
+
+        .newsletter-input::placeholder {
+            color: #9F9F9F;
+        }
+
+        .newsletter-btn {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding-left: 15px;
+        }
+
+        .copyright {
+            border-top: 1px solid #222;
+            margin-top: 60px;
+            padding-top: 30px;
+            font-size: 0.85rem;
+            color: #fff;
+        }
 
         @media (max-width: 992px) {
-            .story-section { text-align: center; }
-            .story-img { margin-top: 50px; }
+            .story-section {
+                text-align: center;
+            }
+
+            .story-img {
+                margin-top: 50px;
+            }
         }
     </style>
 </head>
+
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
-        <div class="container d-flex align-items-center flex-wrap">
-            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+    <nav class="navbar navbar-light bg-white py-3">
+        <div class="container">
 
-            <a class="navbar-brand ms-2" href="index.html">
-                <img src="/Images/logo wings.png" alt="Logo" style="height: 40px;">
-            </a>
+            <!-- TOP ROW -->
+            <div class="d-flex align-items-center w-100">
 
-            <div class="d-flex gap-3 align-items-center ms-auto order-lg-3">
-                <a href="#"><i class="bi bi-person fs-5 text-dark"></i></a>
-                
-                <div class="search-container d-flex align-items-center">
-                    <input type="text" id="search-desktop" class="search-input-desktop d-none d-lg-block" placeholder="Search...">
-                    <button id="search-trigger" class="btn p-0 border-0 shadow-none">
-                        <i class="bi bi-search fs-5 text-dark"></i>
+                <!-- LOGO -->
+                <a class="navbar-brand" href="index.html">
+                    <img src="/Images/logo wings.png" class="navbar-logo" alt="Logo">
+                </a>
+
+                <!-- DESKTOP MENU (CENTER) -->
+                <ul class="navbar-nav flex-row gap-4 mx-auto d-none d-lg-flex">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="about.html">About</a></li>
+                    <li class="nav-item signup-link">
+                        <a class="nav-link" href="signup.html">Sign Up</a>
+                    </li>
+
+                </ul>
+
+                <!-- DESKTOP RIGHT -->
+                <div class="d-none d-lg-flex align-items-center gap-3">
+
+                    <div class="nav-search">
+                        <input type="text" placeholder="Search..." />
+                        <i class="bi bi-search"></i>
+                    </div>
+
+                    <a href="wishlist.html" class="nav-icon auth-protected" data-target="wishlist.html">
+                        <i class="bi bi-heart"></i>
+                    </a>
+
+                    <a href="cart.html" class="nav-icon auth-protected" data-target="cart.html">
+                        <i class="bi bi-cart"></i>
+                    </a>
+
+                    <div id="auth-nav"></div>
+
+                </div>
+
+                <!-- MOBILE RIGHT -->
+                <div class="d-flex align-items-center gap-3 d-lg-none ms-auto">
+                    <a href="wishlist.html" class="nav-icon auth-protected" data-target="wishlist.html">
+                        <i class="bi bi-heart"></i>
+                    </a>
+
+                    <a href="cart.html" class="nav-icon auth-protected" data-target="cart.html">
+                        <i class="bi bi-cart"></i>
+                    </a>
+
+                    <div id="auth-nav-mobile"></div>
+
+                    <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav">
+                        <span class="navbar-toggler-icon"></span>
                     </button>
                 </div>
 
-                <a href="wishlist.html"><i class="bi bi-heart fs-5 text-dark"></i></a>
-                <a href="cart.html"><i class="bi bi-cart fs-5 text-dark"></i></a>
             </div>
 
-            <div class="search-full-width-wrapper w-100 order-4 d-lg-none">
-                 <input type="text" id="search-input-mobile" class="search-input-mobile" placeholder="Search toys...">
+            <!-- MOBILE SEARCH -->
+            <div class="nav-search w-100 mt-3 d-lg-none">
+                <input type="text" placeholder="Search..." />
+                <i class="bi bi-search"></i>
             </div>
 
-            <div class="collapse navbar-collapse justify-content-center order-lg-2" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" href="home.html">Home</a></li>
+            <!-- MOBILE MENU -->
+            <div class="collapse navbar-collapse d-lg-none mt-3" id="navbarNav">
+                <ul class="navbar-nav gap-3">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
-                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
                     <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item signup-link">
+                        <a class="nav-link" href="signup.html">Sign Up</a>
+                    </li>
+
                 </ul>
             </div>
+
         </div>
     </nav>
 
@@ -126,11 +345,17 @@
         <div class="row align-items-center">
             <div class="col-lg-6 story-content pe-lg-5">
                 <h2>Our Story</h2>
-                <p>At Wings Toys, playtime begins with imagination. We're dedicated to delivering fun, safe, and engaging toys that help children learn, grow, and explore the world through play. From colorful soft toys to brain-boosting educational games, every toy is designed with care, comfort, and creativity in mind.</p>
-                <p>Created for curious kids and caring parents, Wings Toys represents quality, safety, and joyful shopping. No matter the age or interest, we help you choose toys that turn everyday moments into magical memories.</p>
+                <p>At Wings Toys, playtime begins with imagination. We're dedicated to delivering fun, safe, and
+                    engaging toys that help children learn, grow, and explore the world through play. From colorful soft
+                    toys to brain-boosting educational games, every toy is designed with care, comfort, and creativity
+                    in mind.</p>
+                <p>Created for curious kids and caring parents, Wings Toys represents quality, safety, and joyful
+                    shopping. No matter the age or interest, we help you choose toys that turn everyday moments into
+                    magical memories.</p>
             </div>
             <div class="col-lg-6">
-                <img src="https://images.unsplash.com/photo-1558060370-d644479cb6f7?q=80&w=800" class="story-img" alt="Kids playing with toys">
+                <img src="https://images.unsplash.com/photo-1558060370-d644479cb6f7?q=80&w=800" class="story-img"
+                    alt="Kids playing with toys">
             </div>
         </div>
     </section>
@@ -162,10 +387,10 @@
                 </div>
                 <div class="col-lg-2 col-6 mb-4">
                     <span class="footer-title">Links</span>
-                    <a href="#">Home</a>
-                    <a href="#">Shop</a>
-                    <a href="#">About</a>
-                    <a href="#">Contact</a>
+                    <a href="index.html">Home</a>
+                    <a href="shop.html">Shop</a>
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
                 </div>
                 <div class="col-lg-2 col-6 mb-4">
                     <span class="footer-title">Help</span>
@@ -182,12 +407,112 @@
                 </div>
             </div>
             <div class="copyright">
-                2022 Meubel House. All rights reserved
+                2026 ToyStore. All rights reserved
             </div>
         </div>
     </footer>
- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-     <script>
+
+    <!-- LOGIN REQUIRED MODAL -->
+    <div class="modal fade" id="loginRequiredModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4">
+
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Login Required</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body text-center">
+                    <i class="bi bi-lock-fill fs-1 text-warning mb-3"></i>
+                    <p class="mb-3">
+                        You need to login to access your account.
+                    </p>
+                </div>
+
+                <div class="modal-footer border-0 justify-content-center gap-3">
+                    <a href="signup.html" class="btn btn-dark rounded-pill px-4">
+                        Login / Sign Up
+                    </a>
+                    <button class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            let isLoggedIn = false;
+
+            try {
+                const res = await fetch("/api/check-auth", {
+                    credentials: "include"
+                });
+                const data = await res.json();
+                isLoggedIn = data.loggedIn === true;
+            } catch {
+                isLoggedIn = false;
+            }
+
+            // 🔐 Protect Cart / Wishlist / Account
+            document.querySelectorAll(".auth-protected").forEach(link => {
+                link.addEventListener("click", e => {
+                    if (!isLoggedIn) {
+                        e.preventDefault();
+                        showLoginModal();
+                    }
+                });
+            });
+
+            // 👤 Account Icon Logic
+            const desktop = document.getElementById("auth-nav");
+            const mobile = document.getElementById("auth-nav-mobile");
+
+            if (isLoggedIn) {
+                const html = `
+      <a href="my_account.html" class="nav-icon" title="My Account">
+        <i class="bi bi-person-circle"></i>
+      </a>
+      <a href="order.html" class="nav-icon ms-2" title="My Orders">
+        <i class="bi bi-bag-check"></i>
+      </a>
+    `;
+                desktop.innerHTML = html;
+                mobile.innerHTML = html;
+
+                // ❌ REMOVE SIGNUP FROM NAV
+                document.querySelectorAll(".signup-link").forEach(el => el.remove());
+            } else {
+                const html = `
+      <a href="#" class="nav-icon login-required">
+        <i class="bi bi-person"></i>
+      </a>
+    `;
+                desktop.innerHTML = html;
+                mobile.innerHTML = html;
+
+                document.querySelectorAll(".login-required").forEach(el => {
+                    el.addEventListener("click", e => {
+                        e.preventDefault();
+                        showLoginModal();
+                    });
+                });
+            }
+        });
+
+        function showLoginModal() {
+            const modal = new bootstrap.Modal(
+                document.getElementById("loginRequiredModal")
+            );
+            modal.show();
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
         // Example: Add a click event to all buttons to show they work
         document.querySelectorAll('button').forEach(button => {
             button.addEventListener('click', () => {
@@ -202,9 +527,9 @@
                 // This is where you'd scroll to section, currently mostly # placeholders
             });
         });
-   </script>
+    </script>
     <script>
-        document.getElementById('search-trigger').addEventListener('click', function(e) {
+        document.getElementById('search-trigger').addEventListener('click', function (e) {
             e.preventDefault();
             if (window.innerWidth < 992) {
                 const mobileInput = document.getElementById('search-input-mobile');
@@ -219,4 +544,5 @@
 
     </script>
 </body>
+
 </html>

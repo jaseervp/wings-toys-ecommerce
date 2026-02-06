@@ -16,6 +16,12 @@ router.get("/my", protect, orderController.getMyOrders);
 // get single order (for View Details)
 router.get("/my/:id", protect, orderController.getMyOrderById);
 
+// cancel order
+router.post("/:id/cancel", protect, orderController.cancelOrder);
+
+// request return
+router.post("/:id/return", protect, orderController.requestReturn);
+
 
 // ================= ADMIN =================
 
@@ -38,6 +44,14 @@ router.put(
   protect,
   adminOnly,
   orderController.updateItemStatus
+);
+
+// update return status (approve/reject)
+router.put(
+  "/admin/:id/return",
+  protect,
+  adminOnly,
+  orderController.updateReturnStatus
 );
 
 module.exports = router;

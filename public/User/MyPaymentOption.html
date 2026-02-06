@@ -169,29 +169,131 @@
             text-decoration: none;
             font-size: 0.9rem;
         }
+
+        /* NAV ICONS */
+        .navbar-logo {
+            height: 40px;
+        }
+
+        .nav-icon {
+            font-size: 1.4rem;
+            color: #000;
+            text-decoration: none;
+        }
+
+        .nav-search {
+            display: flex;
+            align-items: center;
+            background: #f5f5f5;
+            border-radius: 30px;
+            padding: 8px 16px;
+            width: 260px;
+        }
+
+        .nav-search input {
+            border: none;
+            outline: none;
+            background: transparent;
+            width: 100%;
+        }
+
+        @media (max-width: 991px) {
+            .navbar-logo {
+                height: 28px;
+            }
+
+            .nav-search {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+    <nav class="navbar navbar-light bg-white py-3">
         <div class="container">
-            <a class="navbar-brand" href="index.html">
-                <img src="/Images/logo wings.png" alt="Logo" style="height: 40px;">
-            </a>
-            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-                <ul class="navbar-nav">
+
+            <!-- TOP ROW -->
+            <div class="d-flex align-items-center w-100">
+
+                <!-- LOGO -->
+                <a class="navbar-brand" href="index.html">
+                    <img src="/Images/logo wings.png" class="navbar-logo" alt="Logo">
+                </a>
+
+                <!-- DESKTOP MENU (CENTER) -->
+                <ul class="navbar-nav flex-row gap-4 mx-auto d-none d-lg-flex">
                     <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
-                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
                     <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item signup-link">
+                        <a class="nav-link" href="signup.html">Sign Up</a>
+                    </li>
+
+                </ul>
+
+                <!-- DESKTOP RIGHT -->
+                <div class="d-none d-lg-flex align-items-center gap-3">
+
+                    <div class="nav-search">
+                        <input type="text" placeholder="Search..." />
+                        <i class="bi bi-search"></i>
+                    </div>
+
+                    <a href="wishlist.html" class="nav-icon auth-protected" data-target="wishlist.html">
+                        <i class="bi bi-heart"></i>
+                    </a>
+
+                    <a href="cart.html" class="nav-icon auth-protected" data-target="cart.html">
+                        <i class="bi bi-cart"></i>
+                    </a>
+
+                    <div id="auth-nav"></div>
+
+                </div>
+
+                <!-- MOBILE RIGHT -->
+                <div class="d-flex align-items-center gap-3 d-lg-none ms-auto">
+                    <a href="wishlist.html" class="nav-icon auth-protected" data-target="wishlist.html">
+                        <i class="bi bi-heart"></i>
+                    </a>
+
+                    <a href="cart.html" class="nav-icon auth-protected" data-target="cart.html">
+                        <i class="bi bi-cart"></i>
+                    </a>
+
+                    <div id="auth-nav-mobile"></div>
+
+                    <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- MOBILE SEARCH -->
+            <div class="nav-search w-100 mt-3 d-lg-none">
+                <input type="text" placeholder="Search..." />
+                <i class="bi bi-search"></i>
+            </div>
+
+            <!-- MOBILE MENU -->
+            <div class="collapse navbar-collapse d-lg-none mt-3" id="navbarNav">
+                <ul class="navbar-nav gap-3">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item signup-link">
+                        <a class="nav-link" href="signup.html">Sign Up</a>
+                    </li>
+
                 </ul>
             </div>
-            <div class="d-flex gap-3 align-items-center">
-                <a href="#"><i class="bi bi-person fs-5 text-dark"></i></a>
-                <a href="#"><i class="bi bi-heart fs-5 text-dark"></i></a>
-                <a href="#"><i class="bi bi-cart fs-5 text-dark"></i></a>
-            </div>
+
         </div>
     </nav>
 
@@ -209,7 +311,7 @@
                     <p class="text-muted small">Account Details</p>
 
                     <div class="menu-section-title">Manage My Account</div>
-                    <a href="#" class="sidebar-link " id="myProfileLink">
+                    <a href="my_account.html" class="sidebar-link ">
                         My Profile
                     </a>
 
@@ -217,7 +319,7 @@
                     <a href="MyPaymentOption.html" class="sidebar-link active">My Payment Options</a>
 
                     <div class="menu-section-title">My Orders</div>
-                    <a href="order.html" class="sidebar-link" id="myOrdersLink">
+                    <a href="order.html" class="sidebar-link">
                         <i class="bi bi-bag-check me-2"></i> My Orders
                     </a>
                     <a href="MyReturns.html" class="sidebar-link">My Returns</a>
@@ -303,33 +405,137 @@
     </section>
 
     <footer>
-        <div class="container text-center text-md-start">
-            <div class="row g-5">
-                <div class="col-lg-4">
-                    <p style="color: #9F9F9F; line-height: 2;">400 University Drive Suite 200 Coral Gables, <br>FL 33134
-                        USA</p>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <p class="footer-address">400 University Drive Suite 200 Coral Gables, <br>FL 33134 USA</p>
                 </div>
-                <div class="col-lg-2 col-6">
-                    <h6 class="mb-4 text-white">Links</h6>
-                    <a href="#">Home</a><a href="#">Shop</a><a href="#">About</a><a href="#">Contact</a>
+                <div class="col-lg-2 col-6 mb-4">
+                    <span class="footer-title">Links</span>
+                    <a href="index.html">Home</a>
+                    <a href="shop.html">Shop</a>
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
                 </div>
-                <div class="col-lg-2 col-6">
-                    <h6 class="mb-4 text-white">Help</h6>
-                    <a href="#">Payment Options</a><a href="#">Returns</a><a href="#">Privacy Policies</a>
+                <div class="col-lg-2 col-6 mb-4">
+                    <span class="footer-title">Help</span>
+                    <a href="#">Payment Options</a>
+                    <a href="#">Returns</a>
+                    <a href="#">Privacy Policies</a>
                 </div>
-                <div class="col-lg-4">
-                    <h6 class="mb-4 text-white">Newsletter</h6>
-                    <div class="d-flex gap-2">
-                        <input type="email"
-                            class="form-control bg-transparent border-0 border-bottom rounded-0 text-white p-0"
-                            placeholder="Enter Your Email Address">
-                        <button
-                            class="btn btn-link text-white fw-bold p-0 border-bottom border-white rounded-0 text-decoration-none">SUBSCRIBE</button>
+                <div class="col-lg-4 mb-4">
+                    <span class="footer-title">Newsletter</span>
+                    <div class="newsletter-form">
+                        <input type="email" class="newsletter-input" placeholder="Enter Your Email Address">
+                        <button class="newsletter-btn">SUBSCRIBE</button>
                     </div>
                 </div>
             </div>
+            <div class="copyright">
+                2026 ToyStore. All rights reserved
+            </div>
         </div>
     </footer>
+
+    <!-- LOGIN REQUIRED MODAL -->
+    <div class="modal fade" id="loginRequiredModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4">
+
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Login Required</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body text-center">
+                    <i class="bi bi-lock-fill fs-1 text-warning mb-3"></i>
+                    <p class="mb-3">
+                        You need to login to access your account.
+                    </p>
+                </div>
+
+                <div class="modal-footer border-0 justify-content-center gap-3">
+                    <a href="signup.html" class="btn btn-dark rounded-pill px-4">
+                        Login / Sign Up
+                    </a>
+                    <button class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            let isLoggedIn = false;
+
+            try {
+                const res = await fetch("/api/check-auth", {
+                    credentials: "include"
+                });
+                const data = await res.json();
+                isLoggedIn = data.loggedIn === true;
+            } catch {
+                isLoggedIn = false;
+            }
+
+            // 🔐 Protect Cart / Wishlist / Account
+            document.querySelectorAll(".auth-protected").forEach(link => {
+                link.addEventListener("click", e => {
+                    if (!isLoggedIn) {
+                        e.preventDefault();
+                        showLoginModal();
+                    }
+                });
+            });
+
+            // 👤 Account Icon Logic
+            const desktop = document.getElementById("auth-nav");
+            const mobile = document.getElementById("auth-nav-mobile");
+
+            if (isLoggedIn) {
+                const html = `
+      <a href="my_account.html" class="nav-icon" title="My Account">
+        <i class="bi bi-person-circle"></i>
+      </a>
+      <a href="order.html" class="nav-icon ms-2" title="My Orders">
+        <i class="bi bi-bag-check"></i>
+      </a>
+    `;
+                desktop.innerHTML = html;
+                mobile.innerHTML = html;
+
+                // ❌ REMOVE SIGNUP FROM NAV
+                document.querySelectorAll(".signup-link").forEach(el => el.remove());
+            } else {
+                const html = `
+      <a href="#" class="nav-icon login-required">
+        <i class="bi bi-person"></i>
+      </a>
+    `;
+                desktop.innerHTML = html;
+                mobile.innerHTML = html;
+
+                document.querySelectorAll(".login-required").forEach(el => {
+                    el.addEventListener("click", e => {
+                        e.preventDefault();
+                        showLoginModal();
+                    });
+                });
+            }
+        });
+
+        function showLoginModal() {
+            const modal = new bootstrap.Modal(
+                document.getElementById("loginRequiredModal")
+            );
+            modal.show();
+        }
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

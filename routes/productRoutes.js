@@ -8,7 +8,8 @@ const {
   deleteProduct,
   getSingleProduct,
   getRelatedProducts,
-  getPublicProducts
+  getPublicProducts,
+  toggleTrending
 } = require("../controllers/productController");
 
 // Middlewares
@@ -42,6 +43,14 @@ router.delete(
   protect,
   adminOnly,
   deleteProduct
+);
+
+// 🔥 Toggle Trending Status
+router.patch(
+  "/admin/product/:id/trending",
+  protect,
+  adminOnly,
+  toggleTrending
 );
 
 /* =========================

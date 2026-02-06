@@ -5,8 +5,9 @@ const Cart = require("../models/Cart");
 /* ================= CREATE ORDER ================= */
 exports.createOrder = async (req, res) => {
   try {
-    const { subtotal, paymentMethod, couponCode } = req.body;
+    const { paymentMethod, couponCode } = req.body;
 
+    // 1️⃣ Get cart
     const cart = await Cart.findOne({ user: req.user.id })
       .populate("items.product");
 
@@ -14,40 +15,80 @@ exports.createOrder = async (req, res) => {
       return res.status(400).json({ message: "Cart is empty" });
     }
 
+    // 2️⃣ Validate payment
     const allowedMethods = ["wallet", "upi", "cod"];
     if (!allowedMethods.includes(paymentMethod)) {
       return res.status(400).json({ message: "Invalid payment method" });
     }
 
-    const items = cart.items.map(item => ({
-      product: item.product._id,
-      quantity: item.quantity,
-      price: item.product.finalPrice,
-      itemStatus: "pending"
-    }));
+    // 3️⃣ Build items + calculate subtotal (DO NOT trust frontend)
+    let subtotal = 0;
+    const items = cart.items.map(item => {
+      subtotal += item.product.finalPrice * item.quantity;
+      return {
+        product: item.product._id,
+        quantity: item.quantity,
+        price: item.product.finalPrice,
+        itemStatus: "pending"
+      };
+    });
 
+    // 4️⃣ Apply coupon
     let discount = 0;
+    let appliedCouponCode = null;
+
     if (couponCode) {
-      const coupon = await Coupon.findOne({ code: couponCode, isActive: true });
-      if (coupon) discount = coupon.discountAmount || 0;
+      const coupon = await Coupon.findOne({
+        code: couponCode,
+        isActive: true
+      });
+
+      if (coupon) {
+
+        // ❌ Minimum cart check
+        if (subtotal < coupon.minCartValue) {
+          return res.status(400).json({
+            message: `Minimum purchase ₹${coupon.minCartValue} required`
+          });
+        }
+
+        // ✅ Calculate discount
+        if (coupon.discountType === "percentage") {
+          discount = Math.floor((subtotal * coupon.discountValue) / 100);
+
+          // 🔒 Max discount cap
+          if (coupon.maxDiscount && discount > coupon.maxDiscount) {
+            discount = coupon.maxDiscount;
+          }
+        }
+
+        if (coupon.discountType === "flat") {
+          discount = coupon.discountValue;
+        }
+
+        appliedCouponCode = coupon.code;
+      }
     }
 
+    // 5️⃣ Create order
     const order = await Order.create({
-  user: req.user.id,
-  items,
-  subtotal,
-  discount,
-  totalAmount: subtotal - discount,
-  paymentMethod,
-  paymentStatus: paymentMethod === "cod" ? "unpaid" : "paid",
-  orderStatus: "pending"   // ⭐ REQUIRED
-});
+      user: req.user.id,
+      items,
+      subtotal,
+      discount,
+      totalAmount: subtotal - discount,
+      couponCode: appliedCouponCode,
+      paymentMethod,
+      paymentStatus: paymentMethod === "cod" ? "unpaid" : "paid",
+      orderStatus: "pending"
+    });
 
-
+    // 6️⃣ Clear cart
     cart.items = [];
     await cart.save();
 
     res.status(201).json({ success: true, order });
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
@@ -57,8 +98,18 @@ exports.createOrder = async (req, res) => {
 
 /* ================= USER: GET MY ORDERS ================= */
 exports.getMyOrders = async (req, res) => {
-  const orders = await Order.find({ user: req.user.id })
-  
+  const { status, returnStatus } = req.query;
+  const filter = { user: req.user.id };
+
+  if (status) {
+    filter.orderStatus = status;
+  }
+
+  if (returnStatus === 'active') {
+    filter.returnStatus = { $ne: 'none' };
+  }
+
+  const orders = await Order.find(filter)
     .populate("items.product", "name images")
     .sort({ createdAt: -1 });
 
@@ -115,4 +166,73 @@ exports.updateItemStatus = async (req, res) => {
   );
 
   res.json(order);
+};
+
+/* ================= CANCEL / RETURN LOGIC ================= */
+
+// User: Cancel Order
+exports.cancelOrder = async (req, res) => {
+  try {
+    const order = await Order.findOne({ _id: req.params.id, user: req.user.id });
+
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    if (order.orderStatus === "shipped" || order.orderStatus === "delivered") {
+      return res.status(400).json({ message: "Cannot cancel shipped or delivered order" });
+    }
+
+    if (order.orderStatus === "canceled") {
+      return res.status(400).json({ message: "Order is already canceled" });
+    }
+
+    order.orderStatus = "canceled";
+    await order.save();
+
+    res.json({ message: "Order canceled successfully", order });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// User: Request Return
+exports.requestReturn = async (req, res) => {
+  try {
+    const { reason } = req.body;
+    const order = await Order.findOne({ _id: req.params.id, user: req.user.id });
+
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    if (order.orderStatus !== "delivered") {
+      return res.status(400).json({ message: "Only delivered orders can be returned" });
+    }
+
+    if (order.returnStatus !== "none") {
+      return res.status(400).json({ message: "Return already requested" });
+    }
+
+    order.returnStatus = "requested";
+    order.returnReason = reason;
+    await order.save();
+
+    res.json({ message: "Return requested successfully", order });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Admin: Update Return Status
+exports.updateReturnStatus = async (req, res) => {
+  try {
+    const { status } = req.body; // approved / rejected
+    const order = await Order.findById(req.params.id);
+
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    order.returnStatus = status;
+    await order.save();
+
+    res.json({ message: "Return status updated", order });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
 };

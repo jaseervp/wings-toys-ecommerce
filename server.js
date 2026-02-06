@@ -26,7 +26,7 @@ app.use("/uploads", express.static("uploads"));
 
 
 // 1. CONNECT TO DATABASE using ENV variable
-const dbURI = process.env.MONGO_URI; 
+const dbURI = process.env.MONGO_URI;
 mongoose.connect(dbURI)
     .then(() => console.log("✅ MongoDB Connected"))
     .catch(err => console.error("❌ Connection Error:", err));
@@ -35,12 +35,14 @@ mongoose.connect(dbURI)
 app.use('/api', authRoutes);
 app.use("/api", categoryRoutes);
 app.use("/api", productRoutes);
+app.use("/api", require("./routes/adminRoutes"));
 app.use("/api", require("./routes/cartRoutes"));
 app.use("/api", require("./routes/couponRoutes"));
 app.use("/api/orders", orderRoutes);
 
 app.use("/api/users", userRoutes);
 app.use("/api/payment", require("./routes/paymentRoutes"));
+app.use("/api/wishlist", require("./routes/wishlistRoutes"));
 
 
 

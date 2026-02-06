@@ -52,7 +52,18 @@ const orderSchema = new mongoose.Schema(
       default: "pending"
     },
 
-    couponCode: String
+    couponCode: String,
+
+    returnStatus: {
+      type: String,
+      enum: ["none", "requested", "approved", "rejected"],
+      default: "none"
+    },
+
+    returnReason: {
+      type: String,
+      default: ""
+    }
   },
   { timestamps: true }
 );

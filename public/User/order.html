@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
     :root {
@@ -33,8 +35,8 @@
 
     /* HEADER */
     .page-header {
-      background: linear-gradient(rgba(255,255,255,.5), rgba(255,255,255,.5)),
-      url('https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=1200');
+      background: linear-gradient(rgba(255, 255, 255, .5), rgba(255, 255, 255, .5)),
+        url('https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=1200');
       background-size: cover;
       background-position: center;
       padding: 70px 0;
@@ -47,7 +49,9 @@
     }
 
     /* SIDEBAR */
-    .sidebar-menu { padding-right: 30px; }
+    .sidebar-menu {
+      padding-right: 30px;
+    }
 
     .menu-section-title {
       font-weight: 600;
@@ -101,9 +105,20 @@
       text-transform: capitalize;
     }
 
-    .status-pending { background: #fff3cd; color: #856404; }
-    .status-shipped { background: #e3f2fd; color: #1565c0; }
-    .status-delivered { background: #e8f5e9; color: #2e7d32; }
+    .status-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-shipped {
+      background: #e3f2fd;
+      color: #1565c0;
+    }
+
+    .status-delivered {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
 
     .btn-view {
       color: var(--accent-blue);
@@ -111,10 +126,15 @@
       font-weight: 600;
     }
 
-    .btn-view:hover { opacity: .7; }
+    .btn-view:hover {
+      opacity: .7;
+    }
 
     /* LOGOUT */
-    .logout-link { color: #dc3545 !important; }
+    .logout-link {
+      color: #dc3545 !important;
+    }
+
     .logout-link:hover {
       background: #fff5f5;
       color: #a71d2a !important;
@@ -140,157 +160,606 @@
       margin-bottom: 12px;
       font-size: .9rem;
     }
+
+    /* NAV ICONS */
+    .navbar-logo {
+      height: 40px;
+    }
+
+    .nav-icon {
+      font-size: 1.4rem;
+      color: #000;
+      text-decoration: none;
+    }
+
+    .nav-search {
+      display: flex;
+      align-items: center;
+      background: #f5f5f5;
+      border-radius: 30px;
+      padding: 8px 16px;
+      width: 260px;
+    }
+
+    .nav-search input {
+      border: none;
+      outline: none;
+      background: transparent;
+      width: 100%;
+    }
+
+    @media (max-width: 991px) {
+      .navbar-logo {
+        height: 28px;
+      }
+
+      .nav-search {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
-  <div class="container">
-    <a class="navbar-brand" href="index.html">
-      <img src="/Images/logo wings.png" style="height:40px">
-    </a>
-    <div class="collapse navbar-collapse justify-content-center">
-      <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
-        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
-      </ul>
-    </div>
-    <div class="d-flex gap-3">
-      <i class="bi bi-person fs-5"></i>
-      <i class="bi bi-cart fs-5"></i>
-    </div>
-  </div>
-</nav>
+  <nav class="navbar navbar-light bg-white py-3">
+    <div class="container">
 
-<!-- HEADER -->
-<header class="page-header">
-  <div class="container">
-    <h1>My Orders</h1>
-    <p class="text-muted">
-      Home <i class="bi bi-chevron-right mx-2"></i> My Orders
-    </p>
-  </div>
-</header>
+      <!-- TOP ROW -->
+      <div class="d-flex align-items-center w-100">
 
-<!-- MAIN -->
-<main class="container py-5">
-  <div class="row">
-
-    <!-- SIDEBAR -->
-    <div class="col-lg-3">
-      <div class="sidebar-menu">
-
-        <p class="text-muted small">Account Details</p>
-
-        <div class="menu-section-title">Manage My Account</div>
-        <a href="profile.html" class="sidebar-link">My Profile</a>
-        <a href="address-book.html" class="sidebar-link">Address Book</a>
-        <a href="MyPaymentOption.html" class="sidebar-link">My Payment Options</a>
-
-        <div class="menu-section-title">My Orders</div>
-        <a href="MyOrders.html" class="sidebar-link active">
-          <i class="bi bi-bag-check me-2"></i> My Orders
-        </a>
-        <a href="MyReturns.html" class="sidebar-link">My Returns</a>
-        <a href="MyCancellations.html" class="sidebar-link">My Cancellations</a>
-
-        <div class="menu-section-title">My Wishlist</div>
-        <a href="wishlist.html" class="sidebar-link">My Wishlist</a>
-
-        <div class="menu-section-title mt-4">Account Actions</div>
-        <a href="#" class="sidebar-link logout-link">
-          <i class="bi bi-box-arrow-right me-2"></i> Logout
+        <!-- LOGO -->
+        <a class="navbar-brand" href="index.html">
+          <img src="/Images/logo wings.png" class="navbar-logo" alt="Logo">
         </a>
 
+        <!-- DESKTOP MENU (CENTER) -->
+        <ul class="navbar-nav flex-row gap-4 mx-auto d-none d-lg-flex">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item signup-link">
+            <a class="nav-link" href="signup.html">Sign Up</a>
+          </li>
+
+        </ul>
+
+        <!-- DESKTOP RIGHT -->
+        <div class="d-none d-lg-flex align-items-center gap-3">
+
+          <div class="nav-search">
+            <input type="text" placeholder="Search..." />
+            <i class="bi bi-search"></i>
+          </div>
+
+          <a href="wishlist.html" class="nav-icon auth-protected" data-target="wishlist.html">
+            <i class="bi bi-heart"></i>
+          </a>
+
+          <a href="cart.html" class="nav-icon auth-protected" data-target="cart.html">
+            <i class="bi bi-cart"></i>
+          </a>
+
+          <div id="auth-nav"></div>
+
+        </div>
+
+        <!-- MOBILE RIGHT -->
+        <div class="d-flex align-items-center gap-3 d-lg-none ms-auto">
+          <a href="wishlist.html" class="nav-icon auth-protected" data-target="wishlist.html">
+            <i class="bi bi-heart"></i>
+          </a>
+
+          <a href="cart.html" class="nav-icon auth-protected" data-target="cart.html">
+            <i class="bi bi-cart"></i>
+          </a>
+
+          <div id="auth-nav-mobile"></div>
+
+          <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+
       </div>
+
+      <!-- MOBILE SEARCH -->
+      <div class="nav-search w-100 mt-3 d-lg-none">
+        <input type="text" placeholder="Search..." />
+        <i class="bi bi-search"></i>
+      </div>
+
+      <!-- MOBILE MENU -->
+      <div class="collapse navbar-collapse d-lg-none mt-3" id="navbarNav">
+        <ul class="navbar-nav gap-3">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item signup-link">
+            <a class="nav-link" href="signup.html">Sign Up</a>
+          </li>
+
+        </ul>
+      </div>
+
     </div>
+  </nav>
 
-    <!-- RIGHT CONTENT -->
-    <div class="col-lg-9">
-      <h4 class="fw-bold mb-4">My Orders</h4>
-
-      <div class="table-responsive">
-        <table class="table order-table">
-          <thead>
-            <tr>
-              <th>Order ID</th>
-              <th>Order Date</th>
-              <th>Amount</th>
-              <th>Status</th>
-              <th class="text-end">Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <td colspan="5" class="text-center py-5 text-muted">
-                No orders found.
-              </td>
-            </tr>
-
-            <!-- SAMPLE ROW -->
-            <!--
-            <tr>
-              <td>#ORD12345</td>
-              <td>15 Jan 2026</td>
-              <td>₹1,299</td>
-              <td><span class="status-badge status-pending">Pending</span></td>
-              <td class="text-end"><a href="#" class="btn-view">View</a></td>
-            </tr>
-            -->
-          </tbody>
-        </table>
-      </div>
+  <!-- HEADER -->
+  <header class="page-header">
+    <div class="container">
+      <h1>My Orders</h1>
+      <p class="text-muted">
+        Home <i class="bi bi-chevron-right mx-2"></i> My Orders
+      </p>
     </div>
+  </header>
 
-  </div>
-</main>
+  <!-- MAIN -->
+  <main class="container py-5">
+    <div class="row">
 
-<!-- FEATURES -->
-<section class="features">
-  <div class="container">
-    <div class="row text-center text-md-start">
-      <div class="col-md-4">
-        <h3 class="fw-bold">Free Delivery</h3>
-        <p class="text-muted">For all orders over $50.</p>
+      <!-- SIDEBAR -->
+      <div class="col-lg-3">
+        <div class="sidebar-menu">
+
+          <p class="text-muted small">Account Details</p>
+
+          <div class="menu-section-title">Manage My Account</div>
+          <a href="my_account.html" class="sidebar-link">My Profile</a>
+          <a href="address-book.html" class="sidebar-link">Address Book</a>
+          <a href="MyPaymentOption.html" class="sidebar-link">My Payment Options</a>
+
+          <div class="menu-section-title">My Orders</div>
+          <a href="order.html" class="sidebar-link active">
+            <i class="bi bi-bag-check me-2"></i> My Orders
+          </a>
+          <a href="MyReturns.html" class="sidebar-link">My Returns</a>
+          <a href="MyCancellations.html" class="sidebar-link">My Cancellations</a>
+
+          <div class="menu-section-title">My Wishlist</div>
+          <a href="wishlist.html" class="sidebar-link">My Wishlist</a>
+
+          <div class="menu-section-title mt-4">Account Actions</div>
+          <a href="#" class="sidebar-link logout-link" id="logoutBtn">
+            <i class="bi bi-box-arrow-right me-2"></i> Logout
+          </a>
+
+        </div>
       </div>
-      <div class="col-md-4">
-        <h3 class="fw-bold">90 Days Return</h3>
-        <p class="text-muted">If goods have problems.</p>
+
+      <!-- RIGHT CONTENT -->
+      <div class="col-lg-9">
+
+        <!-- ORDER LIST VIEW -->
+        <div id="orderListView">
+          <h4 class="fw-bold mb-4">My Orders</h4>
+
+          <div class="table-responsive">
+            <table class="table order-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Order Date</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th class="text-end">Action</th>
+                </tr>
+              </thead>
+
+              <tbody id="ordersTableBody">
+                <tr>
+                  <td colspan="5" class="text-center py-5 text-muted">
+                    <div class="spinner-border text-warning" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ORDER DETAILS VIEW (Hidden) -->
+        <div id="orderDetailView" class="d-none">
+          <button class="btn btn-outline-dark mb-4" onclick="showListView()">
+            <i class="bi bi-arrow-left me-2"></i> Back to Orders
+          </button>
+
+          <div id="orderDetailContent"></div>
+        </div>
+
       </div>
-      <div class="col-md-4">
-        <h3 class="fw-bold">Secure Payment</h3>
-        <p class="text-muted">100% secure payment.</p>
-      </div>
+
     </div>
-  </div>
-</section>
+  </main>
 
-<!-- FOOTER -->
-<footer>
-  <div class="container">
-    <div class="row g-5">
-      <div class="col-lg-4">
-        <p style="color:#9F9F9F;line-height:2">
-          400 University Drive Suite 200 Coral Gables,<br>FL 33134 USA
+  <script>
+    let ALL_ORDERS = [];
+
+    document.addEventListener("DOMContentLoaded", fetchOrders);
+
+    async function fetchOrders() {
+      try {
+        const res = await fetch("/api/orders/my", { credentials: "include" });
+        if (!res.ok) {
+          if (res.status === 401) window.location.href = "login.html";
+          return;
+        }
+
+        const data = await res.json();
+        ALL_ORDERS = data.orders;
+        renderOrders(ALL_ORDERS);
+
+      } catch (err) {
+        console.error("Error fetching orders:", err);
+        document.getElementById("ordersTableBody").innerHTML = `
+        <tr><td colspan="5" class="text-center text-danger">Failed to load orders.</td></tr>
+      `;
+      }
+    }
+
+    function renderOrders(orders) {
+      const tbody = document.getElementById("ordersTableBody");
+
+      if (orders.length === 0) {
+        tbody.innerHTML = `
+        <tr><td colspan="5" class="text-center py-5 text-muted">No orders found.</td></tr>
+      `;
+        return;
+      }
+
+      tbody.innerHTML = orders.map(order => `
+      <tr>
+        <td>#${order._id.slice(-6).toUpperCase()}</td>
+        <td>${new Date(order.createdAt).toLocaleDateString()}</td>
+        <td>₹${order.totalAmount}</td>
+        <td><span class="status-badge status-${order.orderStatus.toLowerCase()}">${order.orderStatus}</span></td>
+        <td class="text-end">
+          <a href="#" class="btn-view" onclick="event.preventDefault(); viewOrder('${order._id}')">View</a>
+        </td>
+      </tr>
+    `).join("");
+    }
+
+    function viewOrder(orderId) {
+      const order = ALL_ORDERS.find(o => o._id === orderId);
+      if (!order) return;
+
+      const content = document.getElementById("orderDetailContent");
+
+      content.innerHTML = `
+      <div class="card border-0 shadow-sm rounded-4 p-4">
+        <div class="d-flex justify-content-between align-items-start mb-4">
+          <div>
+            <h5 class="fw-bold mb-1">Order #${order._id.slice(-6).toUpperCase()}</h5>
+            <p class="text-muted small mb-0">Placed on ${new Date(order.createdAt).toLocaleString()}</p>
+          </div>
+          <span class="status-badge status-${order.orderStatus.toLowerCase()} fs-6">${order.orderStatus}</span>
+        </div>
+
+        <div class="card bg-light border-0 p-3 mb-4 rounded-3">
+          <h6 class="fw-bold mb-3">Items</h6>
+          ${order.items.map(item => `
+            <div class="d-flex align-items-center mb-3 bg-white p-2 rounded shadow-sm">
+              <img src="${item.product?.images?.[0] || 'https://via.placeholder.com/60'}" 
+                   style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;" class="me-3">
+              <div class="flex-grow-1">
+                <p class="mb-0 fw-semibold">${item.product?.name || 'Product Deleted'}</p>
+                <small class="text-muted">Quantity: ${item.quantity}</small>
+              </div>
+              <div class="fw-bold">₹${item.price * item.quantity}</div>
+            </div>
+          `).join("")}
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <h6 class="fw-bold">Payment Info</h6>
+            <p class="text-muted small">
+              Method: <span class="text-uppercase">${order.paymentMethod}</span><br>
+              Status: <span class="text-uppercase">${order.paymentStatus}</span>
+            </p>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <div class="col-md-6 text-md-end">
+  <h6 class="fw-bold">Price Details</h6>
+
+  <p class="mb-1">
+    Actual Price:
+    <span class="fw-semibold">₹${order.subtotal}</span>
+  </p>
+
+  ${
+    order.discount > 0
+      ? `
+        <p class="mb-1 text-success">
+          Coupon Applied ${order.couponCode ? `(${order.couponCode})` : ""} :
+          -₹${order.discount}
         </p>
+      `
+      : `
+        <p class="mb-1 text-muted">
+          Coupon: Not Applied
+        </p>
+      `
+  }
+
+  <hr class="my-2">
+
+  <h5 class="fw-bold">
+    Final Amount: ₹${order.totalAmount}
+  </h5>
+</div>
+
+          </div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+             ${(order.orderStatus === 'pending')
+          ? `<button class="btn btn-outline-danger" onclick="cancelOrder('${order._id}')">Cancel Order</button>`
+          : ''}
+
+             ${(order.orderStatus === 'delivered' && (!order.returnStatus || order.returnStatus === 'none'))
+          ? `<button class="btn btn-dark" onclick="returnOrder('${order._id}')">Return Order</button>`
+          : ''}
+
+             ${(order.returnStatus === 'requested') ? `<span class="badge bg-warning text-dark p-2">Return Requested</span>` : ''}
+             ${(order.returnStatus === 'approved') ? `<span class="badge bg-success p-2">Return Approved</span>` : ''}
+             ${(order.returnStatus === 'rejected') ? `<span class="badge bg-danger p-2">Return Rejected</span>` : ''}
+        </div>
+
       </div>
-      <div class="col-lg-2 col-6">
-        <h6 class="text-white mb-4">Links</h6>
-        <a href="#">Home</a><a href="#">Shop</a><a href="#">About</a><a href="#">Contact</a>
+    `;
+
+      document.getElementById("orderListView").classList.add("d-none");
+      document.getElementById("orderDetailView").classList.remove("d-none");
+    }
+
+    function showListView() {
+      document.getElementById("orderDetailView").classList.add("d-none");
+      document.getElementById("orderListView").classList.remove("d-none");
+    }
+
+    async function cancelOrder(orderId) {
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you really want to cancel this order?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, cancel it!'
+      });
+
+      if (result.isConfirmed) {
+        try {
+          const res = await fetch(`/api/orders/${orderId}/cancel`, {
+            method: 'POST',
+            credentials: "include"
+          });
+          const data = await res.json();
+
+          if (res.ok) {
+            Swal.fire('Cancelled!', 'Your order has been cancelled.', 'success');
+            fetchOrders(); // Reload list
+            showListView(); // Go back to list
+          } else {
+            Swal.fire('Error', data.message, 'error');
+          }
+        } catch (err) {
+          Swal.fire('Error', 'Something went wrong', 'error');
+        }
+      }
+    }
+
+    async function returnOrder(orderId) {
+      const { value: reason } = await Swal.fire({
+        title: 'Return Order',
+        input: 'textarea',
+        inputLabel: 'Reason for return',
+        inputPlaceholder: 'Type your reason here...',
+        inputAttributes: {
+          'aria-label': 'Type your reason here'
+        },
+        showCancelButton: true
+      });
+
+      if (reason) {
+        try {
+          const res = await fetch(`/api/orders/${orderId}/return`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ reason }),
+            credentials: "include"
+          });
+          const data = await res.json();
+
+          if (res.ok) {
+            Swal.fire('Requested!', 'Return request submitted.', 'success');
+            fetchOrders(); // Reload list
+            showListView(); // Go back to list
+          } else {
+            Swal.fire('Error', data.message, 'error');
+          }
+        } catch (err) {
+          Swal.fire('Error', 'Something went wrong', 'error');
+        }
+      }
+    }
+
+    // Logout Logic
+    document.getElementById("logoutBtn").addEventListener("click", async (e) => {
+      e.preventDefault();
+      try {
+        await fetch("/api/logout", { method: "POST", credentials: "include" });
+        localStorage.removeItem("userName");
+        window.location.href = "index.html";
+      } catch {
+        alert("Logout failed. Please try again.");
+      }
+    });
+  </script>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <div class="container">
+      <div class="row text-center text-md-start">
+        <div class="col-md-4">
+          <h3 class="fw-bold">Free Delivery</h3>
+          <p class="text-muted">For all orders over $50.</p>
+        </div>
+        <div class="col-md-4">
+          <h3 class="fw-bold">90 Days Return</h3>
+          <p class="text-muted">If goods have problems.</p>
+        </div>
+        <div class="col-md-4">
+          <h3 class="fw-bold">Secure Payment</h3>
+          <p class="text-muted">100% secure payment.</p>
+        </div>
       </div>
-      <div class="col-lg-2 col-6">
-        <h6 class="text-white mb-4">Help</h6>
-        <a href="#">Payment Options</a><a href="#">Returns</a><a href="#">Privacy Policies</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 mb-4">
+          <p class="footer-address">400 University Drive Suite 200 Coral Gables, <br>FL 33134 USA</p>
+        </div>
+        <div class="col-lg-2 col-6 mb-4">
+          <span class="footer-title">Links</span>
+          <a href="index.html">Home</a>
+          <a href="shop.html">Shop</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="col-lg-2 col-6 mb-4">
+          <span class="footer-title">Help</span>
+          <a href="#">Payment Options</a>
+          <a href="#">Returns</a>
+          <a href="#">Privacy Policies</a>
+        </div>
+        <div class="col-lg-4 mb-4">
+          <span class="footer-title">Newsletter</span>
+          <div class="newsletter-form">
+            <input type="email" class="newsletter-input" placeholder="Enter Your Email Address">
+            <button class="newsletter-btn">SUBSCRIBE</button>
+          </div>
+        </div>
+      </div>
+      <div class="copyright">
+        2026 ToyStore. All rights reserved
+      </div>
+    </div>
+  </footer>
+
+  <!-- LOGIN REQUIRED MODAL -->
+  <div class="modal fade" id="loginRequiredModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4">
+
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold">Login Required</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body text-center">
+          <i class="bi bi-lock-fill fs-1 text-warning mb-3"></i>
+          <p class="mb-3">
+            You need to login to access your account.
+          </p>
+        </div>
+
+        <div class="modal-footer border-0 justify-content-center gap-3">
+          <a href="signup.html" class="btn btn-dark rounded-pill px-4">
+            Login / Sign Up
+          </a>
+          <button class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+
       </div>
     </div>
   </div>
-</footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      let isLoggedIn = false;
+
+      try {
+        const res = await fetch("/api/check-auth", {
+          credentials: "include"
+        });
+        const data = await res.json();
+        isLoggedIn = data.loggedIn === true;
+      } catch {
+        isLoggedIn = false;
+      }
+
+      // 🔐 Protect Cart / Wishlist / Account
+      document.querySelectorAll(".auth-protected").forEach(link => {
+        link.addEventListener("click", e => {
+          if (!isLoggedIn) {
+            e.preventDefault();
+            showLoginModal();
+          }
+        });
+      });
+
+      // 👤 Account Icon Logic
+      const desktop = document.getElementById("auth-nav");
+      const mobile = document.getElementById("auth-nav-mobile");
+
+      if (isLoggedIn) {
+        const html = `
+      <a href="my_account.html" class="nav-icon" title="My Account">
+        <i class="bi bi-person-circle"></i>
+      </a>
+      <a href="order.html" class="nav-icon ms-2" title="My Orders">
+        <i class="bi bi-bag-check"></i>
+      </a>
+    `;
+        desktop.innerHTML = html;
+        mobile.innerHTML = html;
+
+        // ❌ REMOVE SIGNUP FROM NAV
+        document.querySelectorAll(".signup-link").forEach(el => el.remove());
+      } else {
+        const html = `
+      <a href="#" class="nav-icon login-required">
+        <i class="bi bi-person"></i>
+      </a>
+    `;
+        desktop.innerHTML = html;
+        mobile.innerHTML = html;
+
+        document.querySelectorAll(".login-required").forEach(el => {
+          el.addEventListener("click", e => {
+            e.preventDefault();
+            showLoginModal();
+          });
+        });
+      }
+    });
+
+    function showLoginModal() {
+      const modal = new bootstrap.Modal(
+        document.getElementById("loginRequiredModal")
+      );
+      modal.show();
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

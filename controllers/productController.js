@@ -50,20 +50,20 @@ exports.addProduct = async (req, res) => {
       product
     });
 
- } catch (error) {
-  console.error("ADD PRODUCT ERROR:", error);
+  } catch (error) {
+    console.error("ADD PRODUCT ERROR:", error);
 
-  // ✅ HANDLE DUPLICATE SKU ERROR
-  if (error.code === 11000 && error.keyPattern?.sku) {
-    return res.status(400).json({
-      message: "SKU already exists. Please use a unique SKU."
+    // ✅ HANDLE DUPLICATE SKU ERROR
+    if (error.code === 11000 && error.keyPattern?.sku) {
+      return res.status(400).json({
+        message: "SKU already exists. Please use a unique SKU."
+      });
+    }
+
+    res.status(500).json({
+      message: "Server error"
     });
   }
-
-  res.status(500).json({
-    message: "Server error"
-  });
-}
 };
 
 /* =========================
@@ -88,14 +88,56 @@ exports.getAllProductsAdmin = async (req, res) => {
 ========================= */
 exports.getPublicProducts = async (req, res) => {
   try {
-    const products = await Product.find({ isActive: true })
+    const { sort, category, trending } = req.query;
+    let sortOption = { createdAt: -1 }; // Default: Newest
+    let filter = { isActive: true };
+
+    if (category && category !== 'all') {
+      filter.category = category;
+    }
+
+    if (trending === 'true') {
+      filter.isTrending = true;
+    }
+
+    if (sort === "price-asc") {
+      sortOption = { finalPrice: 1 };
+    } else if (sort === "price-desc") {
+      sortOption = { finalPrice: -1 };
+    } else if (sort === "oldest") {
+      sortOption = { createdAt: 1 };
+    }
+
+    const products = await Product.find(filter)
       .populate("category", "name")
-      .sort({ createdAt: -1 });
+      .sort(sortOption);
 
     res.status(200).json(products);
 
   } catch (error) {
     console.error("FETCH PRODUCTS ERROR:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Toggle Trending Status
+exports.toggleTrending = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    product.isTrending = !product.isTrending;
+    await product.save();
+
+    res.status(200).json({
+      message: `Product marked as ${product.isTrending ? "Trending" : "Not Trending"}`,
+      isTrending: product.isTrending
+    });
+
+  } catch (error) {
+    console.error("TOGGLE TRENDING ERROR:", error);
     res.status(500).json({ message: "Server error" });
   }
 };

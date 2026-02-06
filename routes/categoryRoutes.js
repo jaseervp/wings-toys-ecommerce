@@ -18,7 +18,7 @@ router.post(
   addCategory
 );
 
-router.get("/categories", protect, getCategories);
+router.get("/categories", getCategories);
 
 router.put(
   "/admin/category/:id",

@@ -536,10 +536,10 @@
         if (!res.ok) throw new Error("Unauthorized");
 
         const data = await res.json();
-const orders = data.orders;   // ✅ FIX
+        const orders = data.orders;   // ✅ FIX
 
-ALL_ORDERS = orders;
- renderOrders(ALL_ORDERS);
+        ALL_ORDERS = orders;
+        renderOrders(ALL_ORDERS);
 
         tableBody.innerHTML = orders.map((o, i) => `
       <tr>
@@ -602,6 +602,33 @@ ALL_ORDERS = orders;
       });
 
       loadOrders();
+    }
+
+    async function updateReturnStatus(orderId, status) {
+      if (!confirm("Are you sure you want to " + status + " this return?")) return;
+
+      const token = localStorage.getItem("adminToken");
+      try {
+        const res = await fetch(`/api/orders/admin/${orderId}/return`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token
+          },
+          body: JSON.stringify({ status })
+        });
+
+        if (res.ok) {
+          alert("Return request " + status);
+          bootstrap.Modal.getInstance(document.getElementById('orderDetailModal')).hide();
+          loadOrders();
+        } else {
+          alert("Failed to update status");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Error updating status");
+      }
     }
   </script>
 
@@ -702,6 +729,26 @@ ALL_ORDERS = orders;
           <span>Payment</span>
           <span class="fw-bold">${order.paymentMethod}</span>
         </div>
+        
+        ${order.returnStatus !== 'none' ? `
+        <div class="summary-item mt-3 pt-3 border-top">
+           <span>Return Status</span>
+           <span class="fw-bold text-capitalize badge bg-secondary text-white">${order.returnStatus}</span>
+        </div>
+        ${order.returnReason ? `
+        <div class="mt-2">
+           <p class="mb-1 fw-bold small">Return Reason:</p>
+           <p class="small text-muted bg-light p-2 rounded">${order.returnReason}</p>
+        </div>` : ''}
+        
+        ${order.returnStatus === 'requested' ? `
+         <div class="d-flex gap-2 mt-3">
+             <button class="btn btn-success btn-sm w-100" onclick="updateReturnStatus('${order._id}', 'approved')">Approve Return</button>
+             <button class="btn btn-danger btn-sm w-100" onclick="updateReturnStatus('${order._id}', 'rejected')">Reject Return</button>
+         </div>
+        ` : ''}
+        ` : ''}
+
       </div>
     </div>
   `;
@@ -729,58 +776,58 @@ ALL_ORDERS = orders;
       }
     }
   </script>
-<script>
-function applyFilters() {
-  const orderId = document.getElementById("filterOrderId").value.toLowerCase();
-  const status  = document.getElementById("filterStatus").value;
-  const method  = document.getElementById("filterMethod").value;
-  const date    = document.getElementById("filterDate").value;
+  <script>
+    function applyFilters() {
+      const orderId = document.getElementById("filterOrderId").value.toLowerCase();
+      const status = document.getElementById("filterStatus").value;
+      const method = document.getElementById("filterMethod").value;
+      const date = document.getElementById("filterDate").value;
 
-  let filtered = ALL_ORDERS.filter(o => {
-    let match = true;
+      let filtered = ALL_ORDERS.filter(o => {
+        let match = true;
 
-    // Order ID filter
-    if (orderId) {
-      const oid = `ord-${o._id.slice(-6)}`.toLowerCase();
-      match = match && oid.includes(orderId);
+        // Order ID filter
+        if (orderId) {
+          const oid = `ord-${o._id.slice(-6)}`.toLowerCase();
+          match = match && oid.includes(orderId);
+        }
+
+        // Status filter
+        if (status) {
+          match = match && o.orderStatus === status;
+        }
+
+        // Payment method filter
+        if (method) {
+          match =
+            match &&
+            o.paymentMethod?.toLowerCase() === method.toLowerCase();
+        }
+
+
+        // Date filter
+        if (date) {
+          const orderDate = new Date(o.createdAt).toISOString().split("T")[0];
+          match = match && orderDate === date;
+        }
+
+        return match;
+      });
+
+      renderOrders(filtered);
     }
 
-    // Status filter
-    if (status) {
-      match = match && o.orderStatus === status;
+    function resetFilters() {
+      document.getElementById("filterOrderId").value = "";
+      document.getElementById("filterStatus").value = "";
+      document.getElementById("filterMethod").value = "";
+      document.getElementById("filterDate").value = "";
+
+      renderOrders(ALL_ORDERS);
     }
 
-    // Payment method filter
-    if (method) {
-  match =
-    match &&
-    o.paymentMethod?.toLowerCase() === method.toLowerCase();
-}
-
-
-    // Date filter
-    if (date) {
-      const orderDate = new Date(o.createdAt).toISOString().split("T")[0];
-      match = match && orderDate === date;
-    }
-
-    return match;
-  });
-
-  renderOrders(filtered);
-}
-
-function resetFilters() {
-  document.getElementById("filterOrderId").value = "";
-  document.getElementById("filterStatus").value = "";
-  document.getElementById("filterMethod").value = "";
-  document.getElementById("filterDate").value = "";
-
-  renderOrders(ALL_ORDERS);
-}
-
-function renderOrders(orders) {
-  tableBody.innerHTML = orders.map((o, i) => `
+    function renderOrders(orders) {
+      tableBody.innerHTML = orders.map((o, i) => `
     <tr>
       <td>${i + 1}</td>
       <td class="fw-bold">#ORD-${o._id.slice(-6).toUpperCase()}</td>
@@ -797,9 +844,9 @@ function renderOrders(orders) {
       <td>
         <select class="form-select form-select-sm"
           onchange="updateItemStatus('${o._id}', this.value)">
-          ${["pending","shipped","delivered","canceled"]
-            .map(s => `<option value="${s}" ${s===o.orderStatus?"selected":""}>${s}</option>`)
-            .join("")}
+          ${["pending", "shipped", "delivered", "canceled"]
+          .map(s => `<option value="${s}" ${s === o.orderStatus ? "selected" : ""}>${s}</option>`)
+          .join("")}
         </select>
       </td>
       <td>${o.paymentMethod?.toUpperCase()}</td>
@@ -812,9 +859,9 @@ function renderOrders(orders) {
       </td>
     </tr>
   `).join("");
-}
+    }
 
-</script>
+  </script>
 
 
 </body>

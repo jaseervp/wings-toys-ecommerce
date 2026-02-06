@@ -8,12 +8,12 @@ const productSchema = new mongoose.Schema(
       trim: true
     },
     sku: {
-  type: String,
-  required: true,
-  unique: true,
-  trim: true,
-  uppercase: true
-},
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      uppercase: true
+    },
 
 
     description: {
@@ -58,14 +58,19 @@ const productSchema = new mongoose.Schema(
       required: true
     },
 
-     images: {
-      type: [String], 
+    images: {
+      type: [String],
       default: []
     },
 
     isActive: {
       type: Boolean,
       default: true
+    },
+
+    isTrending: {
+      type: Boolean,
+      default: false
     },
 
     createdBy: {

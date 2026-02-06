@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact - ToyStore</title>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -15,129 +16,389 @@
             --input-border: #9F9F9F;
         }
 
-        body { 
-            font-family: 'Poppins', sans-serif; 
-            color: #000; 
-            margin: 0; 
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #000;
+            margin: 0;
             -webkit-font-smoothing: antialiased;
         }
-        
-     
+
+
         /* --- NAVIGATION --- */
-        .nav-link { font-weight: 600; color: #000 !important; margin: 0 15px; }
-        
-        .search-input-desktop {
-            width: 0; opacity: 0; border: none; border-bottom: 2px solid #000;
-            outline: none; transition: all 0.4s ease; padding: 0; background: transparent;
+        .nav-link {
+            font-weight: 600;
+            color: #000 !important;
+            margin: 0 15px;
         }
 
-        .search-input-desktop.active { width: 200px; opacity: 1; padding: 0 10px; margin-right: 10px; }
+        .search-input-desktop {
+            width: 0;
+            opacity: 0;
+            border: none;
+            border-bottom: 2px solid #000;
+            outline: none;
+            transition: all 0.4s ease;
+            padding: 0;
+            background: transparent;
+        }
+
+        .search-input-desktop.active {
+            width: 200px;
+            opacity: 1;
+            padding: 0 10px;
+            margin-right: 10px;
+        }
 
         .search-input-mobile {
-            width: 100%; height: 0; opacity: 0; padding: 0; border: none;
-            border-bottom: 2px solid #000; transition: all 0.3s ease; outline: none; overflow: hidden;
+            width: 100%;
+            height: 0;
+            opacity: 0;
+            padding: 0;
+            border: none;
+            border-bottom: 2px solid #000;
+            transition: all 0.3s ease;
+            outline: none;
+            overflow: hidden;
         }
 
-        .search-input-mobile.active { height: 40px; opacity: 1; padding: 10px 0; margin-top: 15px; }
+        .search-input-mobile.active {
+            height: 40px;
+            opacity: 1;
+            padding: 10px 0;
+            margin-top: 15px;
+        }
+
+
+        /* NAV ICONS */
+        .navbar-logo {
+            height: 40px;
+        }
+
+        .nav-icon {
+            font-size: 1.4rem;
+            color: #000;
+            text-decoration: none;
+        }
+
+        .nav-search {
+            display: flex;
+            align-items: center;
+            background: #f5f5f5;
+            border-radius: 30px;
+            padding: 8px 16px;
+            width: 260px;
+        }
+
+        .nav-search input {
+            border: none;
+            outline: none;
+            background: transparent;
+            width: 100%;
+        }
+
+        @media (max-width: 991px) {
+            .navbar-logo {
+                height: 28px;
+            }
+
+            .nav-search {
+                width: 100%;
+            }
+        }
 
 
         /* --- HERO BANNER --- */
         .page-header {
-            background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), 
-                        url('https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?q=80&w=1200');
-            background-size: cover; background-position: center;
-            padding: 80px 0; text-align: center;
+            background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
+                url('https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?q=80&w=1200');
+            background-size: cover;
+            background-position: center;
+            padding: 80px 0;
+            text-align: center;
         }
-        .page-header h1 { font-size: 3rem; font-weight: 500; margin-bottom: 5px; }
-        .page-header p { font-size: 0.9rem; font-weight: 500; }
+
+        .page-header h1 {
+            font-size: 3rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .page-header p {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
 
         /* --- CONTACT CONTENT --- */
-        .contact-section { padding: 100px 0; }
-        .contact-intro { text-align: center; margin-bottom: 80px; }
-        .contact-intro h2 { font-size: 2.2rem; font-weight: 600; margin-bottom: 15px; }
-        .contact-intro p { color: #9F9F9F; max-width: 600px; margin: 0 auto; font-size: 0.95rem; line-height: 1.6; }
+        .contact-section {
+            padding: 100px 0;
+        }
 
-        .info-item { display: flex; gap: 25px; margin-bottom: 45px; }
-        .info-item i { font-size: 1.6rem; color: #000; }
-        .info-item h5 { font-size: 1.4rem; font-weight: 600; margin-bottom: 5px; }
-        .info-item p { color: #000; font-size: 0.95rem; line-height: 1.5; margin: 0; }
+        .contact-intro {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .contact-intro h2 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .contact-intro p {
+            color: #9F9F9F;
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .info-item {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 45px;
+        }
+
+        .info-item i {
+            font-size: 1.6rem;
+            color: #000;
+        }
+
+        .info-item h5 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .info-item p {
+            color: #000;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin: 0;
+        }
 
         /* --- FORM STYLING --- */
-        .contact-form label { display: block; font-weight: 500; margin-bottom: 15px; font-size: 1rem; }
-        .form-input {
-            width: 100%; border: 1px solid var(--input-border); border-radius: 10px;
-            padding: 18px 25px; margin-bottom: 35px; outline: none; font-size: 0.95rem;
+        .contact-form label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 15px;
+            font-size: 1rem;
         }
-        .form-input::placeholder { color: #9F9F9F; }
-        textarea.form-input { min-height: 150px; resize: none; }
+
+        .form-input {
+            width: 100%;
+            border: 1px solid var(--input-border);
+            border-radius: 10px;
+            padding: 18px 25px;
+            margin-bottom: 35px;
+            outline: none;
+            font-size: 0.95rem;
+        }
+
+        .form-input::placeholder {
+            color: #9F9F9F;
+        }
+
+        textarea.form-input {
+            min-height: 150px;
+            resize: none;
+        }
 
         .btn-submit {
-            border: 1px solid #000; background: transparent; padding: 12px 60px;
-            border-radius: 10px; font-size: 1rem; transition: 0.3s;
+            border: 1px solid #000;
+            background: transparent;
+            padding: 12px 60px;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: 0.3s;
         }
-        .btn-submit:hover { background: #000; color: #fff; }
+
+        .btn-submit:hover {
+            background: #000;
+            color: #fff;
+        }
 
         /* --- FEATURES SECTION --- */
-        .features { background: var(--soft-bg); padding: 80px 0; }
-        .feature-box h3 { font-size: 1.6rem; font-weight: 500; margin-bottom: 8px; }
-        .feature-box p { color: #9F9F9F; font-size: 0.95rem; line-height: 1.5; margin: 0; }
+        .features {
+            background: var(--soft-bg);
+            padding: 80px 0;
+        }
+
+        .feature-box h3 {
+            font-size: 1.6rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .feature-box p {
+            color: #9F9F9F;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin: 0;
+        }
 
         /* --- FOOTER --- */
-        footer { background: #000; color: #fff; padding: 80px 0 30px; }
-        footer a { color: #fff; display: block; margin-bottom: 25px; text-decoration: none; font-size: 0.95rem; font-weight: 500; }
-        .footer-title { color: #9F9F9F; font-weight: 400; margin-bottom: 45px; display: block; font-size: 1rem; }
-        .footer-address { color: #9F9F9F; line-height: 1.8; font-size: 0.95rem; margin-bottom: 40px; }
-        
-        .newsletter-form { display: flex; border-bottom: 1px solid #fff; padding-bottom: 8px; width: 100%; max-width: 300px; }
-        .newsletter-input { background: transparent; border: none; color: #fff; font-size: 0.9rem; outline: none; flex-grow: 1; }
-        .newsletter-btn { background: transparent; border: none; color: #fff; font-weight: 600; font-size: 0.9rem; text-transform: uppercase; padding-left: 15px; }
+        footer {
+            background: #000;
+            color: #fff;
+            padding: 80px 0 30px;
+        }
 
-        .copyright { border-top: 1px solid #333; margin-top: 60px; padding-top: 30px; font-size: 0.95rem; color: #fff; }
+        footer a {
+            color: #fff;
+            display: block;
+            margin-bottom: 25px;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .footer-title {
+            color: #9F9F9F;
+            font-weight: 400;
+            margin-bottom: 45px;
+            display: block;
+            font-size: 1rem;
+        }
+
+        .footer-address {
+            color: #9F9F9F;
+            line-height: 1.8;
+            font-size: 0.95rem;
+            margin-bottom: 40px;
+        }
+
+        .newsletter-form {
+            display: flex;
+            border-bottom: 1px solid #fff;
+            padding-bottom: 8px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .newsletter-input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            flex-grow: 1;
+        }
+
+        .newsletter-btn {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            padding-left: 15px;
+        }
+
+        .copyright {
+            border-top: 1px solid #333;
+            margin-top: 60px;
+            padding-top: 30px;
+            font-size: 0.95rem;
+            color: #fff;
+        }
 
         @media (max-width: 992px) {
-            .contact-info { margin-bottom: 60px; }
-            .features .row > div { margin-bottom: 40px; }
+            .contact-info {
+                margin-bottom: 60px;
+            }
+
+            .features .row>div {
+                margin-bottom: 40px;
+            }
         }
     </style>
 </head>
+
 <body>
 
-   <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
-        <div class="container d-flex align-items-center flex-wrap">
-            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+    <nav class="navbar navbar-light bg-white py-3">
+        <div class="container">
 
-            <a class="navbar-brand ms-2" href="home.html">
-                <img src="/Images/logo wings.png" alt="Logo" style="height: 40px;">
-            </a>
+            <!-- TOP ROW -->
+            <div class="d-flex align-items-center w-100">
 
-            <div class="d-flex gap-3 align-items-center ms-auto order-lg-3">
-                <a href="#"><i class="bi bi-person fs-5 text-dark"></i></a>
-                
-                <div class="search-container d-flex align-items-center">
-                    <input type="text" id="search-desktop" class="search-input-desktop d-none d-lg-block" placeholder="Search...">
-                    <button id="search-trigger" class="btn p-0 border-0 shadow-none">
-                        <i class="bi bi-search fs-5 text-dark"></i>
+                <!-- LOGO -->
+                <a class="navbar-brand" href="index.html">
+                    <img src="/Images/logo wings.png" class="navbar-logo" alt="Logo">
+                </a>
+
+                <!-- DESKTOP MENU (CENTER) -->
+                <ul class="navbar-nav flex-row gap-4 mx-auto d-none d-lg-flex">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item signup-link">
+                        <a class="nav-link" href="signup.html">Sign Up</a>
+                    </li>
+
+                </ul>
+
+                <!-- DESKTOP RIGHT -->
+                <div class="d-none d-lg-flex align-items-center gap-3">
+
+                    <div class="nav-search">
+                        <input type="text" placeholder="Search..." />
+                        <i class="bi bi-search"></i>
+                    </div>
+
+                    <a href="wishlist.html" class="nav-icon auth-protected" data-target="wishlist.html">
+                        <i class="bi bi-heart"></i>
+                    </a>
+
+                    <a href="cart.html" class="nav-icon auth-protected" data-target="cart.html">
+                        <i class="bi bi-cart"></i>
+                    </a>
+
+                    <div id="auth-nav"></div>
+
+                </div>
+
+                <!-- MOBILE RIGHT -->
+                <div class="d-flex align-items-center gap-3 d-lg-none ms-auto">
+                    <a href="wishlist.html" class="nav-icon auth-protected" data-target="wishlist.html">
+                        <i class="bi bi-heart"></i>
+                    </a>
+
+                    <a href="cart.html" class="nav-icon auth-protected" data-target="cart.html">
+                        <i class="bi bi-cart"></i>
+                    </a>
+
+                    <div id="auth-nav-mobile"></div>
+
+                    <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav">
+                        <span class="navbar-toggler-icon"></span>
                     </button>
                 </div>
 
-                <a href="wishlist.html"><i class="bi bi-heart fs-5 text-dark"></i></a>
-                <a href="cart.html"><i class="bi bi-cart fs-5 text-dark"></i></a>
             </div>
 
-            <div class="search-full-width-wrapper w-100 d-lg-none">
-                 <input type="text" id="search-input-mobile" class="search-input-mobile" placeholder="Search toys...">
+            <!-- MOBILE SEARCH -->
+            <div class="nav-search w-100 mt-3 d-lg-none">
+                <input type="text" placeholder="Search..." />
+                <i class="bi bi-search"></i>
             </div>
 
-            <div class="collapse navbar-collapse justify-content-center order-lg-2" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" href="home.html">Home</a></li>
+            <!-- MOBILE MENU -->
+            <div class="collapse navbar-collapse d-lg-none mt-3" id="navbarNav">
+                <ul class="navbar-nav gap-3">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="contact.html">Contact</a></li>
                     <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item signup-link">
+                        <a class="nav-link" href="signup.html">Sign Up</a>
+                    </li>
+
                 </ul>
             </div>
+
         </div>
     </nav>
 
@@ -152,7 +413,8 @@
     <main class="container contact-section">
         <div class="contact-intro">
             <h2>Get In Touch With Us</h2>
-            <p>For More Information About Our Product & Services. Please Feel Free To Drop Us An Email. Our Staff Always Be There To Help You Out. Do Not Hesitate!</p>
+            <p>For More Information About Our Product & Services. Please Feel Free To Drop Us An Email. Our Staff Always
+                Be There To Help You Out. Do Not Hesitate!</p>
         </div>
 
         <div class="row justify-content-center">
@@ -230,23 +492,23 @@
     <footer>
         <div class="container">
             <div class="row">
-                <div class="col-lg-4 mb-5">
-                    <p class="footer-address">400 University Drive Suite 200 Coral <br> Gables, <br> FL 33134 USA</p>
+                <div class="col-lg-4 mb-4">
+                    <p class="footer-address">400 University Drive Suite 200 Coral Gables, <br>FL 33134 USA</p>
                 </div>
-                <div class="col-lg-2 col-6 mb-5">
+                <div class="col-lg-2 col-6 mb-4">
                     <span class="footer-title">Links</span>
-                    <a href="#">Home</a>
-                    <a href="#">Shop</a>
-                    <a href="#">About</a>
-                    <a href="#">Contact</a>
+                    <a href="index.html">Home</a>
+                    <a href="shop.html">Shop</a>
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
                 </div>
-                <div class="col-lg-2 col-6 mb-5">
+                <div class="col-lg-2 col-6 mb-4">
                     <span class="footer-title">Help</span>
                     <a href="#">Payment Options</a>
                     <a href="#">Returns</a>
                     <a href="#">Privacy Policies</a>
                 </div>
-                <div class="col-lg-4 mb-5">
+                <div class="col-lg-4 mb-4">
                     <span class="footer-title">Newsletter</span>
                     <div class="newsletter-form">
                         <input type="email" class="newsletter-input" placeholder="Enter Your Email Address">
@@ -255,15 +517,114 @@
                 </div>
             </div>
             <div class="copyright">
-                2022 Meubel House. All rights reserved
+                2026 ToyStore. All rights reserved
             </div>
         </div>
     </footer>
 
 
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- LOGIN REQUIRED MODAL -->
+    <div class="modal fade" id="loginRequiredModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4">
+
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Login Required</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body text-center">
+                    <i class="bi bi-lock-fill fs-1 text-warning mb-3"></i>
+                    <p class="mb-3">
+                        You need to login to access your account.
+                    </p>
+                </div>
+
+                <div class="modal-footer border-0 justify-content-center gap-3">
+                    <a href="signup.html" class="btn btn-dark rounded-pill px-4">
+                        Login / Sign Up
+                    </a>
+                    <button class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
     <script>
-        document.getElementById('search-trigger').addEventListener('click', function() {
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            let isLoggedIn = false;
+
+            try {
+                const res = await fetch("/api/check-auth", {
+                    credentials: "include"
+                });
+                const data = await res.json();
+                isLoggedIn = data.loggedIn === true;
+            } catch {
+                isLoggedIn = false;
+            }
+
+            // 🔐 Protect Cart / Wishlist / Account
+            document.querySelectorAll(".auth-protected").forEach(link => {
+                link.addEventListener("click", e => {
+                    if (!isLoggedIn) {
+                        e.preventDefault();
+                        showLoginModal();
+                    }
+                });
+            });
+
+            // 👤 Account Icon Logic
+            const desktop = document.getElementById("auth-nav");
+            const mobile = document.getElementById("auth-nav-mobile");
+
+            if (isLoggedIn) {
+                const html = `
+      <a href="my_account.html" class="nav-icon" title="My Account">
+        <i class="bi bi-person-circle"></i>
+      </a>
+      <a href="order.html" class="nav-icon ms-2" title="My Orders">
+        <i class="bi bi-bag-check"></i>
+      </a>
+    `;
+                desktop.innerHTML = html;
+                mobile.innerHTML = html;
+
+                // ❌ REMOVE SIGNUP FROM NAV
+                document.querySelectorAll(".signup-link").forEach(el => el.remove());
+            } else {
+                const html = `
+      <a href="#" class="nav-icon login-required">
+        <i class="bi bi-person"></i>
+      </a>
+    `;
+                desktop.innerHTML = html;
+                mobile.innerHTML = html;
+
+                document.querySelectorAll(".login-required").forEach(el => {
+                    el.addEventListener("click", e => {
+                        e.preventDefault();
+                        showLoginModal();
+                    });
+                });
+            }
+        });
+
+        function showLoginModal() {
+            const modal = new bootstrap.Modal(
+                document.getElementById("loginRequiredModal")
+            );
+            modal.show();
+        }
+    </script>
+    <script>
+        document.getElementById('search-trigger').addEventListener('click', function () {
             if (window.innerWidth < 992) {
                 const mobileInput = document.getElementById('search-input-mobile');
                 mobileInput.classList.toggle('active');
@@ -276,4 +637,5 @@
         });
     </script>
 </body>
+
 </html>
