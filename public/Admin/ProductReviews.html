@@ -1,10 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" id="html-root">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wings Admin | Product Reviews</title>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -33,7 +34,15 @@
             --input-bg: #2D3748;
         }
 
-        body { font-family: 'Poppins', sans-serif; background-color: var(--main-bg); color: var(--text-dark); margin: 0; display: flex; transition: 0.3s; min-height: 100vh;}
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--main-bg);
+            color: var(--text-dark);
+            margin: 0;
+            display: flex;
+            transition: 0.3s;
+            min-height: 100vh;
+        }
 
         /* --- SIDEBAR --- */
         .sidebar {
@@ -41,7 +50,8 @@
             background: var(--sidebar-bg);
             height: 100vh;
             position: fixed;
-            left: 0; top: 0;
+            left: 0;
+            top: 0;
             border-right: 1px solid var(--card-border);
             display: flex;
             flex-direction: column;
@@ -55,94 +65,233 @@
             padding: 20px;
         }
 
-        .sidebar-brand img { height: 45px; margin-bottom: 25px; }
+        .sidebar-brand img {
+            height: 45px;
+            margin-bottom: 25px;
+        }
 
-        .menu-label { 
-            font-size: 0.75rem; color: var(--text-gray); 
-            text-transform: capitalize; margin: 20px 0 10px 10px; font-weight: 500;
+        .menu-label {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            text-transform: capitalize;
+            margin: 20px 0 10px 10px;
+            font-weight: 500;
         }
 
         .nav-item {
-            display: flex; align-items: center; padding: 12px 15px;
-            color: var(--text-gray); text-decoration: none; border-radius: 10px;
-            margin-bottom: 5px; font-size: 0.9rem; transition: 0.2s;
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: var(--text-gray);
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            transition: 0.2s;
         }
 
-        .nav-item.active { background: var(--accent-blue); color: #fff; }
-        .nav-item i { margin-right: 12px; font-size: 1.1rem; }
-        .nav-item:hover:not(.active) { background: rgba(108, 142, 239, 0.1); color: var(--accent-blue); }
+        .nav-item.active {
+            background: var(--accent-blue);
+            color: #fff;
+        }
+
+        .nav-item i {
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+
+        .nav-item:hover:not(.active) {
+            background: rgba(108, 142, 239, 0.1);
+            color: var(--accent-blue);
+        }
 
         .admin-footer {
-            padding: 20px; border-top: 1px solid var(--card-border); background: var(--sidebar-bg);
+            padding: 20px;
+            border-top: 1px solid var(--card-border);
+            background: var(--sidebar-bg);
         }
 
-        .admin-profile-box { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
-        .admin-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; }
-        .admin-name { font-size: 0.85rem; font-weight: 600; color: var(--text-dark); margin: 0; }
-        .admin-email { font-size: 0.7rem; color: var(--text-gray); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px; }
+        .admin-profile-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .admin-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .admin-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .admin-email {
+            font-size: 0.7rem;
+            color: var(--text-gray);
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px;
+        }
 
         /* --- MAIN CONTENT --- */
-        .main-wrapper { 
-            margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); 
-            padding: 30px; transition: 0.3s; 
+        .main-wrapper {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            padding: 30px;
+            transition: 0.3s;
         }
 
         /* --- REVIEWS COMPONENTS --- */
-        .rating-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 25px; }
-        .review-item { border-bottom: 1px solid var(--card-border); padding: 20px 0; }
-        .review-item:last-child { border-bottom: none; }
-        
-        .customer-avatar { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
-        .product-mini-img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
-        
-        .star-rating { color: var(--star-color); font-size: 0.85rem; }
-        .text-quote { font-style: italic; color: var(--text-gray); font-size: 0.9rem; margin-top: 10px; display: block;}
+        .rating-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 25px;
+        }
 
-        .status-badge { padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 600; }
-        .status-approved { background: rgba(40, 167, 69, 0.1); color: #28a745; }
-        .status-pending { background: rgba(255, 193, 7, 0.1); color: #ffc107; }
+        .review-item {
+            border-bottom: 1px solid var(--card-border);
+            padding: 20px 0;
+        }
 
-        .btn-action-sm { padding: 4px 8px; font-size: 0.8rem; border-radius: 6px; }
+        .review-item:last-child {
+            border-bottom: none;
+        }
+
+        .customer-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .product-mini-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .star-rating {
+            color: var(--star-color);
+            font-size: 0.85rem;
+        }
+
+        .text-quote {
+            font-style: italic;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: block;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .status-approved {
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+
+        .btn-action-sm {
+            padding: 4px 8px;
+            font-size: 0.8rem;
+            border-radius: 6px;
+        }
 
         /* --- RESPONSIVE --- */
         @media (max-width: 1200px) {
-            :root { --sidebar-width: 80px; }
-            .sidebar span, .sidebar .menu-label { display: none; }
-            .sidebar .nav-item { justify-content: center; }
-            .sidebar i { margin: 0; }
-            .main-wrapper { margin-left: 80px; width: calc(100% - 80px); }
+            :root {
+                --sidebar-width: 80px;
+            }
+
+            .sidebar span,
+            .sidebar .menu-label {
+                display: none;
+            }
+
+            .sidebar .nav-item {
+                justify-content: center;
+            }
+
+            .sidebar i {
+                margin: 0;
+            }
+
+            .main-wrapper {
+                margin-left: 80px;
+                width: calc(100% - 80px);
+            }
         }
 
         @media (max-width: 991px) {
-            .mobile-nav-btn { display: block; }
-            .sidebar { transform: translateX(-100%); width: 260px !important; }
-            .sidebar.active { transform: translateX(0); }
-            .sidebar span, .sidebar .menu-label { display: block !important; }
-            .main-wrapper { margin-left: 0; width: 100%; padding: 20px; }
-        }
-        /* Hide toggle button by default (Desktop/Large Screens) */
-.mobile-nav-btn { 
-    display: none; 
-    font-size: 1.5rem; 
-    background: none; 
-    border: none; 
-    color: var(--text-dark); 
-    cursor: pointer;
-}
+            .mobile-nav-btn {
+                display: block;
+            }
 
-/* Show toggle button ONLY on mobile (Tablets and Phones) */
-@media (max-width: 991px) {
-    .mobile-nav-btn { 
-        display: block !important; 
-    }
-}
+            .sidebar {
+                transform: translateX(-100%);
+                width: 260px !important;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .sidebar span,
+            .sidebar .menu-label {
+                display: block !important;
+            }
+
+            .main-wrapper {
+                margin-left: 0;
+                width: 100%;
+                padding: 20px;
+            }
+        }
+
+        /* Hide toggle button by default (Desktop/Large Screens) */
+        .mobile-nav-btn {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-dark);
+            cursor: pointer;
+        }
+
+        /* Show toggle button ONLY on mobile (Tablets and Phones) */
+        @media (max-width: 991px) {
+            .mobile-nav-btn {
+                display: block !important;
+            }
+        }
     </style>
 </head>
+
 <body>
 
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
-        <aside class="sidebar" id="sidebar">
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-scroll">
             <div class="sidebar-brand"><img src="logo wings.png" alt="Wings"></div>
             <p class="menu-label">Main menu</p>
@@ -156,7 +305,8 @@
             <p class="menu-label">Product</p>
             <a href="AddProduct.html" class="nav-item"><i class="bi bi-plus-circle"></i> Add Products</a>
             <a href="ProductList.html" class="nav-item"><i class="bi bi-list-ul"></i> Product List</a>
-            <a href="ProductReviews.html" class="nav-item active"><i class="bi bi-chat-left-text"></i> Product Reviews</a>
+            <a href="ProductReviews.html" class="nav-item active"><i class="bi bi-chat-left-text"></i> Product
+                Reviews</a>
         </div>
 
         <div class="admin-footer">
@@ -174,7 +324,7 @@
                 <i class="bi bi-shop"></i> Your Shop <i class="bi bi-box-arrow-up-right ms-auto small"></i>
             </a>
         </div>
-    </aside> 
+    </aside>
     <main class="main-wrapper">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div class="d-flex align-items-center">
@@ -191,16 +341,26 @@
                 <div class="rating-card text-center">
                     <h1 class="fw-bold mb-0">4.8</h1>
                     <div class="star-rating fs-5 mb-2">
-                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i
+                            class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
                     </div>
                     <p class="text-gray small">Average Rating (2.4k Reviews)</p>
                 </div>
             </div>
             <div class="col-md-8">
                 <div class="rating-card d-flex align-items-center justify-content-around h-100">
-                    <div class="text-center"><h5 class="fw-bold mb-0">1,240</h5><p class="text-gray small mb-0">Approved</p></div>
-                    <div class="text-center"><h5 class="fw-bold mb-0 text-warning">45</h5><p class="text-gray small mb-0">Pending</p></div>
-                    <div class="text-center"><h5 class="fw-bold mb-0 text-danger">12</h5><p class="text-gray small mb-0">Flagged</p></div>
+                    <div class="text-center">
+                        <h5 class="fw-bold mb-0">1,240</h5>
+                        <p class="text-gray small mb-0">Approved</p>
+                    </div>
+                    <div class="text-center">
+                        <h5 class="fw-bold mb-0 text-warning">45</h5>
+                        <p class="text-gray small mb-0">Pending</p>
+                    </div>
+                    <div class="text-center">
+                        <h5 class="fw-bold mb-0 text-danger">12</h5>
+                        <p class="text-gray small mb-0">Flagged</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -222,10 +382,13 @@
                         <div>
                             <h6 class="mb-0 fw-semibold">Alex Johnson</h6>
                             <div class="star-rating">
-                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i
+                                    class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i
+                                    class="bi bi-star-fill"></i>
                                 <span class="ms-2 text-gray" style="font-size: 0.7rem;">2 hours ago</span>
                             </div>
-                            <span class="text-quote">"The build quality of the Wireless Z1 is incredible for the price. Best purchase this year!"</span>
+                            <span class="text-quote">"The build quality of the Wireless Z1 is incredible for the price.
+                                Best purchase this year!"</span>
                         </div>
                     </div>
                     <div class="text-md-end">
@@ -249,10 +412,12 @@
                         <div>
                             <h6 class="mb-0 fw-semibold">Sarah Miller</h6>
                             <div class="star-rating">
-                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i><i class="bi bi-star"></i>
+                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i
+                                    class="bi bi-star-fill"></i><i class="bi bi-star"></i><i class="bi bi-star"></i>
                                 <span class="ms-2 text-gray" style="font-size: 0.7rem;">Yesterday</span>
                             </div>
-                            <span class="text-quote">"Shipping was a bit slow, but the product itself is good. Hope it improves."</span>
+                            <span class="text-quote">"Shipping was a bit slow, but the product itself is good. Hope it
+                                improves."</span>
                         </div>
                     </div>
                     <div class="text-md-end">
@@ -271,7 +436,7 @@
         </div>
     </main>
 
-    
+
 
     <script>
         function toggleSidebar() {
@@ -291,5 +456,41 @@
             }
         }
     </script>
+    <script>
+        (async function updateAdminProfileUI() {
+            const token = localStorage.getItem('adminToken');
+            if (!token) return;
+
+            try {
+                const res = await fetch('/api/admin/profile', {
+                    headers: { Authorization: 'Bearer ' + token }
+                });
+
+                if (!res.ok) return;
+
+                const admin = await res.json();
+
+                // Update Sidebar & Topbar Images
+                if (admin.avatar) {
+                    document.querySelectorAll('.admin-avatar, .rounded-circle.border').forEach(img => {
+                        img.src = admin.avatar;
+                    });
+                }
+
+                // Update Name & Email
+                if (admin.fullName) {
+                    document.querySelectorAll('.admin-name').forEach(el => el.textContent = admin.fullName);
+                }
+                if (admin.email) {
+                    document.querySelectorAll('.admin-email').forEach(el => el.textContent = admin.email);
+                }
+
+            } catch (err) {
+                console.error('Failed to load admin profile:', err);
+            }
+        })();
+    </script>
+    <script src="js/admin-global.js"></script>
 </body>
+
 </html>

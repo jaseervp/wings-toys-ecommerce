@@ -9,7 +9,8 @@ const {
   getSingleProduct,
   getRelatedProducts,
   getPublicProducts,
-  toggleTrending
+  toggleTrending,
+  updateProduct
 } = require("../controllers/productController");
 
 // Middlewares
@@ -51,6 +52,15 @@ router.patch(
   protect,
   adminOnly,
   toggleTrending
+);
+
+// ✏️ Update Product
+router.put(
+  "/admin/product/:id",
+  protect,
+  adminOnly,
+  upload.array("images", 5),
+  updateProduct
 );
 
 /* =========================

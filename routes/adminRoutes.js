@@ -8,12 +8,12 @@ const {
   changeAdminPassword
 } = require("../controllers/adminController");
 
-// 🔐 Admin profile
-router.get("/admin/profile", protect, adminOnly, getAdminProfile);
-router.put("/admin/profile", protect, adminOnly, updateAdminProfile);
+const uploadProfile = require("../middleware/uploadProfile");
 
-// 🔐 Admin password change
-router.put("/admin/change-password", protect, adminOnly, changeAdminPassword);
+// 🔐 Admin profile
+router.get("/profile", protect, adminOnly, getAdminProfile);
+router.put("/profile", protect, adminOnly, uploadProfile.single("avatar"), updateAdminProfile);
+router.put("/change-password", protect, adminOnly, changeAdminPassword);
+
 
 module.exports = router;
- 

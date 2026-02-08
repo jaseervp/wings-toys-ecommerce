@@ -9,55 +9,66 @@ exports.getAdminProfile = async (req, res) => {
 
 /* ================= UPDATE ADMIN PROFILE ================= */
 exports.updateAdminProfile = async (req, res) => {
-  const allowedFields = [
-    "fullName",
-    "email",
-    "phone",
-    "dob",
-    "location",
-    "bio"
-  ];
+  try {
+    const updates = {
+      fullName: req.body.fullName,
+      email: req.body.email,
+      phone: req.body.phone,
+      dob: req.body.dob,
+      location: req.body.location,
+      bio: req.body.bio
+    };
 
-  const updates = {};
-  allowedFields.forEach(field => {
-    if (req.body[field] !== undefined) {
-      updates[field] = req.body[field];
+    // 📸 If file uploaded, add to updates
+    if (req.file) {
+      updates.avatar = `/uploads/profiles/${req.file.filename}`;
     }
-  });
 
-  const admin = await User.findByIdAndUpdate(
-    req.user._id,
-    updates,
-    { new: true, runValidators: true }
-  ).select("-password");
+    // Filter undefined
+    Object.keys(updates).forEach(key => updates[key] === undefined && delete updates[key]);
 
-  res.json({
-    message: "Admin profile updated",
-    admin
-  });
+    const admin = await User.findByIdAndUpdate(
+      req.user._id,
+      updates,
+      { new: true, runValidators: true }
+    ).select("-password");
+
+    res.json({
+      message: "Admin profile updated",
+      admin
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
 };
 
 /* ================= CHANGE ADMIN PASSWORD ================= */
 exports.changeAdminPassword = async (req, res) => {
-  const { currentPassword, newPassword, confirmPassword } = req.body;
+  try {
+    const { currentPassword, newPassword } = req.body;
 
-  if (!currentPassword || !newPassword || !confirmPassword) {
-    return res.status(400).json({ message: "All fields required" });
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ message: "All fields required" });
+    }
+
+    const admin = await User.findById(req.user._id);
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, admin.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Current password incorrect" });
+    }
+
+    admin.password = await bcrypt.hash(newPassword, 10);
+    await admin.save();
+
+    res.json({ message: "Password updated successfully" });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
-
-  if (newPassword !== confirmPassword) {
-    return res.status(400).json({ message: "Passwords do not match" });
-  }
-
-  const admin = await User.findById(req.user._id);
-
-  const isMatch = await bcrypt.compare(currentPassword, admin.password);
-  if (!isMatch) {
-    return res.status(401).json({ message: "Current password incorrect" });
-  }
-
-  admin.password = await bcrypt.hash(newPassword, 10);
-  await admin.save();
-
-  res.json({ message: "Password updated successfully" });
 };

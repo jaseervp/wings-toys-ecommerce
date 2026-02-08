@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -536,7 +536,7 @@
         if (!res.ok) throw new Error("Unauthorized");
 
         const data = await res.json();
-        const orders = data.orders;   // ✅ FIX
+        const orders = data.orders;   // âœ… FIX
 
         ALL_ORDERS = orders;
         renderOrders(ALL_ORDERS);
@@ -568,7 +568,7 @@
           </select>
         </td>
         <td>${o.paymentMethod?.toUpperCase()}</td>
-        <td class="fw-bold">₹${Number(o.totalAmount).toFixed(2)}</td>
+        <td class="fw-bold">â‚¹${Number(o.totalAmount).toFixed(2)}</td>
         <td>
          <button class="btn btn-dark btn-sm"
   onclick="viewOrderDetails('${o._id}')">
@@ -658,7 +658,7 @@
           return;
         }
 
-        // ✅ OK
+        // âœ… OK
         loadOrders();
 
       } catch {
@@ -705,13 +705,13 @@
           ${item.product?.name || "Product removed"}
         </p>
         <small class="text-muted">
-          Qty: ${item.quantity} × ₹${item.price}
+          Qty: ${item.quantity} Ã— â‚¹${item.price}
         </small>
       </div>
     </div>
 
     <div class="fw-bold">
-      ₹${item.quantity * item.price}
+      â‚¹${item.quantity * item.price}
     </div>
   </div>
 `).join("")}
@@ -719,7 +719,7 @@
       <div class="summary-box">
         <div class="summary-item">
           <span>Total</span>
-          <span class="fw-bold">₹${order.totalAmount}</span>
+          <span class="fw-bold">â‚¹${order.totalAmount}</span>
         </div>
         <div class="summary-item">
           <span>Status</span>
@@ -850,7 +850,7 @@
         </select>
       </td>
       <td>${o.paymentMethod?.toUpperCase()}</td>
-      <td class="fw-bold">₹${Number(o.totalAmount).toFixed(2)}</td>
+      <td class="fw-bold">â‚¹${Number(o.totalAmount).toFixed(2)}</td>
       <td>
         <button class="btn btn-dark btn-sm"
           onclick="viewOrderDetails('${o._id}')">
@@ -864,6 +864,41 @@
   </script>
 
 
+  <script>
+    (async function updateAdminProfileUI() {
+      const token = localStorage.getItem('adminToken');
+      if (!token) return;
+
+      try {
+        const res = await fetch('/api/admin/profile', {
+          headers: { Authorization: 'Bearer ' + token }
+        });
+
+        if (!res.ok) return;
+
+        const admin = await res.json();
+
+        // Update Sidebar & Topbar Images
+        if (admin.avatar) {
+          document.querySelectorAll('.admin-avatar, .rounded-circle.border').forEach(img => {
+            img.src = admin.avatar;
+          });
+        }
+
+        // Update Name & Email
+        if (admin.fullName) {
+          document.querySelectorAll('.admin-name').forEach(el => el.textContent = admin.fullName);
+        }
+        if (admin.email) {
+          document.querySelectorAll('.admin-email').forEach(el => el.textContent = admin.email);
+        }
+
+      } catch (err) {
+        console.error('Failed to load admin profile:', err);
+      }
+    })();
+  </script>
+  <script src="js/admin-global.js"></script>
 </body>
 
 </html>

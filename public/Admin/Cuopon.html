@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" id="html-root">
 
 <head>
@@ -42,25 +42,26 @@
             transition: 0.3s;
             min-height: 100vh;
         }
+
         /* Force Poppins everywhere */
-* {
-    font-family: 'Poppins', sans-serif !important;
-}
+        * {
+            font-family: 'Poppins', sans-serif !important;
+        }
 
-/* Table header style */
-table thead th {
-    font-weight: 600;
-    font-size: 0.85rem;
-    color: var(--text-gray);
-    text-transform: uppercase;
-}
+        /* Table header style */
+        table thead th {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            text-transform: uppercase;
+        }
 
-/* Table body text */
-table tbody td {
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--text-dark);
-}
+        /* Table body text */
+        table tbody td {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
 
 
         /* --- SIDEBAR --- */
@@ -225,27 +226,30 @@ table tbody td {
             padding: 12px 30px;
             font-weight: 500;
         }
-        /* Search button – same as Create Coupon */
-.btn-search {
-    background: var(--accent-blue);
-    border: none;
-    font-weight: 500;
-}
 
-.btn-search:hover {
-    background: #4a6bdc;
-}
-.badge {
-    font-size: 0.75rem;
-    padding: 6px 12px;
-    border-radius: 999px;
-}
-.badge-sm {
-    font-size: 0.65rem;
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-weight: 500;
-}
+        /* Search button â€“ same as Create Coupon */
+        .btn-search {
+            background: var(--accent-blue);
+            border: none;
+            font-weight: 500;
+        }
+
+        .btn-search:hover {
+            background: #4a6bdc;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 6px 12px;
+            border-radius: 999px;
+        }
+
+        .badge-sm {
+            font-size: 0.65rem;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-weight: 500;
+        }
 
 
 
@@ -256,33 +260,36 @@ table tbody td {
             border: none;
             color: var(--text-dark);
         }
+
         /* --- CUSTOM GENERATE BUTTON --- */
-.btn-generate {
-    background: var(--card-bg);
-    color: var(--accent-blue);
-    border: 1px solid var(--card-border);
-    border-left: none; /* Merges cleanly with the input */
-    padding: 0 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    transition: all 0.2s ease;
-    border-radius: 0 10px 10px 0;
-}
+        .btn-generate {
+            background: var(--card-bg);
+            color: var(--accent-blue);
+            border: 1px solid var(--card-border);
+            border-left: none;
+            /* Merges cleanly with the input */
+            padding: 0 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border-radius: 0 10px 10px 0;
+        }
 
-.btn-generate:hover {
-    background: var(--accent-blue);
-    color: #ffffff;
-    border-color: var(--accent-blue);
-}
+        .btn-generate:hover {
+            background: var(--accent-blue);
+            color: #ffffff;
+            border-color: var(--accent-blue);
+        }
 
-.btn-generate:active {
-    transform: scale(0.95); /* Slight "click" animation */
-}
+        .btn-generate:active {
+            transform: scale(0.95);
+            /* Slight "click" animation */
+        }
 
-/* Dark mode adjustment for the button border */
-[data-theme="dark"] .btn-generate {
-    border-color: var(--card-border);
-}
+        /* Dark mode adjustment for the button border */
+        [data-theme="dark"] .btn-generate {
+            border-color: var(--card-border);
+        }
 
         /* --- RESPONSIVE --- */
         @media (max-width: 1200px) {
@@ -398,7 +405,7 @@ table tbody td {
 
             <p class="menu-label">Product</p>
             <a href="AddProduct.html" class="nav-item"><i class="bi bi-plus-circle"></i> Add Products</a>
-        
+
             <a href="ProductList.html" class="nav-item"><i class="bi bi-list-ul"></i> Product List</a>
             <a href="ProductReviews.html" class="nav-item"><i class="bi bi-chat-left-text"></i> Product Reviews</a>
         </div>
@@ -428,7 +435,7 @@ table tbody td {
                 <button class="mobile-nav-btn me-3" onclick="toggleSidebar()"><i class="bi bi-list"></i></button>
                 <h4 class="fw-semibold mb-0">Create New Coupon</h4>
             </div>
-            
+
             <div class="d-flex gap-2">
                 <div class="theme-toggle me-3 align-self-center" style="cursor:pointer" onclick="toggleTheme()">
                     <i class="bi bi-moon-stars-fill" id="tIcon"></i>
@@ -438,44 +445,44 @@ table tbody td {
             </div>
         </div>
         <!-- ================= COUPON LIST ================= -->
-<div class="section-card mb-4">
-    <div class="row g-3 align-items-end">
-        <div class="col-md-4">
-            <label class="form-label">Search Coupon</label>
-            <input id="searchInput" class="custom-input" placeholder="Code, type...">
+        <div class="section-card mb-4">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Search Coupon</label>
+                    <input id="searchInput" class="custom-input" placeholder="Code, type...">
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Status</label>
+                    <select id="statusFilter" class="custom-input">
+                        <option value="all">All</option>
+                        <option value="active">Active</option>
+                        <option value="upcoming">Upcoming</option>
+                        <option value="expired">Expired</option>
+
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Sort By</label>
+                    <select id="sortFilter" class="custom-input">
+                        <option value="newest">Newest</option>
+                        <option value="oldest">Oldest</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2 d-flex gap-2">
+                    <button class="btn btn-primary w-100 btn-search" onclick="loadCoupons()">
+                        Search
+                    </button>
+
+                    <button class="btn btn-outline-secondary w-100" onclick="resetFilters()">Reset</button>
+                </div>
+            </div>
         </div>
 
-        <div class="col-md-3">
-            <label class="form-label">Status</label>
-            <select id="statusFilter" class="custom-input">
-               <option value="all">All</option>
-<option value="active">Active</option>
-<option value="upcoming">Upcoming</option>
-<option value="expired">Expired</option>
 
-            </select>
-        </div>
-
-        <div class="col-md-3">
-            <label class="form-label">Sort By</label>
-            <select id="sortFilter" class="custom-input">
-                <option value="newest">Newest</option>
-                <option value="oldest">Oldest</option>
-            </select>
-        </div>
-
-        <div class="col-md-2 d-flex gap-2">
-            <button class="btn btn-primary w-100 btn-search" onclick="loadCoupons()">
-    Search
-</button>
-
-            <button class="btn btn-outline-secondary w-100" onclick="resetFilters()">Reset</button>
-        </div>
-    </div>
-</div>
-
-
-<!-- ================= END LIST ================= -->
+        <!-- ================= END LIST ================= -->
 
 
         <div class="row">
@@ -485,18 +492,18 @@ table tbody td {
                     <div class="mb-4">
                         <label class="form-label">Coupon Code</label>
                         <div class="input-group">
-    <input type="text" id="couponCodeInput" class="custom-input" placeholder="e.g. SUMMER25"
-        style="border-top-right-radius:0; border-bottom-right-radius:0; flex: 1;">
-    
-    <button class="btn-generate" onclick="generateCode()">
-        <i class="bi bi-magic me-1"></i> Generate
-    </button>
-</div>
+                            <input type="text" id="couponCodeInput" class="custom-input" placeholder="e.g. SUMMER25"
+                                style="border-top-right-radius:0; border-bottom-right-radius:0; flex: 1;">
+
+                            <button class="btn-generate" onclick="generateCode()">
+                                <i class="bi bi-magic me-1"></i> Generate
+                            </button>
+                        </div>
                     </div>
                     <div class="mb-0">
                         <label class="form-label">Description (Optional)</label>
-                       <textarea id="descInput" class="custom-input" rows="3"
-    placeholder="Explain what this coupon provides..."></textarea>
+                        <textarea id="descInput" class="custom-input" rows="3"
+                            placeholder="Explain what this coupon provides..."></textarea>
 
                     </div>
                 </div>
@@ -507,10 +514,10 @@ table tbody td {
                         <div class="col-md-6 mb-3 mb-md-0">
                             <label class="form-label">Discount Type</label>
                             <select id="discountTypeInput" class="custom-input">
-    <option value="percentage">Percentage (%)</option>
-    <option value="flat">Fixed Amount (₹)</option>
-    <option value="free_shipping">Free Shipping</option>
-</select>
+                                <option value="percentage">Percentage (%)</option>
+                                <option value="flat">Fixed Amount (â‚¹)</option>
+                                <option value="free_shipping">Free Shipping</option>
+                            </select>
 
                         </div>
                         <div class="col-md-6">
@@ -522,11 +529,7 @@ table tbody td {
                     <div class="row">
                         <div class="col-md-6 mb-3 mb-md-0">
                             <label class="form-label">Start Date</label>
-                            <input
-    id="startDateInput"
-    type="date"
-    class="custom-input"
->
+                            <input id="startDateInput" type="date" class="custom-input">
 
                         </div>
                         <div class="col-md-6">
@@ -542,114 +545,92 @@ table tbody td {
                 <div class="section-card" style="border: 1px solid var(--accent-blue);">
                     <h5 class="section-title">Coupon Preview</h5>
                     <div class="coupon-preview-box">
-    <small class="opacity-75" id="previewLabel">YOU SAVE</small>
+                        <small class="opacity-75" id="previewLabel">YOU SAVE</small>
 
-    <h2 class="fw-bold mb-1" id="previewDiscount">
-        10% OFF
-    </h2>
+                        <h2 class="fw-bold mb-1" id="previewDiscount">
+                            10% OFF
+                        </h2>
 
-    <div class="py-2 px-3 my-2 bg-white text-dark rounded-pill d-inline-block fw-bold border"
-        id="previewCode">
-        COUPON_CODE
-    </div>
+                        <div class="py-2 px-3 my-2 bg-white text-dark rounded-pill d-inline-block fw-bold border"
+                            id="previewCode">
+                            COUPON_CODE
+                        </div>
 
-    <p class="small mt-2 mb-1" id="previewDesc">
-        Coupon description goes here
-    </p>
+                        <p class="small mt-2 mb-1" id="previewDesc">
+                            Coupon description goes here
+                        </p>
 
-    <p class="small mb-0 opacity-75" id="previewDate">
-        Valid until —
-    </p>
-</div>
+                        <p class="small mb-0 opacity-75" id="previewDate">
+                            Valid until â€”
+                        </p>
+                    </div>
 
                 </div>
-<div class="section-card">
-    <h5 class="section-title">Usage Restrictions</h5>
+                <div class="section-card">
+                    <h5 class="section-title">Usage Restrictions</h5>
 
-    <!-- Minimum Spend -->
-    <div class="mb-4">
-        <label class="form-label">Minimum Spend (₹)</label>
-        <input
-            id="minCartInput"
-            type="number"
-            class="custom-input"
-            placeholder="0"
-        >
-    </div>
+                    <!-- Minimum Spend -->
+                    <div class="mb-4">
+                        <label class="form-label">Minimum Spend (â‚¹)</label>
+                        <input id="minCartInput" type="number" class="custom-input" placeholder="0">
+                    </div>
 
-    <!-- Maximum Discount (ONLY for percentage coupons) -->
-    <div class="mb-4">
-        <label class="form-label">Maximum Discount (₹)</label>
-        <input
-            id="maxDiscountInput"
-            type="number"
-            class="custom-input"
-            placeholder="No limit"
-        >
-        <small class="text-muted">
-            Applies only for percentage coupons
-        </small>
-    </div>
+                    <!-- Maximum Discount (ONLY for percentage coupons) -->
+                    <div class="mb-4">
+                        <label class="form-label">Maximum Discount (â‚¹)</label>
+                        <input id="maxDiscountInput" type="number" class="custom-input" placeholder="No limit">
+                        <small class="text-muted">
+                            Applies only for percentage coupons
+                        </small>
+                    </div>
 
-    <!-- Maximum Usage -->
-    <div class="mb-4">
-        <label class="form-label">Maximum Uses (Total)</label>
-        <input
-            id="usageLimitInput"
-            type="number"
-            class="custom-input"
-            placeholder="Unlimited"
-        >
-    </div>
+                    <!-- Maximum Usage -->
+                    <div class="mb-4">
+                        <label class="form-label">Maximum Uses (Total)</label>
+                        <input id="usageLimitInput" type="number" class="custom-input" placeholder="Unlimited">
+                    </div>
 
-    <!-- Per User Limit -->
-    <div class="form-check form-switch">
-        <input
-            class="form-check-input"
-            type="checkbox"
-            id="userLimit"
-        >
-        <label
-            class="form-check-label ms-2 small text-muted"
-            for="userLimit"
-        >
-            Limit to one use per customer
-        </label>
-    </div>
-</div>
+                    <!-- Per User Limit -->
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="userLimit">
+                        <label class="form-check-label ms-2 small text-muted" for="userLimit">
+                            Limit to one use per customer
+                        </label>
+                    </div>
+                </div>
 
 
-   
-   
-</div>
+
 
             </div>
+
+        </div>
         </div>
         <div class="section-card">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="section-title mb-0">Coupons List</h5>
-    </div>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="section-title mb-0">Coupons List</h5>
+            </div>
 
-    <div class="table-responsive">
-        <table class="table align-middle">
-            <thead>
-    <tr>
-        <th>#</th>
-        <th>Code</th>
-        <th>Discount</th>
-        <th>Min Purchase</th>
-        <th>Max Discount</th>
-        <th>Usage</th>
-        <th>Status</th>
-        <th>Expiry</th>
-        <th>Action</th>
-    </tr>
-</thead>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Code</th>
+                            <th>Discount</th>
+                            <th>Min Purchase</th>
+                            <th>Max Discount</th>
+                            <th>Usage</th>
+                            <th>Status</th>
+                            <th>Expiry</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
 
-            <tbody id="couponTableBody"></tbody>
-        </table>
-    </div>
-</div>
+                    <tbody id="couponTableBody"></tbody>
+                </table>
+            </div>
+        </div>
     </main>
 
     <script>
@@ -685,183 +666,182 @@ table tbody td {
 
     </script>
     <script>
-document.querySelector(".btn-create").addEventListener("click", async () => {
+        document.querySelector(".btn-create").addEventListener("click", async () => {
 
-    const code = document.getElementById("couponCodeInput").value.trim();
-    const discountType = document.getElementById("discountTypeInput").value;
-    const discountValue = document.getElementById("discountValueInput").value;
+            const code = document.getElementById("couponCodeInput").value.trim();
+            const discountType = document.getElementById("discountTypeInput").value;
+            const discountValue = document.getElementById("discountValueInput").value;
 
-    // ✅ ADD THIS LINE HERE 👇
-    const description = document.getElementById("descInput").value.trim();
+            // âœ… ADD THIS LINE HERE ðŸ‘‡
+            const description = document.getElementById("descInput").value.trim();
 
-const startDate = document.getElementById("startDateInput").value;
+            const startDate = document.getElementById("startDateInput").value;
 
-    const endDate = document.getElementById("endDateInput").value;
-const minCartValue = document.getElementById("minCartInput").value;
-const usageLimit = document.getElementById("usageLimitInput").value;
-const maxDiscount = document.getElementById("maxDiscountInput").value;
-const limitPerUser = document.getElementById("userLimit").checked;
-
-
+            const endDate = document.getElementById("endDateInput").value;
+            const minCartValue = document.getElementById("minCartInput").value;
+            const usageLimit = document.getElementById("usageLimitInput").value;
+            const maxDiscount = document.getElementById("maxDiscountInput").value;
+            const limitPerUser = document.getElementById("userLimit").checked;
 
 
-if (!code || !endDate || (discountType !== "free_shipping" && !discountValue)) {
-        alert("❌ Please fill required fields");
-        return;
-    }
-
-    try {
-        const token = localStorage.getItem("adminToken");
-
-const res = await fetch("/api/admin/coupons", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: "Bearer " + token
-  },
-  body: JSON.stringify({
-    code,
-    discountType,
-    discountValue: Number(discountValue),
-    description,
-    minCartValue: Number(minCartValue || 0),
-    maxDiscount: maxDiscount ? Number(maxDiscount) : null,
-    usageLimit: usageLimit ? Number(usageLimit) : null,
-    startDate,
-    expiryDate: endDate,
-    limitPerUser
-  })
-});
 
 
-        const data = await res.json();
+            if (!code || !endDate || (discountType !== "free_shipping" && !discountValue)) {
+                alert("âŒ Please fill required fields");
+                return;
+            }
 
-        if (res.ok) {
-            alert("✅ Coupon created successfully");
-            location.reload();
-        } else {
-            alert("❌ " + data.message);
+            try {
+                const token = localStorage.getItem("adminToken");
+
+                const res = await fetch("/api/admin/coupons", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + token
+                    },
+                    body: JSON.stringify({
+                        code,
+                        discountType,
+                        discountValue: Number(discountValue),
+                        description,
+                        minCartValue: Number(minCartValue || 0),
+                        maxDiscount: maxDiscount ? Number(maxDiscount) : null,
+                        usageLimit: usageLimit ? Number(usageLimit) : null,
+                        startDate,
+                        expiryDate: endDate,
+                        limitPerUser
+                    })
+                });
+
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    alert("âœ… Coupon created successfully");
+                    location.reload();
+                } else {
+                    alert("âŒ " + data.message);
+                }
+
+            } catch (err) {
+                alert("âŒ Server error");
+            }
+        });
+    </script>
+    <script>
+        const codeInput = document.getElementById("couponCodeInput");
+        const descInput = document.getElementById("descInput");
+        const typeInput = document.getElementById("discountTypeInput");
+        const valueInput = document.getElementById("discountValueInput");
+        const endDateInput = document.getElementById("endDateInput");
+
+        const previewCode = document.getElementById("previewCode");
+        const previewDiscount = document.getElementById("previewDiscount");
+        const previewDesc = document.getElementById("previewDesc");
+        const previewDate = document.getElementById("previewDate");
+        const previewLabel = document.getElementById("previewLabel");
+
+        function updatePreview() {
+            // Code
+            previewCode.innerText = codeInput.value || "COUPON_CODE";
+
+            // Description
+            previewDesc.innerText =
+                descInput.value || "No description provided";
+
+            // Discount display
+            const type = typeInput.value;
+            const value = valueInput.value;
+
+            if (type === "percentage") {
+                previewLabel.innerText = "YOU SAVE";
+                previewDiscount.innerText = value ? `${value}% OFF` : "â€”";
+                valueInput.disabled = false;
+            }
+            else if (type === "flat") {
+                previewLabel.innerText = "FLAT DISCOUNT";
+                previewDiscount.innerText = value ? `â‚¹${value} OFF` : "â€”";
+                valueInput.disabled = false;
+            }
+            else if (type === "free_shipping") {
+                previewLabel.innerText = "SPECIAL OFFER";
+                previewDiscount.innerText = "FREE SHIPPING ðŸšš";
+                valueInput.value = 0;
+                valueInput.disabled = true;
+            }
+
+            // Expiry
+            previewDate.innerText = endDateInput.value
+                ? `Valid until ${new Date(endDateInput.value).toDateString()}`
+                : "Valid until â€”";
         }
 
-    } catch (err) {
-        alert("❌ Server error");
-    }
-});
-</script>
-<script>
-const codeInput = document.getElementById("couponCodeInput");
-const descInput = document.getElementById("descInput");
-const typeInput = document.getElementById("discountTypeInput");
-const valueInput = document.getElementById("discountValueInput");
-const endDateInput = document.getElementById("endDateInput");
+        // Live listeners
+        [
+            codeInput,
+            descInput,
+            typeInput,
+            valueInput,
+            endDateInput
+        ].forEach(el => el.addEventListener("input", updatePreview));
+    </script>
+    <script>
+        const tableBody = document.getElementById("couponTableBody");
 
-const previewCode = document.getElementById("previewCode");
-const previewDiscount = document.getElementById("previewDiscount");
-const previewDesc = document.getElementById("previewDesc");
-const previewDate = document.getElementById("previewDate");
-const previewLabel = document.getElementById("previewLabel");
+        async function loadCoupons() {
+            const token = localStorage.getItem("adminToken");
 
-function updatePreview() {
-    // Code
-    previewCode.innerText = codeInput.value || "COUPON_CODE";
+            const search = searchInput.value;
+            const status = statusFilter.value;
+            const sort = sortFilter.value;
 
-    // Description
-    previewDesc.innerText =
-        descInput.value || "No description provided";
+            const res = await fetch(
+                `/api/admin/coupons?search=${search}&status=${status}&sort=${sort}`,
+                {
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                }
+            );
 
-    // Discount display
-    const type = typeInput.value;
-    const value = valueInput.value;
+            if (!res.ok) {
+                alert("Unauthorized");
+                return;
+            }
 
-    if (type === "percentage") {
-        previewLabel.innerText = "YOU SAVE";
-        previewDiscount.innerText = value ? `${value}% OFF` : "—";
-        valueInput.disabled = false;
-    }
-    else if (type === "flat") {
-        previewLabel.innerText = "FLAT DISCOUNT";
-        previewDiscount.innerText = value ? `₹${value} OFF` : "—";
-        valueInput.disabled = false;
-    }
-    else if (type === "free_shipping") {
-        previewLabel.innerText = "SPECIAL OFFER";
-        previewDiscount.innerText = "FREE SHIPPING 🚚";
-        valueInput.value = 0;
-        valueInput.disabled = true;
-    }
+            const coupons = await res.json();
+            tableBody.innerHTML = "";
 
-    // Expiry
-    previewDate.innerText = endDateInput.value
-        ? `Valid until ${new Date(endDateInput.value).toDateString()}`
-        : "Valid until —";
-}
+            coupons.forEach((c, i) => {
+                const today = new Date();
+                const start = new Date(c.startDate);
+                const end = new Date(c.expiryDate);
 
-// Live listeners
-[
-    codeInput,
-    descInput,
-    typeInput,
-    valueInput,
-    endDateInput
-].forEach(el => el.addEventListener("input", updatePreview));
-</script>
-<script>
-const tableBody = document.getElementById("couponTableBody");
+                let statusText = "Active";
+                let badgeClass = "bg-success";
 
-async function loadCoupons() {
-  const token = localStorage.getItem("adminToken");
+                if (today < start) {
+                    statusText = "Upcoming";
+                    badgeClass = "bg-info";
+                } else if (today > end) {
+                    statusText = "Expired";
+                    badgeClass = "bg-danger";
+                }
 
-  const search = searchInput.value;
-  const status = statusFilter.value;
-  const sort = sortFilter.value;
-
-  const res = await fetch(
-    `/api/admin/coupons?search=${search}&status=${status}&sort=${sort}`,
-    {
-      headers: {
-        Authorization: "Bearer " + token
-      }
-    }
-  );
-
-  if (!res.ok) {
-    alert("Unauthorized");
-    return;
-  }
-
-  const coupons = await res.json();
-  tableBody.innerHTML = "";
-
-  coupons.forEach((c, i) => {
-    const today = new Date();
-    const start = new Date(c.startDate);
-    const end = new Date(c.expiryDate);
-
-    let statusText = "Active";
-    let badgeClass = "bg-success";
-
-    if (today < start) {
-      statusText = "Upcoming";
-      badgeClass = "bg-info";
-    } else if (today > end) {
-      statusText = "Expired";
-      badgeClass = "bg-danger";
-    }
-
-    tableBody.innerHTML += `
+                tableBody.innerHTML += `
       <tr>
         <td>${i + 1}</td>
         <td><strong>${c.code}</strong></td>
-        <td>${
-          c.discountType === "percentage"
-            ? `${c.discountValue}%`
-            : c.discountType === "flat"
-            ? `₹${c.discountValue}`
-            : "Free Shipping"
-        }</td>
-        <td>₹${c.minCartValue}</td>
-        <td>${c.maxDiscount ? "₹" + c.maxDiscount : "—"}</td>
-        <td>${c.usedCount || 0} / ${c.usageLimit || "∞"}</td>
+        <td>${c.discountType === "percentage"
+                        ? `${c.discountValue}%`
+                        : c.discountType === "flat"
+                            ? `â‚¹${c.discountValue}`
+                            : "Free Shipping"
+                    }</td>
+        <td>â‚¹${c.minCartValue}</td>
+        <td>${c.maxDiscount ? "â‚¹" + c.maxDiscount : "â€”"}</td>
+        <td>${c.usedCount || 0} / ${c.usageLimit || "âˆž"}</td>
         <td><span class="badge badge-sm ${badgeClass}">${statusText}</span></td>
         <td>${new Date(c.expiryDate).toDateString()}</td>
         <td>
@@ -872,66 +852,101 @@ async function loadCoupons() {
         </td>
       </tr>
     `;
-  });
-}
+            });
+        }
 
-async function deleteCoupon(id) {
-  if (!confirm("Delete this coupon?")) return;
+        async function deleteCoupon(id) {
+            if (!confirm("Delete this coupon?")) return;
 
-  const token = localStorage.getItem("adminToken");
+            const token = localStorage.getItem("adminToken");
 
-  await fetch(`/api/admin/coupons/${id}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: "Bearer " + token
-    }
-  });
+            await fetch(`/api/admin/coupons/${id}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            });
 
-  loadCoupons();
-}
+            loadCoupons();
+        }
 
-function resetFilters() {
-  searchInput.value = "";
-  statusFilter.value = "all";
-  sortFilter.value = "newest";
-  loadCoupons();
-}
-</script>
-<script>
-(async function checkAdminAuth() {
-  const token = localStorage.getItem("adminToken");
-  const role  = localStorage.getItem("adminRole");
+        function resetFilters() {
+            searchInput.value = "";
+            statusFilter.value = "all";
+            sortFilter.value = "newest";
+            loadCoupons();
+        }
+    </script>
+    <script>
+        (async function checkAdminAuth() {
+            const token = localStorage.getItem("adminToken");
+            const role = localStorage.getItem("adminRole");
 
-  if (!token || role !== "admin") {
-    window.location.href = "../User/login.html";
-    return;
-  }
+            if (!token || role !== "admin") {
+                window.location.href = "../User/login.html";
+                return;
+            }
 
-  try {
-    const res = await fetch("/api/check-auth", {
-      headers: {
-        Authorization: "Bearer " + token
-      }
-    });
+            try {
+                const res = await fetch("/api/check-auth", {
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                });
 
-    if (!res.ok) throw new Error("Unauthorized");
+                if (!res.ok) throw new Error("Unauthorized");
 
-    const data = await res.json();
+                const data = await res.json();
 
-    if (!data.loggedIn || data.user.role !== "admin") {
-      window.location.href = "../User/login.html";
-      return;
-    }
+                if (!data.loggedIn || data.user.role !== "admin") {
+                    window.location.href = "../User/login.html";
+                    return;
+                }
 
-    // ✅ ONLY NOW LOAD COUPONS
-    loadCoupons();
+                // âœ… ONLY NOW LOAD COUPONS
+                loadCoupons();
 
-  } catch (err) {
-    window.location.href = "../User/login.html";
-  }
-})();
-</script>
+            } catch (err) {
+                window.location.href = "../User/login.html";
+            }
+        })();
+    </script>
 
+    <script>
+        (async function updateAdminProfileUI() {
+            const token = localStorage.getItem('adminToken');
+            if (!token) return;
+
+            try {
+                const res = await fetch('/api/admin/profile', {
+                    headers: { Authorization: 'Bearer ' + token }
+                });
+
+                if (!res.ok) return;
+
+                const admin = await res.json();
+
+                // Update Sidebar & Topbar Images
+                if (admin.avatar) {
+                    document.querySelectorAll('.admin-avatar, .rounded-circle.border').forEach(img => {
+                        img.src = admin.avatar;
+                    });
+                }
+
+                // Update Name & Email
+                if (admin.fullName) {
+                    document.querySelectorAll('.admin-name').forEach(el => el.textContent = admin.fullName);
+                }
+                if (admin.email) {
+                    document.querySelectorAll('.admin-email').forEach(el => el.textContent = admin.email);
+                }
+
+            } catch (err) {
+                console.error('Failed to load admin profile:', err);
+            }
+        })();
+    </script>
+    <script src="js/admin-global.js"></script>
 </body>
 
 </html>

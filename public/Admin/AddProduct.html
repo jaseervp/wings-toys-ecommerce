@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" id="html-root">
 
 <head>
@@ -304,49 +304,49 @@
             white-space: nowrap;
         }
 
-  .sku-container {
-  position: relative;
-  width: 100%;
-}
+        .sku-container {
+            position: relative;
+            width: 100%;
+        }
 
-.sku-container input {
-  width: 100%;
-  height: 48px;
-  padding: 0 120px 0 16px;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  background: #f8fafc;
-  font-size: 14px;
-  color: #111827;
-  outline: none;
-}
+        .sku-container input {
+            width: 100%;
+            height: 48px;
+            padding: 0 120px 0 16px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            background: #f8fafc;
+            font-size: 14px;
+            color: #111827;
+            outline: none;
+        }
 
-.sku-container input::placeholder {
-  color: #9ca3af;
-}
+        .sku-container input::placeholder {
+            color: #9ca3af;
+        }
 
-.sku-container button {
-  position: absolute;
-  top: 50%;
-  right: 8px;
-  transform: translateY(-50%);
-  height: 32px;
-  padding: 0 14px;
-  border-radius: 8px;
-  border: none;
-  background: transparent;
-  color: #6366f1;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
+        .sku-container button {
+            position: absolute;
+            top: 50%;
+            right: 8px;
+            transform: translateY(-50%);
+            height: 32px;
+            padding: 0 14px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: #6366f1;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-.sku-container button:hover {
-  background: #eef2ff;
-}
+        .sku-container button:hover {
+            background: #eef2ff;
+        }
 
 
 
@@ -452,7 +452,7 @@
 
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3 header-container">
             <div>
-                <h4 class="fw-semibold mb-0">Add New Product</h4>
+                <h4 class="fw-semibold mb-0" id="pageTitle">Add New Product</h4>
             </div>
             <div class="d-flex gap-2 flex-wrap header-actions">
                 <div class="custom-input d-flex align-items-center bg-white border search-box-wrapper"
@@ -463,7 +463,7 @@
                         style="border:none; outline:none; background:transparent; width:100%; font-size:0.8rem;">
                 </div>
                 <div class="d-flex gap-2 action-btns-group">
-                    <button class="btn-publish" onclick="addProduct()">Publish Product</button>
+                    <button class="btn-publish" id="submitBtn" onclick="handleProductSubmit()">Publish Product</button>
 
                     <button class="btn-draft"><i class="bi bi-save me-1"></i> Save to draft</button>
                 </div>
@@ -482,22 +482,17 @@
                             placeholder="Enter Product Name (Min 3 Characters)">
 
                     </div>
-   <div class="mb-4">
-  <label class="form-label">Product SKU</label>
+                    <div class="mb-4">
+                        <label class="form-label">Product SKU</label>
 
-  <div class="sku-container">
-    <input
-      type="text"
-      id="productSKU"
-      placeholder="e.g. SUMMER25"
-      readonly
-    />
+                        <div class="sku-container">
+                            <input type="text" id="productSKU" placeholder="e.g. SUMMER25" readonly />
 
-    <button type="button" onclick="generateSKU()">
-      ✨ Generate
-    </button>
-  </div>
-</div>
+                            <button type="button" onclick="generateSKU()">
+                                âœ¨ Generate
+                            </button>
+                        </div>
+                    </div>
 
 
 
@@ -599,20 +594,11 @@
                 <div class="section-card" style="border: 2px solid var(--accent-blue);">
                     <h5 class="section-title">Upload Product Image</h5>
 
-                    <input type="file"
-       id="mainFileInput"
-       name="images"
-       accept="image/*"
-       style="display:none"
-       onchange="loadMain(event)">
+                    <input type="file" id="mainFileInput" name="images" accept="image/*" style="display:none"
+                        onchange="loadMain(event)">
 
-<input type="file"
-       id="galleryFileInput"
-       name="images"
-       accept="image/*"
-       multiple
-       style="display:none"
-       onchange="loadThumb(event)">
+                    <input type="file" id="galleryFileInput" name="images" accept="image/*" multiple
+                        style="display:none" onchange="loadThumb(event)">
 
 
                     <label class="form-label">Product Image</label>
@@ -633,7 +619,7 @@
                     </div>
 
                     <div class="thumb-grid" id="thumbGallery">
-                        
+
 
                         <div class="thumb-box flex-column text-accent-blue"
                             onclick="document.getElementById('galleryFileInput').click()"
@@ -658,185 +644,374 @@
             </div>
         </div>
     </main>
-<script>
-function generateSKU() {
-  const sku =
-    "WINGS-" +
-    Math.random().toString(36).substring(2, 6).toUpperCase() +
-    "-" +
-    Date.now().toString().slice(-3);
+    <script>
+        function generateSKU() {
+            const sku =
+                "WINGS-" +
+                Math.random().toString(36).substring(2, 6).toUpperCase() +
+                "-" +
+                Date.now().toString().slice(-3);
 
-  document.getElementById("productSKU").value = sku;
-}
-</script>
+            document.getElementById("productSKU").value = sku;
+        }
+    </script>
 
-   <script>
-/* ================= ADMIN AUTH ================= */
-(async function checkAdminAuth() {
-  const token = localStorage.getItem("adminToken");
-  const role  = localStorage.getItem("adminRole");
+    <script>
+        /* ================= ADMIN AUTH ================= */
+        (async function checkAdminAuth() {
+            const token = localStorage.getItem("adminToken");
+            const role = localStorage.getItem("adminRole");
 
-  if (!token || role !== "admin") {
-    window.location.href = "../User/login.html";
-    return;
-  }
+            if (!token || role !== "admin") {
+                window.location.href = "../User/login.html";
+                return;
+            }
 
-  try {
-    const res = await fetch("/api/check-auth", {
-      headers: { Authorization: "Bearer " + token }
-    });
+            try {
+                const res = await fetch("/api/check-auth", {
+                    headers: { Authorization: "Bearer " + token }
+                });
 
-    if (!res.ok) throw new Error("Unauthorized");
+                if (!res.ok) throw new Error("Unauthorized");
 
-    const data = await res.json();
+                const data = await res.json();
 
-    if (!data.loggedIn || data.user.role !== "admin") {
-      window.location.href = "../User/login.html";
-      return;
-    }
+                if (!data.loggedIn || data.user.role !== "admin") {
+                    window.location.href = "../User/login.html";
+                    return;
+                }
 
-    loadCategoryDropdown();
-    updateStockUI();
+                loadCategoryDropdown();
+                updateStockUI();
 
-    document
-      .getElementById("unlimitedStock")
-      .addEventListener("change", updateStockUI);
+                document
+                    .getElementById("unlimitedStock")
+                    .addEventListener("change", updateStockUI);
 
-  } catch {
-    window.location.href = "../User/login.html";
-  }
-})();
+                // Check for Edit Mode
+                checkForEditMode();
 
-/* ================= GLOBAL STATE ================= */
-let selectedImages = [];
+            } catch {
+                window.location.href = "../User/login.html";
+            }
+        })();
 
-/* ================= SIDEBAR ================= */
-function toggleMenu() {
-  sidebar.classList.toggle("active");
-  sidebarOverlay.classList.toggle("active");
-}
+        /* ================= GLOBAL STATE ================= */
+        let selectedImages = [];
+        let editingProductId = null;
+        let existingImages = []; // URL strings of images to keep
 
-/* ================= MAIN IMAGE ================= */
-function loadMain(event) {
-  const file = event.target.files[0];
-  if (!file) return;
+        /* ================= SIDEBAR ================= */
+        function toggleMenu() {
+            sidebar.classList.toggle("active");
+            sidebarOverlay.classList.toggle("active");
+        }
 
-  // Remove old main image
-  selectedImages = selectedImages.filter(img => img.isMain !== true);
+        /* ================= MAIN IMAGE ================= */
+        function loadMain(event) {
+            const file = event.target.files[0];
+            if (!file) return;
 
-  file.isMain = true;
-  selectedImages.unshift(file);
+            // Remove old main image
+            selectedImages = selectedImages.filter(img => img.isMain !== true);
 
-  mainDisplay.src = URL.createObjectURL(file);
-  event.target.value = "";
-}
+            file.isMain = true;
+            selectedImages.unshift(file);
 
-/* ================= GALLERY IMAGES ================= */
-function loadThumb(event) {
-  const files = Array.from(event.target.files);
-  const gallery = thumbGallery;
+            mainDisplay.src = URL.createObjectURL(file);
+            event.target.value = "";
+        }
 
-  files.forEach(file => {
-    selectedImages.push(file);
-    const index = selectedImages.length - 1;
+        /* ================= GALLERY IMAGES ================= */
+        function loadThumb(event) {
+            const files = Array.from(event.target.files);
+            const gallery = thumbGallery;
 
-    const div = document.createElement("div");
-    div.className = "thumb-box";
-    div.innerHTML = `
+            files.forEach(file => {
+                selectedImages.push(file);
+                const index = selectedImages.length - 1;
+
+                const div = document.createElement("div");
+                div.className = "thumb-box";
+                div.innerHTML = `
       <img src="${URL.createObjectURL(file)}">
-      <button class="remove-thumb" onclick="removeImage(${index}, this)">×</button>
+      <button class="remove-thumb" onclick="removeImage(${index}, this)">Ã—</button>
     `;
-    gallery.insertBefore(div, gallery.lastElementChild);
-  });
+                gallery.insertBefore(div, gallery.lastElementChild);
+            });
 
-  event.target.value = "";
-}
+            event.target.value = "";
+        }
 
-/* ================= REMOVE IMAGE ================= */
-function removeImage(index, btn) {
-  selectedImages.splice(index, 1);
-  btn.parentElement.remove();
-}
+        /* ================= REMOVE IMAGE ================= */
+        function removeImage(index, btn) {
+            selectedImages.splice(index, 1);
+            btn.parentElement.remove();
+        }
 
-/* ================= CATEGORY ================= */
-async function loadCategoryDropdown() {
-  const token = localStorage.getItem("adminToken");
+        function removeExistingImage(url, btn) {
+            existingImages = existingImages.filter(img => img !== url);
+            btn.parentElement.remove();
+        }
 
-  const res = await fetch("/api/categories", {
-    headers: { Authorization: "Bearer " + token }
-  });
+        /* ================= CATEGORY ================= */
+        async function loadCategoryDropdown() {
+            const token = localStorage.getItem("adminToken");
 
-  if (!res.ok) return;
+            const res = await fetch("/api/categories", {
+                headers: { Authorization: "Bearer " + token }
+            });
 
-  const categories = await res.json();
-  productCategory.innerHTML = `<option value="">Select Category</option>`;
+            if (!res.ok) return;
 
-  categories.forEach(cat => {
-    productCategory.innerHTML += `
+            const categories = await res.json();
+            productCategory.innerHTML = `<option value="">Select Category</option>`;
+
+            categories.forEach(cat => {
+                productCategory.innerHTML += `
       <option value="${cat._id}">${cat.name}</option>
     `;
-  });
-}
+            });
+        }
 
-/* ================= STOCK ================= */
-function updateStockUI() {
-  if (unlimitedStock.checked) {
-    stockQuantity.disabled = true;
-    stockQuantity.value = "";
-    stockQuantity.placeholder = "Unlimited";
-  } else {
-    stockQuantity.disabled = false;
-    stockQuantity.placeholder = "Enter quantity";
-  }
-}
+        /* ================= STOCK ================= */
+        function updateStockUI() {
+            if (unlimitedStock.checked) {
+                stockQuantity.disabled = true;
+                stockQuantity.value = "";
+                stockQuantity.placeholder = "Unlimited";
+            } else {
+                stockQuantity.disabled = false;
+                stockQuantity.placeholder = "Enter quantity";
+            }
+        }
 
-/* ================= ADD PRODUCT ================= */
-async function addProduct() {
-  const token = localStorage.getItem("adminToken");
+        /* ================= CHECK FOR EDIT MODE ================= */
+        async function checkForEditMode() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get("id");
 
-  if (!productName.value || !productSKU.value || !productPrice.value || !productCategory.value) {
-    alert("Required fields missing");
-    return;
-  }
+            if (id) {
+                editingProductId = id;
+                document.getElementById("pageTitle").textContent = "Edit Product";
+                document.getElementById("submitBtn").textContent = "Update Product";
+                await loadProductDetails(id);
+            }
+        }
 
-  if (selectedImages.length === 0) {
-    alert("Upload at least one image");
-    return;
-  }
+        async function loadProductDetails(id) {
+            try {
+                const res = await fetch(`/api/products/${id}`);
+                const product = await res.json();
 
-  const fd = new FormData();
-  fd.append("name", productName.value);
-  fd.append("sku", productSKU.value);
-  fd.append("description", productDescription.value);
-  fd.append("price", productPrice.value);
-  fd.append("discountPrice", discountPrice.value || 0);
-  fd.append("finalPrice", finalPrice.value || productPrice.value);
-  fd.append("stockQuantity", unlimitedStock.checked ? 0 : stockQuantity.value);
-  fd.append("stockStatus", stockStatus.value);
-  fd.append("category", productCategory.value);
+                if (!res.ok) throw new Error(product.message);
 
-  selectedImages.forEach(img => fd.append("images", img));
+                // Populate Fields
+                productName.value = product.name;
+                productSKU.value = product.sku;
+                productDescription.value = product.description;
+                productPrice.value = product.price;
+                discountPrice.value = product.discountPrice;
+                finalPrice.value = product.finalPrice;
+                stockQuantity.value = product.stockQuantity;
+                stockStatus.value = product.stockStatus;
 
-  const res = await fetch("/api/admin/product", {
-    method: "POST",
-    headers: { Authorization: "Bearer " + token },
-    body: fd
-  });
+                // Handle Category
+                // Wait a bit for dropdown to populate if needed, but since we call this after load, it should be fine.
+                // However, let's just set it directly.
+                productCategory.value = product.category?._id || product.category;
 
-  const data = await res.json();
+                // Handle Stock UI
+                if (product.stockQuantity === 0) {
+                    unlimitedStock.checked = true;
+                } else {
+                    unlimitedStock.checked = false;
+                }
+                updateStockUI();
 
-  if (res.ok) {
-    alert("✅ Product added");
-    location.href = "ProductList.html";
-  } else {
-    alert(data.message || "Failed");
-  }
-}
-</script>
+                // Handle Images
+                existingImages = product.images || [];
+
+                // Show Main Image
+                if (existingImages.length > 0) {
+                    mainDisplay.src = existingImages[0];
+                }
+
+                // Show Gallery (excluding first one if it's treated as main)
+                // Actually, let's show all in gallery section for management or just skip main?
+                // For simplicity, let's just show all other images in gallery.
+                const otherImages = existingImages.slice(1);
+                const gallery = thumbGallery;
+
+                otherImages.forEach(imgUrl => {
+                    const div = document.createElement("div");
+                    div.className = "thumb-box";
+                    div.innerHTML = `
+                      <img src="${imgUrl}">
+                      <button type="button" class="remove-thumb" onclick="removeExistingImage('${imgUrl}', this)">×</button>
+                    `;
+                    gallery.insertBefore(div, gallery.lastElementChild);
+                });
+
+
+            } catch (err) {
+                console.error("Failed to load product", err);
+                alert("Failed to load product details");
+            }
+        }
+
+        /* ================= HANDLE SUBMIT ================= */
+        async function handleProductSubmit() {
+            if (editingProductId) {
+                await updateProduct();
+            } else {
+                await addProduct();
+            }
+        }
+
+        /* ================= UPDATE PRODUCT ================= */
+        async function updateProduct() {
+            const token = localStorage.getItem("adminToken");
+
+            if (!productName.value || !productSKU.value || !productPrice.value || !productCategory.value) {
+                alert("Required fields missing");
+                return;
+            }
+
+            const fd = new FormData();
+            fd.append("name", productName.value);
+            fd.append("sku", productSKU.value);
+            fd.append("description", productDescription.value);
+            fd.append("price", productPrice.value);
+            fd.append("discountPrice", discountPrice.value || 0);
+            fd.append("stockQuantity", unlimitedStock.checked ? 0 : stockQuantity.value);
+            fd.append("stockStatus", stockStatus.value);
+            fd.append("category", productCategory.value);
+
+            // Append Existing Images to Keep
+            // If existingImages is [url1, url2], append them.
+            // Backend expects "existingImages"
+            existingImages.forEach(img => {
+                fd.append("existingImages", img);
+            });
+            // Also append the main image if it's an existing one and not replaced? 
+            // The logic above assumes existingImages includes ALL currently saved images. 
+            // If user replaced main image, `loadMain` would have cleared `selectedImages` (new files) 
+            // but we need to ensure we don't duplicate or lose.
+            // Simplified: existingImages tracks what's on server. selectedImages tracks NEW uploads.
+            // If user deletes an existing image, it is removed from existingImages.
+
+            // Append New Images
+            selectedImages.forEach(file => {
+                fd.append("images", file);
+            });
+
+            try {
+                const res = await fetch(`/api/admin/product/${editingProductId}`, {
+                    method: "PUT",
+                    headers: {
+                        Authorization: "Bearer " + token
+                    },
+                    body: fd
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    alert("Product updated successfully!");
+                    window.location.href = "ProductList.html";
+                } else {
+                    alert("Error: " + data.message);
+                }
+
+            } catch (err) {
+                console.error(err);
+                alert("Something went wrong");
+            }
+        }
+
+        /* ================= ADD PRODUCT ================= */
+        async function addProduct() {
+            const token = localStorage.getItem("adminToken");
+
+            if (!productName.value || !productSKU.value || !productPrice.value || !productCategory.value) {
+                alert("Required fields missing");
+                return;
+            }
+
+            if (selectedImages.length === 0) {
+                alert("Upload at least one image");
+                return;
+            }
+
+            const fd = new FormData();
+            fd.append("name", productName.value);
+            fd.append("sku", productSKU.value);
+            fd.append("description", productDescription.value);
+            fd.append("price", productPrice.value);
+            fd.append("discountPrice", discountPrice.value || 0);
+            fd.append("finalPrice", finalPrice.value || productPrice.value);
+            fd.append("stockQuantity", unlimitedStock.checked ? 0 : stockQuantity.value);
+            fd.append("stockStatus", stockStatus.value);
+            fd.append("category", productCategory.value);
+
+            selectedImages.forEach(img => fd.append("images", img));
+
+            const res = await fetch("/api/admin/product", {
+                method: "POST",
+                headers: { Authorization: "Bearer " + token },
+                body: fd
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                alert("âœ… Product added");
+                location.href = "ProductList.html";
+            } else {
+                alert(data.message || "Failed");
+            }
+        }
+    </script>
 
 
 
 
+    <script>
+        (async function updateAdminProfileUI() {
+            const token = localStorage.getItem('adminToken');
+            if (!token) return;
+
+            try {
+                const res = await fetch('/api/admin/profile', {
+                    headers: { Authorization: 'Bearer ' + token }
+                });
+
+                if (!res.ok) return;
+
+                const admin = await res.json();
+
+                // Update Sidebar & Topbar Images
+                if (admin.avatar) {
+                    document.querySelectorAll('.admin-avatar, .rounded-circle.border').forEach(img => {
+                        img.src = admin.avatar;
+                    });
+                }
+
+                // Update Name & Email
+                if (admin.fullName) {
+                    document.querySelectorAll('.admin-name').forEach(el => el.textContent = admin.fullName);
+                }
+                if (admin.email) {
+                    document.querySelectorAll('.admin-email').forEach(el => el.textContent = admin.email);
+                }
+
+            } catch (err) {
+                console.error('Failed to load admin profile:', err);
+            }
+        })();
+    </script>
+    <script src="js/admin-global.js"></script>
 </body>
 
 </html>

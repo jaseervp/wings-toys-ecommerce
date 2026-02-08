@@ -71,14 +71,120 @@ exports.addProduct = async (req, res) => {
 ========================= */
 exports.getAllProductsAdmin = async (req, res) => {
   try {
-    const products = await Product.find()
+    const { search, category, stockStatus, sort } = req.query;
+
+    let query = {};
+
+    // 🔍 Search (Name or SKU)
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { sku: { $regex: search, $options: "i" } }
+      ];
+    }
+
+    // 📂 Filter by Category
+    if (category) {
+      query.category = category;
+    }
+
+    // 📦 Filter by Stock Status
+    if (stockStatus) {
+      query.stockStatus = stockStatus;
+    }
+
+    // 🔃 Sorting
+    let sortOption = { createdAt: -1 }; // Default: Newest
+    if (sort === "price-asc") sortOption = { finalPrice: 1 };
+    if (sort === "price-desc") sortOption = { finalPrice: -1 };
+    if (sort === "oldest") sortOption = { createdAt: 1 };
+    if (sort === "name-asc") sortOption = { name: 1 };
+
+    const products = await Product.find(query)
       .populate("category", "name")
-      .sort({ createdAt: -1 });
+      .sort(sortOption);
 
     res.status(200).json(products);
 
   } catch (error) {
     console.error("GET PRODUCTS ERROR:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+/* =========================
+   ✏️ UPDATE PRODUCT (ADMIN)
+========================= */
+exports.updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    const {
+      name,
+      sku,
+      description,
+      price,
+      discountPrice,
+      stockQuantity,
+      stockStatus,
+      category,
+      existingImages // JSON string or array of URLs to KEEP
+    } = req.body;
+
+    // 1. Update basic fields
+    product.name = name || product.name;
+    product.sku = sku || product.sku;
+    product.description = description || product.description;
+    product.price = price || product.price;
+    product.discountPrice = discountPrice || 0;
+    product.stockQuantity = stockQuantity || 0;
+    product.stockStatus = stockStatus || product.stockStatus;
+    product.category = category || product.category;
+
+    // Recalculate Final Price
+    product.finalPrice =
+      product.discountPrice && Number(product.discountPrice) > 0
+        ? Number(product.price) - Number(product.discountPrice)
+        : Number(product.price);
+
+    // 2. Handle Images
+    // - existingImages: URLs of images the user wants to KEEP
+    // - req.files: NEW images uploaded
+
+    let keptImages = [];
+    if (existingImages) {
+      // existingImages might be a single string or array, normalize it
+      const existingList = Array.isArray(existingImages) ? existingImages : [existingImages];
+      keptImages = existingList.filter(img => typeof img === 'string' && img.startsWith('/uploads'));
+    }
+
+    let newImages = [];
+    if (req.files && req.files.length > 0) {
+      newImages = req.files.map(file => `/uploads/products/${file.filename}`);
+    }
+
+    // Combine: Kept images first, then new ones
+    product.images = [...keptImages, ...newImages];
+
+    await product.save();
+
+    res.status(200).json({
+      message: "Product updated successfully",
+      product
+    });
+
+  } catch (error) {
+    console.error("UPDATE PRODUCT ERROR:", error);
+    if (error.code === 11000 && error.keyPattern?.sku) {
+      return res.status(400).json({
+        message: "SKU already exists. Please use a unique SKU."
+      });
+    }
     res.status(500).json({ message: "Server error" });
   }
 };

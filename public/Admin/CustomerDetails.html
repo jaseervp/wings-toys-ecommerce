@@ -1,10 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" id="html-root">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wings Admin | Customers</title>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -34,13 +35,13 @@
             --table-header: #212936;
         }
 
-        body { 
-            font-family: 'Poppins', sans-serif; 
-            background-color: var(--main-bg); 
-            margin: 0; 
-            display: flex; 
-            color: var(--text-dark); 
-            transition: background 0.3s, color 0.3s; 
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--main-bg);
+            margin: 0;
+            display: flex;
+            color: var(--text-dark);
+            transition: background 0.3s, color 0.3s;
         }
 
         /* --- SIDEBAR --- */
@@ -49,7 +50,8 @@
             background: var(--sidebar-bg);
             height: 100vh;
             position: fixed;
-            left: 0; top: 0;
+            left: 0;
+            top: 0;
             border-right: 1px solid var(--card-border);
             display: flex;
             flex-direction: column;
@@ -63,104 +65,360 @@
             padding: 20px;
         }
 
-        .sidebar-brand img { height: 45px; margin-bottom: 25px; }
+        .sidebar-brand img {
+            height: 45px;
+            margin-bottom: 25px;
+        }
 
-        .menu-label { 
-            font-size: 0.75rem; color: var(--text-gray); 
-            text-transform: capitalize; margin: 20px 0 10px 10px; font-weight: 500;
+        .menu-label {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            text-transform: capitalize;
+            margin: 20px 0 10px 10px;
+            font-weight: 500;
         }
 
         .nav-item {
-            display: flex; align-items: center; padding: 12px 15px;
-            color: var(--text-gray); text-decoration: none; border-radius: 10px;
-            margin-bottom: 5px; font-size: 0.9rem; transition: 0.2s;
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: var(--text-gray);
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            transition: 0.2s;
         }
 
-        .nav-item.active { background: var(--accent-blue); color: #fff; }
-        .nav-item i { margin-right: 12px; font-size: 1.1rem; }
-        .nav-item:hover:not(.active) { background: rgba(108, 142, 239, 0.1); color: var(--accent-blue); }
+        .nav-item.active {
+            background: var(--accent-blue);
+            color: #fff;
+        }
+
+        .nav-item i {
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+
+        .nav-item:hover:not(.active) {
+            background: rgba(108, 142, 239, 0.1);
+            color: var(--accent-blue);
+        }
 
         .admin-footer {
-            padding: 20px; border-top: 1px solid var(--card-border); background: var(--sidebar-bg);
+            padding: 20px;
+            border-top: 1px solid var(--card-border);
+            background: var(--sidebar-bg);
         }
 
-        .admin-profile-box { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
-        .admin-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; }
-        .admin-name { font-size: 0.85rem; font-weight: 600; color: var(--text-dark); margin: 0; }
-        .admin-email { font-size: 0.7rem; color: var(--text-gray); margin: 0; }
+        .admin-profile-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .admin-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .admin-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .admin-email {
+            font-size: 0.7rem;
+            color: var(--text-gray);
+            margin: 0;
+        }
 
         /* --- MAIN CONTENT LAYOUT --- */
-        .main-wrapper { margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); padding: 30px; transition: 0.3s; }
-        .content-flex { display: flex; gap: 25px; align-items: flex-start; }
+        .main-wrapper {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            padding: 30px;
+            transition: 0.3s;
+        }
+
+        .content-flex {
+            display: flex;
+            gap: 25px;
+            align-items: flex-start;
+        }
 
         /* --- TABLE STYLES --- */
-        .table-container { flex: 1; background: var(--card-bg); border-radius: 20px; border: 1px solid var(--card-border); padding: 20px; min-width: 0; }
-        .custom-table { width: 100%; border-collapse: separate; border-spacing: 0; color: var(--text-dark); }
-        .custom-table thead tr { background: var(--table-header); }
-        .custom-table th { padding: 15px; font-size: 0.85rem; border: none; color: var(--text-dark); }
-        .custom-table td { padding: 15px; border-bottom: 1px solid var(--card-border); vertical-align: middle; }
+        .table-container {
+            flex: 1;
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+            padding: 20px;
+            min-width: 0;
+        }
 
-        .customer-row { cursor: pointer; transition: background 0.2s; }
-        .customer-row:hover { background: rgba(108, 142, 239, 0.05) !important; }
-        .customer-row.selected-user { background: rgba(108, 142, 239, 0.12) !important; }
-
-        .status-pill { padding: 5px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; }
-        .active-pill { background: rgba(72, 187, 120, 0.15); color: #48BB78; }
-        .blocked-pill { background: rgba(245, 101, 101, 0.15); color: #F56565; }
-        .inactive-pill { background: rgba(160, 174, 192, 0.15); color: #A0AEC0; }
-
-        .custom-card { 
-            background: var(--card-bg) !important; 
-            border: 1px solid var(--card-border) !important; 
-            border-radius: 20px; 
-            padding: 25px; 
-            margin-bottom: 30px; 
+        .custom-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
             color: var(--text-dark);
         }
 
-        .action-group { display: flex; gap: 8px; }
-        .action-btn { border: 1px solid var(--card-border); background: var(--card-bg); width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-gray); transition: 0.2s; }
-        .action-btn.edit-btn:hover { color: var(--accent-blue); border-color: var(--accent-blue); }
-        .action-btn.block-btn:hover, .action-btn.delete-btn:hover { color: var(--danger-red); border-color: var(--danger-red); }
-
-        .profile-panel { width: 340px; flex-shrink: 0; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; position: sticky; top: 20px; }
-        .user-header { text-align: center; margin-bottom: 20px; }
-        .profile-avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 3px solid var(--table-header); }
-        .info-input { background: var(--main-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; font-size: 0.8rem; }
-        .social-row { display: flex; justify-content: center; gap: 12px; margin: 15px 0; font-size: 1.1rem; }
-        .order-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
-        .order-stat-box { border: 1px solid var(--card-border); border-radius: 10px; padding: 10px; text-align: center; }
-        .order-stat-box b { font-size: 1rem; display: block; }
-        .order-stat-box span { font-size: 0.6rem; text-transform: uppercase; color: var(--text-gray); }
-
-        .side-metric { padding: 12px 0; border-bottom: 1px solid var(--card-border); }
-        .side-metric:last-child { border-bottom: none; }
-        .side-metric .label { font-size: 0.75rem; color: var(--text-gray); }
-        .side-metric .value { font-size: 1.3rem; font-weight: 700; color: var(--text-dark); }
-
-        /* --- NEW RESPONSIVE MEDIA QUERIES --- */
-        .mobile-nav-btn { display: none; background: none; border: none; font-size: 1.5rem; color: var(--text-dark); cursor: pointer; }
-
-        @media (max-width: 1200px) { 
-            .content-flex { flex-direction: column; } 
-            .profile-panel { width: 100%; position: static; } 
+        .custom-table thead tr {
+            background: var(--table-header);
         }
 
-        @media (max-width: 992px) { 
-            .mobile-nav-btn { display: block; margin-right: 15px; }
-            .sidebar { transform: translateX(-100%); } 
-            .sidebar.active { transform: translateX(0); }
-            .main-wrapper { margin-left: 0; width: 100%; padding: 20px; } 
-            
-            .custom-card .row { flex-direction: column; }
-            .custom-card .col-lg-8 { border: none !important; border-bottom: 1px solid var(--card-border); padding-bottom: 20px; margin-bottom: 20px; width: 100%; }
-            .custom-card .col-lg-4 { padding-left: 12px !important; width: 100%; }
-            
-            .table-container { overflow-x: auto; }
-            .custom-table { min-width: 600px; }
+        .custom-table th {
+            padding: 15px;
+            font-size: 0.85rem;
+            border: none;
+            color: var(--text-dark);
+        }
+
+        .custom-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--card-border);
+            vertical-align: middle;
+        }
+
+        .customer-row {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .customer-row:hover {
+            background: rgba(108, 142, 239, 0.05) !important;
+        }
+
+        .customer-row.selected-user {
+            background: rgba(108, 142, 239, 0.12) !important;
+        }
+
+        .status-pill {
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .active-pill {
+            background: rgba(72, 187, 120, 0.15);
+            color: #48BB78;
+        }
+
+        .blocked-pill {
+            background: rgba(245, 101, 101, 0.15);
+            color: #F56565;
+        }
+
+        .inactive-pill {
+            background: rgba(160, 174, 192, 0.15);
+            color: #A0AEC0;
+        }
+
+        .custom-card {
+            background: var(--card-bg) !important;
+            border: 1px solid var(--card-border) !important;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            color: var(--text-dark);
+        }
+
+        .action-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-gray);
+            transition: 0.2s;
+        }
+
+        .action-btn.edit-btn:hover {
+            color: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }
+
+        .action-btn.block-btn:hover,
+        .action-btn.delete-btn:hover {
+            color: var(--danger-red);
+            border-color: var(--danger-red);
+        }
+
+        .profile-panel {
+            width: 340px;
+            flex-shrink: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 20px;
+            position: sticky;
+            top: 20px;
+        }
+
+        .user-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 3px solid var(--table-header);
+        }
+
+        .info-input {
+            background: var(--main-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.8rem;
+        }
+
+        .social-row {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 15px 0;
+            font-size: 1.1rem;
+        }
+
+        .order-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .order-stat-box {
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .order-stat-box b {
+            font-size: 1rem;
+            display: block;
+        }
+
+        .order-stat-box span {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            color: var(--text-gray);
+        }
+
+        .side-metric {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .side-metric:last-child {
+            border-bottom: none;
+        }
+
+        .side-metric .label {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+        }
+
+        .side-metric .value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        /* --- NEW RESPONSIVE MEDIA QUERIES --- */
+        .mobile-nav-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            cursor: pointer;
+        }
+
+        @media (max-width: 1200px) {
+            .content-flex {
+                flex-direction: column;
+            }
+
+            .profile-panel {
+                width: 100%;
+                position: static;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .mobile-nav-btn {
+                display: block;
+                margin-right: 15px;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-wrapper {
+                margin-left: 0;
+                width: 100%;
+                padding: 20px;
+            }
+
+            .custom-card .row {
+                flex-direction: column;
+            }
+
+            .custom-card .col-lg-8 {
+                border: none !important;
+                border-bottom: 1px solid var(--card-border);
+                padding-bottom: 20px;
+                margin-bottom: 20px;
+                width: 100%;
+            }
+
+            .custom-card .col-lg-4 {
+                padding-left: 12px !important;
+                width: 100%;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            .custom-table {
+                min-width: 600px;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <aside class="sidebar" id="sidebar">
@@ -173,11 +431,11 @@
             <a href="Cuopon.html" class="nav-item"><i class="bi bi-ticket-perforated"></i> Coupon Code</a>
             <a href="Categories.html" class="nav-item"><i class="bi bi-tags"></i> Categories</a>
             <a href="Transaction.html" class="nav-item"><i class="bi bi-arrow-left-right"></i> Transaction</a>
-       <a href="Offers.html" class="nav-item "><i class="bi bi-megaphone"></i> Offers & Ads</a>
+            <a href="Offers.html" class="nav-item "><i class="bi bi-megaphone"></i> Offers & Ads</a>
 
             <p class="menu-label">Product</p>
             <a href="AddProduct.html" class="nav-item"><i class="bi bi-plus-circle"></i> Add Products</a>
-           
+
             <a href="ProductList.html" class="nav-item"><i class="bi bi-list-ul"></i> Product List</a>
             <a href="ProductReviews.html" class="nav-item"><i class="bi bi-chat-left-text"></i> Product Reviews</a>
         </div>
@@ -203,7 +461,8 @@
         <div class="top-bar d-flex align-items-center mb-4">
             <button class="mobile-nav-btn" onclick="toggleSidebar()"><i class="bi bi-list"></i></button>
             <h4 class="m-0 fw-semibold flex-grow-1">Customer Analytics</h4>
-            <div class="theme-toggle" style="cursor:pointer" onclick="toggleTheme()"><i class="bi bi-moon-stars-fill" id="tIcon"></i></div>
+            <div class="theme-toggle" style="cursor:pointer" onclick="toggleTheme()"><i class="bi bi-moon-stars-fill"
+                    id="tIcon"></i></div>
         </div>
 
         <div class="custom-card">
@@ -245,52 +504,70 @@
                         </tr>
                     </thead>
                     <tbody id="cust-table-body">
-                        <tr class="customer-row selected-user" onclick="updateProfile(this, 'Wade Warren', 'wade@example.com', 'https://ui-avatars.com/api/?name=Wade+Warren&background=random', '+1 234 567 890', '12 Jan 2025')">
+                        <tr class="customer-row selected-user"
+                            onclick="updateProfile(this, 'Wade Warren', 'wade@example.com', 'https://ui-avatars.com/api/?name=Wade+Warren&background=random', '+1 234 567 890', '12 Jan 2025')">
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <img src="https://ui-avatars.com/api/?name=Wade+Warren&background=random" width="35" class="rounded-circle me-3">
-                                    <div><p class="m-0 fw-bold small">Wade Warren</p><small class="text-muted">wade@example.com</small></div>
+                                    <img src="https://ui-avatars.com/api/?name=Wade+Warren&background=random" width="35"
+                                        class="rounded-circle me-3">
+                                    <div>
+                                        <p class="m-0 fw-bold small">Wade Warren</p><small
+                                            class="text-muted">wade@example.com</small>
+                                    </div>
                                 </div>
                             </td>
                             <td><span class="status-pill active-pill">Active</span></td>
                             <td class="small">12 Jan 2025</td>
                             <td>
                                 <div class="action-group">
-                                    <div class="action-btn block-btn" title="Block"><i class="bi bi-slash-circle"></i></div>
+                                    <div class="action-btn block-btn" title="Block"><i class="bi bi-slash-circle"></i>
+                                    </div>
                                     <div class="action-btn edit-btn" title="Edit"><i class="bi bi-pencil"></i></div>
                                     <div class="action-btn delete-btn" title="Delete"><i class="bi bi-trash"></i></div>
                                 </div>
                             </td>
                         </tr>
-                        <tr class="customer-row" onclick="updateProfile(this, 'Bessie Cooper', 'bessie@test.com', 'https://ui-avatars.com/api/?name=Bessie+Cooper&background=random', '+1 987 654 321', '05 Jan 2025')">
+                        <tr class="customer-row"
+                            onclick="updateProfile(this, 'Bessie Cooper', 'bessie@test.com', 'https://ui-avatars.com/api/?name=Bessie+Cooper&background=random', '+1 987 654 321', '05 Jan 2025')">
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <img src="https://ui-avatars.com/api/?name=Bessie+Cooper&background=random" width="35" class="rounded-circle me-3">
-                                    <div><p class="m-0 fw-bold small">Bessie Cooper</p><small class="text-muted">bessie@test.com</small></div>
+                                    <img src="https://ui-avatars.com/api/?name=Bessie+Cooper&background=random"
+                                        width="35" class="rounded-circle me-3">
+                                    <div>
+                                        <p class="m-0 fw-bold small">Bessie Cooper</p><small
+                                            class="text-muted">bessie@test.com</small>
+                                    </div>
                                 </div>
                             </td>
                             <td><span class="status-pill blocked-pill">Blocked</span></td>
                             <td class="small">05 Jan 2025</td>
                             <td>
                                 <div class="action-group">
-                                    <div class="action-btn block-btn" title="Block"><i class="bi bi-slash-circle"></i></div>
+                                    <div class="action-btn block-btn" title="Block"><i class="bi bi-slash-circle"></i>
+                                    </div>
                                     <div class="action-btn edit-btn" title="Edit"><i class="bi bi-pencil"></i></div>
                                     <div class="action-btn delete-btn" title="Delete"><i class="bi bi-trash"></i></div>
                                 </div>
                             </td>
                         </tr>
-                        <tr class="customer-row" onclick="updateProfile(this, 'Guy Hawkins', 'guy.h@outlook.com', 'https://ui-avatars.com/api/?name=Guy+Hawkins&background=random', '+1 555 010 999', '28 Dec 2024')">
+                        <tr class="customer-row"
+                            onclick="updateProfile(this, 'Guy Hawkins', 'guy.h@outlook.com', 'https://ui-avatars.com/api/?name=Guy+Hawkins&background=random', '+1 555 010 999', '28 Dec 2024')">
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <img src="https://ui-avatars.com/api/?name=Guy+Hawkins&background=random" width="35" class="rounded-circle me-3">
-                                    <div><p class="m-0 fw-bold small">Guy Hawkins</p><small class="text-muted">guy.h@outlook.com</small></div>
+                                    <img src="https://ui-avatars.com/api/?name=Guy+Hawkins&background=random" width="35"
+                                        class="rounded-circle me-3">
+                                    <div>
+                                        <p class="m-0 fw-bold small">Guy Hawkins</p><small
+                                            class="text-muted">guy.h@outlook.com</small>
+                                    </div>
                                 </div>
                             </td>
                             <td><span class="status-pill inactive-pill">Inactive</span></td>
                             <td class="small">28 Dec 2024</td>
                             <td>
                                 <div class="action-group">
-                                    <div class="action-btn block-btn" title="Block"><i class="bi bi-slash-circle"></i></div>
+                                    <div class="action-btn block-btn" title="Block"><i class="bi bi-slash-circle"></i>
+                                    </div>
                                     <div class="action-btn edit-btn" title="Edit"><i class="bi bi-pencil"></i></div>
                                     <div class="action-btn delete-btn" title="Delete"><i class="bi bi-trash"></i></div>
                                 </div>
@@ -302,7 +579,8 @@
 
             <div class="profile-panel">
                 <div class="user-header">
-                    <img src="https://ui-avatars.com/api/?name=Wade+Warren&background=random" class="profile-avatar" id="p-img">
+                    <img src="https://ui-avatars.com/api/?name=Wade+Warren&background=random" class="profile-avatar"
+                        id="p-img">
                     <h6 class="fw-bold m-0" id="p-name">Wade Warren</h6>
                     <small class="text-muted" id="p-email">wade@example.com</small>
                 </div>
@@ -310,11 +588,14 @@
                 <div class="info-input"><i class="bi bi-telephone"></i> <span id="p-phone">+1 234 567 890</span></div>
                 <div class="info-input"><i class="bi bi-geo-alt"></i> <span>123 Main St, New York</span></div>
                 <div class="social-row">
-                    <i class="bi bi-facebook text-primary"></i><i class="bi bi-whatsapp text-success"></i><i class="bi bi-twitter text-info"></i><i class="bi bi-instagram text-danger"></i>
+                    <i class="bi bi-facebook text-primary"></i><i class="bi bi-whatsapp text-success"></i><i
+                        class="bi bi-twitter text-info"></i><i class="bi bi-instagram text-danger"></i>
                 </div>
                 <div class="border-top pt-3 mt-3">
-                    <div class="d-flex justify-content-between small mb-1"><span class="text-muted">Joined:</span> <b id="p-join">12 Jan 2025</b></div>
-                    <div class="d-flex justify-content-between small"><span class="text-muted">Last Active:</span> <b>Today</b></div>
+                    <div class="d-flex justify-content-between small mb-1"><span class="text-muted">Joined:</span> <b
+                            id="p-join">12 Jan 2025</b></div>
+                    <div class="d-flex justify-content-between small"><span class="text-muted">Last Active:</span>
+                        <b>Today</b></div>
                 </div>
                 <div class="order-stats-grid">
                     <div class="order-stat-box"><b>150</b><span>Total</span></div>
@@ -377,5 +658,41 @@
             }
         });
     </script>
+    <script>
+        (async function updateAdminProfileUI() {
+            const token = localStorage.getItem('adminToken');
+            if (!token) return;
+
+            try {
+                const res = await fetch('/api/admin/profile', {
+                    headers: { Authorization: 'Bearer ' + token }
+                });
+
+                if (!res.ok) return;
+
+                const admin = await res.json();
+
+                // Update Sidebar & Topbar Images
+                if (admin.avatar) {
+                    document.querySelectorAll('.admin-avatar, .rounded-circle.border').forEach(img => {
+                        img.src = admin.avatar;
+                    });
+                }
+
+                // Update Name & Email
+                if (admin.fullName) {
+                    document.querySelectorAll('.admin-name').forEach(el => el.textContent = admin.fullName);
+                }
+                if (admin.email) {
+                    document.querySelectorAll('.admin-email').forEach(el => el.textContent = admin.email);
+                }
+
+            } catch (err) {
+                console.error('Failed to load admin profile:', err);
+            }
+        })();
+    </script>
+    <script src="js/admin-global.js"></script>
 </body>
+
 </html>

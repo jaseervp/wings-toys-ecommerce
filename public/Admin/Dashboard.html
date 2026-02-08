@@ -1,15 +1,16 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wings Admin Dashboard | Full Responsive</title>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
     <style>
         :root {
             --sidebar-width: 260px;
@@ -32,8 +33,8 @@
             --card-border: #2D3748;
         }
 
-        body { 
-            font-family: 'Poppins', sans-serif; 
+        body {
+            font-family: 'Poppins', sans-serif;
             background-color: var(--main-bg);
             color: var(--text-dark);
             margin: 0;
@@ -47,7 +48,8 @@
             background: var(--sidebar-bg);
             height: 100vh;
             position: fixed;
-            left: 0; top: 0;
+            left: 0;
+            top: 0;
             border-right: 1px solid var(--card-border);
             display: flex;
             flex-direction: column;
@@ -61,32 +63,79 @@
             padding: 20px;
         }
 
-        .sidebar-brand img { height: 45px; margin-bottom: 25px; }
+        .sidebar-brand img {
+            height: 45px;
+            margin-bottom: 25px;
+        }
 
-        .menu-label { 
-            font-size: 0.75rem; color: var(--text-gray); 
-            text-transform: capitalize; margin: 20px 0 10px 10px; font-weight: 500;
+        .menu-label {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            text-transform: capitalize;
+            margin: 20px 0 10px 10px;
+            font-weight: 500;
         }
 
         .nav-item {
-            display: flex; align-items: center; padding: 12px 15px;
-            color: var(--text-gray); text-decoration: none; border-radius: 10px;
-            margin-bottom: 5px; font-size: 0.9rem; transition: 0.2s;
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: var(--text-gray);
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            transition: 0.2s;
         }
 
-        .nav-item.active { background: var(--accent-blue); color: #fff; }
-        .nav-item i { margin-right: 12px; font-size: 1.1rem; }
-        .nav-item:hover:not(.active) { background: rgba(108, 142, 239, 0.1); color: var(--accent-blue); }
+        .nav-item.active {
+            background: var(--accent-blue);
+            color: #fff;
+        }
+
+        .nav-item i {
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+
+        .nav-item:hover:not(.active) {
+            background: rgba(108, 142, 239, 0.1);
+            color: var(--accent-blue);
+        }
 
         /* Sidebar Bottom (Admin Section) */
         .admin-footer {
-            padding: 20px; border-top: 1px solid var(--card-border); background: var(--sidebar-bg);
+            padding: 20px;
+            border-top: 1px solid var(--card-border);
+            background: var(--sidebar-bg);
         }
 
-        .admin-profile-box { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
-        .admin-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; }
-        .admin-name { font-size: 0.85rem; font-weight: 600; color: var(--text-dark); margin: 0; }
-        .admin-email { font-size: 0.7rem; color: var(--text-gray); margin: 0; }
+        .admin-profile-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .admin-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .admin-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .admin-email {
+            font-size: 0.7rem;
+            color: var(--text-gray);
+            margin: 0;
+        }
 
         /* --- MAIN WRAPPER (Right Side) --- */
         .main-wrapper {
@@ -96,50 +145,122 @@
             min-height: 100vh;
         }
 
-        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; }
-        .search-box {
-            background: var(--card-bg); border-radius: 12px; padding: 8px 20px;
-            width: 100%; max-width: 400px; display: flex; border: 1px solid var(--card-border);
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
         }
-        .search-box input { border: none; outline: none; background: transparent; color: var(--text-dark); width: 100%; }
+
+        .search-box {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 8px 20px;
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            border: 1px solid var(--card-border);
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--text-dark);
+            width: 100%;
+        }
 
         /* --- STAT CARDS --- */
         .stat-card {
-            background: var(--card-bg); border: 1px solid var(--card-border);
-            border-radius: 15px; padding: 25px; height: 100%; position: relative;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 15px;
+            padding: 25px;
+            height: 100%;
+            position: relative;
         }
-        .stat-card h6 { color: var(--text-gray); font-size: 0.8rem; margin-bottom: 15px; }
-        .stat-card h2 { font-weight: 600; font-size: 1.7rem; margin-bottom: 5px; }
-        .trend { font-size: 0.75rem; font-weight: 500; color: var(--trend-up); }
+
+        .stat-card h6 {
+            color: var(--text-gray);
+            font-size: 0.8rem;
+            margin-bottom: 15px;
+        }
+
+        .stat-card h2 {
+            font-weight: 600;
+            font-size: 1.7rem;
+            margin-bottom: 5px;
+        }
+
+        .trend {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--trend-up);
+        }
+
         .btn-details {
-            border: 1px solid var(--accent-blue); color: var(--accent-blue);
-            background: transparent; border-radius: 8px; padding: 4px 15px;
-            font-size: 0.7rem; position: absolute; bottom: 25px; right: 25px;
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            background: transparent;
+            border-radius: 8px;
+            padding: 4px 15px;
+            font-size: 0.7rem;
+            position: absolute;
+            bottom: 25px;
+            right: 25px;
         }
 
         /* --- CHART CARD --- */
         .chart-card {
-            background: var(--card-bg); border: 1px solid var(--card-border);
-            border-radius: 15px; padding: 25px; margin-top: 30px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
         }
 
         /* --- RESPONSIVE --- */
         @media (max-width: 992px) {
-            .sidebar { transform: translateX(-100%); }
-            .sidebar.active { transform: translateX(0); }
-            .main-wrapper { margin-left: 0; width: 100%; padding: 15px; }
-            .mobile-toggle { display: block !important; }
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-wrapper {
+                margin-left: 0;
+                width: 100%;
+                padding: 15px;
+            }
+
+            .mobile-toggle {
+                display: block !important;
+            }
         }
 
-        .mobile-toggle { display: none; font-size: 1.5rem; cursor: pointer; }
-        
+        .mobile-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
         .theme-toggle {
-            cursor: pointer; width: 40px; height: 40px; border-radius: 50%;
-            background: var(--card-bg); border: 1px solid var(--card-border);
-            display: flex; align-items: center; justify-content: center; color: var(--text-gray);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-gray);
         }
     </style>
 </head>
+
 <body data-theme="light">
 
     <aside class="sidebar" id="sidebar">
@@ -153,11 +274,11 @@
             <a href="Categories.html" class="nav-item"><i class="bi bi-tags"></i> Categories</a>
             <a href="Transaction.html" class="nav-item"><i class="bi bi-arrow-left-right"></i> Transaction</a>
             <a href="Offers.html" class="nav-item "><i class="bi bi-megaphone"></i> Offers & Ads</a>
-           
+
 
             <p class="menu-label">Product</p>
             <a href="AddProduct.html" class="nav-item"><i class="bi bi-plus-circle"></i> Add Products</a>
-           
+
             <a href="ProductList.html" class="nav-item"><i class="bi bi-list-ul"></i> Product List</a>
             <a href="ProductReviews.html" class="nav-item"><i class="bi bi-chat-left-text"></i> Product Reviews</a>
         </div>
@@ -182,7 +303,8 @@
     <main class="main-wrapper">
         <div class="top-bar">
             <div class="d-flex align-items-center gap-3">
-                <i class="bi bi-list mobile-toggle" onclick="document.getElementById('sidebar').classList.toggle('active')"></i>
+                <i class="bi bi-list mobile-toggle"
+                    onclick="document.getElementById('sidebar').classList.toggle('active')"></i>
                 <h4 class="m-0 fw-semibold">Dashboard</h4>
             </div>
             <div class="search-box d-none d-md-flex">
@@ -260,52 +382,88 @@
             },
             options: {
                 plugins: { legend: { display: false } },
-                scales: { 
+                scales: {
                     x: { grid: { display: false }, ticks: { color: '#A0AEC0' } },
                     y: { grid: { display: false }, ticks: { color: '#A0AEC0' } }
                 }
             }
         });
     </script>
-    
-   <script>
-(async function checkAdmin() {
-  const token = localStorage.getItem("adminToken");
-  const role = localStorage.getItem("adminRole");
 
-  // Local check (fast)
-  if (!token || role !== "admin") {
-    window.location.href = "../User/login.html";
-    return;
-  }
+    <script>
+        (async function checkAdmin() {
+            const token = localStorage.getItem("adminToken");
+            const role = localStorage.getItem("adminRole");
 
-  // Backend verification (secure)
-  try {
-    const res = await fetch("/api/check-auth", {
-      headers: {
-        Authorization: "Bearer " + token
-      }
-    });
+            // Local check (fast)
+            if (!token || role !== "admin") {
+                window.location.href = "../User/login.html";
+                return;
+            }
 
-    if (!res.ok) {
-      throw new Error("Unauthorized");
-    }
+            // Backend verification (secure)
+            try {
+                const res = await fetch("/api/check-auth", {
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                });
 
-    const data = await res.json();
+                if (!res.ok) {
+                    throw new Error("Unauthorized");
+                }
 
-    if (!data.loggedIn || data.user.role !== "admin") {
-      window.location.href = "../User/login.html";
-    }
+                const data = await res.json();
 
-  } catch (err) {
-    window.location.href = "../User/login.html";
-  }
-})();
-</script>
+                if (!data.loggedIn || data.user.role !== "admin") {
+                    window.location.href = "../User/login.html";
+                }
 
-
+            } catch (err) {
+                window.location.href = "../User/login.html";
+            }
+        })();
+    </script>
 
 
 
+
+
+    <script>
+        (async function updateAdminProfileUI() {
+            const token = localStorage.getItem('adminToken');
+            if (!token) return;
+
+            try {
+                const res = await fetch('/api/admin/profile', {
+                    headers: { Authorization: 'Bearer ' + token }
+                });
+
+                if (!res.ok) return;
+
+                const admin = await res.json();
+
+                // Update Sidebar & Topbar Images
+                if (admin.avatar) {
+                    document.querySelectorAll('.admin-avatar, .rounded-circle.border').forEach(img => {
+                        img.src = admin.avatar;
+                    });
+                }
+
+                // Update Name & Email
+                if (admin.fullName) {
+                    document.querySelectorAll('.admin-name').forEach(el => el.textContent = admin.fullName);
+                }
+                if (admin.email) {
+                    document.querySelectorAll('.admin-email').forEach(el => el.textContent = admin.email);
+                }
+
+            } catch (err) {
+                console.error('Failed to load admin profile:', err);
+            }
+        })();
+    </script>
+    <script src="js/admin-global.js"></script>
 </body>
+
 </html>

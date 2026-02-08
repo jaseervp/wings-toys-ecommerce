@@ -35,7 +35,7 @@ mongoose.connect(dbURI)
 app.use('/api', authRoutes);
 app.use("/api", categoryRoutes);
 app.use("/api", productRoutes);
-app.use("/api", require("./routes/adminRoutes"));
+app.use("/api/admin", require("./routes/adminRoutes"));
 app.use("/api", require("./routes/cartRoutes"));
 app.use("/api", require("./routes/couponRoutes"));
 app.use("/api/orders", orderRoutes);
