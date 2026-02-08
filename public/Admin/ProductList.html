@@ -244,6 +244,11 @@
             color: #C5221F;
         }
 
+        .low-pill {
+            background: #FEF3C7;
+            color: #B45309;
+        }
+
 
         /* =========================
    FORCE DARK MODE â€“ PRODUCT TABLE
@@ -578,15 +583,17 @@
                 }
 
                 products.forEach(product => {
-                    const stockText =
-                        product.stockQuantity === 0
-                            ? "Unlimited"
-                            : `${product.stockQuantity} Items`;
+                    const stockText = `${product.stockQuantity} Items`;
 
-                    const stockBadge =
-                        product.stockStatus === "In Stock"
-                            ? `<span class="status-pill active-pill">Active</span>`
-                            : `<span class="status-pill out-pill">Out of Stock</span>`;
+                    let stockBadge;
+
+                    if (product.stockQuantity === 0 || product.stockStatus === 'Out of Stock') {
+                        stockBadge = `<span class="status-pill out-pill">Out of Stock</span>`;
+                    } else if (product.stockQuantity <= 10) {
+                        stockBadge = `<span class="status-pill low-pill">Low Stock</span>`;
+                    } else {
+                        stockBadge = `<span class="status-pill active-pill">Active</span>`;
+                    }
 
                     const trendingChecked = product.isTrending ? "checked" : "";
 
@@ -634,9 +641,7 @@
             }
         }
 
-        /* =========================
-           TOGGLE TRENDING
-        ========================= */
+
         /* =========================
            SEARCH DEBOUNCE
         ========================= */
@@ -775,8 +780,8 @@
                         p.sku,
                         p.category ? p.category.name : "-",
                         `Rs. ${p.finalPrice}`,
-                        p.stockQuantity === 0 ? "Unlimited" : p.stockQuantity,
-                        p.stockStatus
+                        p.stockQuantity,
+                        p.stockQuantity <= 10 && p.stockQuantity > 0 ? "Low Stock" : p.stockStatus
                     ];
                     tableRows.push(row);
                 });

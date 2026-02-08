@@ -26,7 +26,7 @@ router.post(
   "/admin/product",
   protect,
   adminOnly,
-  upload.array("images", 5),
+  upload.array("productImage", 4),
   addProduct
 );
 
@@ -59,7 +59,7 @@ router.put(
   "/admin/product/:id",
   protect,
   adminOnly,
-  upload.array("images", 5),
+  upload.array("productImage", 4),
   updateProduct
 );
 

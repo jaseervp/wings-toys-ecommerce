@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         :root {
@@ -294,15 +295,7 @@
             white-space: nowrap;
         }
 
-        .btn-draft {
-            background: transparent;
-            border: 1px solid var(--card-border);
-            color: var(--text-dark);
-            border-radius: 8px;
-            padding: 10px 25px;
-            font-weight: 500;
-            white-space: nowrap;
-        }
+
 
         .sku-container {
             position: relative;
@@ -465,11 +458,16 @@
                 <div class="d-flex gap-2 action-btns-group">
                     <button class="btn-publish" id="submitBtn" onclick="handleProductSubmit()">Publish Product</button>
 
-                    <button class="btn-draft"><i class="bi bi-save me-1"></i> Save to draft</button>
+                 
                 </div>
-                <button class="btn border p-2 bg-white" style="border-radius:8px;"><i
-                        class="bi bi-plus-lg"></i></button>
+               
             </div>
+        </div>
+
+        <!-- Error Alert Container -->
+        <div id="errorContainer" class="alert alert-danger d-none" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <span id="errorMessage"></span>
         </div>
 
         <div class="row">
@@ -478,7 +476,7 @@
                     <h5 class="section-title">Basic Details</h5>
                     <div class="mb-4">
                         <label class="form-label">Product Name</label>
-                        <input type="text" class="custom-input" id="productName"
+                        <input type="text" class="custom-input" id="productName" name="productName"
                             placeholder="Enter Product Name (Min 3 Characters)">
 
                     </div>
@@ -486,10 +484,10 @@
                         <label class="form-label">Product SKU</label>
 
                         <div class="sku-container">
-                            <input type="text" id="productSKU" placeholder="e.g. SUMMER25" readonly />
+                            <input type="text" id="productSku" name="productSku" placeholder="e.g. WINGS-TOYS-746" readonly />
 
-                            <button type="button" onclick="generateSKU()">
-                                âœ¨ Generate
+                            <button type="button" onclick="generateSku()">
+                                ✨ Generate
                             </button>
                         </div>
                     </div>
@@ -501,7 +499,7 @@
 
                     <div class="mb-3">
                         <label class="form-label">Product Description</label>
-                        <textarea class="custom-input" rows="5" id="productDescription"
+                        <textarea class="custom-input" rows="5" id="productDescription" name="productDescription"
                             placeholder="Enter Product Description" style="resize: none;"></textarea>
 
 
@@ -514,19 +512,19 @@
 
                     <div class="mb-4">
                         <label class="form-label">Product Price</label>
-                        <input type="number" class="custom-input" id="productPrice">
+                        <input type="number" class="custom-input" id="productPrice" name="productPrice">
 
                     </div>
                     <div class="row pricing-row mb-4">
                         <div class="col-6">
                             <label class="form-label">Discounted Price <span
                                     class="text-muted">(Optional)</span></label>
-                            <input type="number" class="custom-input" id="discountPrice">
+                            <input type="number" class="custom-input" id="discountPrice" name="discountPrice">
 
                         </div>
                         <div class="col-6">
                             <label class="form-label">Final Price <span class="text-muted"></span></label>
-                            <input type="number" class="custom-input" id="finalPrice">
+                            <input type="number" class="custom-input" id="finalPrice" name="finalPrice">
 
                         </div>
                     </div>
@@ -560,24 +558,19 @@
                     <div class="row inventory-row mb-3">
                         <div class="col-6">
                             <label class="form-label">Stock Quantity</label>
-                            <input type="text" class="custom-input" id="stockQuantity">
+                            <input type="text" class="custom-input" id="stockQuantity" name="stockQuantity">
                         </div>
 
                         <div class="col-6">
                             <label class="form-label">Stock Status</label>
-                            <select class="custom-input" id="stockStatus">
+                            <select class="custom-input" id="stockStatus" name="stockStatus">
                                 <option value="In Stock">In Stock</option>
                                 <option value="Out of Stock">Out of Stock</option>
                             </select>
                         </div>
                     </div>
 
-                    <div class="form-check form-switch mb-3">
-                        <input class="form-check-input" type="checkbox" id="unlimitedStock" checked>
-                        <label class="form-check-label ms-2 small text-muted">
-                            Unlimited
-                        </label>
-                    </div>
+                    
 
                     <!-- <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="featureProduct">
@@ -594,10 +587,10 @@
                 <div class="section-card" style="border: 2px solid var(--accent-blue);">
                     <h5 class="section-title">Upload Product Image</h5>
 
-                    <input type="file" id="mainFileInput" name="images" accept="image/*" style="display:none"
+                    <input type="file" id="mainFileInput" name="productImage" accept="image/*" style="display:none"
                         onchange="loadMain(event)">
 
-                    <input type="file" id="galleryFileInput" name="images" accept="image/*" multiple
+                    <input type="file" id="galleryFileInput" name="productImage" accept="image/*" multiple
                         style="display:none" onchange="loadThumb(event)">
 
 
@@ -632,7 +625,7 @@
                     <h5 class="section-title mt-4 mb-3">Categories</h5>
                     <div class="mb-4">
                         <label class="form-label">Product Categories</label>
-                        <select class="custom-input" id="productCategory">
+                        <select class="custom-input" id="productCategory" name="productCategory">
                             <option value="">Select Category</option>
                         </select>
 
@@ -645,14 +638,14 @@
         </div>
     </main>
     <script>
-        function generateSKU() {
+        function generateSku() {
             const sku =
                 "WINGS-" +
                 Math.random().toString(36).substring(2, 6).toUpperCase() +
                 "-" +
                 Date.now().toString().slice(-3);
 
-            document.getElementById("productSKU").value = sku;
+            document.getElementById("productSku").value = sku;
         }
     </script>
 
@@ -682,11 +675,6 @@
                 }
 
                 loadCategoryDropdown();
-                updateStockUI();
-
-                document
-                    .getElementById("unlimitedStock")
-                    .addEventListener("change", updateStockUI);
 
                 // Check for Edit Mode
                 checkForEditMode();
@@ -727,6 +715,15 @@
             const files = Array.from(event.target.files);
             const gallery = thumbGallery;
 
+            // Calculate current total
+            const currentTotal = (editingProductId ? existingImages.length : 0) + selectedImages.length;
+
+            if (currentTotal + files.length > 4) {
+                showError(`You can only upload a maximum of 4 images. You currently have ${currentTotal}.`);
+                event.target.value = "";
+                return;
+            }
+
             files.forEach(file => {
                 selectedImages.push(file);
                 const index = selectedImages.length - 1;
@@ -735,10 +732,13 @@
                 div.className = "thumb-box";
                 div.innerHTML = `
       <img src="${URL.createObjectURL(file)}">
-      <button class="remove-thumb" onclick="removeImage(${index}, this)">Ã—</button>
+      <button class="remove-thumb" onclick="removeImage(${index}, this)">×</button>
     `;
                 gallery.insertBefore(div, gallery.lastElementChild);
             });
+
+            // Clear error if valid
+            hideError();
 
             event.target.value = "";
         }
@@ -775,16 +775,9 @@
         }
 
         /* ================= STOCK ================= */
-        function updateStockUI() {
-            if (unlimitedStock.checked) {
-                stockQuantity.disabled = true;
-                stockQuantity.value = "";
-                stockQuantity.placeholder = "Unlimited";
-            } else {
-                stockQuantity.disabled = false;
-                stockQuantity.placeholder = "Enter quantity";
-            }
-        }
+        // Removed unlimited logic
+
+        /* ================= CHECK FOR EDIT MODE ================= */
 
         /* ================= CHECK FOR EDIT MODE ================= */
         async function checkForEditMode() {
@@ -799,6 +792,131 @@
             }
         }
 
+
+        /* ================= PRICE CALCULATION ================= */
+        function calculateFinalPrice() {
+            const price = Number(productPrice.value) || 0;
+            const discount = Number(discountPrice.value) || 0;
+            const final = price - discount;
+            finalPrice.value = final > 0 ? final : 0;
+        }
+
+        // Add event listeners for price calculation
+        document.addEventListener('DOMContentLoaded', () => {
+            if (document.getElementById('productPrice')) {
+                document.getElementById('productPrice').addEventListener('input', calculateFinalPrice);
+                document.getElementById('productPrice').addEventListener('change', calculateFinalPrice);
+            }
+            if (document.getElementById('discountPrice')) {
+                document.getElementById('discountPrice').addEventListener('input', calculateFinalPrice);
+                document.getElementById('discountPrice').addEventListener('change', calculateFinalPrice);
+            }
+
+            // Clear errors on input
+            document.querySelectorAll('.custom-input, #productSku').forEach(input => {
+                input.addEventListener('input', function () {
+                    this.style.border = '1px solid var(--card-border)';
+                    hideError();
+                });
+            });
+        });
+
+        /* ================= VALIDATION ================= */
+        function validateForm() {
+            let isValid = true;
+            const errors = [];
+
+            // Reset styles
+            const inputs = document.querySelectorAll('.custom-input, #productSku, #mainFileInput, #galleryFileInput');
+            inputs.forEach(i => i.style.border = '1px solid transparent');
+
+            // Clear error on input
+            document.querySelectorAll('.custom-input, #productSku').forEach(input => {
+                input.addEventListener('input', function () {
+                    this.style.border = '1px solid var(--card-border)'; // Reset to default
+                    // Optional: hide main error if ANY field changes? Or just keep it until valid?
+                    // User request: "if alert filed i change same time its vanish"
+                    // So let's hide the main error container on any input.
+                    hideError();
+                });
+            });
+
+            const setInvalid = (element, msg) => {
+                isValid = false;
+                errors.push(msg);
+                element.style.border = '1px solid #dc3545';
+            };
+
+            // 1. Name
+            const name = productName.value.trim();
+            const nameRegex = /^[a-z][a-zA-Z0-9]*$/; // camelCase, no spaces, no special chars
+
+            if (!name) {
+                setInvalid(productName, "Product Name is required");
+            } else if (!nameRegex.test(name)) {
+                setInvalid(productName, "Product Name must be in camelCase format (e.g. 'myProduct'). No spaces or special characters.");
+            } else if (name.length < 3) {
+                setInvalid(productName, "Product Name must be at least 3 characters");
+            }
+
+            // 2. SKU
+            if (!productSku.value.trim()) {
+                setInvalid(productSku, "Product SKU is required");
+                // Note: SKU input doesn't have .custom-input class in HTML but we can target it by ID
+                productSku.style.border = '1px solid #dc3545';
+            } else {
+                productSku.style.border = '1px solid #e5e7eb';
+            }
+
+            // 3. Price
+            const price = Number(productPrice.value);
+            if (!productPrice.value || isNaN(price) || price <= 0) {
+                setInvalid(productPrice, "Price must be a positive number");
+            }
+
+            // 4. Category
+            if (!productCategory.value) {
+                setInvalid(productCategory, "Please select a category");
+            }
+
+            // 5. Images
+            // Add Mode: need at least 1 in selectedImages
+            // Edit Mode: need at least 1 in (existingImages + selectedImages)
+            const totalImages = (editingProductId ? existingImages.length : 0) + selectedImages.length;
+
+            if (totalImages < 2) {
+                isValid = false;
+                errors.push("Minimum 2 product images are required");
+                document.querySelector('.upload-area').style.border = '2px dashed #dc3545';
+            } else if (totalImages > 4) {
+                isValid = false;
+                errors.push("Maximum 4 product images are allowed");
+                document.querySelector('.upload-area').style.border = '2px dashed #dc3545';
+            } else {
+                document.querySelector('.upload-area').style.border = '2px dashed var(--card-border)';
+            }
+
+            if (!isValid) {
+                showError("Please correct the highlighted fields:\n" + errors.join("<br>"));
+            } else {
+                hideError();
+            }
+
+            return isValid;
+        }
+
+        function showError(msg) {
+            const errContainer = document.getElementById('errorContainer');
+            const errMessage = document.getElementById('errorMessage');
+            errMessage.innerHTML = msg;
+            errContainer.classList.remove('d-none');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function hideError() {
+            document.getElementById('errorContainer').classList.add('d-none');
+        }
+
         async function loadProductDetails(id) {
             try {
                 const res = await fetch(`/api/products/${id}`);
@@ -808,7 +926,7 @@
 
                 // Populate Fields
                 productName.value = product.name;
-                productSKU.value = product.sku;
+                productSku.value = product.sku;
                 productDescription.value = product.description;
                 productPrice.value = product.price;
                 discountPrice.value = product.discountPrice;
@@ -820,14 +938,6 @@
                 // Wait a bit for dropdown to populate if needed, but since we call this after load, it should be fine.
                 // However, let's just set it directly.
                 productCategory.value = product.category?._id || product.category;
-
-                // Handle Stock UI
-                if (product.stockQuantity === 0) {
-                    unlimitedStock.checked = true;
-                } else {
-                    unlimitedStock.checked = false;
-                }
-                updateStockUI();
 
                 // Handle Images
                 existingImages = product.images || [];
@@ -871,39 +981,28 @@
 
         /* ================= UPDATE PRODUCT ================= */
         async function updateProduct() {
+            if (!validateForm()) return;
+
             const token = localStorage.getItem("adminToken");
-
-            if (!productName.value || !productSKU.value || !productPrice.value || !productCategory.value) {
-                alert("Required fields missing");
-                return;
-            }
-
             const fd = new FormData();
-            fd.append("name", productName.value);
-            fd.append("sku", productSKU.value);
-            fd.append("description", productDescription.value);
+
+            fd.append("name", productName.value.trim());
+            fd.append("sku", productSku.value.trim());
+            fd.append("description", productDescription.value.trim());
             fd.append("price", productPrice.value);
             fd.append("discountPrice", discountPrice.value || 0);
-            fd.append("stockQuantity", unlimitedStock.checked ? 0 : stockQuantity.value);
+            fd.append("stockQuantity", stockQuantity.value);
             fd.append("stockStatus", stockStatus.value);
             fd.append("category", productCategory.value);
 
             // Append Existing Images to Keep
-            // If existingImages is [url1, url2], append them.
-            // Backend expects "existingImages"
             existingImages.forEach(img => {
                 fd.append("existingImages", img);
             });
-            // Also append the main image if it's an existing one and not replaced? 
-            // The logic above assumes existingImages includes ALL currently saved images. 
-            // If user replaced main image, `loadMain` would have cleared `selectedImages` (new files) 
-            // but we need to ensure we don't duplicate or lose.
-            // Simplified: existingImages tracks what's on server. selectedImages tracks NEW uploads.
-            // If user deletes an existing image, it is removed from existingImages.
 
-            // Append New Images
+            // Append New Images (Singular 'productImage')
             selectedImages.forEach(file => {
-                fd.append("images", file);
+                fd.append("productImage", file);
             });
 
             try {
@@ -918,58 +1017,67 @@
                 const data = await res.json();
 
                 if (res.ok) {
-                    alert("Product updated successfully!");
-                    window.location.href = "ProductList.html";
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Product updated successfully!',
+                        confirmButtonColor: '#6C8EEF'
+                    }).then(() => {
+                        window.location.href = "ProductList.html";
+                    });
                 } else {
-                    alert("Error: " + data.message);
+                    showError(data.message || "Failed to update product");
                 }
 
             } catch (err) {
                 console.error(err);
-                alert("Something went wrong");
+                showError("Something went wrong. Please try again.");
             }
         }
 
         /* ================= ADD PRODUCT ================= */
         async function addProduct() {
+            if (!validateForm()) return;
+
             const token = localStorage.getItem("adminToken");
-
-            if (!productName.value || !productSKU.value || !productPrice.value || !productCategory.value) {
-                alert("Required fields missing");
-                return;
-            }
-
-            if (selectedImages.length === 0) {
-                alert("Upload at least one image");
-                return;
-            }
-
             const fd = new FormData();
-            fd.append("name", productName.value);
-            fd.append("sku", productSKU.value);
-            fd.append("description", productDescription.value);
+
+            fd.append("name", productName.value.trim());
+            fd.append("sku", productSku.value.trim());
+            fd.append("description", productDescription.value.trim());
             fd.append("price", productPrice.value);
             fd.append("discountPrice", discountPrice.value || 0);
             fd.append("finalPrice", finalPrice.value || productPrice.value);
-            fd.append("stockQuantity", unlimitedStock.checked ? 0 : stockQuantity.value);
+            fd.append("stockQuantity", stockQuantity.value);
             fd.append("stockStatus", stockStatus.value);
             fd.append("category", productCategory.value);
 
-            selectedImages.forEach(img => fd.append("images", img));
+            selectedImages.forEach(img => fd.append("productImage", img));
 
-            const res = await fetch("/api/admin/product", {
-                method: "POST",
-                headers: { Authorization: "Bearer " + token },
-                body: fd
-            });
+            try {
+                const res = await fetch("/api/admin/product", {
+                    method: "POST",
+                    headers: { Authorization: "Bearer " + token },
+                    body: fd
+                });
 
-            const data = await res.json();
+                const data = await res.json();
 
-            if (res.ok) {
-                alert("âœ… Product added");
-                location.href = "ProductList.html";
-            } else {
-                alert(data.message || "Failed");
+                if (res.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Product added successfully!',
+                        confirmButtonColor: '#6C8EEF'
+                    }).then(() => {
+                        window.location.href = "ProductList.html";
+                    });
+                } else {
+                    showError(data.message || "Failed to add product");
+                }
+            } catch (err) {
+                console.error("Add Product Error:", err);
+                showError("Something went wrong. Please try again.");
             }
         }
     </script>

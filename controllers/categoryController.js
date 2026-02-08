@@ -9,22 +9,29 @@ exports.addCategory = async (req, res) => {
     console.log("REQ BODY:", req.body);
     console.log("REQ FILE:", req.file);
 
-    const name = req.body?.name;
+    const name = req.body?.name?.trim();
 
     if (!name) {
       return res.status(400).json({ message: "Category name is required" });
     }
 
-    // Prevent duplicate categories
-    const exists = await Category.findOne({ name });
+    if (name.length < 3 || name.length > 10) {
+      return res.status(400).json({ message: "Category name must be between 3 and 10 characters" });
+    }
+
+    // Prevent duplicate categories (Case-insensitive)
+    const exists = await Category.findOne({ name: { $regex: new RegExp(`^${name}$`, "i") } });
     if (exists) {
       return res.status(400).json({ message: "Category already exists" });
     }
 
+    // Require Image
+    if (!req.file) {
+      return res.status(400).json({ message: "Category image is required" });
+    }
+
     // Image path from Multer
-    const imagePath = req.file
-      ? `/uploads/categories/${req.file.filename}`
-      : "";
+    const imagePath = `/uploads/categories/${req.file.filename}`;
 
     const category = await Category.create({
       name,
@@ -68,11 +75,28 @@ exports.getCategories = async (req, res) => {
 exports.updateCategory = async (req, res) => {
   try {
     const { id } = req.params;
-    const name = req.body?.name;
+    const name = req.body?.name?.trim();
 
     const updateData = {};
 
-    if (name) updateData.name = name;
+    if (name) {
+      if (name.length < 3 || name.length > 10) {
+        return res.status(400).json({ message: "Category name must be between 3 and 10 characters" });
+      }
+
+      // Check for duplicates (Case-insensitive regex), excluding current category
+      const exists = await Category.findOne({
+        name: { $regex: new RegExp(`^${name}$`, "i") },
+        _id: { $ne: id }
+      });
+
+      if (exists) {
+        return res.status(400).json({ message: "Category name already exists" });
+      }
+
+      updateData.name = name;
+    }
+
     if (req.file) {
       updateData.image = `/uploads/categories/${req.file.filename}`;
     }

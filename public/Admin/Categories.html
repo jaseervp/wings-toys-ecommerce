@@ -9,6 +9,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
     :root {
@@ -623,11 +624,11 @@
     <span class="fw-bold d-block">${cat.name}</span>
     <div class="mt-1">
       <button class="btn btn-sm btn-light me-1"
-        onclick="openEditCategory('${cat._id}', '${cat.name}')">
+        onclick="openEditCategory('${cat._id}', '${cat.name.replace(/'/g, "\\'")}')">
         <i class="bi bi-pencil"></i>
       </button>
       <button class="btn btn-sm btn-light"
-        onclick="deleteCategory('${cat._id}')">
+        onclick="confirmDelete('${cat._id}')">
         <i class="bi bi-trash text-danger"></i>
       </button>
     </div>
@@ -679,15 +680,31 @@
 
   <script>
     async function addCategory() {
-      const name = document.getElementById("categoryName").value.trim();
-      const imageFile = document.getElementById("categoryImage").files[0];
+      const nameInput = document.getElementById("categoryName");
+      const imageInput = document.getElementById("categoryImage");
+
+      const name = nameInput.value.trim();
+      const imageFile = imageInput.files[0];
       const responseBox = document.getElementById("catResponse");
 
       responseBox.className = "alert d-none";
 
+      // 1. Client-Side Validation
       if (!name) {
         responseBox.className = "alert alert-danger";
         responseBox.innerText = "Category name is required";
+        return;
+      }
+
+      if (!imageFile) {
+        responseBox.className = "alert alert-danger";
+        responseBox.innerText = "Category image is required";
+        return;
+      }
+
+      if (name.length < 3 || name.length > 10) {
+        responseBox.className = "alert alert-danger";
+        responseBox.innerText = "Name must be between 3 and 10 characters";
         return;
       }
 
@@ -709,20 +726,23 @@
         const data = await res.json();
 
         if (res.ok) {
-          responseBox.className = "alert alert-success";
-          responseBox.innerText = "Category added successfully";
+          // Success!
+          bootstrap.Modal.getInstance(document.getElementById("addCategoryModal")).hide();
 
-          document.getElementById("categoryName").value = "";
-          document.getElementById("categoryImage").value = "";
+          Swal.fire({
+            icon: 'success',
+            title: 'Category Added!',
+            text: `Category "${data.category.name}" added successfully.`,
+            timer: 2000,
+            showConfirmButton: false
+          });
 
+          nameInput.value = "";
+          imageInput.value = "";
           loadCategories();
 
-          setTimeout(() => {
-            bootstrap.Modal.getInstance(
-              document.getElementById("addCategoryModal")
-            ).hide();
-          }, 800);
         } else {
+          // Backend Error
           responseBox.className = "alert alert-danger";
           responseBox.innerText = data.message;
         }
@@ -768,7 +788,7 @@
             </button>
 
             <button class="action-btn"
-              onclick="deleteCategory('${cat._id}')">
+              onclick="confirmDelete('${cat._id}')">
               <i class="bi bi-trash text-danger"></i>
             </button>
           </div>
@@ -791,37 +811,106 @@
 
     /* UPDATE CATEGORY */
     async function updateCategory() {
+      const name = editCategoryName.value.trim();
+      const responseBox = document.getElementById("editCatResponse");
+      responseBox.className = "alert d-none";
+
+      // Validation
+      if (!name) {
+        responseBox.className = "alert alert-danger";
+        responseBox.innerText = "Category name required";
+        responseBox.classList.remove("d-none");
+        return;
+      }
+      if (name.length < 3 || name.length > 10) {
+        responseBox.className = "alert alert-danger";
+        responseBox.innerText = "Name must be 3-10 characters";
+        responseBox.classList.remove("d-none");
+        return;
+      }
+
       const fd = new FormData();
-      fd.append("name", editCategoryName.value);
+      fd.append("name", name);
       if (editCategoryImage.files[0]) {
         fd.append("image", editCategoryImage.files[0]);
       }
 
-      await fetch(`/api/admin/category/${editCategoryId.value}`, {
-        method: "PUT",
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("adminToken")
-        },
-        body: fd
-      });
+      try {
+        const res = await fetch(`/api/admin/category/${editCategoryId.value}`, {
+          method: "PUT",
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("adminToken")
+          },
+          body: fd
+        });
 
-      bootstrap.Modal.getInstance(editCategoryModal).hide();
-      loadCategories();
+        const data = await res.json();
+
+        if (res.ok) {
+          bootstrap.Modal.getInstance(editCategoryModal).hide();
+          Swal.fire({
+            icon: 'success',
+            title: 'Updated',
+            text: 'Category updated successfully',
+            timer: 1500,
+            showConfirmButton: false
+          });
+          loadCategories();
+        } else {
+          responseBox.className = "alert alert-danger";
+          responseBox.innerText = data.message;
+          responseBox.classList.remove("d-none");
+        }
+      } catch (err) {
+        console.error(err);
+        responseBox.className = "alert alert-danger";
+        responseBox.innerText = "Update failed";
+        responseBox.classList.remove("d-none");
+      }
     }
 
     /* DELETE CATEGORY */
-    async function deleteCategory(id) {
-      if (!confirm("Delete this category?")) return;
-
-      await fetch(`/api/admin/category/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("adminToken")
+    /* CONFIRM DELETE */
+    function confirmDelete(id) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "This action cannot be undone!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          deleteCategory(id);
         }
       });
+    }
 
+    async function deleteCategory(id) {
+      try {
+        const res = await fetch(`/api/admin/category/${id}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("adminToken")
+          }
+        });
 
-      loadCategories();
+        const data = await res.json();
+
+        if (res.ok) {
+          Swal.fire(
+            'Deleted!',
+            'Category has been deleted.',
+            'success'
+          );
+          loadCategories();
+        } else {
+          Swal.fire('Error', data.message || 'Failed to delete', 'error');
+        }
+      } catch (err) {
+        Swal.fire('Error', 'Server error', 'error');
+      }
     }
 
 
