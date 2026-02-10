@@ -4,6 +4,14 @@ const Category = require("../models/Category");
  * ➕ ADD CATEGORY (ADMIN)
  * Supports image upload via Multer
  */
+function createSlug(name) {
+  return name.toString().toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')     // Replace spaces with -
+    .replace(/[^\w\-]+/g, '') // Remove all non-word chars
+    .replace(/\-\-+/g, '-');  // Replace multiple - with single -
+}
+
 exports.addCategory = async (req, res) => {
   try {
     console.log("REQ BODY:", req.body);
@@ -33,8 +41,17 @@ exports.addCategory = async (req, res) => {
     // Image path from Multer
     const imagePath = `/uploads/categories/${req.file.filename}`;
 
+    const slug = req.body.slug ? createSlug(req.body.slug) : createSlug(name);
+
+    // Check if slug exists
+    const slugExists = await Category.findOne({ slug });
+    if (slugExists) {
+      return res.status(400).json({ message: "Slug already exists, please choose another" });
+    }
+
     const category = await Category.create({
       name,
+      slug,
       image: imagePath,
       createdBy: req.user.id
     });
@@ -57,8 +74,37 @@ exports.addCategory = async (req, res) => {
  */
 exports.getCategories = async (req, res) => {
   try {
-    const categories = await Category.find()
-      .sort({ createdAt: -1 });
+    const { isAdmin } = req.query;
+    const matchStage = {};
+
+    // Only filter by active status if explicitly requested
+    if (req.query.active === 'true') {
+      matchStage.isActive = true;
+    }
+
+    // Aggregation to get product count per category
+    const categories = await Category.aggregate([
+      { $match: matchStage },
+      {
+        $lookup: {
+          from: "products",
+          localField: "_id",
+          foreignField: "category",
+          as: "products"
+        }
+      },
+      {
+        $project: {
+          name: 1,
+          slug: 1,
+          image: 1,
+          isActive: 1,
+          createdAt: 1,
+          productCount: { $size: "$products" }
+        }
+      },
+      { $sort: { createdAt: -1 } }
+    ]);
 
     res.status(200).json(categories);
 
@@ -95,6 +141,22 @@ exports.updateCategory = async (req, res) => {
       }
 
       updateData.name = name;
+      if (!req.body.slug) {
+        updateData.slug = createSlug(name);
+      }
+    }
+
+    if (req.body.isActive !== undefined) {
+      updateData.isActive = req.body.isActive;
+    }
+
+    if (req.body.slug) {
+      const newSlug = createSlug(req.body.slug);
+      const slugExists = await Category.findOne({ slug: newSlug, _id: { $ne: id } });
+      if (slugExists) {
+        return res.status(400).json({ message: "Slug already exists" });
+      }
+      updateData.slug = newSlug;
     }
 
     if (req.file) {

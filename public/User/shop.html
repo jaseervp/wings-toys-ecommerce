@@ -666,7 +666,7 @@
         ========================= */
         async function loadCategories() {
             try {
-                const res = await fetch("/api/categories");
+                const res = await fetch("/api/categories?active=true");
                 const categories = await res.json();
                 const container = document.getElementById("categoryContainer");
 

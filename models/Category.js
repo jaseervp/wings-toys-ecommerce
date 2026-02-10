@@ -9,6 +9,13 @@ const categorySchema = new mongoose.Schema(
       unique: true
     },
 
+    slug: {
+      type: String,
+      unique: true,
+      lowercase: true,
+      index: true
+    },
+
     image: {
       type: String, // icon/image filename or URL
       default: ""

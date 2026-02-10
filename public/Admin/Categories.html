@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
   <style>
     :root {
@@ -452,55 +454,33 @@
           data-bs-toggle="modal" data-bs-target="#addCategoryModal">
           + Add Category
         </button>
-
-      </div>
-    </div>
-    <div class="modal fade" id="editCategoryModal" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5>Edit Category</h5>
-            <button class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-
-          <div class="modal-body">
-            <div id="editCatResponse" class="alert d-none"></div>
-            <input type="hidden" id="editCategoryId">
-
-            <input id="editCategoryName" class="form-control mb-3">
-            <input id="editCategoryImage" type="file" class="form-control">
-          </div>
-
-          <div class="modal-footer">
-            <button class="btn btn-primary" onclick="updateCategory()">Update</button>
-          </div>
-        </div>
       </div>
     </div>
 
-
-    <h5 class="fw-bold mb-3">Discover</h5>
-    <div class="discover-grid" id="categoryGrid">
-      <!-- Categories will be loaded here dynamically -->
-    </div>
-
-
+    <!-- CATEGORIES LIST CARD -->
     <div class="content-card">
       <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <div class="d-flex gap-3">
-          <button class="btn btn-sm fw-bold border-0"
-            style="color:var(--accent-blue); border-bottom: 2px solid var(--accent-blue) !important; border-radius:0;">All
-            Product (145)</button>
-          <button class="btn btn-sm text-muted border-0">Featured Products</button>
-          <button class="btn btn-sm text-muted border-0">On Sale</button>
-        </div>
+        <h5 class="fw-bold m-0">Categories List</h5>
         <div class="d-flex gap-2 align-items-center flex-wrap">
-          <div class="custom-search-group" style="width: 250px;">
-            <i class="bi bi-search"></i>
-            <input type="text" placeholder="Search product">
-          </div>
-          <button class="action-btn"><i class="bi bi-filter"></i></button>
-          <button class="action-btn"><i class="bi bi-plus-lg"></i></button>
+          <button class="btn btn-danger btn-sm" onclick="exportCategories()"><i class="bi bi-file-earmark-pdf me-2"></i>
+            Export PDF</button>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <!-- Search & Filter -->
+        <div class="custom-search-group" style="width: 250px;">
+          <i class="bi bi-search"></i>
+          <input type="text" id="searchInput" placeholder="Search category..." onkeyup="filterCategories()">
+        </div>
+        <div class="d-flex gap-2">
+          <select id="sortSelect" class="form-select form-select-sm" style="width: 150px;"
+            onchange="filterCategories()">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="name">Name (A-Z)</option>
+            <option value="products">High Product Count</option>
+          </select>
         </div>
       </div>
 
@@ -508,64 +488,81 @@
         <table class="custom-table">
           <thead>
             <tr>
-              <th width="50"><input type="checkbox" class="form-check-input"></th>
-              <th>No.</th>
-              <th>Product</th>
-              <th>Created Date</th>
-              <th>Order</th>
-              <th>Action</th>
+              <th width="50">#</th>
+              <th>CATEGORY</th>
+              <th>PRODUCTS</th>
+              <th>STATUS</th>
+              <th>ACTIONS</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="categoryTableBody">
+            <!-- Dynamic Content -->
             <tr>
-              <td><input type="checkbox" class="form-check-input"></td>
-              <td>1</td>
-              <td>
-                <div class="d-flex align-items-center gap-3">
-                  <img src="red-car.png" class="product-img">
-                  <span class="fw-bold">Red toy car</span>
-                </div>
-              </td>
-              <td>01-01-2025</td>
-              <td>20</td>
-              <td>
-                <button class="action-btn me-1"><i class="bi bi-pencil"></i></button>
-                <button class="action-btn"><i class="bi bi-trash"></i></button>
-              </td>
-            </tr>
-            <tr>
-              <td><input type="checkbox" class="form-check-input"></td>
-              <td>2</td>
-              <td>
-                <div class="d-flex align-items-center gap-3">
-                  <img src="doll-house.png" class="product-img">
-                  <span class="fw-bold">Wooden style house</span>
-                </div>
-              </td>
-              <td>01-01-2025</td>
-              <td>35</td>
-              <td>
-                <button class="action-btn me-1"><i class="bi bi-pencil"></i></button>
-                <button class="action-btn"><i class="bi bi-trash"></i></button>
-              </td>
+              <td colspan="6" class="text-center py-4">Loading categories...</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div class="pagination-container">
-        <a href="#" class="page-btn"><i class="bi bi-arrow-left"></i> Previous</a>
-        <div class="d-flex gap-2">
-          <div class="page-num active">1</div>
-          <div class="page-num">2</div>
-          <div class="page-num">3</div>
-          <div class="page-num">...</div>
-          <div class="page-num">24</div>
-        </div>
-        <a href="#" class="page-btn">Next <i class="bi bi-arrow-right"></i></a>
+      <div class="pagination-container justify-content-end">
+        <span class="text-muted small" id="totalCount"></span>
       </div>
     </div>
   </main>
+
+  <!-- ADD CATEGORY MODAL -->
+  <div class="modal fade" id="addCategoryModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="fw-bold">Add Category</h5>
+          <button class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="addCatResponse" class="alert d-none"></div>
+          <div class="mb-3"> 
+            <label class="form-label">Category Name</label>
+            <input type="text" id="addCatName" class="form-control" placeholder="E.g. New Born">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Image</label>
+            <input type="file" id="addCatImage" class="form-control" accept="image/*">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary" onclick="addNewCategory()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Category Modal (Kept for editing) -->
+  <div class="modal fade" id="editCategoryModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5>Edit Category</h5>
+          <button class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="editCatResponse" class="alert d-none"></div>
+          <input type="hidden" id="editCategoryId">
+          <div class="mb-3">
+            <label class="form-label">Category Name</label>
+            <input id="editCategoryName" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Image</label>
+            <input id="editCategoryImage" type="file" class="form-control">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" onclick="updateCategory()">Update</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
     function toggleTheme() {
@@ -595,361 +592,254 @@
   </script>
 
   <script>
+    let allCategories = [];
+
     async function loadCategories() {
       try {
-        const res = await fetch("/api/categories", {
-
-        });
-
-        const categories = await res.json();
-        const grid = document.getElementById("categoryGrid");
-
-        grid.innerHTML = "";
-
-        if (!categories.length) {
-          grid.innerHTML = "<p class='text-muted'>No categories found</p>";
-          return;
-        }
-
-        categories.forEach(cat => {
-          const card = document.createElement("div");
-          card.className = "category-mini-card";
-
-          card.innerHTML = `
-  <div class="cat-icon-bg">
-    <img src="${cat.image || 'placeholder.png'}" alt="${cat.name}">
-  </div>
-
-  <div class="flex-grow-1">
-    <span class="fw-bold d-block">${cat.name}</span>
-    <div class="mt-1">
-      <button class="btn btn-sm btn-light me-1"
-        onclick="openEditCategory('${cat._id}', '${cat.name.replace(/'/g, "\\'")}')">
-        <i class="bi bi-pencil"></i>
-      </button>
-      <button class="btn btn-sm btn-light"
-        onclick="confirmDelete('${cat._id}')">
-        <i class="bi bi-trash text-danger"></i>
-      </button>
-    </div>
-  </div>
-`;
-
-          grid.appendChild(card);
-        });
-
+        const res = await fetch("/api/categories");
+        allCategories = await res.json();
+        renderCategories(allCategories);
       } catch (error) {
         console.error("Failed to load categories:", error);
+        document.getElementById("categoryTableBody").innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error loading categories</td></tr>`;
       }
     }
 
-    // Load categories when page loads
-    loadCategories();
-  </script>
+    function renderCategories(categories) {
+      const tbody = document.getElementById("categoryTableBody");
+      tbody.innerHTML = "";
+      document.getElementById("totalCount").innerText = `Total: ${categories.length}`;
 
-  <div class="modal fade" id="addCategoryModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content" style="border-radius:15px;">
-        <div class="modal-header">
-          <h5 class="modal-title">Add Category</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-
-        <div class="modal-body">
-          <div id="catResponse" class="alert d-none"></div>
-
-          <div class="mb-3">
-            <label class="form-label">Category Name</label>
-            <input type="text" id="categoryName" class="form-control">
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Add Image</label>
-            <input type="file" id="categoryImage" class="form-control" accept="image/*">
-
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button class="btn btn-primary" onclick="addCategory()">Add</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    async function addCategory() {
-      const nameInput = document.getElementById("categoryName");
-      const imageInput = document.getElementById("categoryImage");
-
-      const name = nameInput.value.trim();
-      const imageFile = imageInput.files[0];
-      const responseBox = document.getElementById("catResponse");
-
-      responseBox.className = "alert d-none";
-
-      // 1. Client-Side Validation
-      if (!name) {
-        responseBox.className = "alert alert-danger";
-        responseBox.innerText = "Category name is required";
+      if (!categories.length) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center">No categories found</td></tr>`;
         return;
       }
 
-      if (!imageFile) {
-        responseBox.className = "alert alert-danger";
-        responseBox.innerText = "Category image is required";
-        return;
-      }
+      categories.forEach((cat, index) => {
+        const row = document.createElement("tr");
 
-      if (name.length < 3 || name.length > 10) {
-        responseBox.className = "alert alert-danger";
-        responseBox.innerText = "Name must be between 3 and 10 characters";
-        return;
-      }
+        // Status Badge
+        const statusBadge = cat.isActive
+          ? `<span class="badge bg-success-subtle text-success rounded-pill px-3">Active</span>`
+          : `<span class="badge bg-warning-subtle text-warning rounded-pill px-3">Inactive</span>`;
 
-      const formData = new FormData();
-      formData.append("name", name);
-      if (imageFile) {
-        formData.append("image", imageFile);
-      }
+        // Image
+        const imgUrl = cat.image || 'placeholder.png';
 
-      try {
-        const res = await fetch("/api/admin/category", {
-          method: "POST",
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("adminToken")
-          },
-          body: formData
-        });
+        // Action Buttons
+        const enableDetails = cat.isActive
+          ? `<button class="btn btn-sm btn-outline-danger ms-1" onclick="toggleStatus('${cat._id}', false)">Disable</button>`
+          : `<button class="btn btn-sm btn-outline-success ms-1" onclick="toggleStatus('${cat._id}', true)">Enable</button>`;
 
-        const data = await res.json();
-
-        if (res.ok) {
-          // Success!
-          bootstrap.Modal.getInstance(document.getElementById("addCategoryModal")).hide();
-
-          Swal.fire({
-            icon: 'success',
-            title: 'Category Added!',
-            text: `Category "${data.category.name}" added successfully.`,
-            timer: 2000,
-            showConfirmButton: false
-          });
-
-          nameInput.value = "";
-          imageInput.value = "";
-          loadCategories();
-
-        } else {
-          // Backend Error
-          responseBox.className = "alert alert-danger";
-          responseBox.innerText = data.message;
-        }
-
-      } catch (err) {
-        responseBox.className = "alert alert-danger";
-        responseBox.innerText = "Server error";
-      }
-    }
-
-    /* LOAD CATEGORIES */
-    async function loadCategories() {
-      const token = localStorage.getItem("adminToken");
-
-      const res = await fetch("/api/categories", {
-        headers: {
-          Authorization: "Bearer " + token
-        }
-      });;
-      if (!res.ok) {
-        alert("Unauthorized");
-        window.location.href = "../User/login.html";
-        return;
-      }
-      const categories = await res.json();
-      const grid = document.getElementById("categoryGrid");
-
-      grid.innerHTML = "";
-
-      categories.forEach(cat => {
-        grid.innerHTML += `
-      <div class="category-mini-card">
-        <div class="cat-icon-bg">
-          <img src="${cat.image || 'placeholder.png'}">
-        </div>
-
-        <div class="flex-grow-1">
-          <span class="fw-bold">${cat.name}</span>
-          <div class="mt-2">
-            <button class="action-btn me-1"
-              onclick="openEditCategory('${cat._id}','${cat.name}')">
-              <i class="bi bi-pencil"></i>
-            </button>
-
-            <button class="action-btn"
-              onclick="confirmDelete('${cat._id}')">
-              <i class="bi bi-trash text-danger"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    `;
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>
+               <div class="d-flex align-items-center gap-3">
+                  <img src="${imgUrl}" class="rounded" style="width:40px; height:40px; object-fit:cover;">
+                  <span class="fw-bold">${cat.name}</span>
+               </div>
+            </td>
+            <td>${cat.productCount || 0}</td>
+            <td>${statusBadge}</td>
+            <td>
+              <div class="d-flex">
+                  <button class="action-btn me-1" 
+                    onclick="openEditCategory('${cat._id}', '${cat.name.replace(/'/g, "\\'")}', '${imgUrl}')">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  ${enableDetails}
+              </div>
+            </td>
+          `;
+        tbody.appendChild(row);
       });
     }
 
+    function filterCategories() {
+      const search = document.getElementById("searchInput").value.toLowerCase();
+      const sort = document.getElementById("sortSelect").value;
 
+      let filtered = allCategories.filter(cat =>
+        cat.name.toLowerCase().includes(search)
+      );
 
-    /* OPEN EDIT */
-    function openEditCategory(id, name) {
-      editCategoryId.value = id;
-      editCategoryName.value = name;
-      editCategoryImage.value = "";
+      // Sort
+      if (sort === 'name') {
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (sort === 'products') {
+        filtered.sort((a, b) => (b.productCount || 0) - (a.productCount || 0));
+      } else if (sort === 'oldest') {
+        filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      } else { // newest
+        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      }
 
-      new bootstrap.Modal(editCategoryModal).show();
+      renderCategories(filtered);
     }
 
-    /* UPDATE CATEGORY */
-    async function updateCategory() {
-      const name = editCategoryName.value.trim();
-      const responseBox = document.getElementById("editCatResponse");
+    function clearAddForm() {
+      document.getElementById("addCatName").value = "";
+      document.getElementById("addCatImage").value = "";
+      document.getElementById("addCatResponse").classList.add("d-none");
+    }
+
+    async function addNewCategory() {
+      const nameInput = document.getElementById("addCatName");
+      const imageInput = document.getElementById("addCatImage");
+      const responseBox = document.getElementById("addCatResponse");
+
+      const name = nameInput.value.trim();
+      const imageFile = imageInput.files[0];
+
       responseBox.className = "alert d-none";
 
-      // Validation
-      if (!name) {
+      if (!name || !imageFile) {
+        responseBox.innerText = "Name and Image are required";
         responseBox.className = "alert alert-danger";
-        responseBox.innerText = "Category name required";
-        responseBox.classList.remove("d-none");
-        return;
-      }
-      if (name.length < 3 || name.length > 10) {
-        responseBox.className = "alert alert-danger";
-        responseBox.innerText = "Name must be 3-10 characters";
         responseBox.classList.remove("d-none");
         return;
       }
 
       const fd = new FormData();
       fd.append("name", name);
-      if (editCategoryImage.files[0]) {
-        fd.append("image", editCategoryImage.files[0]);
-      }
+      fd.append("image", imageFile);
 
       try {
-        const res = await fetch(`/api/admin/category/${editCategoryId.value}`, {
-          method: "PUT",
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("adminToken")
-          },
+        const res = await fetch("/api/admin/category", {
+          method: "POST",
+          headers: { Authorization: "Bearer " + localStorage.getItem("adminToken") },
           body: fd
         });
-
         const data = await res.json();
 
         if (res.ok) {
-          bootstrap.Modal.getInstance(editCategoryModal).hide();
+          bootstrap.Modal.getInstance(document.getElementById("addCategoryModal")).hide();
           Swal.fire({
             icon: 'success',
-            title: 'Updated',
-            text: 'Category updated successfully',
-            timer: 1500,
-            showConfirmButton: false
+            title: 'Category Added',
+            showConfirmButton: false,
+            timer: 1500
           });
+          clearAddForm();
           loadCategories();
         } else {
-          responseBox.className = "alert alert-danger";
           responseBox.innerText = data.message;
+          responseBox.className = "alert alert-danger";
           responseBox.classList.remove("d-none");
         }
       } catch (err) {
         console.error(err);
+        responseBox.innerText = "Server Error";
         responseBox.className = "alert alert-danger";
-        responseBox.innerText = "Update failed";
         responseBox.classList.remove("d-none");
       }
     }
 
-    /* DELETE CATEGORY */
-    /* CONFIRM DELETE */
-    function confirmDelete(id) {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: "This action cannot be undone!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Yes, delete it!'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          deleteCategory(id);
-        }
-      });
+    function openEditCategory(id, name, imageUrl) {
+      document.getElementById("editCategoryId").value = id;
+      document.getElementById("editCategoryName").value = name;
+      document.getElementById("editCategoryImage").value = "";
+      new bootstrap.Modal(document.getElementById("editCategoryModal")).show();
     }
 
-    async function deleteCategory(id) {
+    async function updateCategory() {
+      const id = document.getElementById("editCategoryId").value;
+      const name = document.getElementById("editCategoryName").value;
+      const imageFile = document.getElementById("editCategoryImage").files[0];
+
+      const fd = new FormData();
+      fd.append("name", name);
+      if (imageFile) fd.append("image", imageFile);
+
       try {
         const res = await fetch(`/api/admin/category/${id}`, {
-          method: "DELETE",
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("adminToken")
-          }
+          method: "PUT",
+          headers: { Authorization: "Bearer " + localStorage.getItem("adminToken") },
+          body: fd
         });
 
-        const data = await res.json();
-
         if (res.ok) {
-          Swal.fire(
-            'Deleted!',
-            'Category has been deleted.',
-            'success'
-          );
+          bootstrap.Modal.getInstance(document.getElementById("editCategoryModal")).hide();
+          Swal.fire("Updated", "Category updated successfully", "success");
           loadCategories();
         } else {
-          Swal.fire('Error', data.message || 'Failed to delete', 'error');
+          Swal.fire("Error", "Update failed", "error");
         }
       } catch (err) {
-        Swal.fire('Error', 'Server error', 'error');
+        Swal.fire("Error", "Server error", "error");
       }
     }
 
+    async function toggleStatus(id, isActive) {
+      try {
+        const res = await fetch(`/api/admin/category/${id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("adminToken")
+          },
+          body: JSON.stringify({ isActive })
+        });
 
+        const data = await res.json();
+        if (res.ok) {
+          loadCategories();
+          Swal.fire({
+            icon: 'success',
+            title: 'Status Updated',
+            showConfirmButton: false,
+            timer: 1000
+          });
+        } else {
+          Swal.fire("Error", data.message, "error");
+        }
+      } catch (err) {
+        Swal.fire("Error", "Server error", "error");
+      }
+    }
+
+    // Export CSV
+    // Export PDF
+    function exportCategories() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.text("Categories List", 14, 15);
+
+      const tableColumn = ["#", "Category Name", "Products", "Status"];
+      const tableRows = [];
+
+      allCategories.forEach((cat, index) => {
+        const catData = [
+          index + 1,
+          cat.name,
+          cat.productCount || 0,
+          cat.isActive ? "Active" : "Inactive"
+        ];
+        tableRows.push(catData);
+      });
+
+      doc.autoTable({
+        head: [tableColumn],
+        body: tableRows,
+        startY: 20,
+      });
+
+      doc.save("categories.pdf");
+    }
   </script>
+
   <script>
     (async function checkAdminAuth() {
       const token = localStorage.getItem("adminToken");
       const role = localStorage.getItem("adminRole");
-
       if (!token || role !== "admin") {
         window.location.href = "../User/login.html";
         return;
       }
-
-      try {
-        const res = await fetch("/api/check-auth", {
-          headers: {
-            Authorization: "Bearer " + token
-          }
-        });
-
-        if (!res.ok) throw new Error();
-
-        const data = await res.json();
-        if (!data.loggedIn || data.user.role !== "admin") {
-          window.location.href = "../User/login.html";
-          return;
-        }
-
-        loadCategories(); // âœ… safe now
-      } catch {
-        window.location.href = "../User/login.html";
-      }
+      loadCategories();
     })();
   </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
   <script>
     (async function updateAdminProfileUI() {
       const token = localStorage.getItem('adminToken');
@@ -985,6 +875,7 @@
     })();
   </script>
   <script src="js/admin-global.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

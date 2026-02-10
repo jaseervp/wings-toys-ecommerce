@@ -139,9 +139,17 @@ exports.getMyOrderById = async (req, res) => {
 
 /* ================= ADMIN ================= */
 exports.getOrders = async (req, res) => {
+  const { sortBy } = req.query;
+  let sort = { createdAt: -1 }; // Default: Newest
+
+  if (sortBy === 'oldest') sort = { createdAt: 1 };
+  if (sortBy === 'amount_high') sort = { totalAmount: -1 };
+  if (sortBy === 'amount_low') sort = { totalAmount: 1 };
+
   const orders = await Order.find()
     .populate("user", "fullName email")
-    .populate("items.product", "name images");
+    .populate("items.product", "name images")
+    .sort(sort);
 
   res.json({ orders });
 };
@@ -158,12 +166,30 @@ exports.updateOrderStatus = async (req, res) => {
 
 exports.updateItemStatus = async (req, res) => {
   const { orderId, itemId } = req.params;
+  const { status } = req.body;
 
-  const order = await Order.findOneAndUpdate(
+  let order = await Order.findOneAndUpdate(
     { _id: orderId, "items._id": itemId },
-    { $set: { "items.$.itemStatus": req.body.status } },
+    { $set: { "items.$.itemStatus": status } },
     { new: true }
   );
+
+  // Auto-update Order Status logic
+  if (order) {
+    const anyPending = order.items.some(i => i.itemStatus === 'pending');
+    const allDelivered = order.items.every(i => i.itemStatus === 'delivered');
+    const allCanceled = order.items.every(i => i.itemStatus === 'canceled');
+    const anyShipped = order.items.some(i => i.itemStatus === 'shipped');
+    const anyDelivered = order.items.some(i => i.itemStatus === 'delivered');
+
+    if (allCanceled) order.orderStatus = 'canceled';
+    else if (allDelivered) order.orderStatus = 'delivered';
+    else if (anyPending) order.orderStatus = 'pending';
+    else if (anyShipped || anyDelivered) order.orderStatus = 'shipped';
+    else order.orderStatus = 'pending';
+
+    await order.save();
+  }
 
   res.json(order);
 };

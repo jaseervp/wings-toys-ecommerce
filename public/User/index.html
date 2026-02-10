@@ -685,7 +685,7 @@
 
     async function fetchHomeCategories() {
       try {
-        const res = await fetch("/api/categories");
+        const res = await fetch("/api/categories?active=true");
         const categories = await res.json();
         const container = document.getElementById("homeCategories");
         const colors = ['bg-sky', 'bg-rose', 'bg-mint', 'bg-soft-yellow'];

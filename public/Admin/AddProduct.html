@@ -458,9 +458,9 @@
                 <div class="d-flex gap-2 action-btns-group">
                     <button class="btn-publish" id="submitBtn" onclick="handleProductSubmit()">Publish Product</button>
 
-                 
+
                 </div>
-               
+
             </div>
         </div>
 
@@ -484,7 +484,8 @@
                         <label class="form-label">Product SKU</label>
 
                         <div class="sku-container">
-                            <input type="text" id="productSku" name="productSku" placeholder="e.g. WINGS-TOYS-746" readonly />
+                            <input type="text" id="productSku" name="productSku" placeholder="e.g. WINGS-TOYS-746"
+                                readonly />
 
                             <button type="button" onclick="generateSku()">
                                 ✨ Generate
@@ -570,7 +571,7 @@
                         </div>
                     </div>
 
-                    
+
 
                     <!-- <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="featureProduct">
@@ -758,7 +759,7 @@
         async function loadCategoryDropdown() {
             const token = localStorage.getItem("adminToken");
 
-            const res = await fetch("/api/categories", {
+            const res = await fetch("/api/categories?active=true", {
                 headers: { Authorization: "Bearer " + token }
             });
 
