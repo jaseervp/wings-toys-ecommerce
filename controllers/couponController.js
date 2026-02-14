@@ -6,20 +6,20 @@ const Coupon = require("../models/Coupon");
 exports.createCoupon = async (req, res) => {
     try {
         const {
-    code,
-    discountType,
-    discountValue,
-    description,
-    minCartValue,
-    maxDiscount,      
-    usageLimit, 
-    startDate,        
-    expiryDate,
-    limitPerUser
-} = req.body;
+            code,
+            discountType,
+            discountValue,
+            description,
+            minCartValue,
+            maxDiscount,
+            usageLimit,
+            startDate,
+            expiryDate,
+            limitPerUser
+        } = req.body;
 
-      
-      
+
+
         // ✅ Basic validation
         if (!code || !discountType || !expiryDate) {
             return res.status(400).json({
@@ -27,10 +27,16 @@ exports.createCoupon = async (req, res) => {
             });
         }
         if (!startDate || !expiryDate) {
-    return res.status(400).json({
-        message: "Start date and expiry date are required"
-    });
-}
+            return res.status(400).json({
+                message: "Start date and expiry date are required"
+            });
+        }
+
+        if (new Date(startDate) > new Date(expiryDate)) {
+            return res.status(400).json({
+                message: "Start date cannot be after expiry date"
+            });
+        }
 
 
         // ❌ Discount value required except free shipping
@@ -51,20 +57,25 @@ exports.createCoupon = async (req, res) => {
             });
         }
 
+        // ❌ Negative Value Check
+        if (Number(discountValue) < 0 || Number(minCartValue) < 0) {
+            return res.status(400).json({ message: "Values cannot be negative" });
+        }
+
         // ✅ Create coupon
-      const coupon = await Coupon.create({
-    code: code.toUpperCase(),
-    discountType,
-    discountValue: discountType === "free_shipping" ? 0 : Number(discountValue),
-    description: description || "",
-    minCartValue: Number(minCartValue) || 0,
-    maxDiscount: maxDiscount ? Number(maxDiscount) : null,
-    usageLimit: usageLimit ? Number(usageLimit) : null,
-    startDate,              // ✅ SAVE
-    expiryDate,
-    isActive: true,
-    limitPerUser: Boolean(limitPerUser)
-});
+        const coupon = await Coupon.create({
+            code: code.toUpperCase(),
+            discountType,
+            discountValue: discountType === "free_shipping" ? 0 : Number(discountValue),
+            description: description || "",
+            minCartValue: Number(minCartValue) || 0,
+            maxDiscount: maxDiscount ? Number(maxDiscount) : null,
+            usageLimit: usageLimit ? Number(usageLimit) : null,
+            startDate,              // ✅ SAVE
+            expiryDate,
+            isActive: true,
+            limitPerUser: Boolean(limitPerUser)
+        });
 
 
         res.status(201).json({
@@ -81,6 +92,75 @@ exports.createCoupon = async (req, res) => {
 };
 
 /**
+ * UPDATE COUPON (ADMIN)
+ */
+exports.updateCoupon = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const {
+            code,
+            discountType,
+            discountValue,
+            description,
+            minCartValue,
+            maxDiscount,
+            usageLimit,
+            startDate,
+            expiryDate,
+            limitPerUser
+        } = req.body;
+
+        // Basic validation
+        if (!code || !discountType || !expiryDate) {
+            return res.status(400).json({ message: "Required fields missing" });
+        }
+
+        if (startDate && expiryDate && new Date(startDate) > new Date(expiryDate)) {
+            return res.status(400).json({ message: "Start date cannot be after expiry date" });
+        }
+
+        // Check for duplicate code (excluding current coupon)
+        const existing = await Coupon.findOne({ code, _id: { $ne: id } });
+        if (existing) {
+            return res.status(400).json({ message: "Coupon code already exists" });
+        }
+
+        // ❌ Negative Value Check
+        if (Number(discountValue) < 0 || Number(minCartValue) < 0) {
+            return res.status(400).json({ message: "Values cannot be negative" });
+        }
+
+
+        const updatedCoupon = await Coupon.findByIdAndUpdate(
+            id,
+            {
+                code: code.toUpperCase(),
+                discountType,
+                discountValue: discountType === "free_shipping" ? 0 : Number(discountValue),
+                description: description || "",
+                minCartValue: Number(minCartValue) || 0,
+                maxDiscount: maxDiscount ? Number(maxDiscount) : null,
+                usageLimit: usageLimit ? Number(usageLimit) : null,
+                startDate,
+                expiryDate,
+                limitPerUser: Boolean(limitPerUser)
+            },
+            { new: true }
+        );
+
+        if (!updatedCoupon) {
+            return res.status(404).json({ message: "Coupon not found" });
+        }
+
+        res.json({ message: "Coupon updated successfully", coupon: updatedCoupon });
+
+    } catch (err) {
+        console.error("Update coupon error:", err);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+/**
  * GET ACTIVE COUPONS (USER / CHECKOUT)
  */
 exports.getActiveCoupons = async (req, res) => {
@@ -88,12 +168,12 @@ exports.getActiveCoupons = async (req, res) => {
         const today = new Date();
 
         const coupons = await Coupon.find({
-    isActive: true,
-    startDate: { $lte: today },   // ✅ EXCLUDE UPCOMING
-    expiryDate: { $gte: today }
-}).select(
-  "code discountType discountValue description minCartValue maxDiscount expiryDate limitPerUser"
-);
+            isActive: true,
+            startDate: { $lte: today },   // ✅ EXCLUDE UPCOMING
+            expiryDate: { $gte: today }
+        }).select(
+            "code discountType discountValue description minCartValue maxDiscount expiryDate limitPerUser"
+        );
 
 
         res.status(200).json(coupons);
@@ -120,16 +200,16 @@ exports.getAllCoupons = async (req, res) => {
         // Status filter
         const today = new Date();
 
-if (status === "active") {
-    filter.startDate = { $lte: today };
-    filter.expiryDate = { $gte: today };
-}
-else if (status === "expired") {
-    filter.expiryDate = { $lt: today };
-}
-else if (status === "upcoming") {
-    filter.startDate = { $gt: today };
-}
+        if (status === "active") {
+            filter.startDate = { $lte: today };
+            filter.expiryDate = { $gte: today };
+        }
+        else if (status === "expired") {
+            filter.expiryDate = { $lt: today };
+        }
+        else if (status === "upcoming") {
+            filter.startDate = { $gt: today };
+        }
 
 
         // Sorting

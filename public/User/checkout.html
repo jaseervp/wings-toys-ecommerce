@@ -1,510 +1,577 @@
-  <!DOCTYPE html>
-  <html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout | Wings Premium</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout | Wings Premium</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-    <style>
-      :root {
-        --primary-color: #6366f1;
-        --bg-light: #f9fafb;
-        --text-muted: #898989;
-      }
+  <style>
+    :root {
+      --primary-color: #6366f1;
+      --bg-light: #f9fafb;
+      --text-muted: #898989;
+    }
 
-      body {
-        font-family: 'Poppins', sans-serif;
-        background-color: #fff;
-        color: #111;
-      }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #fff;
+      color: #111;
+    }
 
-      /* --- Global Components --- */
-      .card-custom {
-        border: none;
-        border-radius: 20px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        background: #fff;
-      }
+    /* --- Global Components --- */
+    .card-custom {
+      border: none;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      background: #fff;
+    }
 
-      /* --- Hero Section --- */
-      .hero-section {
-        background: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)),
-          url('https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=2043&auto=format&fit=crop');
-        background-size: cover;
-        background-position: center;
-        padding: 100px 0;
-        text-align: center;
-      }
+    /* --- Hero Section --- */
+    .hero-section {
+      background: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)),
+        url('https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=2043&auto=format&fit=crop');
+      background-size: cover;
+      background-position: center;
+      padding: 100px 0;
+      text-align: center;
+    }
 
-      /* --- Checkout Layout --- */
-      .checkout-container {
-        background-color: var(--bg-light);
-        padding: 80px 0;
-      }
+    /* --- Checkout Layout --- */
+    .checkout-container {
+      background-color: var(--bg-light);
+      padding: 80px 0;
+    }
 
-      .payment-option {
-        cursor: pointer;
-        border: 2px solid #eee;
-        border-radius: 15px;
-        transition: 0.3s;
-        background: white;
-        position: relative;
-        padding: 25px;
-        display: block;
-      }
+    .payment-option {
+      cursor: pointer;
+      border: 2px solid #eee;
+      border-radius: 15px;
+      transition: 0.3s;
+      background: white;
+      position: relative;
+      padding: 25px;
+      display: block;
+    }
 
-      .payment-input:checked+.payment-option {
-        border-color: var(--primary-color);
-        background-color: #f5f3ff;
-      }
+    .payment-input:checked+.payment-option {
+      border-color: var(--primary-color);
+      background-color: #f5f3ff;
+    }
 
-      .payment-input:checked+.payment-option::after {
-        content: "\F272";
-        font-family: "bootstrap-icons";
-        position: absolute;
-        top: 12px;
-        right: 12px;
-        color: var(--primary-color);
-        font-size: 1.2rem;
-      }
+    .payment-input:checked+.payment-option::after {
+      content: "\F272";
+      font-family: "bootstrap-icons";
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      color: var(--primary-color);
+      font-size: 1.2rem;
+    }
 
-      /* --- Coupon Cards --- */
-      .coupon-list-container {
-        display: flex;
-        overflow-x: auto;
-        gap: 12px;
-        padding: 10px 0;
-        scrollbar-width: none;
-      }
+    /* --- Coupon Cards --- */
+    .coupon-list-container {
+      display: flex;
+      overflow-x: auto;
+      gap: 12px;
+      padding: 10px 0;
+      scrollbar-width: none;
+    }
 
-      .coupon-list-container::-webkit-scrollbar {
-        display: none;
-      }
+    .coupon-list-container::-webkit-scrollbar {
+      display: none;
+    }
 
-      .coupon-card {
-        min-width: 140px;
-        background: white;
-        border: 2px dashed #d1d5db;
-        border-radius: 12px;
-        padding: 12px;
-        text-align: center;
-        transition: 0.3s;
-        cursor: pointer;
-      }
+    .coupon-card {
+      min-width: 140px;
+      background: white;
+      border: 2px dashed #d1d5db;
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      transition: 0.3s;
+      cursor: pointer;
+    }
 
-      .coupon-card:hover,
-      .coupon-card.active {
-        border-color: var(--primary-color);
-        background: #f5f3ff;
-        transform: translateY(-3px);
-      }
+    .coupon-card:hover,
+    .coupon-card.active {
+      border-color: var(--primary-color);
+      background: #f5f3ff;
+      transform: translateY(-3px);
+    }
 
-      .coupon-code {
-        font-weight: 700;
-        color: var(--primary-color);
-        font-size: 0.9rem;
-      }
+    .coupon-code {
+      font-weight: 700;
+      color: var(--primary-color);
+      font-size: 0.9rem;
+    }
 
-      /* Upcoming coupon (fade + disable feel) */
-      .coupon-card.upcoming {
-        opacity: 0.4;
-        pointer-events: none;
-        filter: grayscale(40%);
-      }
+    /* Upcoming coupon (fade + disable feel) */
+    .coupon-card.upcoming {
+      opacity: 0.4;
+      pointer-events: none;
+      filter: grayscale(40%);
+    }
 
 
-      /* --- Footer Black --- */
-      .footer-black {
-        background-color: #000;
-        color: #fff;
-        padding: 80px 0 30px;
-      }
+    /* --- Footer Black --- */
+    .footer-black {
+      background-color: #000;
+      color: #fff;
+      padding: 80px 0 30px;
+    }
 
-      .footer-black a {
-        color: #fff;
-        text-decoration: none;
-        opacity: 0.7;
-        transition: 0.3s;
-      }
+    .footer-black a {
+      color: #fff;
+      text-decoration: none;
+      opacity: 0.7;
+      transition: 0.3s;
+    }
 
-      .footer-black a:hover {
-        opacity: 1;
-        text-decoration: underline;
-      }
+    .footer-black a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
 
-      .newsletter-input {
-        background: transparent;
-        border: none;
-        border-bottom: 2px solid #fff;
-        color: #fff;
-        width: 100%;
-        padding: 8px 0;
-        outline: none;
-      }
+    .newsletter-input {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid #fff;
+      color: #fff;
+      width: 100%;
+      padding: 8px 0;
+      outline: none;
+    }
 
-      .btn-subscribe {
-        background: none;
-        border: none;
-        color: #fff;
-        font-weight: 700;
-        text-decoration: underline;
-      }
+    .btn-subscribe {
+      background: none;
+      border: none;
+      color: #fff;
+      font-weight: 700;
+      text-decoration: underline;
+    }
 
-      /* --- Modal Custom --- */
-      .modal-content {
-        border-radius: 25px;
-        border: none;
-        padding: 15px;
-      }
+    /* --- Modal Custom --- */
+    .modal-content {
+      border-radius: 25px;
+      border: none;
+      padding: 15px;
+    }
 
-      .form-control-custom {
-        background: #f3f4f6;
-        border: none;
-        padding: 12px 18px;
-        border-radius: 12px;
-        margin-bottom: 15px;
-      }
+    .form-control-custom {
+      background: #f3f4f6;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+    }
 
-      /* NAV ICONS */
+    /* NAV ICONS */
+    .navbar-logo {
+      height: 40px;
+    }
+
+    .nav-icon {
+      font-size: 1.4rem;
+      color: #000;
+      text-decoration: none;
+    }
+
+    .nav-search {
+      display: flex;
+      align-items: center;
+      background: #f5f5f5;
+      border-radius: 30px;
+      padding: 8px 16px;
+      width: 260px;
+    }
+
+    .nav-search input {
+      border: none;
+      outline: none;
+      background: transparent;
+      width: 100%;
+    }
+
+    @media (max-width: 991px) {
       .navbar-logo {
-        height: 40px;
-      }
-
-      .nav-icon {
-        font-size: 1.4rem;
-        color: #000;
-        text-decoration: none;
+        height: 28px;
       }
 
       .nav-search {
-        display: flex;
-        align-items: center;
-        background: #f5f5f5;
-        border-radius: 30px;
-        padding: 8px 16px;
-        width: 260px;
-      }
-
-      .nav-search input {
-        border: none;
-        outline: none;
-        background: transparent;
         width: 100%;
       }
+    }
+  </style>
+</head>
 
-      @media (max-width: 991px) {
-        .navbar-logo {
-          height: 28px;
-        }
+<body>
 
-        .nav-search {
-          width: 100%;
-        }
-      }
-    </style>
-  </head>
+  <nav class="navbar navbar-light bg-white py-3">
+    <div class="container">
 
-  <body>
+      <!-- TOP ROW -->
+      <div class="d-flex align-items-center w-100">
 
-    <nav class="navbar navbar-light bg-white py-3">
-      <div class="container">
+        <!-- LOGO -->
+        <a class="navbar-brand" href="index.html">
+          <img src="/Images/logo wings.png" class="navbar-logo" alt="Logo">
+        </a>
 
-        <!-- TOP ROW -->
-        <div class="d-flex align-items-center w-100">
+        <!-- DESKTOP MENU (CENTER) -->
+        <ul class="navbar-nav flex-row gap-4 mx-auto d-none d-lg-flex">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item signup-link">
+            <a class="nav-link" href="signup.html">Sign Up</a>
+          </li>
 
-          <!-- LOGO -->
-          <a class="navbar-brand" href="index.html">
-            <img src="/Images/logo wings.png" class="navbar-logo" alt="Logo">
+        </ul>
+
+        <!-- DESKTOP RIGHT -->
+        <div class="d-none d-lg-flex align-items-center gap-3">
+
+          <div class="nav-search">
+            <input type="text" placeholder="Search..." />
+            <i class="bi bi-search"></i>
+          </div>
+
+          <a href="wishlist.html" class="nav-icon auth-protected" data-target="wishlist.html">
+            <i class="bi bi-heart"></i>
           </a>
 
-          <!-- DESKTOP MENU (CENTER) -->
-          <ul class="navbar-nav flex-row gap-4 mx-auto d-none d-lg-flex">
-            <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
-            <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
-            <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-            <li class="nav-item signup-link">
-              <a class="nav-link" href="signup.html">Sign Up</a>
-            </li>
+          <a href="cart.html" class="nav-icon auth-protected" data-target="cart.html">
+            <i class="bi bi-cart"></i>
+          </a>
 
-          </ul>
-
-          <!-- DESKTOP RIGHT -->
-          <div class="d-none d-lg-flex align-items-center gap-3">
-
-            <div class="nav-search">
-              <input type="text" placeholder="Search..." />
-              <i class="bi bi-search"></i>
-            </div>
-
-            <a href="wishlist.html" class="nav-icon auth-protected" data-target="wishlist.html">
-              <i class="bi bi-heart"></i>
-            </a>
-
-            <a href="cart.html" class="nav-icon auth-protected" data-target="cart.html">
-              <i class="bi bi-cart"></i>
-            </a>
-
-            <div id="auth-nav"></div>
-
-          </div>
-
-          <!-- MOBILE RIGHT -->
-          <div class="d-flex align-items-center gap-3 d-lg-none ms-auto">
-            <a href="wishlist.html" class="nav-icon auth-protected" data-target="wishlist.html">
-              <i class="bi bi-heart"></i>
-            </a>
-
-            <a href="cart.html" class="nav-icon auth-protected" data-target="cart.html">
-              <i class="bi bi-cart"></i>
-            </a>
-
-            <div id="auth-nav-mobile"></div>
-
-            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
-              data-bs-target="#navbarNav">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-          </div>
+          <div id="auth-nav"></div>
 
         </div>
 
-        <!-- MOBILE SEARCH -->
-        <div class="nav-search w-100 mt-3 d-lg-none">
-          <input type="text" placeholder="Search..." />
-          <i class="bi bi-search"></i>
-        </div>
+        <!-- MOBILE RIGHT -->
+        <div class="d-flex align-items-center gap-3 d-lg-none ms-auto">
+          <a href="wishlist.html" class="nav-icon auth-protected" data-target="wishlist.html">
+            <i class="bi bi-heart"></i>
+          </a>
 
-        <!-- MOBILE MENU -->
-        <div class="collapse navbar-collapse d-lg-none mt-3" id="navbarNav">
-          <ul class="navbar-nav gap-3">
-            <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
-            <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
-            <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-            <li class="nav-item signup-link">
-              <a class="nav-link" href="signup.html">Sign Up</a>
-            </li>
+          <a href="cart.html" class="nav-icon auth-protected" data-target="cart.html">
+            <i class="bi bi-cart"></i>
+          </a>
 
-          </ul>
+          <div id="auth-nav-mobile"></div>
+
+          <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+          </button>
         </div>
 
       </div>
-    </nav>
 
-    <section class="hero-section">
-      <div class="container">
-        <i class="bi bi-cart-check-fill fs-1 text-primary"></i>
-        <h1 class="display-5 fw-bold mt-2">Checkout</h1>
-        <p class="text-muted fw-medium">Home <i class="bi bi-chevron-right mx-2 small"></i> Checkout</p>
+      <!-- MOBILE SEARCH -->
+      <div class="nav-search w-100 mt-3 d-lg-none">
+        <input type="text" placeholder="Search..." />
+        <i class="bi bi-search"></i>
       </div>
-    </section>
 
-    <section class="checkout-container">
-      <div class="container">
-        <div class="row g-4">
+      <!-- MOBILE MENU -->
+      <div class="collapse navbar-collapse d-lg-none mt-3" id="navbarNav">
+        <ul class="navbar-nav gap-3">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item signup-link">
+            <a class="nav-link" href="signup.html">Sign Up</a>
+          </li>
 
-          <div class="col-lg-8">
-            <div class="card card-custom p-4 mb-4">
-              <div class="d-flex justify-content-between align-items-center mb-4">
-                <h5 class="fw-bold m-0"><i class="bi bi-geo-alt me-2"></i>Shipping Details</h5>
-                <button class="btn btn-outline-primary btn-sm fw-bold rounded-pill px-4" onclick="openAddressPopup()"
-                  data-bs-toggle="modal" data-bs-target="#addressPopup">
-                  Change Address
-                </button>
+        </ul>
+      </div>
 
+    </div>
+  </nav>
 
-              </div>
-              <div class="border rounded-4 p-4 d-flex align-items-center bg-white shadow-sm">
-                <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
-                  <i class="bi bi-house-door-fill text-primary h4 mb-0"></i>
-                </div>
-                <div>
-                  <p class="mb-0 fw-bold" id="displayUser">John Doe</p>
-                  <small class="text-muted" id="displayAddr">123 Tech Avenue, Silicon Valley, CA 94043</small>
-                </div>
-              </div>
-            </div>
+  <section class="hero-section">
+    <div class="container">
+      <i class="bi bi-cart-check-fill fs-1 text-primary"></i>
+      <h1 class="display-5 fw-bold mt-2">Checkout</h1>
+      <p class="text-muted fw-medium">Home <i class="bi bi-chevron-right mx-2 small"></i> Checkout</p>
+    </div>
+  </section>
 
-            <div class="card card-custom p-4">
-              <h5 class="fw-bold mb-4"><i class="bi bi-credit-card me-2"></i>Payment Method</h5>
-              <div class="row g-3">
-                <div class="col-md-4">
-                  <input type="radio" name="p" id="pay-w" class="d-none payment-input" checked>
-                  <label for="pay-w" class="payment-option text-center">
-                    <i class="bi bi-wallet2 h2 mb-2 d-block"></i> <span class="fw-bold">Wallet</span>
-                  </label>
-                </div>
-                <div class="col-md-4">
-                  <input type="radio" name="p" id="pay-u" class="d-none payment-input">
-                  <label for="pay-u" class="payment-option text-center">
-                    <i class="bi bi-qr-code h2 mb-2 d-block"></i> <span class="fw-bold">UPI</span>
-                  </label>
-                </div>
-                <div class="col-md-4">
-                  <input type="radio" name="p" id="pay-c" class="d-none payment-input">
-                  <label for="pay-c" class="payment-option text-center">
-                    <i class="bi bi-truck h2 mb-2 d-block"></i> <span class="fw-bold">COD</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
+  <section class="checkout-container">
+    <div class="container">
+      <div class="row g-4">
 
-          <div class="col-lg-4">
-            <div class="card card-custom p-4 sticky-top" style="top: 30px;">
-              <h5 class="fw-bold mb-4">Order Summary</h5>
-              <div id="checkoutItems"></div>
-
-              <div class="mb-4">
-                <label class="small fw-bold text-secondary mb-2">OFFERS FOR YOU</label>
-                <div class="coupon-list-container" id="couponContainer"></div>
-
-              </div>
-
-              <div class="d-flex justify-content-between mb-2"><span>Subtotal</span><span class="fw-bold"
-                  id="checkoutSubtotal">₹0</span></div>
-              <div class="d-flex justify-content-between mb-2 text-success"><span>Discount</span><span class="fw-bold"
-                  id="discAmount">-₹0.00</span></div>
-              <hr>
-              <div class="d-flex justify-content-between mb-4">
-                <span class="h5 fw-bold">Total</span><span class="fw-bold" id="grandTotal">₹0</span>
-
-              </div>
-
-              <button class="btn btn-primary w-100 py-3 fw-bold rounded-pill shadow-lg border-0" onclick="finalCheck()">
-                Complete Order <i class="bi bi-arrow-right ms-2"></i>
+        <div class="col-lg-8">
+          <div class="card card-custom p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h5 class="fw-bold m-0"><i class="bi bi-geo-alt me-2"></i>Shipping Details</h5>
+              <button class="btn btn-outline-primary btn-sm fw-bold rounded-pill px-4" onclick="openAddressPopup()"
+                data-bs-toggle="modal" data-bs-target="#addressPopup">
+                Change Address
               </button>
+
+
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-
-
-    <footer>
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-4 mb-4">
-            <p class="footer-address">400 University Drive Suite 200 Coral Gables, <br>FL 33134 USA</p>
-          </div>
-          <div class="col-lg-2 col-6 mb-4">
-            <span class="footer-title">Links</span>
-            <a href="index.html">Home</a>
-            <a href="shop.html">Shop</a>
-            <a href="about.html">About</a>
-            <a href="contact.html">Contact</a>
-          </div>
-          <div class="col-lg-2 col-6 mb-4">
-            <span class="footer-title">Help</span>
-            <a href="#">Payment Options</a>
-            <a href="#">Returns</a>
-            <a href="#">Privacy Policies</a>
-          </div>
-          <div class="col-lg-4 mb-4">
-            <span class="footer-title">Newsletter</span>
-            <div class="newsletter-form">
-              <input type="email" class="newsletter-input" placeholder="Enter Your Email Address">
-              <button class="newsletter-btn">SUBSCRIBE</button>
-            </div>
-          </div>
-        </div>
-        <div class="copyright">
-          2026 ToyStore. All rights reserved
-        </div>
-      </div>
-    </footer>
-
-    <div class="modal fade" id="addressPopup" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content shadow-lg">
-          <div class="modal-header border-0 pb-0">
-            <h5 class="fw-bold">New Shipping Address</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <div id="addressList" class="d-flex flex-column gap-3">
-              <!-- Saved addresses from My Account will be injected here -->
-            </div>
-
-            <div class="text-center mt-3">
-              <a href="address-book.html" class="text-decoration-none fw-bold">
-                + Add new address
-              </a>
+            <div class="border rounded-4 p-4 d-flex align-items-center bg-white shadow-sm">
+              <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
+                <i class="bi bi-house-door-fill text-primary h4 mb-0"></i>
+              </div>
+              <div>
+                <p class="mb-0 fw-bold" id="displayUser">John Doe</p>
+                <small class="text-muted" id="displayAddr">123 Tech Avenue, Silicon Valley, CA 94043</small>
+              </div>
             </div>
           </div>
 
+          <div class="card card-custom p-4">
+            <h5 class="fw-bold mb-4"><i class="bi bi-credit-card me-2"></i>Payment Method</h5>
+            <div class="row g-3">
+              <div class="col-md-4">
+                <input type="radio" name="p" id="pay-w" class="d-none payment-input" checked>
+                <label for="pay-w" class="payment-option text-center">
+                  <i class="bi bi-wallet2 h2 mb-2 d-block"></i> <span class="fw-bold">Wallet</span>
+                </label>
+              </div>
+              <div class="col-md-4">
+                <input type="radio" name="p" id="pay-u" class="d-none payment-input">
+                <label for="pay-u" class="payment-option text-center">
+                  <i class="bi bi-qr-code h2 mb-2 d-block"></i> <span class="fw-bold">UPI</span>
+                </label>
+              </div>
+              <div class="col-md-4">
+                <input type="radio" name="p" id="pay-c" class="d-none payment-input">
+                <label for="pay-c" class="payment-option text-center">
+                  <i class="bi bi-truck h2 mb-2 d-block"></i> <span class="fw-bold">COD</span>
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <!-- LOGIN REQUIRED MODAL -->
-    <div class="modal fade" id="loginRequiredModal" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content rounded-4">
+        <div class="col-lg-4">
+          <div class="card card-custom p-4 sticky-top" style="top: 30px;">
+            <h5 class="fw-bold mb-4">Order Summary</h5>
+            <div id="checkoutItems"></div>
 
-          <div class="modal-header border-0">
-            <h5 class="modal-title fw-bold">Login Required</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
+            <div class="mb-4">
+              <label class="small fw-bold text-secondary mb-2">OFFERS FOR YOU</label>
+              <div class="coupon-list-container" id="couponContainer"></div>
 
-          <div class="modal-body text-center">
-            <i class="bi bi-lock-fill fs-1 text-warning mb-3"></i>
-            <p class="mb-3">
-              You need to login to access your account.
-            </p>
-          </div>
+            </div>
 
-          <div class="modal-footer border-0 justify-content-center gap-3">
-            <a href="signup.html" class="btn btn-dark rounded-pill px-4">
-              Login / Sign Up
-            </a>
-            <button class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
-              Cancel
+            <div class="d-flex justify-content-between mb-2"><span>Subtotal</span><span class="fw-bold"
+                id="checkoutSubtotal">₹0</span></div>
+            <div class="d-flex justify-content-between mb-2 text-success"><span>Discount</span><span class="fw-bold"
+                id="discAmount">-₹0.00</span></div>
+            <hr>
+            <div class="d-flex justify-content-between mb-4">
+              <span class="h5 fw-bold">Total</span><span class="fw-bold" id="grandTotal">₹0</span>
+
+            </div>
+
+            <button class="btn btn-primary w-100 py-3 fw-bold rounded-pill shadow-lg border-0" onclick="finalCheck()">
+              Complete Order <i class="bi bi-arrow-right ms-2"></i>
             </button>
           </div>
-
         </div>
       </div>
     </div>
+  </section>
 
 
-    <script>
 
-      document.addEventListener("DOMContentLoaded", async () => {
-        let isLoggedIn = false;
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 mb-4">
+          <p class="footer-address">400 University Drive Suite 200 Coral Gables, <br>FL 33134 USA</p>
+        </div>
+        <div class="col-lg-2 col-6 mb-4">
+          <span class="footer-title">Links</span>
+          <a href="index.html">Home</a>
+          <a href="shop.html">Shop</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="col-lg-2 col-6 mb-4">
+          <span class="footer-title">Help</span>
+          <a href="#">Payment Options</a>
+          <a href="#">Returns</a>
+          <a href="#">Privacy Policies</a>
+        </div>
+        <div class="col-lg-4 mb-4">
+          <span class="footer-title">Newsletter</span>
+          <div class="newsletter-form">
+            <input type="email" class="newsletter-input" placeholder="Enter Your Email Address">
+            <button class="newsletter-btn">SUBSCRIBE</button>
+          </div>
+        </div>
+      </div>
+      <div class="copyright">
+        2026 ToyStore. All rights reserved
+      </div>
+    </div>
+  </footer>
 
-        try {
-          const res = await fetch("/api/check-auth", {
-            credentials: "include"
-          });
-          const data = await res.json();
-          isLoggedIn = data.loggedIn === true;
-        } catch {
-          isLoggedIn = false;
-        }
+  <div class="modal fade" id="addressPopup" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content shadow-lg">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="fw-bold">New Shipping Address</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="addressList" class="d-flex flex-column gap-3">
+            <!-- Saved addresses from My Account will be injected here -->
+          </div>
 
-        // 🔐 Protect Cart / Wishlist / Account
-        document.querySelectorAll(".auth-protected").forEach(link => {
-          link.addEventListener("click", e => {
-            if (!isLoggedIn) {
-              e.preventDefault();
-              showLoginModal();
-            }
-          });
+          <div class="text-center mt-3">
+            <button class="btn btn-link text-decoration-none fw-bold" data-bs-toggle="modal"
+              data-bs-target="#addAddressModal"
+              onclick="bootstrap.Modal.getInstance(document.getElementById('addressPopup')).hide()">
+              + Add new address
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD ADDRESS MODAL -->
+  <div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
+        <div class="modal-header border-0 pt-4 px-4">
+          <h5 class="modal-title fw-bold" id="addAddressModalLabel">Add New Address</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <form id="addAddressForm">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label small fw-bold">Full Name</label>
+                <input id="newFullName" class="form-control py-2" required style="border-color: #D9D9D9;">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label small fw-bold">Phone Number</label>
+                <input id="newPhone" class="form-control py-2" required style="border-color: #D9D9D9;">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Street Address</label>
+              <input id="newAddressLine" class="form-control py-2 mb-2" required style="border-color: #D9D9D9;">
+              <input id="newAddressLine2" class="form-control py-2"
+                placeholder="Apartment, suite, unit, etc. (optional)" style="border-color: #D9D9D9;">
+            </div>
+
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label small fw-bold">City</label>
+                <input id="newCity" class="form-control py-2" required style="border-color: #D9D9D9;">
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label small fw-bold">Region / State</label>
+                <select id="newState" class="form-select py-2" style="border-color: #D9D9D9;">
+                  <option selected>Kerala</option>
+                  <option>Tamilnadu</option>
+                  <option>Karnadaka</option>
+                </select>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label small fw-bold">Postcode / ZIP</label>
+                <input id="newPincode" class="form-control py-2" required style="border-color: #D9D9D9;">
+              </div>
+            </div>
+
+            <div class="form-check mt-2 mb-4">
+              <input class="form-check-input" type="checkbox" id="newDefaultAddress" checked>
+              <label class="form-check-label small text-muted" for="newDefaultAddress">
+                Set as default shipping address
+              </label>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 border-top pt-4">
+              <button type="button" class="btn px-4" data-bs-dismiss="modal" style="font-weight: 500;">Cancel</button>
+              <button type="submit" class="btn text-white px-4"
+                style="background-color: var(--primary-color); font-weight: 500;">Save Address</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN REQUIRED MODAL -->
+  <div class="modal fade" id="loginRequiredModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4">
+
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold">Login Required</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body text-center">
+          <i class="bi bi-lock-fill fs-1 text-warning mb-3"></i>
+          <p class="mb-3">
+            You need to login to access your account.
+          </p>
+        </div>
+
+        <div class="modal-footer border-0 justify-content-center gap-3">
+          <a href="signup.html" class="btn btn-dark rounded-pill px-4">
+            Login / Sign Up
+          </a>
+          <button class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      let isLoggedIn = false;
+
+      try {
+        const res = await fetch("/api/check-auth", {
+          credentials: "include"
         });
+        const data = await res.json();
+        isLoggedIn = data.loggedIn === true;
+      } catch {
+        isLoggedIn = false;
+      }
 
-        // 👤 Account Icon Logic
-        const desktop = document.getElementById("auth-nav");
-        const mobile = document.getElementById("auth-nav-mobile");
+      // 🔐 Protect Cart / Wishlist / Account
+      document.querySelectorAll(".auth-protected").forEach(link => {
+        link.addEventListener("click", e => {
+          if (!isLoggedIn) {
+            e.preventDefault();
+            showLoginModal();
+          }
+        });
+      });
 
-        if (isLoggedIn) {
-          const html = `
+      // 👤 Account Icon Logic
+      const desktop = document.getElementById("auth-nav");
+      const mobile = document.getElementById("auth-nav-mobile");
+
+      if (isLoggedIn) {
+        const html = `
         <a href="my_account.html" class="nav-icon" title="My Account">
           <i class="bi bi-person-circle"></i>
         </a>
@@ -512,94 +579,94 @@
           <i class="bi bi-bag-check"></i>
         </a>
       `;
-          desktop.innerHTML = html;
-          mobile.innerHTML = html;
+        desktop.innerHTML = html;
+        mobile.innerHTML = html;
 
-          // ❌ REMOVE SIGNUP FROM NAV
-          document.querySelectorAll(".signup-link").forEach(el => el.remove());
-        } else {
-          const html = `
+        // ❌ REMOVE SIGNUP FROM NAV
+        document.querySelectorAll(".signup-link").forEach(el => el.remove());
+      } else {
+        const html = `
         <a href="#" class="nav-icon login-required">
           <i class="bi bi-person"></i>
         </a>
       `;
-          desktop.innerHTML = html;
-          mobile.innerHTML = html;
+        desktop.innerHTML = html;
+        mobile.innerHTML = html;
 
-          document.querySelectorAll(".login-required").forEach(el => {
-            el.addEventListener("click", e => {
-              e.preventDefault();
-              showLoginModal();
-            });
+        document.querySelectorAll(".login-required").forEach(el => {
+          el.addEventListener("click", e => {
+            e.preventDefault();
+            showLoginModal();
           });
-        }
-      });
-
-      function showLoginModal() {
-        const modal = new bootstrap.Modal(
-          document.getElementById("loginRequiredModal")
-        );
-        modal.show();
+        });
       }
-    </script>
+    });
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
+    function showLoginModal() {
+      const modal = new bootstrap.Modal(
+        document.getElementById("loginRequiredModal")
+      );
+      modal.show();
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
 
 
-      function saveAddress() {
-        const name = document.getElementById('in-name').value;
-        const street = document.getElementById('in-street').value;
-        const city = document.getElementById('in-city').value;
+    function saveAddress() {
+      const name = document.getElementById('in-name').value;
+      const street = document.getElementById('in-street').value;
+      const city = document.getElementById('in-city').value;
 
-        if (name && street) {
-          document.getElementById('displayUser').innerText = name;
-          document.getElementById('displayAddr').innerText = street + ", " + city;
-          bootstrap.Modal.getInstance(document.getElementById('addressPopup')).hide();
-        } else {
-          alert("Please fill name and address");
-        }
+      if (name && street) {
+        document.getElementById('displayUser').innerText = name;
+        document.getElementById('displayAddr').innerText = street + ", " + city;
+        bootstrap.Modal.getInstance(document.getElementById('addressPopup')).hide();
+      } else {
+        alert("Please fill name and address");
       }
+    }
 
 
-    </script>
-    <script>
-      let subtotal = 0;
-      let appliedDiscount = 0;
-      let appliedCoupon = null;
+  </script>
+  <script>
+    let subtotal = 0;
+    let appliedDiscount = 0;
+    let appliedCoupon = null;
 
-      async function loadCheckoutCart() {
-        try {
-          const res = await fetch("/api/cart", {
-            credentials: "include"
-          });
+    async function loadCheckoutCart() {
+      try {
+        const res = await fetch("/api/cart", {
+          credentials: "include"
+        });
 
-          if (!res.ok) {
-            alert("Please login to continue checkout");
-            window.location.href = "/login.html";
-            return;
-          }
+        if (!res.ok) {
+          alert("Please login to continue checkout");
+          window.location.href = "/login.html";
+          return;
+        }
 
-          const data = await res.json();
-          const items = data.items || [];
+        const data = await res.json();
+        const items = data.items || [];
 
-          const container = document.getElementById("checkoutItems");
-          container.innerHTML = "";
-          subtotal = 0;
+        const container = document.getElementById("checkoutItems");
+        container.innerHTML = "";
+        subtotal = 0;
 
-          if (items.length === 0) {
-            container.innerHTML = `<p class="text-muted">Your cart is empty</p>`;
-            updateTotals();
-            return;
-          }
+        if (items.length === 0) {
+          container.innerHTML = `<p class="text-muted">Your cart is empty</p>`;
+          updateTotals();
+          return;
+        }
 
-          items.forEach(item => {
-            const price = item.product.finalPrice;
-            const qty = item.quantity;
-            const itemTotal = price * qty;
-            subtotal += itemTotal;
+        items.forEach(item => {
+          const price = item.product.finalPrice;
+          const qty = item.quantity;
+          const itemTotal = price * qty;
+          subtotal += itemTotal;
 
-            container.innerHTML += `
+          container.innerHTML += `
                   <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
                       <img src="${item.product.images[0]}" 
                           class="rounded-3 me-3" width="65">
@@ -610,371 +677,447 @@
                       <span class="fw-bold">₹${itemTotal}</span>
                   </div>
               `;
-          });
+        });
 
-          updateTotals();
+        updateTotals();
 
-        } catch (err) {
-          console.error(err);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function updateTotals() {
+      document.getElementById("checkoutSubtotal").innerText = `₹${subtotal}`;
+      document.getElementById("discAmount").innerText = `-₹${appliedDiscount}`;
+      document.getElementById("grandTotal").innerText =
+        `₹${subtotal - appliedDiscount}`;
+    }
+
+    document.addEventListener("DOMContentLoaded", loadCheckoutCart);
+  </script>
+
+  <script>
+    // 1️⃣ Load coupons from admin-created coupons
+    async function loadCoupons() {
+      const res = await fetch("/api/coupons/checkout");
+
+      const coupons = await res.json();
+
+      const container = document.getElementById("couponContainer");
+      container.innerHTML = "";
+
+      const today = new Date();
+
+      coupons.forEach(coupon => {
+        const start = new Date(coupon.startDate);
+        const end = new Date(coupon.expiryDate);
+
+        // ❌ Hide expired coupons
+        if (today > end) return;
+
+        const div = document.createElement("div");
+        div.className = "coupon-card";
+
+        // 🟡 Upcoming → fade
+        if (today < start) {
+          div.classList.add("upcoming");
         }
-      }
 
-      function updateTotals() {
-        document.getElementById("checkoutSubtotal").innerText = `₹${subtotal}`;
-        document.getElementById("discAmount").innerText = `-₹${appliedDiscount}`;
-        document.getElementById("grandTotal").innerText =
-          `₹${subtotal - appliedDiscount}`;
-      }
-
-      document.addEventListener("DOMContentLoaded", loadCheckoutCart);
-    </script>
-
-    <script>
-      // 1️⃣ Load coupons from admin-created coupons
-      async function loadCoupons() {
-        const res = await fetch("/api/coupons/checkout");
-
-        const coupons = await res.json();
-
-        const container = document.getElementById("couponContainer");
-        container.innerHTML = "";
-
-        const today = new Date();
-
-        coupons.forEach(coupon => {
-          const start = new Date(coupon.startDate);
-          const end = new Date(coupon.expiryDate);
-
-          // ❌ Hide expired coupons
-          if (today > end) return;
-
-          const div = document.createElement("div");
-          div.className = "coupon-card";
-
-          // 🟡 Upcoming → fade
-          if (today < start) {
-            div.classList.add("upcoming");
-          }
-
-          div.innerHTML = `
+        div.innerHTML = `
               <span class="coupon-code">${coupon.code}</span><br>
               <small class="text-muted d-block">
                   ${coupon.discountType === "percentage"
-              ? `${coupon.discountValue}% OFF`
-              : coupon.discountType === "flat"
-                ? `₹${coupon.discountValue} OFF`
-                : "FREE SHIPPING"
-            }
+            ? `${coupon.discountValue}% OFF`
+            : coupon.discountType === "flat"
+              ? `₹${coupon.discountValue} OFF`
+              : "FREE SHIPPING"
+          }
               </small>
               ${coupon.description
-              ? `<small class="text-secondary">${coupon.description}</small>`
-              : ""
-            }
+            ? `<small class="text-secondary">${coupon.description}</small>`
+            : ""
+          }
           `;
 
-          // ✅ Only active coupons clickable
-          if (today >= start && today <= end) {
-            div.onclick = () => applyCoupon(div, coupon);
-          }
+        // ✅ Only active coupons clickable
+        if (today >= start && today <= end) {
+          div.onclick = () => applyCoupon(div, coupon);
+        }
 
-          container.appendChild(div);
+        container.appendChild(div);
+      });
+    }
+
+
+
+    // 2️⃣ Apply coupon logic
+    function applyCoupon(element, coupon) {
+
+      // 🔒 Safety: block upcoming coupons
+      const today = new Date();
+      if (today < new Date(coupon.startDate)) {
+        alert("⏳ This coupon is not active yet");
+        return;
+      }
+
+      if (subtotal < coupon.minCartValue) {
+        alert(`Minimum cart value ₹${coupon.minCartValue} required`);
+        return;
+      }
+
+      document.querySelectorAll(".coupon-card")
+        .forEach(c => c.classList.remove("active"));
+      element.classList.add("active");
+
+      appliedDiscount = 0;
+
+      if (coupon.discountType === "percentage") {
+        appliedDiscount = Math.floor((subtotal * coupon.discountValue) / 100);
+      }
+      else if (coupon.discountType === "flat") {
+        appliedDiscount = coupon.discountValue;
+      }
+      else if (coupon.discountType === "free_shipping") {
+        appliedDiscount = 0;
+        alert("🚚 Free Shipping Applied!");
+      }
+
+      appliedCoupon = coupon.code;
+
+      document.getElementById("discAmount").innerText =
+        appliedDiscount > 0 ? `-₹${appliedDiscount}` : `₹0`;
+
+      document.getElementById("grandTotal").innerText =
+        `₹${(subtotal - appliedDiscount).toFixed(2)}`;
+    }
+
+
+    // 3️⃣ Place order (send coupon to backend)
+
+
+    async function finalCheck() {
+      try {
+        const paymentInput =
+          document.querySelector('input[name="p"]:checked');
+
+        if (!paymentInput) {
+          Swal.fire({
+            icon: "warning",
+            title: "Select payment method"
+          });
+          return;
+        }
+
+        let paymentMethod;
+
+        switch (paymentInput.id) {
+          case "pay-w":
+            paymentMethod = "wallet";
+            break;
+          case "pay-u":
+            paymentMethod = "upi";
+            break;
+          case "pay-c":
+            paymentMethod = "cod";
+            break;
+        }
+
+
+        if (!paymentMethod) {
+          Swal.fire({
+            icon: "warning",
+            title: "Select payment method",
+            confirmButtonColor: "#6366f1"
+          });
+          return;
+        }
+
+        if (!selectedAddress) {
+          Swal.fire({
+            icon: "warning",
+            title: "Select delivery address"
+          });
+          return;
+        }
+
+        const totalAmount = subtotal - appliedDiscount;
+
+        // 🟢 UPI → Razorpay TEST
+        if (paymentMethod === "upi") {
+          await startRazorpay(totalAmount);
+          return;
+        }
+
+        // 🟡 COD / Wallet → normal order flow
+        const res = await fetch("/api/orders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            subtotal,
+            couponCode: appliedCoupon || null,
+            paymentMethod,
+            shippingAddress: selectedAddress
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "Order failed");
+
+        Swal.fire({
+          icon: "success",
+          title: "Order Placed!",
+          text: appliedCoupon
+            ? `Coupon "${appliedCoupon}" applied successfully ✨`
+            : "Order placed without coupon",
+          confirmButtonColor: "#6366f1",
+          timer: 3000,
+          timerProgressBar: true
+        }).then(() => {
+          window.location.href = "order.html";
+        });
+
+      } catch (err) {
+        Swal.fire({
+          icon: "error",
+          title: "Order Failed",
+          text: "Something went wrong. Please try again.",
+          confirmButtonColor: "#ef4444"
         });
       }
+    }
+  </script>
 
 
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-      // 2️⃣ Apply coupon logic
-      function applyCoupon(element, coupon) {
+  <script>
+    async function startRazorpay(amount) {
+      try {
+        // 1️⃣ Create Razorpay order (TEST)
+        const res = await fetch("/api/payment/create-order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ amount })
+        });
 
-        // 🔒 Safety: block upcoming coupons
-        const today = new Date();
-        if (today < new Date(coupon.startDate)) {
-          alert("⏳ This coupon is not active yet");
-          return;
-        }
+        const data = await res.json();
+        if (!data.success) throw new Error("Razorpay order failed");
 
-        if (subtotal < coupon.minCartValue) {
-          alert(`Minimum cart value ₹${coupon.minCartValue} required`);
-          return;
-        }
+        // 2️⃣ Open Razorpay UPI checkout
+        const options = {
+          key: "rzp_test_SC1XM124Zf0QHK",// 🔑 TEST KEY ONLY
+          amount: data.order.amount,
+          currency: "INR",
+          name: "Wings Premium",
+          description: "Order Payment",
+          order_id: data.order.id,
 
-        document.querySelectorAll(".coupon-card")
-          .forEach(c => c.classList.remove("active"));
-        element.classList.add("active");
+          method: {
+            upi: true,
+            card: false,
+            netbanking: false,
+            wallet: false
+          },
 
-        appliedDiscount = 0;
+          handler: async function (response) {
+            await savePaidOrder(response);
+          },
 
-        if (coupon.discountType === "percentage") {
-          appliedDiscount = Math.floor((subtotal * coupon.discountValue) / 100);
-        }
-        else if (coupon.discountType === "flat") {
-          appliedDiscount = coupon.discountValue;
-        }
-        else if (coupon.discountType === "free_shipping") {
-          appliedDiscount = 0;
-          alert("🚚 Free Shipping Applied!");
-        }
+          theme: { color: "#6366f1" }
+        };
 
-        appliedCoupon = coupon.code;
+        new Razorpay(options).open();
 
-        document.getElementById("discAmount").innerText =
-          appliedDiscount > 0 ? `-₹${appliedDiscount}` : `₹0`;
-
-        document.getElementById("grandTotal").innerText =
-          `₹${(subtotal - appliedDiscount).toFixed(2)}`;
+      } catch (err) {
+        Swal.fire({
+          icon: "error",
+          title: "Payment Failed",
+          text: err.message
+        });
       }
+    }
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      loadCoupons();
+    });
+  </script>
 
+  <script>
+    let savedAddresses = [];
+    let selectedAddress = null;
 
-      // 3️⃣ Place order (send coupon to backend)
+    async function loadUserAddresses() {
+      try {
+        const res = await fetch("/api/users/me", {
+          credentials: "include"
+        });
 
+        if (!res.ok) return;
 
-      async function finalCheck() {
-        try {
-          const paymentInput =
-            document.querySelector('input[name="p"]:checked');
+        const data = await res.json();
+        savedAddresses = data.user.addresses || [];
 
-          if (!paymentInput) {
-            Swal.fire({
-              icon: "warning",
-              title: "Select payment method"
-            });
-            return;
-          }
+        if (savedAddresses.length === 0) return;
 
-          let paymentMethod;
+        // ✅ pick default address
+        selectedAddress =
+          savedAddresses.find(a => a.isDefault) || savedAddresses[0];
 
-          switch (paymentInput.id) {
-            case "pay-w":
-              paymentMethod = "wallet";
-              break;
-            case "pay-u":
-              paymentMethod = "upi";
-              break;
-            case "pay-c":
-              paymentMethod = "cod";
-              break;
-          }
+        showAddress(selectedAddress);
 
-
-          if (!paymentMethod) {
-            Swal.fire({
-              icon: "warning",
-              title: "Select payment method",
-              confirmButtonColor: "#6366f1"
-            });
-            return;
-          }
-
-          const totalAmount = subtotal - appliedDiscount;
-
-          // 🟢 UPI → Razorpay TEST
-          if (paymentMethod === "upi") {
-            await startRazorpay(totalAmount);
-            return;
-          }
-
-          // 🟡 COD / Wallet → normal order flow
-          const res = await fetch("/api/orders", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({
-              subtotal,
-              couponCode: appliedCoupon || null,
-              paymentMethod
-            })
-          });
-
-          if (!res.ok) throw new Error("Order failed");
-
-          Swal.fire({
-            icon: "success",
-            title: "Order Placed!",
-            text: appliedCoupon
-              ? `Coupon "${appliedCoupon}" applied successfully ✨`
-              : "Order placed without coupon",
-            confirmButtonColor: "#6366f1",
-            timer: 3000,
-            timerProgressBar: true
-          }).then(() => {
-            window.location.href = "order.html";
-          });
-
-        } catch (err) {
-          Swal.fire({
-            icon: "error",
-            title: "Order Failed",
-            text: "Something went wrong. Please try again.",
-            confirmButtonColor: "#ef4444"
-          });
-        }
+      } catch (err) {
+        console.error("Failed to load addresses", err);
       }
-    </script>
+    }
 
+    function showAddress(addr) {
+      document.getElementById("displayUser").innerText =
+        addr.fullName || "—";
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <script>
-      async function startRazorpay(amount) {
-        try {
-          // 1️⃣ Create Razorpay order (TEST)
-          const res = await fetch("/api/payment/create-order", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({ amount })
-          });
-
-          const data = await res.json();
-          if (!data.success) throw new Error("Razorpay order failed");
-
-          // 2️⃣ Open Razorpay UPI checkout
-          const options = {
-            key: "rzp_test_SC1XM124Zf0QHK",// 🔑 TEST KEY ONLY
-            amount: data.order.amount,
-            currency: "INR",
-            name: "Wings Premium",
-            description: "Order Payment",
-            order_id: data.order.id,
-
-            method: {
-              upi: true,
-              card: false,
-              netbanking: false,
-              wallet: false
-            },
-
-            handler: async function (response) {
-              await savePaidOrder(response);
-            },
-
-            theme: { color: "#6366f1" }
-          };
-
-          new Razorpay(options).open();
-
-        } catch (err) {
-          Swal.fire({
-            icon: "error",
-            title: "Payment Failed",
-            text: err.message
-          });
-        }
-      }
-    </script>
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    loadCoupons();
-  });
-</script>
-
-    <script>
-      let savedAddresses = [];
-      let selectedAddress = null;
-
-      async function loadUserAddresses() {
-        try {
-          const res = await fetch("/api/users/me", {
-            credentials: "include"
-          });
-
-          if (!res.ok) return;
-
-          const data = await res.json();
-          savedAddresses = data.user.addresses || [];
-
-          if (savedAddresses.length === 0) return;
-
-          // ✅ pick default address
-          selectedAddress =
-            savedAddresses.find(a => a.isDefault) || savedAddresses[0];
-
-          showAddress(selectedAddress);
-
-        } catch (err) {
-          console.error("Failed to load addresses", err);
-        }
-      }
-
-      function showAddress(addr) {
-        document.getElementById("displayUser").innerText =
-          addr.fullName || "—";
-
-        document.getElementById("displayAddr").innerText =
-          `${addr.addressLine} - ${addr.pincode}`;
-      }
+      document.getElementById("displayAddr").innerText =
+        `${addr.addressLine} - ${addr.pincode}`;
+    }
 
 
 
 
-      document.addEventListener("DOMContentLoaded", loadUserAddresses);
+    document.addEventListener("DOMContentLoaded", loadUserAddresses);
 
-      function openAddressPopup() {
-        const list = document.getElementById("addressList");
-        list.innerHTML = "";
+    function openAddressPopup() {
+      const list = document.getElementById("addressList");
+      list.innerHTML = "";
 
-        savedAddresses.forEach(addr => {
-          const div = document.createElement("div");
-          div.className = "border rounded-4 p-3 cursor-pointer";
+      savedAddresses.forEach(addr => {
+        const div = document.createElement("div");
+        div.className = "border rounded-4 p-3 cursor-pointer";
 
-          div.innerHTML = `
+        div.innerHTML = `
         <strong>${addr.fullName}</strong><br>
         <small class="text-muted">
-          ${addr.street}, ${addr.city} - ${addr.pincode}
+          ${addr.addressLine}, ${addr.city} - ${addr.pincode}
         </small>
       `;
 
-          div.onclick = () => {
-            selectedAddress = addr;
-            showAddress(addr);
-            bootstrap.Modal.getInstance(
-              document.getElementById("addressPopup")
-            ).hide();
-          };
+        div.onclick = () => {
+          selectedAddress = addr;
+          showAddress(addr);
+          bootstrap.Modal.getInstance(
+            document.getElementById("addressPopup")
+          ).hide();
+        };
 
-          list.appendChild(div);
+        list.appendChild(div);
+      });
+    }
+
+  </script>
+  <script>
+    async function savePaidOrder(payment) {
+      try {
+        const res = await fetch("/api/orders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            subtotal,
+            couponCode: appliedCoupon || null,
+            paymentMethod: "upi",
+            razorpayPayment: payment,
+            shippingAddress: selectedAddress
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "Order save failed");
+
+        Swal.fire({
+          icon: "success",
+          title: "Payment Successful 🎉",
+          confirmButtonColor: "#6366f1",
+          timer: 2500
+        }).then(() => {
+          window.location.href = "order.html";
+        });
+
+      } catch (err) {
+        Swal.fire({
+          icon: "error",
+          title: "Order Failed",
+          text: err.message
         });
       }
+    }
+  </script>
 
-    </script>
-    <script>
-      async function savePaidOrder(payment) {
-        try {
-          const res = await fetch("/api/orders", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({
-              subtotal,
-              couponCode: appliedCoupon || null,
-              paymentMethod: "upi",
-              razorpayPayment: payment
-            })
-          });
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-          if (!res.ok) throw new Error("Order save failed");
+  <script>
+    document.getElementById("addAddressForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-          Swal.fire({
-            icon: "success",
-            title: "Payment Successful 🎉",
-            confirmButtonColor: "#6366f1",
-            timer: 2500
-          }).then(() => {
-            window.location.href = "order.html";
-          });
+      const payload = {
+        fullName: document.getElementById("newFullName").value,
+        phone: document.getElementById("newPhone").value,
+        addressLine: document.getElementById("newAddressLine").value +
+          (document.getElementById("newAddressLine2").value ? " " + document.getElementById("newAddressLine2").value : ""),
+        city: document.getElementById("newCity").value,
+        state: document.getElementById("newState").value,
+        pincode: document.getElementById("newPincode").value,
+        isDefault: document.getElementById("newDefaultAddress").checked
+      };
 
-        } catch (err) {
-          Swal.fire({
-            icon: "error",
-            title: "Order Failed",
-            text: err.message
-          });
+      try {
+        const res = await fetch("/api/users/addresses", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.message || "Failed to add address");
+
+        // 1. Close modal
+        bootstrap.Modal.getInstance(document.getElementById("addAddressModal")).hide();
+
+        // 2. Clear form
+        e.target.reset();
+
+        // 3. Reload addresses & Select new one
+        await loadUserAddresses();
+
+        // 4. Find the new address and select it
+        if (data.addresses && data.addresses.length > 0) {
+          // The API returns the full list, the last one might be the new one, 
+          // or we can find by matching fields if needed. 
+          // For now, let's assume if we reload, we can just select the last one or the default one.
+          const latest = data.addresses[data.addresses.length - 1];
+          selectedAddress = latest;
+          showAddress(selectedAddress);
         }
+
+        Swal.fire({
+          icon: "success",
+          title: "Address Added",
+          text: "Your new address has been added successfully",
+          timer: 2000,
+          showConfirmButton: false
+        });
+
+      } catch (err) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: err.message
+        });
       }
-    </script>
+    });
+  </script>
 
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</body>
 
-  </body>
-
-  </html>
+</html>

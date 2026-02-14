@@ -1,4 +1,6 @@
 const Product = require("../models/Product");
+const Offer = require("../models/Offer");
+const { calculateProductFinalPrice } = require("../utils/priceCalculator");
 
 /* =========================
    ➕ ADD PRODUCT (ADMIN)
@@ -218,7 +220,20 @@ exports.getPublicProducts = async (req, res) => {
       .populate("category", "name")
       .sort(sortOption);
 
-    res.status(200).json(products);
+    // --- Dynamic Price Calculation ---
+    const activeOffers = await Offer.find({
+      isActive: true,
+      startDate: { $lte: new Date() },
+      endDate: { $gte: new Date() }
+    });
+
+    const productsWithOffers = products.map(product => {
+      const productObj = product.toObject();
+      const priceDetails = calculateProductFinalPrice(productObj, activeOffers);
+      return { ...productObj, ...priceDetails };
+    });
+
+    res.status(200).json(productsWithOffers);
 
   } catch (error) {
     console.error("FETCH PRODUCTS ERROR:", error);
@@ -283,7 +298,17 @@ exports.getSingleProduct = async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    res.status(200).json(product);
+    // --- Dynamic Price Calculation ---
+    const activeOffers = await Offer.find({
+      isActive: true,
+      startDate: { $lte: new Date() },
+      endDate: { $gte: new Date() }
+    });
+
+    const productObj = product.toObject();
+    const priceDetails = calculateProductFinalPrice(productObj, activeOffers);
+
+    res.status(200).json({ ...productObj, ...priceDetails });
 
   } catch (error) {
     console.error("GET SINGLE PRODUCT ERROR:", error);
@@ -309,9 +334,22 @@ exports.getRelatedProducts = async (req, res) => {
     })
       .limit(4)
       .populate("category", "name")
-      .select("name finalPrice images category");
+      .select("name finalPrice images category discountPrice price"); // Added discountPrice/price for calc
 
-    res.status(200).json(relatedProducts);
+    // --- Dynamic Price Calculation ---
+    const activeOffers = await Offer.find({
+      isActive: true,
+      startDate: { $lte: new Date() },
+      endDate: { $gte: new Date() }
+    });
+
+    const relatedWithOffers = relatedProducts.map(p => {
+      const pObj = p.toObject();
+      const priceDetails = calculateProductFinalPrice(pObj, activeOffers);
+      return { ...pObj, ...priceDetails };
+    });
+
+    res.status(200).json(relatedWithOffers);
 
   } catch (error) {
     console.error("RELATED PRODUCTS ERROR:", error);

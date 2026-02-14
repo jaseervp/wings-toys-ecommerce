@@ -7,67 +7,92 @@ const generateToken = require("../utils/generateToken");
 
 // SIGNUP LOGIC
 exports.registerUser = async (req, res) => {
-    try {
-        const { fullName, email, password } = req.body;
+  try {
+    const { fullName, email, password } = req.body;
 
-        if (!fullName || !email || !password) {
-            return res.status(400).json({ message: "All fields required" });
-        }
+    if (!fullName || !email || !password) {
+      return res.status(400).json({ message: "All fields required" });
+    }
 
-        const userExists = await User.findOne({ email });
-        if (userExists) {
-            return res.status(400).json({ message: "User already exists" });
-        }
+    const userExists = await User.findOne({ email });
 
+    if (userExists) {
+      if (userExists.isVerified) {
+        return res.status(400).json({ message: "User already exists" });
+      } else {
+        // User exists but NOT verified -> Update details & Resend OTP
         const hashedPassword = await bcrypt.hash(password, 10);
-
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-        const user = await User.create({
-            fullName,
-            email,
-            password: hashedPassword,
-            emailOtp: otp,
-            emailOtpExpiry: Date.now() + 10 * 60 * 1000
-        });
+        userExists.fullName = fullName;
+        userExists.password = hashedPassword;
+        userExists.emailOtp = otp;
+        userExists.emailOtpExpiry = Date.now() + 10 * 60 * 1000;
+
+        await userExists.save();
 
         await sendEmail(
-            email,
-            "Verify your email - Wings Toys",
-            `Your verification OTP is ${otp}`
+          email,
+          "Verify your email - Wings Toys",
+          `Your verification OTP is ${otp}`
         );
 
-        res.status(201).json({
-            message: "OTP sent to email",
-            userId: user._id
+        return res.status(200).json({
+          message: "OTP sent to email (Previous Unverified Account Updated)",
+          userId: userExists._id
         });
-
-    } catch (err) {
-        res.status(500).json({ message: "Server error" });
+      }
     }
-};
-exports.verifySignupOtp = async (req, res) => {
-    const { userId, otp } = req.body;
 
-    const user = await User.findOne({
-        _id: userId,
-        emailOtp: otp,
-        emailOtpExpiry: { $gt: Date.now() }
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    const user = await User.create({
+      fullName,
+      email,
+      password: hashedPassword,
+      emailOtp: otp,
+      emailOtpExpiry: Date.now() + 10 * 60 * 1000
     });
 
-    if (!user) {
-        return res.status(400).json({ message: "Invalid or expired OTP" });
-    }
+    await sendEmail(
+      email,
+      "Verify your email - Wings Toys",
+      `Your verification OTP is ${otp}`
+    );
 
-    user.isVerified = true;
-    user.emailOtp = undefined;
-    user.emailOtpExpiry = undefined;
-    await user.save();
+    res.status(201).json({
+      message: "OTP sent to email",
+      userId: user._id
+    });
 
-   res.status(201).json({
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+exports.verifySignupOtp = async (req, res) => {
+  const { userId, otp } = req.body;
+
+  const user = await User.findOne({
+    _id: userId,
+    emailOtp: otp,
+    emailOtpExpiry: { $gt: Date.now() }
+  });
+
+  if (!user) {
+    return res.status(400).json({ message: "Invalid or expired OTP" });
+  }
+
+  user.isVerified = true;
+  user.emailOtp = undefined;
+  user.emailOtpExpiry = undefined;
+  await user.save();
+
+  res.status(201).json({
     message: "OTP sent",
     userId: user._id
-});
+  });
 
 };
 
@@ -81,6 +106,11 @@ exports.loginUser = async (req, res) => {
   const user = await User.findOne({ email });
   if (!user) {
     return res.status(401).json({ message: "Invalid credentials" });
+  }
+
+  // Check if verified
+  if (!user.isVerified) {
+    return res.status(401).json({ message: "Please verify your email first" });
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
@@ -118,83 +148,83 @@ exports.loginUser = async (req, res) => {
 
 
 exports.forgotPassword = async (req, res) => {
-    try {
-        const { email } = req.body;
+  try {
+    const { email } = req.body;
 
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        // Generate 6-digit OTP
-        const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
-        // ✅ FIXED FIELD NAMES
-        user.resetOtp = otp;
-        user.resetOtpExpiry = Date.now() + 10 * 60 * 1000; // 10 mins
-        await user.save();
-
-        await sendEmail(
-            email,
-            "Wings Toys - Password Reset OTP",
-            `Your OTP is ${otp}. It is valid for 10 minutes.`
-        );
-
-        res.status(200).json({ message: "OTP sent to email" });
-
-    } catch (error) {
-        console.error("FORGOT PASSWORD ERROR:", error);
-        res.status(500).json({ message: "Server error" });
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
+
+    // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // ✅ FIXED FIELD NAMES
+    user.resetOtp = otp;
+    user.resetOtpExpiry = Date.now() + 10 * 60 * 1000; // 10 mins
+    await user.save();
+
+    await sendEmail(
+      email,
+      "Wings Toys - Password Reset OTP",
+      `Your OTP is ${otp}. It is valid for 10 minutes.`
+    );
+
+    res.status(200).json({ message: "OTP sent to email" });
+
+  } catch (error) {
+    console.error("FORGOT PASSWORD ERROR:", error);
+    res.status(500).json({ message: "Server error" });
+  }
 };
 exports.verifyOtp = async (req, res) => {
-    try {
-        const { otp } = req.body;
+  try {
+    const { otp } = req.body;
 
-        const user = await User.findOne({
-            resetOtp: otp,
-            resetOtpExpiry: { $gt: Date.now() }
-        });
+    const user = await User.findOne({
+      resetOtp: otp,
+      resetOtpExpiry: { $gt: Date.now() }
+    });
 
-        if (!user) {
-            return res.status(400).json({ message: "Invalid or expired OTP" });
-        }
-
-        res.status(200).json({ message: "OTP verified", userId: user._id });
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Server error" });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid or expired OTP" });
     }
+
+    res.status(200).json({ message: "OTP verified", userId: user._id });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
 };
 exports.resetPassword = async (req, res) => {
-    try {
-        const { newPassword } = req.body;
+  try {
+    const { newPassword } = req.body;
 
-        // Find user who recently verified OTP
-        const user = await User.findOne({
-            resetOtpExpiry: { $gt: Date.now() }
-        });
+    // Find user who recently verified OTP
+    const user = await User.findOne({
+      resetOtpExpiry: { $gt: Date.now() }
+    });
 
-        if (!user) {
-            return res.status(400).json({ message: "OTP session expired" });
-        }
-
-        const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(newPassword, salt);
-
-        // Clear OTP fields
-        user.resetOtp = undefined;
-        user.resetOtpExpiry = undefined;
-
-        await user.save();
-
-        res.status(200).json({ message: "Password reset successful" });
-
-    } catch (error) {
-        console.error("RESET PASSWORD ERROR:", error);
-        res.status(500).json({ message: "Server error" });
+    if (!user) {
+      return res.status(400).json({ message: "OTP session expired" });
     }
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+
+    // Clear OTP fields
+    user.resetOtp = undefined;
+    user.resetOtpExpiry = undefined;
+
+    await user.save();
+
+    res.status(200).json({ message: "Password reset successful" });
+
+  } catch (error) {
+    console.error("RESET PASSWORD ERROR:", error);
+    res.status(500).json({ message: "Server error" });
+  }
 };
 exports.checkAuth = async (req, res) => {
   try {

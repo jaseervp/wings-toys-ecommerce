@@ -301,60 +301,133 @@
     </aside>
 
     <main class="main-wrapper">
-        <div class="top-bar">
-            <div class="d-flex align-items-center gap-3">
-                <i class="bi bi-list mobile-toggle"
-                    onclick="document.getElementById('sidebar').classList.toggle('active')"></i>
-                <h4 class="m-0 fw-semibold">Dashboard</h4>
-            </div>
-            <div class="search-box d-none d-md-flex">
-                <input type="text" placeholder="Search data, reports...">
-                <i class="bi bi-search text-gray"></i>
-            </div>
-            <div class="d-flex align-items-center gap-3">
-                <div class="theme-toggle" onclick="toggleTheme()"><i class="bi bi-moon-stars-fill" id="tIcon"></i></div>
-                <img src="profile-pic.png" class="rounded-circle border" width="38" height="38">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold m-0">Dashboard</h2>
+            <div class="d-flex gap-2 align-items-center">
+
+                <!-- Date Filter Dropdown -->
+                <select id="dateFilter" class="form-select bg-white border-0 shadow-sm text-secondary fw-medium"
+                    style="width: auto; min-width: 150px; cursor: pointer;">
+                    <option value="last_7_days" selected>Last 7 Days</option>
+                    <option value="today">Today</option>
+                    <option value="last_1_month">Last 1 Month</option>
+                    <option value="last_6_months">Last 6 Months</option>
+                    <option value="last_1_year">Last 1 Year</option>
+                    <option value="all_time">All Time</option>
+                    <option value="specific_date">Specific Date</option>
+                    <option value="custom_range">Custom Range</option>
+                </select>
+
+                <!-- Specific Date Input -->
+                <input type="date" id="customDate"
+                    class="form-control bg-white border-0 shadow-sm text-secondary fw-medium d-none"
+                    style="width: auto; cursor: pointer;">
+
+                <!-- Custom Range Inputs -->
+                <div id="customRangeGroup" class="d-none d-flex gap-2 align-items-center">
+                    <input type="date" id="startDate"
+                        class="form-control bg-white border-0 shadow-sm text-secondary fw-medium"
+                        style="width: auto; cursor: pointer;" title="Start Date">
+                    <span class="text-muted small fw-bold">TO</span>
+                    <input type="date" id="endDate"
+                        class="form-control bg-white border-0 shadow-sm text-secondary fw-medium"
+                        style="width: auto; cursor: pointer;" title="End Date">
+                </div>
+
+                <button onclick="fetchReport()"
+                    class="btn btn-white bg-white border-0 shadow-sm text-primary fw-medium px-3 ms-2">
+                    <i class="bi bi-download me-2"></i>Report
+                </button>
             </div>
         </div>
 
-        <div class="row g-4">
+        <!-- STATS CARDS -->
+        <div class="row g-4 mb-5">
+            <!-- Net Sales -->
             <div class="col-12 col-md-4">
-                <div class="stat-card">
-                    <h6>Total Sales</h6>
-                    <h2>$350K <span class="trend"><i class="bi bi-arrow-up"></i> 10.4%</span></h2>
-                    <p class="small text-gray">Previous 7days ($235)</p>
-                    <button class="btn-details">Details</button>
-                </div>
-            </div>
-            <div class="col-12 col-md-4">
-                <div class="stat-card">
-                    <h6>Total Orders</h6>
-                    <h2>10.7K <span class="trend"><i class="bi bi-arrow-up"></i> 14.4%</span></h2>
-                    <p class="small text-gray">Previous 7days (7.6k)</p>
-                    <button class="btn-details">Details</button>
-                </div>
-            </div>
-            <div class="col-12 col-md-4">
-                <div class="stat-card">
-                    <h6>Pending & Canceled</h6>
-                    <div class="d-flex gap-4">
-                        <div><small class="text-gray d-block">Pending</small><b>509</b></div>
-                        <div><small class="text-gray d-block">Canceled</small><b class="text-danger">94</b></div>
+                <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 16px;">
+                    <div class="d-flex justify-content-between text-secondary mb-2">
+                        <span class="fw-medium">Net Sales</span>
+                        <small class="text-muted filter-label">Last 7 Days</small>
                     </div>
-                    <button class="btn-details">Details</button>
+                    <h2 class="fw-bold mb-3" id="netSales">₹0</h2>
+                    <div class="d-flex gap-2">
+                        <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">
+                            <i class="bi bi-check-circle me-1"></i>Revenue
+                        </span>
+                        <a href="Transaction.html"
+                            class="btn btn-light text-primary bg-primary bg-opacity-10 border-0 rounded-pill px-3 fw-medium"
+                            style="font-size: 0.85rem;">
+                            View Transactions
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Orders -->
+            <div class="col-12 col-md-4">
+                <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 16px;">
+                    <div class="d-flex justify-content-between text-secondary mb-2">
+                        <span class="fw-medium">Total Orders</span>
+                        <small class="text-muted filter-label">Last 7 Days</small>
+                    </div>
+                    <h2 class="fw-bold mb-3" id="totalOrders">0</h2>
+                    <div class="d-flex gap-2">
+                        <span class="badge bg-info bg-opacity-10 text-info px-3 py-2 rounded-pill">
+                            <i class="bi bi-bag-check me-1"></i>Received
+                        </span>
+                        <a href="OrderMangement.html"
+                            class="btn btn-light text-primary bg-primary bg-opacity-10 border-0 rounded-pill px-3 fw-medium"
+                            style="font-size: 0.85rem;">
+                            View Orders
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- New Customers -->
+            <div class="col-12 col-md-4">
+                <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 16px;">
+                    <div class="d-flex justify-content-between text-secondary mb-2">
+                        <span class="fw-medium">New Customers</span>
+                        <small class="text-muted filter-label">Last 7 Days</small>
+                    </div>
+                    <h2 class="fw-bold mb-3" id="newCustomers">0</h2>
+                    <div class="d-flex gap-2">
+                        <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">
+                            <i class="bi bi-person-plus me-1"></i>Registered
+                        </span>
+                        <a href="Customers.html"
+                            class="btn btn-light text-primary bg-primary bg-opacity-10 border-0 rounded-pill px-3 fw-medium"
+                            style="font-size: 0.85rem;">
+                            View Customers
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="chart-card">
+        <!-- CHART SECTION -->
+        <div class="card border-0 shadow-sm p-4" style="border-radius: 16px;">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h5 class="fw-semibold m-0">Customer Overview</h5>
-                <div class="btn-group btn-group-sm">
-                    <button class="btn btn-outline-secondary active">This week</button>
-                    <button class="btn btn-outline-secondary">Last week</button>
+                <h5 class="fw-bold m-0">Item Status Breakdown</h5>
+                <small class="text-secondary">Active (Pending/Delivered) vs Cancelled</small>
+            </div>
+
+            <div class="d-flex gap-4 mb-4">
+                <div class="d-flex align-items-center gap-2">
+                    <span style="width: 12px; height: 12px; border-radius: 50%; background-color: #10B981;"></span>
+                    <small class="text-muted">Successful Items</small>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span style="width: 12px; height: 12px; border-radius: 50%; background-color: #EF4444;"></span>
+                    <small class="text-muted">Cancelled/Returned Items</small>
                 </div>
             </div>
-            <canvas id="mainChart" height="100"></canvas>
+
+            <div style="height: 300px; width: 100%;">
+                <canvas id="itemStatusChart"></canvas>
+            </div>
         </div>
     </main>
 
@@ -366,28 +439,174 @@
             i.classList.toggle('bi-moon-stars-fill'); i.classList.toggle('bi-sun-fill');
         }
 
-        const ctx = document.getElementById('mainChart').getContext('2d');
-        new Chart(ctx, {
+        // Initial Chart
+        const ctx = document.getElementById('itemStatusChart').getContext('2d');
+        let itemChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-                datasets: [{
-                    data: [20, 40, 35, 60, 45, 75, 65],
-                    borderColor: '#4FD1C5',
-                    tension: 0.4,
-                    fill: true,
-                    backgroundColor: 'rgba(79, 209, 197, 0.1)',
-                    pointRadius: 0
-                }]
+                labels: [],
+                datasets: [
+                    {
+                        label: 'Successful Items',
+                        data: [],
+                        borderColor: '#10B981', // Green
+                        backgroundColor: '#10B981',
+                        borderWidth: 2,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#10B981',
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Cancelled/Returned Items',
+                        data: [],
+                        borderColor: '#EF4444', // Red
+                        backgroundColor: '#EF4444',
+                        borderWidth: 2,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#EF4444',
+                        tension: 0.1
+                    }
+                ]
             },
             options: {
-                plugins: { legend: { display: false } },
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false } // Custom legend used
+                },
                 scales: {
-                    x: { grid: { display: false }, ticks: { color: '#A0AEC0' } },
-                    y: { grid: { display: false }, ticks: { color: '#A0AEC0' } }
+                    y: {
+                        beginAtZero: true,
+                        grid: { borderDash: [5, 5], drawBorder: false },
+                        ticks: { stepSize: 1 }
+                    },
+                    x: {
+                        grid: { display: false, drawBorder: false }
+                    }
                 }
             }
         });
+
+        // Filter Elements
+        const filterSelect = document.getElementById("dateFilter");
+        const customDate = document.getElementById("customDate");
+        const rangeGroup = document.getElementById("customRangeGroup");
+        const startDateIn = document.getElementById("startDate");
+        const endDateIn = document.getElementById("endDate");
+        const filterLabels = document.querySelectorAll(".filter-label");
+
+        // Event Listeners
+        filterSelect.addEventListener("change", handleFilterChange);
+        customDate.addEventListener("change", () => loadDashboardData());
+        startDateIn.addEventListener("change", () => loadDashboardData());
+        endDateIn.addEventListener("change", () => loadDashboardData());
+
+        function handleFilterChange() {
+            const val = filterSelect.value;
+
+            // Hide all first
+            customDate.classList.add("d-none");
+            rangeGroup.classList.add("d-none");
+
+            if (val === "specific_date") {
+                customDate.classList.remove("d-none");
+            } else if (val === "custom_range") {
+                rangeGroup.classList.remove("d-none");
+            } else {
+                // Determine label text
+                let label = filterSelect.options[filterSelect.selectedIndex].text;
+                updateLabels(label);
+                loadDashboardData();
+            }
+        }
+
+        function updateLabels(text) {
+            filterLabels.forEach(el => el.innerText = `(${text})`);
+        }
+
+
+        // Fetch Real Data with Filters
+        async function loadDashboardData() {
+            const token = localStorage.getItem("adminToken");
+            const filter = filterSelect.value;
+            let query = `?filter=${filter}`;
+
+            // Add dates if needed
+            if (filter === "specific_date" && customDate.value) {
+                query += `&startDate=${customDate.value}`;
+                updateLabels(customDate.value);
+            }
+            else if (filter === "custom_range" && startDateIn.value && endDateIn.value) {
+                query += `&startDate=${startDateIn.value}&endDate=${endDateIn.value}`;
+                updateLabels(`${startDateIn.value} to ${endDateIn.value}`);
+            }
+
+            try {
+                const res = await fetch(`/api/admin/dashboard${query}`, {
+                    headers: { Authorization: "Bearer " + token }
+                });
+                if (!res.ok) return;
+                const data = await res.json();
+
+                // Update Cards
+                document.getElementById('netSales').innerText = '₹' + (data.netSales || 0).toLocaleString();
+                document.getElementById('totalOrders').innerText = (data.newOrders || 0).toLocaleString();
+                document.getElementById('newCustomers').innerText = (data.newCustomers || 0).toLocaleString();
+
+                // Generate Labels dynamically based on Date Range
+                const labels = [];
+                const successValues = [];
+                const cancelValues = [];
+
+                // Helper to create date array between range
+                const start = new Date(data.range.start);
+                const end = new Date(data.range.end);
+
+                // Avoid too many points for All Time / Year (group logic is daily, so might need optimization for large ranges, 
+                // but for now let's just use what API returns or fill gaps)
+
+                // For simplified chart, just use the days present in data or last 7 days logic if range is small
+                // If specific date, show hours? Detailed breakdown logic can get complex. 
+                // Let's stick to showing the points we have for now over the range.
+
+                // For valid rendering, let's iterate day by day if range < 31 days
+                const diffTime = Math.abs(end - start);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                if (diffDays <= 31) {
+                    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+                        const dateStr = d.toISOString().split('T')[0];
+                        labels.push(dateStr);
+
+                        const dayData = data.chartData.find(x => x._id === dateStr);
+                        successValues.push(dayData ? dayData.successful : 0);
+                        cancelValues.push(dayData ? dayData.cancelled : 0);
+                    }
+                } else {
+                    // For longer ranges, just map the actual data points returned
+                    data.chartData.forEach(d => {
+                        labels.push(d._id);
+                        successValues.push(d.successful);
+                        cancelValues.push(d.cancelled);
+                    });
+                }
+
+                itemChart.data.labels = labels;
+                itemChart.data.datasets[0].data = successValues;
+                itemChart.data.datasets[1].data = cancelValues;
+                itemChart.update();
+
+            } catch (err) {
+                console.error("Dashboard load error", err);
+            }
+        }
+
+        function fetchReport() {
+            alert("Report generation feature coming soon!");
+        }
+
+        // Init
+        loadDashboardData();
     </script>
 
     <script>

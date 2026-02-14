@@ -426,144 +426,131 @@
     </aside>
 
     <main class="main-wrapper">
-        <div class="top-bar d-flex align-items-center mb-4">
-            <div class="d-flex align-items-center">
-                <button class="mobile-nav-btn me-3" onclick="toggleSidebar()"><i class="bi bi-list"></i></button>
-                <h4 class="m-0 fw-semibold">Transaction</h4>
-            </div>
+        <div class="content-card border-0 shadow-sm" style="border-radius: 12px; min-height: 80vh;">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                <h5 class="fw-bold mb-0">Transaction List</h5>
 
-            <div class="ms-auto d-flex align-items-center">
-                <div class="custom-search-group me-3 d-none d-lg-flex" style="width: 350px;">
-                    <i class="bi bi-search text-muted"></i>
-                    <input type="text" placeholder="Search data, users, or reports">
-                </div>
-                <div class="d-flex gap-3 align-items-center">
-                    <div class="theme-toggle" style="cursor:pointer" onclick="toggleTheme()"><i
-                            class="bi bi-moon-stars-fill" id="tIcon"></i></div>
-                    <img src="profile-pic.png" class="admin-avatar" style="width:32px; height:32px;">
-                </div>
-            </div>
-        </div>
+                <div class="d-flex gap-2 align-items-center flex-wrap">
+                    <!-- Date Filter -->
+                    <select id="dateFilter" class="form-select bg-white border shadow-sm text-secondary"
+                        style="width: auto; font-size: 0.9rem; border-radius: 8px;">
+                        <option value="all_time">Date: All Time</option>
+                        <option value="today">Today</option>
+                        <option value="last_7_days">Last 7 Days</option>
+                        <option value="last_1_month">Last 1 Month</option>
+                    </select>
 
-        <div class="summary-grid">
-            <div class="summary-card">
-                <i class="bi bi-three-dots-vertical dots"></i>
-                <div class="summary-title">Total Revenue</div>
-                <div class="summary-value">$15,045 <span class="trend-up"><i class="bi bi-arrow-up"></i> 14.4%</span>
-                </div>
-                <div class="summary-label">Last 7 days</div>
-            </div>
-            <div class="summary-card">
-                <i class="bi bi-three-dots-vertical dots"></i>
-                <div class="summary-title">Completed Transactions</div>
-                <div class="summary-value">3,150 <span class="trend-up"><i class="bi bi-arrow-up"></i> 20%</span></div>
-                <div class="summary-label">Last 7 days</div>
-            </div>
-            <div class="summary-card">
-                <i class="bi bi-three-dots-vertical dots"></i>
-                <div class="summary-title">Failed Transactions</div>
-                <div class="summary-value">75 <span class="trend-down"><i class="bi bi-arrow-down"></i> 15%</span></div>
-                <div class="summary-label">Last 7 days</div>
-            </div>
-            <div class="summary-card">
-                <i class="bi bi-three-dots-vertical dots"></i>
-                <div class="summary-title">Pending Transactions</div>
-                <div class="summary-value">150 <span class="trend-up"><i class="bi bi-arrow-up"></i> 85%</span></div>
-                <div class="summary-label">Last 7 days</div>
-            </div>
-        </div>
+                    <!-- Type Filter -->
+                    <select id="typeFilter" class="form-select bg-white border shadow-sm text-secondary"
+                        style="width: auto; font-size: 0.9rem; border-radius: 8px;">
+                        <option value="all">Type: All</option>
+                        <option value="credit">Credit</option>
+                        <option value="debit">Debit</option>
+                    </select>
 
-        <div class="content-card">
-            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3 table-filters">
-                <div class="d-flex gap-1 gap-md-2 overflow-auto pb-1">
-                    <button class="btn btn-sm px-3 text-nowrap"
-                        style="background:#E0E7FF; color:var(--accent-blue); border-radius:8px; font-weight:600;">All
-                        order (240)</button>
-                    <button class="btn btn-sm text-muted text-nowrap">Completed</button>
-                    <button class="btn btn-sm text-muted text-nowrap">Pending</button>
-                    <button class="btn btn-sm text-muted text-nowrap">Canceled</button>
-                </div>
-                <div class="d-flex gap-2 w-sm-100">
-                    <div class="custom-search-group" style="flex-grow: 1;">
-                        <i class="bi bi-search text-muted"></i>
-                        <input type="text" placeholder="Search history">
+                    <button class="btn btn-white bg-white border shadow-sm text-dark fw-medium px-3"
+                        style="border-radius: 8px; font-size: 0.9rem;">
+                        <i class="bi bi-box-arrow-up-right me-2"></i> Export
+                    </button>
+
+                    <div class="position-relative">
+                        <input type="text" id="searchInput" class="form-control border shadow-sm"
+                            placeholder="Search ID, Name..."
+                            style="padding-right: 30px; border-radius: 8px; font-size: 0.9rem; width: 220px;">
                     </div>
-                    <button class="btn border p-2 bg-white" style="border-radius:10px;"><i
-                            class="bi bi-filter"></i></button>
-                    <button class="btn border p-2 bg-white" style="border-radius:10px;"><i
-                            class="bi bi-arrow-left-right"></i></button>
                 </div>
             </div>
 
             <div class="table-responsive">
-                <table class="custom-table">
-                    <thead>
+                <table class="table table-hover align-middle" style="border-collapse: separate; border-spacing: 0;">
+                    <thead class="bg-white">
                         <tr>
-                            <th>Customer Id</th>
-                            <th>Name</th>
-                            <th>Date</th>
-                            <th>Total</th>
-                            <th>Method</th>
-                            <th>Status</th>
-                            <th>Action</th>
+                            <th class="border-0 text-secondary fw-bold small py-3 ps-3">Trx ID</th>
+                            <th class="border-0 text-secondary fw-bold small py-3">Date</th>
+                            <th class="border-0 text-secondary fw-bold small py-3">Customer</th>
+                            <th class="border-0 text-secondary fw-bold small py-3">Item</th>
+                            <th class="border-0 text-secondary fw-bold small py-3">Method</th>
+                            <th class="border-0 text-secondary fw-bold small py-3">Type</th>
+                            <th class="border-0 text-secondary fw-bold small py-3">Amount</th>
+                            <th class="border-0 text-secondary fw-bold small py-3">Status</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>#CUST001</td>
-                            <td>John Doe</td>
-                            <td>01-01-2025</td>
-                            <td>499</td>
-                            <td>CC</td>
-                            <td class="status-complete"><span class="status-dot"
-                                    style="background:var(--success-green)"></span> Complete</td>
-                            <td><span class="action-link">View Details</span></td>
-                        </tr>
-                        <tr>
-                            <td>#CUST001</td>
-                            <td>Jane Smith</td>
-                            <td>01-01-2025</td>
-                            <td>499</td>
-                            <td>CC</td>
-                            <td class="status-canceled"><span class="status-dot"
-                                    style="background:var(--danger-red)"></span> Canceled</td>
-                            <td><span class="action-link">View Details</span></td>
-                        </tr>
-                        <tr>
-                            <td>#CUST001</td>
-                            <td>Emily Davis</td>
-                            <td>01-01-2025</td>
-                            <td>499</td>
-                            <td>PayPal</td>
-                            <td class="status-pending"><span class="status-dot"
-                                    style="background:var(--warning-orange)"></span> Pending</td>
-                            <td><span class="action-link">View Details</span></td>
-                        </tr>
+                    <tbody id="transactionList" class="border-top-0">
+                        <!-- Dynamic Content -->
                     </tbody>
                 </table>
             </div>
 
-            <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
-                <button class="btn btn-outline-secondary btn-sm px-3"
-                    style="border-radius:8px; border-color: var(--card-border);"><i class="bi bi-arrow-left"></i>
-                    Previous</button>
-                <div class="d-flex gap-2">
-                    <div class="page-num active"
-                        style="background:#E0E7FF; color:var(--accent-blue); width:32px; height:32px; display:flex; align-items:center; justify-content:center; border-radius:6px; font-weight:600; cursor:pointer;">
-                        1</div>
-                    <div class="page-num"
-                        style="width:32px; height:32px; display:flex; align-items:center; justify-content:center; cursor:pointer; color: var(--text-gray);">
-                        2</div>
-                    <div class="page-num"
-                        style="width:32px; height:32px; display:flex; align-items:center; justify-content:center; cursor:pointer; color: var(--text-gray);">
-                        3</div>
-                </div>
-                <button class="btn btn-outline-secondary btn-sm px-3"
-                    style="border-radius:8px; border-color: var(--card-border);">Next <i
-                        class="bi bi-arrow-right"></i></button>
+            <!-- Pagination -->
+            <div class="d-flex justify-content-end align-items-center mt-4" id="paginationControls">
+                <!-- Populated by JS -->
             </div>
         </div>
     </main>
+
+    <!-- Transaction Receipt Modal -->
+    <div class="modal fade" id="receiptModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content"
+                style="border-radius: 16px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <div class="modal-header border-0 pb-0 px-4 pt-4">
+                    <h5 class="modal-title fw-bold">Transaction Receipt</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body px-4 pt-2 pb-4">
+                    <!-- Hero Section -->
+                    <div class="text-center p-4 mb-4"
+                        style="background-color: #F8FAFC; border-radius: 12px; margin-top: 10px;">
+                        <h2 class="fw-bold mb-1" id="receiptAmount" style="color: #10B981; font-size: 2rem;">+ ₹0.00
+                        </h2>
+                        <span class="text-uppercase fw-bold" id="receiptStatus"
+                            style="font-size: 0.75rem; letter-spacing: 1px;">SUCCESS</span>
+                    </div>
+
+                    <!-- Details List -->
+                    <div class="d-flex flex-column gap-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted small">Transaction ID</span>
+                            <span class="fw-medium text-dark text-break ps-3 text-end" id="receiptId">TRX-000000</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted small">Date</span>
+                            <span class="fw-medium text-dark text-end" id="receiptDate">01-01-2025</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted small">Customer</span>
+                            <span class="fw-medium text-dark text-end" id="receiptCustomer">John Doe</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted small">Item / Details</span>
+                            <span class="fw-bold text-dark text-end ps-4" id="receiptItem">Item Name (x1)</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted small">Payment Method</span>
+                            <span class="fw-medium text-dark text-end" id="receiptMethod">Online</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted small">Type</span>
+                            <span class="fw-medium text-dark text-end" id="receiptType">Credit</span>
+                        </div>
+                    </div>
+
+                    <!-- Footer Buttons -->
+                    <div class="d-flex gap-3 mt-4 pt-2">
+                        <button type="button" class="btn btn-light flex-grow-1 fw-medium" data-bs-dismiss="modal"
+                            style="padding: 10px; border-radius: 8px; color: #4B5563;">Close</button>
+                        <button type="button" class="btn btn-primary flex-grow-1 fw-medium" onclick="window.print()"
+                            style="padding: 10px; border-radius: 8px; background-color: #3B82F6; border-color: #3B82F6;">
+                            <i class="bi bi-download me-2"></i> Download PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         function toggleTheme() {
@@ -586,39 +573,258 @@
         }
     </script>
     <script>
+        // Init logic for Sidebar/Theme is above in static script
+    </script>
+    <script>
+        let currentPage = 1;
+        let allTransactions = []; // Store for modal
+
+        async function fetchTransactions() {
+            const token = localStorage.getItem('adminToken');
+            const dateFilter = document.getElementById('dateFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            const search = document.getElementById('searchInput').value;
+
+            const query = `?page=${currentPage}&limit=10&filter=${dateFilter}&type=${typeFilter}&search=${search}`;
+
+            try {
+                const res = await fetch(`/api/admin/transactions${query}`, {
+                    headers: { Authorization: 'Bearer ' + token }
+                });
+                const data = await res.json();
+                allTransactions = data.transactions;
+                renderTable(data.transactions);
+                renderPagination(data.currentPage, data.totalPages);
+            } catch (err) {
+                console.error("Error loading transactions:", err);
+            }
+        }
+
+        function renderTable(transactions) {
+            const tbody = document.getElementById('transactionList');
+            if (transactions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-muted">No transactions found</td></tr>';
+                return;
+            }
+            tbody.innerHTML = transactions.map((t, index) => {
+                const isCredit = t.type === 'Credit';
+                const statusColor = t.status === 'Success' ? '#10B981' :
+                    t.status === 'Refunded' ? '#EF4444' : '#10B981';
+                const statusBg = t.status === 'Success' ? '#D1FAE5' :
+                    t.status === 'Refunded' ? '#FEE2E2' : '#D1FAE5';
+
+                // If status is specific like Pending or Failed, adjust colors
+                let realStatusBg = statusBg;
+                let realStatusColor = statusColor;
+                if (t.status === 'Pending') { realStatusBg = '#FEF3C7'; realStatusColor = '#F59E0B'; }
+                if (t.status === 'Failed') { realStatusBg = '#FEE2E2'; realStatusColor = '#EF4444'; }
+
+                const methodIcon = t.method === 'wallet' ? 'bi-wallet2' : 'bi-globe';
+                const methodText = t.method === 'wallet' ? 'Wallet' : 'Online';
+
+                // Format amount with symbol
+                const amountText = `₹${t.amount.toLocaleString('en-IN')}.00`;
+
+                // Trx ID Link color
+                const idColor = t.type === 'Debit' ? '#EF4444' : '#4F46E5';
+
+                // Vertical Bar Color
+                const barColor = t.status === 'Refunded' ? '#EF4444' : '#10B981';
+
+                return `
+                    <tr style="cursor: pointer;" onclick="showReceipt(${index})">
+                        <td class="ps-3 py-3" style="border-left: 5px solid ${barColor};">
+                            <a href="#" class="text-decoration-none fw-medium" style="color: ${idColor}; margin-left:8px;">${t.trxId}</a>
+                        </td>
+                        <td class="py-3">
+                            <div class="d-flex flex-column">
+                                <span class="fw-medium text-dark" style="font-size: 0.9rem;">${new Date(t.date).toLocaleDateString('en-GB')}</span>
+                                <small class="text-muted" style="font-size: 0.75rem;">${new Date(t.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small>
+                            </div>
+                        </td>
+                        <td class="py-3">
+                            <span class="fw-medium text-dark" style="font-size: 0.9rem;">${t.customer?.fullName || 'Unknown'}</span>
+                        </td>
+                        <td class="py-3">
+                            <span class="text-dark d-block text-truncate" style="max-width: 250px; font-size: 0.9rem;">${t.items || '-'}</span>
+                        </td>
+                        <td class="py-3">
+                            <div class="d-flex align-items-center text-secondary" style="font-size: 0.9rem;">
+                                <i class="bi ${methodIcon} me-2"></i> ${methodText}
+                            </div>
+                        </td>
+                        <td class="py-3">
+                            <span class="fw-medium" style="font-size: 0.9rem; color: #374151;">${t.type}</span>
+                        </td>
+                        <td class="py-3">
+                            <span class="fw-bold text-dark" style="font-size: 0.9rem;">${amountText}</span>
+                        </td>
+                        <td class="py-3">
+                            <span class="badge rounded-pill border-0" style="background:${realStatusBg}; color:${realStatusColor}; font-weight: 600; font-size: 0.75rem; padding: 6px 12px;">
+                                ${t.status}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function showReceipt(index) {
+            const t = allTransactions[index];
+            if (!t) return;
+
+            // Populate Fields
+            document.getElementById('receiptId').textContent = t.trxId;
+            document.getElementById('receiptDate').textContent = new Date(t.date).toLocaleString('en-GB');
+            document.getElementById('receiptCustomer').textContent = t.customer?.fullName || 'Unknown';
+            document.getElementById('receiptItem').textContent = t.items || 'Unknown Order';
+            document.getElementById('receiptMethod').textContent = t.method === 'wallet' ? 'Wallet' : 'Online';
+            document.getElementById('receiptType').textContent = t.type;
+
+            // Amount styling
+            const elAmount = document.getElementById('receiptAmount');
+            const elStatus = document.getElementById('receiptStatus');
+
+            elAmount.textContent = (t.type === 'Credit' ? '+ ' : '- ') + `₹${t.amount.toLocaleString('en-IN')}.00`;
+            elStatus.textContent = t.status.toUpperCase();
+
+            if (t.type === 'Debit' || t.status === 'Refunded' || t.status === 'Failed') {
+                elAmount.style.color = '#EF4444'; // Red
+            } else {
+                elAmount.style.color = '#10B981'; // Green
+            }
+
+            // Show Modal
+            const modal = new bootstrap.Modal(document.getElementById('receiptModal'));
+            modal.show();
+        }
+
+        function renderPagination(current, total) {
+            const container = document.getElementById('paginationControls');
+            if (total <= 1) { container.innerHTML = ''; return; }
+
+            let pagesHtml = '';
+            for (let i = 1; i <= total; i++) {
+                if (i === 1 || i === total || (i >= current - 1 && i <= current + 1)) {
+                    pagesHtml += `<button onclick="changePage(${i})" class="btn btn-sm ${i === current ? 'btn-primary' : 'btn-light'} mx-1" style="min-width: 32px;">${i}</button>`;
+                } else if (i === current - 2 || i === current + 2) {
+                    pagesHtml += `<span class="mx-1 text-muted">...</span>`;
+                }
+            }
+
+            container.innerHTML = `
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item ${current === 1 ? 'disabled' : ''}">
+                            <button class="page-link border-0 text-secondary" onclick="changePage(${current - 1})">Previous</button>
+                        </li>
+                        ${pagesHtml}
+                        <li class="page-item ${current === total ? 'disabled' : ''}">
+                            <button class="page-link border-0 text-secondary" onclick="changePage(${current + 1})">Next</button>
+                        </li>
+                    </ul>
+                </nav>
+            `;
+        }
+
+        function changePage(page) {
+            if (page < 1) return;
+            currentPage = page;
+            fetchTransactions();
+        }
+
+        // Listeners
+        document.getElementById('dateFilter').addEventListener('change', () => { currentPage = 1; fetchTransactions(); });
+        document.getElementById('typeFilter').addEventListener('change', () => { currentPage = 1; fetchTransactions(); });
+        document.getElementById('searchInput').addEventListener('input', () => { currentPage = 1; fetchTransactions(); });
+
+        // Init
+        fetchTransactions();
+
         (async function updateAdminProfileUI() {
             const token = localStorage.getItem('adminToken');
             if (!token) return;
+            try {
+                const res = await fetch('/api/admin/profile', { headers: { Authorization: 'Bearer ' + token } });
+                if (!res.ok) return;
+                const admin = await res.json();
+                if (admin.avatar) document.querySelectorAll('.admin-avatar').forEach(img => img.src = admin.avatar);
+                if (admin.fullName) document.querySelectorAll('.admin-name').forEach(el => el.textContent = admin.fullName);
+            } catch (err) { console.error('Failed to load admin profile:', err); }
+        })();
+
+        // Export PDF Function
+        async function exportPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Fetch ALL data for export (using high limit)
+            const token = localStorage.getItem('adminToken');
+            const dateFilter = document.getElementById('dateFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            const search = document.getElementById('searchInput').value;
+
+            // Use limit=10000 to get "all"
+            const query = `?page=1&limit=10000&filter=${dateFilter}&type=${typeFilter}&search=${search}`;
 
             try {
-                const res = await fetch('/api/admin/profile', {
+                const res = await fetch(`/api/admin/transactions${query}`, {
                     headers: { Authorization: 'Bearer ' + token }
                 });
+                const data = await res.json();
+                const transactions = data.transactions;
 
-                if (!res.ok) return;
-
-                const admin = await res.json();
-
-                // Update Sidebar & Topbar Images
-                if (admin.avatar) {
-                    document.querySelectorAll('.admin-avatar, .rounded-circle.border').forEach(img => {
-                        img.src = admin.avatar;
-                    });
+                if (!transactions || transactions.length === 0) {
+                    alert("No transactions to export");
+                    return;
                 }
 
-                // Update Name & Email
-                if (admin.fullName) {
-                    document.querySelectorAll('.admin-name').forEach(el => el.textContent = admin.fullName);
-                }
-                if (admin.email) {
-                    document.querySelectorAll('.admin-email').forEach(el => el.textContent = admin.email);
-                }
+                // Table Columns
+                const columns = ["Trx ID", "Date", "Customer", "Item", "Method", "Type", "Amount", "Status"];
+
+                // Table Rows
+                const rows = transactions.map(t => [
+                    t.trxId,
+                    new Date(t.date).toLocaleDateString('en-GB'),
+                    t.customer?.fullName || 'Unknown',
+                    t.items,
+                    t.method,
+                    t.type,
+                    `Rs. ${t.amount}`,
+                    t.status
+                ]);
+
+                // Header
+                doc.setFontSize(18);
+                doc.text("Transaction Report", 14, 22);
+                doc.setFontSize(11);
+                doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 30);
+                doc.text(`Filter: ${dateFilter.replace('_', ' ')} | Type: ${typeFilter}`, 14, 36);
+
+                // AutoTable
+                doc.autoTable({
+                    head: [columns],
+                    body: rows,
+                    startY: 44,
+                    theme: 'grid',
+                    styles: { fontSize: 8 },
+                    headStyles: { fillColor: [108, 142, 239] } // Accent Blue
+                });
+
+                doc.save('Transaction_Report.pdf');
 
             } catch (err) {
-                console.error('Failed to load admin profile:', err);
+                console.error("Export failed:", err);
+                alert("Failed to export PDF");
             }
-        })();
+        }
+
+        // Bind Export Button
+        document.querySelector('.btn-white').addEventListener('click', exportPDF);
+
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
     <script src="js/admin-global.js"></script>
 </body>
 

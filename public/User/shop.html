@@ -741,12 +741,23 @@
                 }
 
                 products.forEach(p => {
+                    // Discount Badge Logic
+                    const badgeHtml = p.hasDiscount
+                        ? `<span class="badge bg-danger position-absolute top-0 start-0 m-2" style="z-index: 5">- ${p.discountPercentage}%</span>`
+                        : '';
+
+                    // Price Display Logic
+                    const priceHtml = p.hasDiscount
+                        ? `<span class="fw-bold text-dark">Rs. ${p.finalPrice}</span> <del class="text-muted small ms-1">Rs. ${p.originalPrice}</del>`
+                        : `<span class="fw-bold text-dark">Rs. ${p.finalPrice}</span>`;
+
                     container.innerHTML += `
             <div class="col-6 col-md-4 col-lg-3">
               <div class="product-wrapper"
                    onclick="window.location.href='single_product.html?id=${p._id}'">
 
-                <div class="product-img-container">
+                <div class="product-img-container position-relative">
+                  ${badgeHtml}
                   <div class="action-buttons">
                     <button class="btn-circle" title="Add to Wishlist"
                       onclick="event.stopPropagation(); addToWishlist('${p._id}')">
@@ -765,7 +776,9 @@
                 <div class="text-center">
                   <p class="small text-muted mb-0" style="font-size: 0.7rem;">${p.category?.name || "General"}</p>
                   <h6 class="text-truncate px-2 product-name">${p.name}</h6>
-                  <div class="price-tag">Rs. ${p.finalPrice}</div>
+                  <div class="mt-1">
+                    ${priceHtml}
+                  </div>
                 </div>
               </div>
             </div>`;

@@ -15,5 +15,17 @@ router.get("/profile", protect, adminOnly, getAdminProfile);
 router.put("/profile", protect, adminOnly, uploadProfile.single("avatar"), updateAdminProfile);
 router.put("/change-password", protect, adminOnly, changeAdminPassword);
 
+// 👥 Customers Management
+router.get("/customers", protect, adminOnly, require("../controllers/adminController").getAllCustomers);
+router.get("/customers/analytics", protect, adminOnly, require("../controllers/adminController").getCustomerAnalytics);
+router.get("/customers/:id", protect, adminOnly, require("../controllers/adminController").getCustomerDetails);
+router.put("/customers/:id/block", protect, adminOnly, require("../controllers/adminController").blockUser);
+router.delete("/customers/:id", protect, adminOnly, require("../controllers/adminController").deleteUser);
+
+
+// 📊 Dashboard Stats
+// 📊 Dashboard Stats
+router.get("/dashboard", protect, adminOnly, require("../controllers/adminController").getDashboardStats);
+router.get("/transactions", protect, adminOnly, require("../controllers/adminController").getAllTransactions);
 
 module.exports = router;

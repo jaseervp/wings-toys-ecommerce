@@ -33,7 +33,7 @@ exports.updateMyProfile = async (req, res) => {
         }
 
         if (email) user.email = email;
-        
+
 
         await user.save();
 
@@ -99,7 +99,12 @@ exports.changePassword = async (req, res) => {
 };
 exports.addAddress = async (req, res) => {
     try {
+        console.log("Add Address Body:", req.body);
         const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
 
         user.addresses.push(req.body);
         await user.save();
@@ -109,7 +114,8 @@ exports.addAddress = async (req, res) => {
             addresses: user.addresses
         });
     } catch (err) {
-        res.status(500).json({ message: "Failed to add address" });
+        console.error("ADD ADDRESS ERROR:", err);
+        res.status(500).json({ message: "Failed to add address: " + err.message });
     }
 };
 exports.getAddresses = async (req, res) => {

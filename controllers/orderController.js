@@ -5,7 +5,7 @@ const Cart = require("../models/Cart");
 /* ================= CREATE ORDER ================= */
 exports.createOrder = async (req, res) => {
   try {
-    const { paymentMethod, couponCode } = req.body;
+    const { paymentMethod, couponCode, shippingAddress } = req.body;
 
     // 1️⃣ Get cart
     const cart = await Cart.findOne({ user: req.user.id })
@@ -13,6 +13,10 @@ exports.createOrder = async (req, res) => {
 
     if (!cart || cart.items.length === 0) {
       return res.status(400).json({ message: "Cart is empty" });
+    }
+
+    if (!shippingAddress) {
+      return res.status(400).json({ message: "Shipping address is required" });
     }
 
     // 2️⃣ Validate payment
@@ -80,7 +84,8 @@ exports.createOrder = async (req, res) => {
       couponCode: appliedCouponCode,
       paymentMethod,
       paymentStatus: paymentMethod === "cod" ? "unpaid" : "paid",
-      orderStatus: "pending"
+      orderStatus: "pending",
+      shippingAddress
     });
 
     // 6️⃣ Clear cart

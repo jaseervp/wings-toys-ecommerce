@@ -37,11 +37,31 @@ const UserSchema = new mongoose.Schema({
     default: false
   },
 
+  isBlocked: {
+    type: Boolean,
+    default: false
+  },
+
   emailOtp: String,
   emailOtpExpiry: Date,
 
   resetOtp: String,
-  resetOtpExpiry: Date
+  resetOtpExpiry: Date,
+
+  walletBalance: {
+    type: Number,
+    default: 0
+  },
+
+  addresses: [{
+    fullName: { type: String, required: true },
+    phone: { type: String, required: true },
+    addressLine: { type: String, required: true },
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    pincode: { type: String, required: true },
+    isDefault: { type: Boolean, default: false }
+  }]
 
 }, { timestamps: true });
 

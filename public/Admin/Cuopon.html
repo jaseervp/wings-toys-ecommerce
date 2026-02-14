@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         :root {
@@ -515,7 +516,7 @@
                             <label class="form-label">Discount Type</label>
                             <select id="discountTypeInput" class="custom-input">
                                 <option value="percentage">Percentage (%)</option>
-                                <option value="flat">Fixed Amount (â‚¹)</option>
+                                <option value="flat">Fixed Amount (₹)</option>
                                 <option value="free_shipping">Free Shipping</option>
                             </select>
 
@@ -561,7 +562,7 @@
                         </p>
 
                         <p class="small mb-0 opacity-75" id="previewDate">
-                            Valid until â€”
+                            Valid until Date”
                         </p>
                     </div>
 
@@ -571,13 +572,13 @@
 
                     <!-- Minimum Spend -->
                     <div class="mb-4">
-                        <label class="form-label">Minimum Spend (â‚¹)</label>
+                        <label class="form-label">Minimum Spend (₹)</label>
                         <input id="minCartInput" type="number" class="custom-input" placeholder="0">
                     </div>
 
                     <!-- Maximum Discount (ONLY for percentage coupons) -->
                     <div class="mb-4">
-                        <label class="form-label">Maximum Discount (â‚¹)</label>
+                        <label class="form-label">Maximum Discount (₹)</label>
                         <input id="maxDiscountInput" type="number" class="custom-input" placeholder="No limit">
                         <small class="text-muted">
                             Applies only for percentage coupons
@@ -666,36 +667,77 @@
 
     </script>
     <script>
-        document.querySelector(".btn-create").addEventListener("click", async () => {
+        // Initialize Toast Mixin
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+
+        let allCoupons = [];
+        let editingCouponId = null;
+        const submitBtn = document.querySelector(".btn-create");
+        const discardBtn = document.querySelector(".btn-outline-secondary"); // The Discard button
+
+        // Modify Discard button to act as Cancel Edit when editing
+        discardBtn.removeAttribute("onclick"); // Remove history.back()
+        discardBtn.addEventListener("click", () => {
+            if (editingCouponId) {
+                resetForm();
+            } else {
+                history.back();
+            }
+        });
+
+
+        submitBtn.addEventListener("click", async () => {
+
 
             const code = document.getElementById("couponCodeInput").value.trim();
             const discountType = document.getElementById("discountTypeInput").value;
             const discountValue = document.getElementById("discountValueInput").value;
-
-            // âœ… ADD THIS LINE HERE ðŸ‘‡
             const description = document.getElementById("descInput").value.trim();
-
             const startDate = document.getElementById("startDateInput").value;
-
             const endDate = document.getElementById("endDateInput").value;
             const minCartValue = document.getElementById("minCartInput").value;
             const usageLimit = document.getElementById("usageLimitInput").value;
             const maxDiscount = document.getElementById("maxDiscountInput").value;
             const limitPerUser = document.getElementById("userLimit").checked;
 
-
-
-
             if (!code || !endDate || (discountType !== "free_shipping" && !discountValue)) {
-                alert("âŒ Please fill required fields");
+                Toast.fire({ icon: 'error', title: 'Please fill required fields' });
+                return;
+            }
+
+            if (startDate && new Date(startDate) > new Date(endDate)) {
+                Toast.fire({ icon: 'error', title: 'Start date cannot be after expiry date' });
+                return;
+            }
+
+            if (Number(discountValue) < 0 || Number(minCartValue) < 0) {
+                Toast.fire({ icon: 'error', title: 'Values cannot be negative' });
                 return;
             }
 
             try {
                 const token = localStorage.getItem("adminToken");
 
-                const res = await fetch("/api/admin/coupons", {
-                    method: "POST",
+                let url = "/api/admin/coupons";
+                let method = "POST";
+
+                if (editingCouponId) {
+                    url = `/api/admin/coupons/${editingCouponId}`;
+                    method = "PUT";
+                }
+
+                const res = await fetch(url, {
+                    method: method,
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: "Bearer " + token
@@ -718,16 +760,59 @@
                 const data = await res.json();
 
                 if (res.ok) {
-                    alert("âœ… Coupon created successfully");
-                    location.reload();
+                    Toast.fire({ icon: 'success', title: editingCouponId ? 'Coupon updated' : 'Coupon created' });
+                    resetForm();
+                    loadCoupons();
                 } else {
-                    alert("âŒ " + data.message);
+                    Toast.fire({ icon: 'error', title: data.message });
                 }
 
             } catch (err) {
-                alert("âŒ Server error");
+                Toast.fire({ icon: 'error', title: 'Server error' });
             }
         });
+
+        function editCoupon(id) {
+            const coupon = allCoupons.find(c => c._id === id);
+            if (!coupon) return;
+
+            editingCouponId = id;
+            submitBtn.innerText = "Update Coupon";
+            discardBtn.innerText = "Cancel Edit";
+
+            document.getElementById("couponCodeInput").value = coupon.code;
+            document.getElementById("discountTypeInput").value = coupon.discountType;
+            document.getElementById("discountValueInput").value = coupon.discountValue;
+            document.getElementById("descInput").value = coupon.description || "";
+            document.getElementById("startDateInput").value = coupon.startDate ? coupon.startDate.split('T')[0] : "";
+            document.getElementById("endDateInput").value = coupon.expiryDate ? coupon.expiryDate.split('T')[0] : "";
+            document.getElementById("minCartInput").value = coupon.minCartValue || "";
+            document.getElementById("usageLimitInput").value = coupon.usageLimit || "";
+            document.getElementById("maxDiscountInput").value = coupon.maxDiscount || "";
+            document.getElementById("userLimit").checked = coupon.limitPerUser;
+
+            updatePreview();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetForm() {
+            editingCouponId = null;
+            submitBtn.innerText = "Create Coupon";
+            discardBtn.innerText = "Discard";
+
+            document.getElementById("couponCodeInput").value = "";
+            document.getElementById("discountTypeInput").value = "percentage";
+            document.getElementById("discountValueInput").value = "";
+            document.getElementById("descInput").value = "";
+            document.getElementById("startDateInput").value = "";
+            document.getElementById("endDateInput").value = "";
+            document.getElementById("minCartInput").value = "";
+            document.getElementById("usageLimitInput").value = "";
+            document.getElementById("maxDiscountInput").value = "";
+            document.getElementById("userLimit").checked = false;
+
+            updatePreview();
+        }
     </script>
     <script>
         const codeInput = document.getElementById("couponCodeInput");
@@ -756,17 +841,17 @@
 
             if (type === "percentage") {
                 previewLabel.innerText = "YOU SAVE";
-                previewDiscount.innerText = value ? `${value}% OFF` : "â€”";
+                previewDiscount.innerText = value ? `${value}% OFF` : "—";
                 valueInput.disabled = false;
             }
             else if (type === "flat") {
                 previewLabel.innerText = "FLAT DISCOUNT";
-                previewDiscount.innerText = value ? `â‚¹${value} OFF` : "â€”";
+                previewDiscount.innerText = value ? `₹${value} OFF` : "—";
                 valueInput.disabled = false;
             }
             else if (type === "free_shipping") {
                 previewLabel.innerText = "SPECIAL OFFER";
-                previewDiscount.innerText = "FREE SHIPPING ðŸšš";
+                previewDiscount.innerText = "FREE SHIPPING 🚚";
                 valueInput.value = 0;
                 valueInput.disabled = true;
             }
@@ -774,7 +859,7 @@
             // Expiry
             previewDate.innerText = endDateInput.value
                 ? `Valid until ${new Date(endDateInput.value).toDateString()}`
-                : "Valid until â€”";
+                : "Valid until —";
         }
 
         // Live listeners
@@ -792,69 +877,76 @@
         async function loadCoupons() {
             const token = localStorage.getItem("adminToken");
 
-            const search = searchInput.value;
-            const status = statusFilter.value;
-            const sort = sortFilter.value;
+            const search = document.getElementById("searchInput").value;
+            const status = document.getElementById("statusFilter").value;
+            const sort = document.getElementById("sortFilter").value;
 
             const res = await fetch(
                 `/api/admin/coupons?search=${search}&status=${status}&sort=${sort}`,
                 {
-                    headers: {
-                        Authorization: "Bearer " + token
-                    }
+                    headers: { Authorization: "Bearer " + token }
                 }
             );
 
             if (!res.ok) {
-                alert("Unauthorized");
+                alert("Unauthorized"); // This alert is outside the scope of the requested changes, keeping it as is.
                 return;
             }
 
             const coupons = await res.json();
+            allCoupons = coupons; // Store for editing
             tableBody.innerHTML = "";
 
-            coupons.forEach((c, i) => {
+            if (coupons.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="9" class="text-center text-muted py-4">No coupons found</td></tr>`;
+                return;
+            }
+
+            coupons.forEach((coupon, index) => {
                 const today = new Date();
-                const start = new Date(c.startDate);
-                const end = new Date(c.expiryDate);
+                const expiry = new Date(coupon.expiryDate);
+                const start = coupon.startDate ? new Date(coupon.startDate) : null;
 
-                let statusText = "Active";
-                let badgeClass = "bg-success";
-
-                if (today < start) {
-                    statusText = "Upcoming";
-                    badgeClass = "bg-info";
-                } else if (today > end) {
-                    statusText = "Expired";
-                    badgeClass = "bg-danger";
+                let statusBadge;
+                if (expiry < today) {
+                    statusBadge = '<span class="badge bg-danger-subtle text-danger">Expired</span>';
+                } else if (start && start > today) {
+                    statusBadge = '<span class="badge bg-info-subtle text-info">Upcoming</span>';
+                } else {
+                    statusBadge = '<span class="badge bg-success-subtle text-success">Active</span>';
                 }
 
-                tableBody.innerHTML += `
-      <tr>
-        <td>${i + 1}</td>
-        <td><strong>${c.code}</strong></td>
-        <td>${c.discountType === "percentage"
-                        ? `${c.discountValue}%`
-                        : c.discountType === "flat"
-                            ? `â‚¹${c.discountValue}`
-                            : "Free Shipping"
-                    }</td>
-        <td>â‚¹${c.minCartValue}</td>
-        <td>${c.maxDiscount ? "â‚¹" + c.maxDiscount : "â€”"}</td>
-        <td>${c.usedCount || 0} / ${c.usageLimit || "âˆž"}</td>
-        <td><span class="badge badge-sm ${badgeClass}">${statusText}</span></td>
-        <td>${new Date(c.expiryDate).toDateString()}</td>
-        <td>
-          <button class="btn btn-sm btn-outline-danger"
-            onclick="deleteCoupon('${c._id}')">
-            Delete
-          </button>
-        </td>
-      </tr>
-    `;
+                // Currency Formatting
+                const discountDisplay = coupon.discountType === 'percentage'
+                    ? `${coupon.discountValue}%`
+                    : (coupon.discountType === 'free_shipping' ? 'Free Shipping' : `₹${coupon.discountValue}`);
+
+                const minPurchaseDisplay = coupon.minCartValue > 0 ? `₹${coupon.minCartValue}` : '-';
+                const maxDiscountDisplay = coupon.maxDiscount ? `₹${coupon.maxDiscount}` : '-';
+
+                const row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td class="fw-bold">${coupon.code}</td>
+                        <td>${discountDisplay}</td>
+                        <td>${minPurchaseDisplay}</td>
+                        <td>${maxDiscountDisplay}</td>
+                        <td>${coupon.usageCount || 0}/${coupon.usageLimit || '∞'}</td>
+                        <td>${statusBadge}</td>
+                        <td>${new Date(coupon.expiryDate).toLocaleDateString()}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary me-1" onclick="editCoupon('${coupon._id}')">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteCoupon('${coupon._id}')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
             });
         }
-
         async function deleteCoupon(id) {
             if (!confirm("Delete this coupon?")) return;
 

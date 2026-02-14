@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         :root {
@@ -373,25 +374,25 @@
         <div class="custom-card">
             <div class="row align-items-center">
                 <div class="col-lg-8 border-end pe-lg-4">
-                    <h6 class="fw-bold mb-4">Customer Acquisition</h6>
+                    <h6 class="fw-bold mb-4">Customer Overview</h6>
                     <canvas id="growthChart" style="max-height: 250px;"></canvas>
                 </div>
                 <div class="col-lg-4 ps-lg-4">
-                    <div class="side-metric">
+                    <div class="side-metric" onclick="filterCustomers('all')" style="cursor: pointer;">
                         <p class="label m-0">Total Customers</p>
-                        <span class="value">15,840</span>
+                        <span class="value" id="totalCustomersCount">...</span>
                     </div>
-                    <div class="side-metric">
-                        <p class="label m-0">Active Users</p>
-                        <span class="value" style="color:#48BB78">12,210</span>
+                    <div class="side-metric" onclick="filterCustomers('active')" style="cursor: pointer;">
+                        <p class="label m-0">Verified Users</p>
+                        <span class="value" style="color:#48BB78" id="activeUsersCount">...</span>
                     </div>
-                    <div class="side-metric">
-                        <p class="label m-0">Inactive</p>
-                        <span class="value" style="color:#A0AEC0">2,670</span>
+                    <div class="side-metric" onclick="filterCustomers('inactive')" style="cursor: pointer;">
+                        <p class="label m-0">Unverified Users</p>
+                        <span class="value" style="color:#A0AEC0" id="inactiveUsersCount">...</span>
                     </div>
-                    <div class="side-metric">
+                    <div class="side-metric" onclick="filterCustomers('blocked')" style="cursor: pointer;">
                         <p class="label m-0">Blocked</p>
-                        <span class="value" style="color:#F56565">960</span>
+                        <span class="value" style="color:#F56565" id="blockedUsersCount">...</span>
                     </div>
                 </div>
             </div>
@@ -402,77 +403,18 @@
                 <thead>
                     <tr>
                         <th>Customer</th>
+                        <th>Total Orders</th>
+                        <th>Total Spend</th>
                         <th>Status</th>
                         <th>Joined Date</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr style="cursor: pointer;" onclick="viewDetails('1')">
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <img src="https://ui-avatars.com/api/?name=Wade+Warren&background=random" width="35"
-                                    class="rounded-circle me-3">
-                                <div>
-                                    <p class="m-0 fw-bold small">Wade Warren</p><small
-                                        class="text-muted">wade@example.com</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td><span class="status-pill active-pill">Active</span></td>
-                        <td class="small">12 Jan 2025</td>
-                        <td>
-                            <div class="action-group">
-                                <div class="action-btn btn-edit"><i class="bi bi-pencil"></i></div>
-                                <div class="action-btn btn-block"><i class="bi bi-slash-circle"></i></div>
-                                <div class="action-btn btn-delete"><i class="bi bi-trash"></i></div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr style="cursor: pointer;" onclick="viewDetails('2')">
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <img src="https://ui-avatars.com/api/?name=Bessie+Cooper&background=random" width="35"
-                                    class="rounded-circle me-3">
-                                <div>
-                                    <p class="m-0 fw-bold small">Bessie Cooper</p><small
-                                        class="text-muted">bessie@test.com</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td><span class="status-pill blocked-pill">Blocked</span></td>
-                        <td class="small">05 Jan 2025</td>
-                        <td>
-                            <div class="action-group">
-                                <div class="action-btn btn-edit"><i class="bi bi-pencil"></i></div>
-                                <div class="action-btn btn-block" style="color:#48BB78"><i
-                                        class="bi bi-check-circle"></i></div>
-                                <div class="action-btn btn-delete"><i class="bi bi-trash"></i></div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr style="cursor: pointer;" onclick="viewDetails('3')">
-                        <td class="p-3">
-                            <div class="d-flex align-items-center">
-                                <img src="https://ui-avatars.com/api/?name=Esther+Howard&background=F7FAFC&color=A0AEC0"
-                                    width="38" class="rounded-circle me-3">
-                                <div>
-                                    <p class="m-0 fw-bold small" style="color:var(--text-dark)">Esther Howard</p><small
-                                        class="text-muted">esther@gmail.com</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="p-3"><span class="status-pill status-inactive ">Inactive</span></td>
-                        <td class="p-3 small" style="color:var(--text-dark)">Dec 20, 2024</td>
-                        <td class="p-3">
-                            <div class="action-group">
-                                <div class="action-btn btn-edit"><i class="bi bi-pencil"></i></div>
-                                <div class="action-btn btn-block"><i class="bi bi-slash-circle"></i></div>
-                                <div class="action-btn btn-delete"><i class="bi bi-trash"></i></div>
-                            </div>
-                        </td>
-                    </tr>
+                <tbody id="customerTableBody">
+                    <!-- Loaded dynamically -->
                 </tbody>
+            </table>
             </table>
         </div>
     </main>
@@ -491,37 +433,257 @@
             }
         }
 
-        function viewDetails(customerId) {
-            // This will redirect the user to CustomerDetails.html 
-            // and pass the customer ID in the URL
-            window.location.href = 'CustomerDetails.html?id=' + customerId;
+        // Global variable to store all customers
+        let allCustomers = [];
+        let currentFilter = 'all';
+
+        // Load Customers
+        async function loadCustomers() {
+            const token = localStorage.getItem("adminToken");
+            const tableBody = document.getElementById("customerTableBody");
+
+            try {
+                const res = await fetch("/api/admin/customers", {
+                    headers: { Authorization: "Bearer " + token }
+                });
+
+                if (!res.ok) throw new Error("Failed to fetch");
+
+                allCustomers = await res.json();
+                filterCustomers(currentFilter); // Render with current filter
+
+            } catch (err) {
+                console.error(err);
+                tableBody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error loading data</td></tr>`;
+            }
         }
 
+        function filterCustomers(status) {
+            currentFilter = status;
+            const tableBody = document.getElementById("customerTableBody");
+
+            let filtered = [];
+            if (status === 'all') {
+                filtered = allCustomers;
+            } else if (status === 'blocked') {
+                filtered = allCustomers.filter(u => u.isBlocked);
+            } else if (status === 'active') { // Verified
+                filtered = allCustomers.filter(u => u.isVerified);
+            } else if (status === 'inactive') { // Unverified
+                filtered = allCustomers.filter(u => !u.isVerified);
+            }
+
+            renderTable(filtered);
+        }
+
+        function renderTable(customers) {
+            const tableBody = document.getElementById("customerTableBody");
+            tableBody.innerHTML = "";
+
+            if (customers.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4">No customers found</td></tr>`;
+                return;
+            }
+
+            customers.forEach(user => {
+                const joinedDate = new Date(user.createdAt).toLocaleDateString();
+                const avatar = user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.fullName)}&background=random`;
+
+                // Status Logic
+                let statusBadge;
+                if (user.isBlocked) {
+                    statusBadge = '<span class="status-pill blocked-pill">Blocked</span>';
+                } else if (user.isVerified) {
+                    statusBadge = '<span class="status-pill active-pill">Verified</span>';
+                } else {
+                    statusBadge = '<span class="status-pill status-inactive">Unverified</span>';
+                }
+
+                // Format spends
+                const totalSpend = user.totalSpend ? `₹${user.totalSpend.toLocaleString()}` : '₹0';
+                const activeStyle = user.isBlocked ? 'style="color:#48BB78"' : '';
+                const blockIcon = user.isBlocked ? 'bi-check-circle' : 'bi-slash-circle'; // Toggle icon
+                const blockTitle = user.isBlocked ? 'Unblock User' : 'Block User';
+
+                const row = `
+                    <tr onclick="window.location.href='CustomerDetails.html?id=${user._id}'" style="cursor:pointer">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img src="${avatar}" width="35" class="rounded-circle me-3">
+                                <div>
+                                    <p class="m-0 fw-bold small">${user.fullName}</p>
+                                    <small class="text-muted">${user.email}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${user.totalOrders || 0}</td>
+                        <td class="fw-bold text-success">${totalSpend}</td>
+                        <td>${statusBadge}</td>
+                        <td class="small">${joinedDate}</td>
+                        <td>
+                            <div class="action-group">
+                                <div class="action-btn btn-block" ${activeStyle} onclick="event.stopPropagation(); toggleBlock('${user._id}')" title="${blockTitle}">
+                                    <i class="bi ${blockIcon}"></i>
+                                </div>
+                                <div class="action-btn btn-delete" onclick="event.stopPropagation(); deleteUser('${user._id}')" title="Delete User">
+                                    <i class="bi bi-trash"></i>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        }
+
+        // Init load
+        loadCustomers();
+
+
+
+
+
         // CHART JS
-        const ctx = document.getElementById('growthChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{
-                    data: [300, 600, 450, 900, 700, 1100],
-                    borderColor: '#6C8EEF',
-                    tension: 0.4,
-                    fill: true,
-                    backgroundColor: 'rgba(108, 142, 239, 0.05)',
-                    pointRadius: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { grid: { display: false }, ticks: { color: '#A0AEC0' } },
-                    y: { grid: { color: 'rgba(160, 174, 192, 0.1)' }, ticks: { display: false } }
+        let growthChartInstance = null;
+
+        async function loadAnalytics() {
+            const token = localStorage.getItem("adminToken");
+            try {
+                const res = await fetch("/api/admin/customers/analytics", {
+                    headers: { Authorization: "Bearer " + token }
+                });
+                if (!res.ok) return;
+                const data = await res.json();
+
+                // Update Counts
+                document.getElementById('totalCustomersCount').innerText = data.total.toLocaleString();
+                document.getElementById('activeUsersCount').innerText = data.active.toLocaleString();
+                document.getElementById('inactiveUsersCount').innerText = data.inactive.toLocaleString();
+                document.getElementById('blockedUsersCount').innerText = data.blocked.toLocaleString();
+
+                // Update Chart
+                const ctx = document.getElementById('growthChart').getContext('2d');
+
+                // Process Growth Data (Fill missing months with 0)
+                const labels = [];
+                const dataset = [];
+
+                for (let i = 5; i >= 0; i--) {
+                    const d = new Date();
+                    d.setMonth(d.getMonth() - i);
+                    const monthName = d.toLocaleString('default', { month: 'short' });
+                    const monthNum = d.getMonth() + 1;
+
+                    labels.push(monthName);
+
+                    const found = data.growth.find(g => g._id === monthNum);
+                    dataset.push(found ? found.count : 0);
+                }
+
+                if (growthChartInstance) growthChartInstance.destroy();
+
+                growthChartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: dataset,
+                            borderColor: '#6C8EEF',
+                            tension: 0.4,
+                            fill: true,
+                            backgroundColor: 'rgba(108, 142, 239, 0.05)',
+                            pointRadius: 3,
+                            pointHoverRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { grid: { display: false }, ticks: { color: '#A0AEC0' } },
+                            y: { grid: { color: 'rgba(160, 174, 192, 0.1)' }, ticks: { display: false }, beginAtZero: true }
+                        }
+                    }
+                });
+
+            } catch (err) {
+                console.error("Analytics load failed", err);
+            }
+        }
+
+        loadAnalytics();
+
+        // --- ACTIONS ---
+        async function toggleBlock(id) {
+            const token = localStorage.getItem("adminToken");
+            try {
+                const res = await fetch(`/api/admin/customers/${id}/block`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    showToast(data.message, "success");
+                    loadCustomers(); // Reload table
+                    loadAnalytics(); // Reload stats
+                } else {
+                    showToast(data.message || "Failed to update status", "error");
+                }
+            } catch (err) {
+                console.error(err);
+                showToast("Server error", "error");
+            }
+        }
+
+        async function deleteUser(id) {
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            });
+
+            if (result.isConfirmed) {
+                const token = localStorage.getItem("adminToken");
+                try {
+                    const res = await fetch(`/api/admin/customers/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    });
+                    const data = await res.json();
+
+                    if (res.ok) {
+                        Swal.fire('Deleted!', 'User has been deleted.', 'success');
+                        loadCustomers();
+                        loadAnalytics();
+                    } else {
+                        showToast(data.message || "Failed to delete", "error");
+                    }
+                } catch (err) {
+                    console.error(err);
+                    showToast("Server error", "error");
                 }
             }
-        });
+        }
+
+        function showToast(message, type = 'success') {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+            Toast.fire({
+                icon: type,
+                title: message
+            });
+        }
     </script>
     <script>
         (async function updateAdminProfileUI() {

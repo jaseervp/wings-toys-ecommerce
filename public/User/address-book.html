@@ -512,14 +512,15 @@
 
                 <div class="row g-4" id="addressList"></div>
 
-
-                <!-- 
+                <!-- Static Add Button -->
+                <div class="row mt-4">
                     <div class="col-md-6">
                         <button class="btn-add-new" data-bs-toggle="modal" data-bs-target="#addressModal">
                             <i class="bi bi-plus-lg fs-2 mb-2"></i>
                             <span class="fw-500">Add New Address</span>
                         </button>
-                    </div> -->
+                    </div>
+                </div>
             </div>
         </div>
         </div>
@@ -773,14 +774,7 @@
             </div>`;
                 });
 
-                // Add button
-                container.innerHTML += `
-        <div class="col-md-6">
-            <button class="btn-add-new" data-bs-toggle="modal" data-bs-target="#addressModal">
-                <i class="bi bi-plus-lg fs-2 mb-2"></i>
-                <span>Add New Address</span>
-            </button>
-        </div>`;
+
 
             } catch (err) {
                 console.error("LOAD ADDRESS ERROR:", err);
@@ -793,16 +787,24 @@
 
     <script>
         document.getElementById("addressForm").addEventListener("submit", async (e) => {
-            e.preventDefault();
+            const stateVal = document.getElementById("state").value;
+            const pincodeVal = document.getElementById("pincode").value;
+            const isDefaultVal = document.getElementById("defaultAddress").checked;
+
+            const fullNameVal = document.getElementById("fullName").value;
+            const phoneVal = document.getElementById("phone").value;
+            const addressLineVal = document.getElementById("addressLine").value;
+            const addressLine2Val = document.getElementById("addressLine2").value;
+            const cityVal = document.getElementById("city").value;
 
             const payload = {
-                fullName: fullName.value,
-                phone: phone.value,
-                addressLine: addressLine.value + " " + addressLine2.value,
-                city: city.value,
-                state: state.value,
-                pincode: pincode.value,
-                isDefault: defaultAddress.checked
+                fullName: fullNameVal,
+                phone: phoneVal,
+                addressLine: addressLineVal + (addressLine2Val ? " " + addressLine2Val : ""),
+                city: cityVal,
+                state: stateVal,
+                pincode: pincodeVal,
+                isDefault: isDefaultVal
             };
 
             try {
@@ -818,10 +820,10 @@
                     }
                 );
 
+                const data = await res.json();
+
                 if (!res.ok) {
-                    const err = await res.json();
-                    alert(err.message || "Save failed");
-                    return;
+                    throw new Error(data.message || "Request failed");
                 }
 
                 editingAddressId = null;
@@ -837,7 +839,7 @@
 
             } catch (err) {
                 console.error("SAVE ADDRESS ERROR:", err);
-                alert("Something went wrong");
+                alert("Error: " + err.message);
             }
         });
     </script>

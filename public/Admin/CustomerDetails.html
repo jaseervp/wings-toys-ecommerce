@@ -1,10 +1,10 @@
 ﻿<!DOCTYPE html>
-<html lang="en" id="html-root">
+<html lang="en" data-theme="light">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wings Admin | Customers</title>
+    <title>Wings Admin | Customer Details</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -13,69 +13,41 @@
 
     <style>
         :root {
+            /* Blue Theme (Global) */
+            --primary: #6C8EEF;
+            --primary-bg: rgba(108, 142, 239, 0.1);
             --sidebar-width: 260px;
             --main-bg: #F8F9FD;
-            --sidebar-bg: #ffffff;
-            --accent-blue: #6C8EEF;
+            --card-bg: #ffffff;
             --text-dark: #2D3748;
             --text-gray: #A0AEC0;
             --card-border: #EDF2F7;
-            --table-header: #F1F6FF;
-            --card-bg: #ffffff;
-            --danger-red: #F56565;
-        }
-
-        [data-theme="dark"] {
-            --sidebar-bg: #1A202C;
-            --main-bg: #11141D;
-            --card-bg: #1A202C;
-            --text-dark: #E2E8F0;
-            --text-gray: #718096;
-            --card-border: #2D3748;
-            --table-header: #212936;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--main-bg);
-            margin: 0;
-            display: flex;
             color: var(--text-dark);
-            transition: background 0.3s, color 0.3s;
         }
 
-        /* --- SIDEBAR --- */
+        /* --- SIDEBAR (Reused) --- */
         .sidebar {
             width: var(--sidebar-width);
-            background: var(--sidebar-bg);
+            background: #fff;
             height: 100vh;
             position: fixed;
             left: 0;
             top: 0;
             border-right: 1px solid var(--card-border);
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            z-index: 1050;
-            transition: transform 0.3s ease;
-        }
-
-        .sidebar-scroll {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 20px;
+            z-index: 1000;
         }
 
         .sidebar-brand img {
             height: 45px;
-            margin-bottom: 25px;
-        }
-
-        .menu-label {
-            font-size: 0.75rem;
-            color: var(--text-gray);
-            text-transform: capitalize;
-            margin: 20px 0 10px 10px;
-            font-weight: 500;
+            margin-bottom: 30px;
         }
 
         .nav-item {
@@ -91,8 +63,13 @@
         }
 
         .nav-item.active {
-            background: var(--accent-blue);
+            background: var(--primary);
             color: #fff;
+        }
+
+        .nav-item:hover:not(.active) {
+            background: var(--primary-bg);
+            color: var(--primary);
         }
 
         .nav-item i {
@@ -100,180 +77,53 @@
             font-size: 1.1rem;
         }
 
-        .nav-item:hover:not(.active) {
-            background: rgba(108, 142, 239, 0.1);
-            color: var(--accent-blue);
-        }
-
-        .admin-footer {
-            padding: 20px;
-            border-top: 1px solid var(--card-border);
-            background: var(--sidebar-bg);
-        }
-
-        .admin-profile-box {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .admin-avatar {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .admin-name {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin: 0;
-        }
-
-        .admin-email {
-            font-size: 0.7rem;
-            color: var(--text-gray);
-            margin: 0;
-        }
-
-        /* --- MAIN CONTENT LAYOUT --- */
+        /* --- MAIN LAYOUT --- */
         .main-wrapper {
             margin-left: var(--sidebar-width);
-            width: calc(100% - var(--sidebar-width));
             padding: 30px;
-            transition: 0.3s;
         }
 
-        .content-flex {
-            display: flex;
-            gap: 25px;
-            align-items: flex-start;
+        .page-header {
+            margin-bottom: 25px;
         }
 
-        /* --- TABLE STYLES --- */
-        .table-container {
-            flex: 1;
-            background: var(--card-bg);
-            border-radius: 20px;
-            border: 1px solid var(--card-border);
-            padding: 20px;
-            min-width: 0;
-        }
-
-        .custom-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            color: var(--text-dark);
-        }
-
-        .custom-table thead tr {
-            background: var(--table-header);
-        }
-
-        .custom-table th {
-            padding: 15px;
+        .breadcrumb {
             font-size: 0.85rem;
-            border: none;
-            color: var(--text-dark);
-        }
-
-        .custom-table td {
-            padding: 15px;
-            border-bottom: 1px solid var(--card-border);
-            vertical-align: middle;
-        }
-
-        .customer-row {
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .customer-row:hover {
-            background: rgba(108, 142, 239, 0.05) !important;
-        }
-
-        .customer-row.selected-user {
-            background: rgba(108, 142, 239, 0.12) !important;
-        }
-
-        .status-pill {
-            padding: 5px 12px;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .active-pill {
-            background: rgba(72, 187, 120, 0.15);
-            color: #48BB78;
-        }
-
-        .blocked-pill {
-            background: rgba(245, 101, 101, 0.15);
-            color: #F56565;
-        }
-
-        .inactive-pill {
-            background: rgba(160, 174, 192, 0.15);
-            color: #A0AEC0;
-        }
-
-        .custom-card {
-            background: var(--card-bg) !important;
-            border: 1px solid var(--card-border) !important;
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 30px;
-            color: var(--text-dark);
-        }
-
-        .action-group {
-            display: flex;
-            gap: 8px;
-        }
-
-        .action-btn {
-            border: 1px solid var(--card-border);
-            background: var(--card-bg);
-            width: 34px;
-            height: 34px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
             color: var(--text-gray);
-            transition: 0.2s;
         }
 
-        .action-btn.edit-btn:hover {
-            color: var(--accent-blue);
-            border-color: var(--accent-blue);
+        /* --- CONTENT GRID --- */
+        .details-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 25px;
         }
 
-        .action-btn.block-btn:hover,
-        .action-btn.delete-btn:hover {
-            color: var(--danger-red);
-            border-color: var(--danger-red);
-        }
-
-        .profile-panel {
-            width: 340px;
-            flex-shrink: 0;
+        /* --- LEFT PROFILE CARD --- */
+        .profile-card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 20px;
-            position: sticky;
-            top: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            height: fit-content;
         }
 
-        .user-header {
+        .profile-header {
+            background: var(--primary);
+            color: #fff;
+            padding: 30px 20px 50px;
             text-align: center;
-            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .profile-avatar-wrapper {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 5px;
+            background: #fff;
+            border-radius: 50%;
         }
 
         .profile-avatar {
@@ -281,140 +131,194 @@
             height: 80px;
             border-radius: 50%;
             object-fit: cover;
-            margin-bottom: 10px;
-            border: 3px solid var(--table-header);
+            border: 3px solid #fff;
         }
 
-        .info-input {
+        .profile-body {
+            padding: 50px 20px 30px;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .info-icon {
+            width: 35px;
+            height: 35px;
             background: var(--main-bg);
-            border: 1px solid var(--card-border);
             border-radius: 8px;
-            padding: 8px 12px;
-            margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 0.8rem;
-        }
-
-        .social-row {
-            display: flex;
             justify-content: center;
-            gap: 12px;
-            margin: 15px 0;
-            font-size: 1.1rem;
+            color: var(--primary);
+            /* Use primary color for icons */
+            margin-right: 15px;
+            flex-shrink: 0;
         }
 
-        .order-stats-grid {
+        .info-content label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            margin-bottom: 2px;
+        }
+
+        .info-content p {
+            margin: 0;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        /* --- RIGHT TABS SECTION --- */
+        .tabs-container {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 500px;
+        }
+
+        .nav-tabs {
+            border-bottom: 1px solid var(--card-border);
+            margin-bottom: 25px;
+            gap: 25px;
+        }
+
+        .nav-link {
+            border: none;
+            color: var(--text-gray);
+            font-weight: 500;
+            padding: 10px 5px;
+            background: transparent !important;
+        }
+
+        .nav-link.active {
+            color: var(--text-dark);
+            border-bottom: 2px solid var(--text-dark);
+            /* Or Primary Color */
+            font-weight: 600;
+        }
+
+        .nav-link i {
+            margin-right: 8px;
+        }
+
+        /* --- STAT CARDS --- */
+        .stats-row {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 20px;
+            gap: 20px;
+            margin-bottom: 30px;
         }
 
-        .order-stat-box {
+        .stat-card {
             border: 1px solid var(--card-border);
             border-radius: 10px;
-            padding: 10px;
+            padding: 20px;
             text-align: center;
         }
 
-        .order-stat-box b {
-            font-size: 1rem;
-            display: block;
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--primary);
+            /* Default to Primary, can override */
         }
 
-        .order-stat-box span {
-            font-size: 0.6rem;
-            text-transform: uppercase;
+        .text-c-success {
+            color: #48BB78;
+        }
+
+        .text-c-danger {
+            color: #F56565;
+        }
+
+        .stat-label {
             color: var(--text-gray);
+            font-size: 0.85rem;
         }
 
-        .side-metric {
-            padding: 12px 0;
+        /* --- ORDERS TABLE --- */
+        .orders-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        .orders-table th {
+            color: var(--text-gray);
+            font-weight: 500;
+            font-size: 0.85rem;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .orders-table td {
+            background: var(--main-bg);
+            padding: 15px;
+            font-size: 0.9rem;
+        }
+
+        .orders-table tr td:first-child {
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+        }
+
+        .orders-table tr td:last-child {
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+
+        /* --- WALLET --- */
+        .wallet-balance-card {
+            background: var(--main-bg);
+            border-radius: 12px;
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .wallet-icon {
+            width: 50px;
+            height: 50px;
+            background: #fff;
+            border-radius: 50%;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
             border-bottom: 1px solid var(--card-border);
         }
 
-        .side-metric:last-child {
+        .transaction-item:last-child {
             border-bottom: none;
         }
 
-        .side-metric .label {
-            font-size: 0.75rem;
-            color: var(--text-gray);
-        }
-
-        .side-metric .value {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        /* --- NEW RESPONSIVE MEDIA QUERIES --- */
-        .mobile-nav-btn {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--text-dark);
-            cursor: pointer;
-        }
-
-        @media (max-width: 1200px) {
-            .content-flex {
-                flex-direction: column;
-            }
-
-            .profile-panel {
-                width: 100%;
-                position: static;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .mobile-nav-btn {
-                display: block;
-                margin-right: 15px;
-            }
-
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-            .sidebar.active {
-                transform: translateX(0);
-            }
-
-            .main-wrapper {
-                margin-left: 0;
-                width: 100%;
-                padding: 20px;
-            }
-
-            .custom-card .row {
-                flex-direction: column;
-            }
-
-            .custom-card .col-lg-8 {
-                border: none !important;
-                border-bottom: 1px solid var(--card-border);
-                padding-bottom: 20px;
-                margin-bottom: 20px;
-                width: 100%;
-            }
-
-            .custom-card .col-lg-4 {
-                padding-left: 12px !important;
-                width: 100%;
-            }
-
-            .table-container {
-                overflow-x: auto;
-            }
-
-            .custom-table {
-                min-width: 600px;
-            }
+        .t-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            color: var(--primary);
+            background: var(--primary-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -425,7 +329,7 @@
         <div class="sidebar-scroll">
             <div class="sidebar-brand"><img src="logo wings.png" alt="Wings"></div>
             <p class="menu-label">Main menu</p>
-            <a href="Customers.html" class="nav-item "><i class="bi bi-grid"></i> Dashboard</a>
+            <a href="Dashboard.html" class="nav-item "><i class="bi bi-grid"></i> Dashboard</a>
             <a href="OrderMangement.html" class="nav-item"><i class="bi bi-cart"></i> Order Management</a>
             <a href="Customers.html" class="nav-item active"><i class="bi bi-people"></i> Customers</a>
             <a href="Cuopon.html" class="nav-item"><i class="bi bi-ticket-perforated"></i> Coupon Code</a>
@@ -442,7 +346,7 @@
 
         <div class="admin-footer">
             <p class="menu-label" style="margin-left:0; margin-top:0">Admin</p>
-            <a href="AddProduct.html" class="nav-item p-0 mb-3"><i class="bi bi-person-gear"></i> Admin role</a>
+            <a href="AdminRole.html" class="nav-item p-0 mb-3"><i class="bi bi-person-gear"></i> Admin role</a>
             <div class="admin-profile-box">
                 <img src="profile-pic.png" class="admin-avatar" alt="Admin">
                 <div class="admin-info">
@@ -451,248 +355,306 @@
                 </div>
                 <i class="bi bi-box-arrow-right text-gray" style="cursor: pointer;"></i>
             </div>
-            <a href="#" class="nav-item p-0" style="color: var(--accent-blue); font-weight: 600;">
+            <a href="#" class="nav-item p-0" style="color: var(--primary); font-weight: 600;">
                 <i class="bi bi-shop"></i> Your Shop <i class="bi bi-box-arrow-up-right ms-auto small"></i>
             </a>
         </div>
     </aside>
 
     <main class="main-wrapper">
-        <div class="top-bar d-flex align-items-center mb-4">
-            <button class="mobile-nav-btn" onclick="toggleSidebar()"><i class="bi bi-list"></i></button>
-            <h4 class="m-0 fw-semibold flex-grow-1">Customer Analytics</h4>
-            <div class="theme-toggle" style="cursor:pointer" onclick="toggleTheme()"><i class="bi bi-moon-stars-fill"
-                    id="tIcon"></i></div>
+        <div class="page-header">
+            <div class="breadcrumb mb-1"><a href="Customers.html" class="text-decoration-none text-muted">Customers</a>
+                / Customer Details</div>
         </div>
 
-        <div class="custom-card">
-            <div class="row align-items-center">
-                <div class="col-lg-8 border-end pe-lg-4">
-                    <h6 class="fw-bold mb-4">Customer Acquisition</h6>
-                    <canvas id="growthChart" style="max-height: 250px;"></canvas>
+        <div class="details-grid" id="mainContent" style="display:none">
+            <!-- Left Profile -->
+            <div class="profile-card">
+                <div class="profile-header">
+                    <h5 class="fw-bold m-0" id="pName">Loading...</h5>
+                    <small class="opacity-75" id="pId">Customer ID: #...</small>
+                    <div class="profile-avatar-wrapper">
+                        <img src="" id="pAvatar" class="profile-avatar">
+                    </div>
                 </div>
-                <div class="col-lg-4 ps-lg-4">
-                    <div class="side-metric">
-                        <p class="label m-0">Total Customers</p>
-                        <span class="value">15,840</span>
+
+                <div class="profile-body">
+                    <div class="text-center mb-4 mt-2">
+                        <span class="badge bg-light text-dark border" id="pCity"><i class="bi bi-geo-alt-fill me-1"></i>
+                            Not Set</span>
                     </div>
-                    <div class="side-metric">
-                        <p class="label m-0">Active Users</p>
-                        <span class="value" style="color:#48BB78">12,210</span>
+
+                    <div class="info-row">
+                        <div class="info-icon"><i class="bi bi-telephone"></i></div>
+                        <div class="info-content">
+                            <label>Phone</label>
+                            <p id="pPhone">-</p>
+                        </div>
                     </div>
-                    <div class="side-metric">
-                        <p class="label m-0">Inactive</p>
-                        <span class="value" style="color:#A0AEC0">2,670</span>
+
+                    <div class="info-row">
+                        <div class="info-icon " style="color: #F6AD55"><i class="bi bi-envelope"></i></div>
+                        <div class="info-content">
+                            <label>Email</label>
+                            <p id="pEmail">-</p>
+                        </div>
                     </div>
-                    <div class="side-metric">
-                        <p class="label m-0">Blocked</p>
-                        <span class="value" style="color:#F56565">960</span>
+
+                    <div class="info-row">
+                        <div class="info-icon" style="color: #F56565"><i class="bi bi-map"></i></div>
+                        <div class="info-content">
+                            <label>Address</label>
+                            <p id="pAddress">-</p>
+                        </div>
                     </div>
+
+                    <div class="info-row">
+                        <div class="info-icon" style="color: #4299E1"><i class="bi bi-calendar-event"></i></div>
+                        <div class="info-content">
+                            <label>Joined Date</label>
+                            <p id="pJoined">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Tabs -->
+            <div class="tabs-container">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="overview-tab" data-bs-toggle="tab"
+                            data-bs-target="#overview" type="button"><i class="bi bi-pie-chart-fill"></i>
+                            Overview</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="orders-tab" data-bs-toggle="tab" data-bs-target="#orders"
+                            type="button"><i class="bi bi-bag-fill"></i> Orders</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="wallet-tab" data-bs-toggle="tab" data-bs-target="#wallet"
+                            type="button"><i class="bi bi-wallet-fill"></i> Wallet & Transactions</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="myTabContent">
+
+                    <!-- OVERVIEW TAB -->
+                    <div class="tab-pane fade show active" id="overview">
+                        <div class="stats-row">
+                            <div class="stat-card">
+                                <div class="stat-value" id="sTotal" style="color:#2B6CB0">0</div>
+                                <div class="stat-label">Total Orders</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value text-c-success" id="sCompleted">0</div>
+                                <div class="stat-label">Completed</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value text-c-danger" id="sCancelled">0</div>
+                                <div class="stat-label">Cancelled</div>
+                            </div>
+                        </div>
+
+                        <h6 class="fw-bold mb-3">Spending Analytics (Last 6 Months)</h6>
+                        <div style="height: 250px;">
+                            <canvas id="spendingChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- ORDERS TAB -->
+                    <div class="tab-pane fade" id="orders">
+                        <table class="orders-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Date</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersList">
+                                <!-- Dynamic -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- WALLET TAB -->
+                    <div class="tab-pane fade" id="wallet">
+                        <div class="wallet-balance-card">
+                            <div>
+                                <small class="text-muted d-block mb-1">Current Wallet Balance</small>
+                                <h2 class="fw-bold m-0" style="color:var(--primary)" id="wBalance">₹0.00</h2>
+                            </div>
+                            <div class="wallet-icon"><i class="bi bi-wallet2"></i></div>
+                        </div>
+
+                        <h6 class="fw-bold mb-3">Transaction History</h6>
+                        <div id="transactionsList">
+                            !-- Dynamic -->
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
 
-        <div class="content-flex">
-            <div class="table-container">
-                <table class="custom-table">
-                    <thead>
-                        <tr>
-                            <th>Customer</th>
-                            <th>Status</th>
-                            <th>Joined Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="cust-table-body">
-                        <tr class="customer-row selected-user"
-                            onclick="updateProfile(this, 'Wade Warren', 'wade@example.com', 'https://ui-avatars.com/api/?name=Wade+Warren&background=random', '+1 234 567 890', '12 Jan 2025')">
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="https://ui-avatars.com/api/?name=Wade+Warren&background=random" width="35"
-                                        class="rounded-circle me-3">
-                                    <div>
-                                        <p class="m-0 fw-bold small">Wade Warren</p><small
-                                            class="text-muted">wade@example.com</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="status-pill active-pill">Active</span></td>
-                            <td class="small">12 Jan 2025</td>
-                            <td>
-                                <div class="action-group">
-                                    <div class="action-btn block-btn" title="Block"><i class="bi bi-slash-circle"></i>
-                                    </div>
-                                    <div class="action-btn edit-btn" title="Edit"><i class="bi bi-pencil"></i></div>
-                                    <div class="action-btn delete-btn" title="Delete"><i class="bi bi-trash"></i></div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="customer-row"
-                            onclick="updateProfile(this, 'Bessie Cooper', 'bessie@test.com', 'https://ui-avatars.com/api/?name=Bessie+Cooper&background=random', '+1 987 654 321', '05 Jan 2025')">
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="https://ui-avatars.com/api/?name=Bessie+Cooper&background=random"
-                                        width="35" class="rounded-circle me-3">
-                                    <div>
-                                        <p class="m-0 fw-bold small">Bessie Cooper</p><small
-                                            class="text-muted">bessie@test.com</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="status-pill blocked-pill">Blocked</span></td>
-                            <td class="small">05 Jan 2025</td>
-                            <td>
-                                <div class="action-group">
-                                    <div class="action-btn block-btn" title="Block"><i class="bi bi-slash-circle"></i>
-                                    </div>
-                                    <div class="action-btn edit-btn" title="Edit"><i class="bi bi-pencil"></i></div>
-                                    <div class="action-btn delete-btn" title="Delete"><i class="bi bi-trash"></i></div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="customer-row"
-                            onclick="updateProfile(this, 'Guy Hawkins', 'guy.h@outlook.com', 'https://ui-avatars.com/api/?name=Guy+Hawkins&background=random', '+1 555 010 999', '28 Dec 2024')">
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="https://ui-avatars.com/api/?name=Guy+Hawkins&background=random" width="35"
-                                        class="rounded-circle me-3">
-                                    <div>
-                                        <p class="m-0 fw-bold small">Guy Hawkins</p><small
-                                            class="text-muted">guy.h@outlook.com</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="status-pill inactive-pill">Inactive</span></td>
-                            <td class="small">28 Dec 2024</td>
-                            <td>
-                                <div class="action-group">
-                                    <div class="action-btn block-btn" title="Block"><i class="bi bi-slash-circle"></i>
-                                    </div>
-                                    <div class="action-btn edit-btn" title="Edit"><i class="bi bi-pencil"></i></div>
-                                    <div class="action-btn delete-btn" title="Delete"><i class="bi bi-trash"></i></div>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="profile-panel">
-                <div class="user-header">
-                    <img src="https://ui-avatars.com/api/?name=Wade+Warren&background=random" class="profile-avatar"
-                        id="p-img">
-                    <h6 class="fw-bold m-0" id="p-name">Wade Warren</h6>
-                    <small class="text-muted" id="p-email">wade@example.com</small>
-                </div>
-                <small class="text-muted d-block mb-2">Customer Info</small>
-                <div class="info-input"><i class="bi bi-telephone"></i> <span id="p-phone">+1 234 567 890</span></div>
-                <div class="info-input"><i class="bi bi-geo-alt"></i> <span>123 Main St, New York</span></div>
-                <div class="social-row">
-                    <i class="bi bi-facebook text-primary"></i><i class="bi bi-whatsapp text-success"></i><i
-                        class="bi bi-twitter text-info"></i><i class="bi bi-instagram text-danger"></i>
-                </div>
-                <div class="border-top pt-3 mt-3">
-                    <div class="d-flex justify-content-between small mb-1"><span class="text-muted">Joined:</span> <b
-                            id="p-join">12 Jan 2025</b></div>
-                    <div class="d-flex justify-content-between small"><span class="text-muted">Last Active:</span>
-                        <b>Today</b></div>
-                </div>
-                <div class="order-stats-grid">
-                    <div class="order-stat-box"><b>150</b><span>Total</span></div>
-                    <div class="order-stat-box"><b class="text-success">140</b><span>Done</span></div>
-                    <div class="order-stat-box"><b class="text-danger">10</b><span>Cancel</span></div>
-                </div>
-            </div>
+        <div id="loading" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2 text-muted">Loading customer details...</p>
         </div>
+
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function toggleTheme() {
-            const html = document.getElementById('html-root');
-            const icon = document.getElementById('tIcon');
-            if (html.getAttribute('data-theme') === 'dark') {
-                html.removeAttribute('data-theme');
-                icon.classList.replace('bi-sun-fill', 'bi-moon-stars-fill');
-            } else {
-                html.setAttribute('data-theme', 'dark');
-                icon.classList.replace('bi-moon-stars-fill', 'bi-sun-fill');
-            }
+        // Get ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const customerId = urlParams.get('id');
+
+        if (!customerId) {
+            alert("Customer ID missing!");
+            window.location.href = "Customers.html";
         }
 
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('active');
-        }
-
-        function updateProfile(row, name, email, img, phone, joined) {
-            document.querySelectorAll('.customer-row').forEach(r => r.classList.remove('selected-user'));
-            row.classList.add('selected-user');
-            document.getElementById('p-name').innerText = name;
-            document.getElementById('p-email').innerText = email;
-            document.getElementById('p-img').src = img;
-            document.getElementById('p-phone').innerText = phone;
-            document.getElementById('p-join').innerText = joined;
-        }
-
-        const ctx = document.getElementById('growthChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{
-                    data: [400, 700, 550, 950, 800, 1200],
-                    borderColor: '#6C8EEF',
-                    tension: 0.4,
-                    fill: true,
-                    backgroundColor: 'rgba(108, 142, 239, 0.05)',
-                    pointRadius: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { grid: { display: false }, ticks: { color: '#A0AEC0' } },
-                    y: { grid: { color: 'rgba(160, 174, 192, 0.1)' }, ticks: { display: false } }
-                }
-            }
-        });
-    </script>
-    <script>
-        (async function updateAdminProfileUI() {
-            const token = localStorage.getItem('adminToken');
-            if (!token) return;
-
+        async function loadData() {
+            const token = localStorage.getItem("adminToken");
             try {
-                const res = await fetch('/api/admin/profile', {
-                    headers: { Authorization: 'Bearer ' + token }
+                const res = await fetch(`/api/admin/customers/${customerId}`, {
+                    headers: { Authorization: "Bearer " + token }
                 });
 
-                if (!res.ok) return;
+                if (!res.ok) throw new Error("Failed to load");
 
-                const admin = await res.json();
+                const data = await res.json();
+                renderProfile(data.user);
+                renderStats(data.stats);
+                renderChart(data.graphData);
+                renderOrders(data.orders);
+                renderWallet(data.user.walletBalance, data.transactions);
 
-                // Update Sidebar & Topbar Images
-                if (admin.avatar) {
-                    document.querySelectorAll('.admin-avatar, .rounded-circle.border').forEach(img => {
-                        img.src = admin.avatar;
-                    });
-                }
-
-                // Update Name & Email
-                if (admin.fullName) {
-                    document.querySelectorAll('.admin-name').forEach(el => el.textContent = admin.fullName);
-                }
-                if (admin.email) {
-                    document.querySelectorAll('.admin-email').forEach(el => el.textContent = admin.email);
-                }
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'grid';
 
             } catch (err) {
-                console.error('Failed to load admin profile:', err);
+                console.error(err);
+                alert("Error loading data");
             }
-        })();
+        }
+
+        function renderProfile(user) {
+            document.getElementById('pName').innerText = user.fullName;
+            document.getElementById('pId').innerText = `Customer ID: #${user._id.slice(-8).toUpperCase()}`;
+            document.getElementById('pAvatar').src = user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.fullName)}&background=random`;
+
+            document.getElementById('pPhone').innerText = user.phone || "No Phone";
+            document.getElementById('pEmail').innerText = user.email;
+            document.getElementById('pAddress').innerText = user.location || "No Address";
+            document.getElementById('pCity').innerHTML = `<i class="bi bi-geo-alt-fill me-1"></i> ${user.location ? user.location.split(',')[0] : 'Unknown City'}`;
+            document.getElementById('pJoined').innerText = new Date(user.createdAt).toLocaleDateString();
+        }
+
+        function renderStats(stats) {
+            document.getElementById('sTotal').innerText = stats.totalOrders;
+            document.getElementById('sCompleted').innerText = stats.completedOrders;
+            document.getElementById('sCancelled').innerText = stats.cancelledOrders;
+        }
+
+        function renderOrders(orders) {
+            const tbody = document.getElementById('ordersList');
+            if (orders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">No orders found</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = orders.map(o => `
+                <tr>
+                    <td>#${o._id.slice(-6).toUpperCase()}</td>
+                    <td>${new Date(o.createdAt).toLocaleDateString()}</td>
+                    <td class="fw-bold">₹${o.totalAmount}</td>
+                    <td><span class="badge ${getStatusBadge(o.orderStatus)}">${o.orderStatus}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function getStatusBadge(status) {
+            const map = {
+                'pending': 'bg-warning text-dark',
+                'shipped': 'bg-info text-white',
+                'delivered': 'bg-success',
+                'canceled': 'bg-danger'
+            };
+            return map[status] || 'bg-secondary';
+        }
+
+        function renderWallet(balance, transactions) {
+            document.getElementById('wBalance').innerText = `₹${(balance || 0).toLocaleString()}`;
+
+            const list = document.getElementById('transactionsList');
+            if (transactions.length === 0) {
+                list.innerHTML = `<p class="text-center text-muted py-3">No transactions yet</p>`;
+                return;
+            }
+
+            list.innerHTML = transactions.map(t => `
+                <div class="transaction-item">
+                     <div class="d-flex align-items-center">
+                         <div class="t-icon"><i class="bi bi-arrow-down"></i></div> <!-- Always down arrow for now? Or check type -->
+                         <div>
+                             <p class="m-0 fw-bold small">${t.description}</p>
+                             <small class="text-muted">${new Date(t.date).toLocaleDateString()}</small>
+                         </div>
+                     </div>
+                     <span class="fw-bold ${t.type === 'credit' ? 'text-success' : 'text-danger'}">
+                        ${t.type === 'credit' ? '+' : '-'}₹${t.amount}
+                     </span>
+                </div>
+            `).join('');
+        }
+
+        function renderChart(graphData) {
+            // Transform data for chart
+            // graphData is [{ _id: monthNum, total: sum }]
+            const labels = [];
+            const data = [];
+
+            // Generate last 6 month labels
+            for (let i = 5; i >= 0; i--) {
+                const d = new Date();
+                d.setMonth(d.getMonth() - i);
+                const monthName = d.toLocaleString('default', { month: 'short' });
+                const monthNum = d.getMonth() + 1;
+
+                labels.push(`${monthName} ${d.getFullYear()}`);
+
+                const found = graphData.find(g => g._id === monthNum);
+                data.push(found ? found.total : 0);
+            }
+
+            const ctx = document.getElementById('spendingChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Monthly Spend',
+                        data: data,
+                        backgroundColor: '#0CB45D',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, grid: { display: false } },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        loadData();
     </script>
-    <script src="js/admin-global.js"></script>
 </body>
 
 </html>

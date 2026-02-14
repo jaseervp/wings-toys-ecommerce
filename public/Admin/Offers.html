@@ -9,6 +9,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Cropper.js CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 
     <style>
         :root {
@@ -321,7 +325,6 @@
             <div class="d-flex align-items-center gap-3">
                 <i class="bi bi-list mobile-toggle"
                     onclick="document.getElementById('sidebar').classList.toggle('active')"></i>
-                <h4 class="m-0 fw-semibold">Offers & Promotions</h4>
             </div>
             <div class="d-flex align-items-center gap-3">
                 <div class="theme-toggle" onclick="toggleTheme()"><i class="bi bi-moon-stars-fill" id="tIcon"></i></div>
@@ -329,108 +332,261 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-lg-5">
-                <div class="offer-card">
-                    <h5 class="fw-semibold mb-4">Create New Offer</h5>
-                    <form>
-                        <div class="mb-3">
-                            <label class="form-label">Offer Title</label>
-                            <input type="text" class="form-control" placeholder="e.g. Summer Mega Sale">
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-6">
-                                <label class="form-label">Discount Type</label>
-                                <select class="form-select">
-                                    <option>Percentage (%)</option>
-                                    <option>Flat Amount</option>
-                                </select>
-                            </div>
-                            <div class="col-6">
-                                <label class="form-label">Value</label>
-                                <input type="number" class="form-control" placeholder="20">
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Applicable Category</label>
-                            <select class="form-select">
-                                <option>All Products</option>
-                                <option>Die-cast Cars</option>
-                                <option>Action Figures</option>
-                            </select>
-                        </div>
-                        <div class="mb-4">
-                            <label class="form-label">Banner Image</label>
-                            <input type="file" class="form-control">
-                        </div>
-                        <button type="button" class="btn-primary-custom w-100">Publish Offer</button>
-                    </form>
+        <!-- Main Card Container -->
+        <div class="card border-0 shadow-sm p-4" style="border-radius: 12px;">
+
+            <!-- Header Row inside Card -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="m-0 fw-bold">Active Offers</h4>
+
+                <div class="d-flex gap-3">
+                    <div class="search-box bg-white border rounded ps-2"
+                        style="max-width: 300px; display: flex; align-items: center;">
+                        <i class="bi bi-search text-secondary me-2"></i>
+                        <input type="text" placeholder="Search offer name..." class="border-0 bg-transparent py-2"
+                            style="outline: none; width: 200px;">
+                    </div>
+                    <button class="btn btn-primary px-4 fw-medium" data-bs-toggle="modal"
+                        data-bs-target="#newSaleModal">
+                        <i class="bi bi-plus-lg me-2"></i>New Offer
+                    </button>
                 </div>
             </div>
 
-            <div class="col-lg-7">
-                <div class="table-container">
-                    <div class="p-3 bg-white border-bottom">
-                        <h6 class="m-0 fw-semibold">Live Promotions</h6>
+            <!-- Table -->
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr style="border-bottom: 2px solid #f1f5f9;">
+                            <th class="ps-4 py-3 text-secondary fw-medium">Banner</th>
+                            <th class="py-3 text-secondary fw-medium">Offer Name</th>
+                            <th class="py-3 text-secondary fw-medium">Offer</th>
+                            <th class="py-3 text-secondary fw-medium">Target</th>
+                            <th class="py-3 text-secondary fw-medium">Start Date</th>
+                            <th class="py-3 text-secondary fw-medium">End Date</th>
+                            <th class="py-3 text-secondary fw-medium">Status</th>
+                            <th class="text-end pe-4 py-3 text-secondary fw-medium">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="ps-4 py-3">
+                                <img src="https://via.placeholder.com/80x30" alt="Banner"
+                                    style="height: 35px; width: 80px; object-fit: cover; border-radius: 6px;">
+                            </td>
+                            <td class="fw-bold text-dark">Arg spcl</td>
+                            <td class="text-primary fw-bold">Min ₹20</td>
+                            <td class="text-dark">Team</td>
+                            <td class="text-secondary">22/12/2025</td>
+                            <td class="text-secondary">26/02/2026</td>
+                            <td><span
+                                    class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill fw-medium">Active</span>
+                            </td>
+                            <td class="text-end pe-4">
+                                <button class="btn btn-sm"
+                                    style="background: #FFF8E1; color: #FFA000; border-radius: 8px; width: 32px; height: 32px;"><i
+                                        class="bi bi-pencil-square"></i></button>
+                                <button class="btn btn-sm ms-1"
+                                    style="background: #FFEBEE; color: #EF5350; border-radius: 8px; width: 32px; height: 32px;"><i
+                                        class="bi bi-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4 py-3">
+                                <img src="https://via.placeholder.com/80x30" alt="Banner"
+                                    style="height: 35px; width: 80px; object-fit: cover; border-radius: 6px;">
+                            </td>
+                            <td class="fw-bold text-dark">blckfriday</td>
+                            <td class="text-primary fw-bold">Min 2%</td>
+                            <td class="text-dark">Category</td>
+                            <td class="text-secondary">23/12/2025</td>
+                            <td class="text-secondary">02/01/2026</td>
+                            <td><span
+                                    class="badge bg-danger bg-opacity-10 text-danger px-3 py-2 rounded-pill fw-medium">Expired/Inactive</span>
+                            </td>
+                            <td class="text-end pe-4">
+                                <button class="btn btn-sm"
+                                    style="background: #FFF8E1; color: #FFA000; border-radius: 8px; width: 32px; height: 32px;"><i
+                                        class="bi bi-pencil-square"></i></button>
+                                <button class="btn btn-sm ms-1"
+                                    style="background: #FFEBEE; color: #EF5350; border-radius: 8px; width: 32px; height: 32px;"><i
+                                        class="bi bi-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- New Sale Modal -->
+        <div class="modal fade" id="newSaleModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content border-0 shadow-lg" style="border-radius: 12px;">
+                    <div class="modal-header border-bottom-0 pb-0">
+                        <h5 class="modal-title fw-bold">Create Offer</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Offer Details</th>
-                                    <th>Value</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="fw-600">Flash Sale Friday</div>
-                                        <small class="text-gray">Ends in 2 days</small>
-                                    </td>
-                                    <td><span class="fw-bold">15% Off</span></td>
-                                    <td><span class="badge-active">Active</span></td>
-                                    <td>
-                                        <button class="btn btn-sm text-primary"><i
-                                                class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm text-danger"><i class="bi bi-trash"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="fw-600">New User Bonus</div>
-                                        <small class="text-gray">Sitewide</small>
-                                    </td>
-                                    <td><span class="fw-bold">Rs. 500</span></td>
-                                    <td><span class="badge-active">Active</span></td>
-                                    <td>
-                                        <button class="btn btn-sm text-primary"><i
-                                                class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm text-danger"><i class="bi bi-trash"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="fw-600">Christmas 2024</div>
-                                        <small class="text-gray">Expired</small>
-                                    </td>
-                                    <td><span class="fw-bold">40% Off</span></td>
-                                    <td><span class="badge-expired">Expired</span></td>
-                                    <td>
-                                        <button class="btn btn-sm text-primary"><i
-                                                class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm text-danger"><i class="bi bi-trash"></i></button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="modal-body pt-3 px-4">
+                        <form>
+                            <!-- OFFER INFO -->
+                            <div class="mb-4">
+                                <h6 class="text-uppercase fw-bold mb-3"
+                                    style="color: #4F46E5; font-size: 0.75rem; letter-spacing: 0.5px;">Offer Info</h6>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-medium">Offer Name <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control bg-light border-0"
+                                        placeholder="e.g. Monsoon Mega Sale" style="height: 45px;">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-medium">Banner Image <span
+                                            class="text-danger">*</span></label>
+
+                                    <!-- Unified Upload & Preview Area -->
+                                    <div id="uploadArea"
+                                        class="d-flex flex-column align-items-center justify-content-center border-2 border-dashed rounded-3 bg-light position-relative overflow-hidden"
+                                        style="border-style: dashed; border-color: #cbd5e1; height: 160px; cursor: pointer;">
+
+                                        <!-- File Input -->
+                                        <input type="file" id="offerImageInput"
+                                            class="position-absolute w-100 h-100 opacity-0" accept="image/*"
+                                            style="cursor: pointer; z-index: 10;">
+
+                                        <!-- Placeholder Content -->
+                                        <div id="uploadPlaceholder" class="text-center pointer-events-none">
+                                            <i class="bi bi-card-image fs-1 text-secondary mb-2"></i>
+                                            <div class="text-secondary small">Click to upload (Rec: 1200x600)</div>
+                                        </div>
+
+                                        <!-- Preview Image -->
+                                        <img id="finalPreview" src="" class="position-absolute w-100 h-100 d-none"
+                                            style="object-fit: cover; z-index: 5;">
+
+                                        <!-- Remove Button -->
+                                        <button type="button" id="removeImage"
+                                            class="btn btn-light shadow-sm position-absolute top-0 end-0 m-2 rounded-circle p-0 d-none align-items-center justify-content-center"
+                                            style="width: 28px; height: 28px; z-index: 20;">
+                                            <i class="bi bi-x fs-5 text-danger"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- DISCOUNT RULES -->
+                            <div class="mb-4">
+                                <h6 class="text-uppercase fw-bold mb-3"
+                                    style="color: #4F46E5; font-size: 0.75rem; letter-spacing: 0.5px;">Discount Rules
+                                </h6>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-medium">Offer Type</label>
+                                        <select class="form-select bg-light border-0" style="height: 45px;">
+                                            <option>Flat Discount</option>
+                                            <option>Percentage Discount</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label fw-medium">Value <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" class="form-control bg-light border-0"
+                                            placeholder="e.g. 50 or 500" style="height: 45px;">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- TARGETING -->
+                            <div class="mb-4">
+                                <h6 class="text-uppercase fw-bold mb-3"
+                                    style="color: #4F46E5; font-size: 0.75rem; letter-spacing: 0.5px;">Targeting</h6>
+                                <div class="mb-3">
+                                    <label class="form-label fw-medium">Applies To</label>
+                                    <select class="form-select bg-light border-0" id="offerTarget"
+                                        style="height: 45px;">
+                                        <option value="all">All Products</option>
+                                        <option value="category">Specific Category</option>
+                                        <option value="product">Specific Product</option>
+                                    </select>
+                                </div>
+
+                                <!-- Dynamic Product Selection -->
+                                <div id="productSelectionContainer" class="p-3 border rounded bg-white mt-3"
+                                    style="display: none;">
+                                    <label class="form-label fw-medium small text-muted mb-2">Select Products</label>
+                                    <input type="text" id="productSearch" class="form-control form-control-sm mb-2"
+                                        placeholder="Search products...">
+                                    <div id="productList"
+                                        style="max-height: 150px; overflow-y: auto; border: 1px solid #eee; border-radius: 6px; padding: 5px;">
+                                        <!-- Products will be loaded here -->
+                                        <div class="text-center text-muted small py-2">Loading products...</div>
+                                    </div>
+                                    <div class="mt-2 text-end">
+                                        <small class="text-muted" id="selectedCount">0 selected</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SCHEDULE -->
+                            <div class="mb-4">
+                                <h6 class="text-uppercase fw-bold mb-3"
+                                    style="color: #4F46E5; font-size: 0.75rem; letter-spacing: 0.5px;">Schedule</h6>
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-medium">Start Date <span
+                                                class="text-danger">*</span></label>
+                                        <input type="date" class="form-control bg-light border-0" style="height: 45px;">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-medium">End Date <span
+                                                class="text-danger">*</span></label>
+                                        <input type="date" class="form-control bg-light border-0" style="height: 45px;">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-medium">Status</label>
+                                    <select class="form-select bg-light border-0" style="height: 45px;">
+                                        <option>Active</option>
+                                        <option>Inactive</option>
+                                        <option>Scheduled</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer border-top-0 px-4 pb-4">
+                        <button type="button" class="btn btn-light px-4 py-2" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary px-4 py-2"
+                            style="background-color: #4F46E5; border-color: #4F46E5;">Save Offer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Crop Modal -->
+        <div class="modal fade" id="cropModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content border-0 shadow-lg">
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold">Crop Banner (2:1 Ratio)</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-0" style="height: 500px; background: #333;">
+                        <img id="cropImage" src="" style="max-width: 100%; display: block;">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="cropBtn"
+                            style="background-color: #4F46E5;">Crop & Save</button>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function toggleTheme() {
             const b = document.body; const i = document.getElementById('tIcon');
@@ -474,6 +630,616 @@
         })();
     </script>
     <script src="js/admin-global.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const offerTarget = document.getElementById('offerTarget');
+            const productSelectionContainer = document.getElementById('productSelectionContainer');
+            const productList = document.getElementById('productList');
+            const productSearch = document.getElementById('productSearch');
+            const selectedCount = document.getElementById('selectedCount');
+            const selectionLabel = document.getElementById('selectionLabel');
+
+            let loadedProducts = [];
+            let loadedCategories = [];
+
+            // Listen for Target Selection Change
+            offerTarget.addEventListener('change', async function () {
+                const type = this.value;
+
+                if (type === 'product' || type === 'category') {
+                    productSelectionContainer.style.display = 'block';
+
+                    // Update UI Label & Placeholder
+                    const searchInput = document.getElementById('productSearch');
+                    const label = productSelectionContainer.querySelector('label');
+
+                    if (type === 'product') {
+                        label.textContent = 'Select Products';
+                        searchInput.placeholder = 'Search products...';
+                        if (loadedProducts.length === 0) await fetchProducts();
+                        else renderProducts(loadedProducts);
+                    } else {
+                        label.textContent = 'Select Category';
+                        searchInput.placeholder = 'Search categories...';
+                        if (loadedCategories.length === 0) await fetchCategories();
+                        else renderCategories(loadedCategories);
+                    }
+                    updateCount(); // Reset count for new view
+
+                } else {
+                    productSelectionContainer.style.display = 'none';
+                }
+            });
+
+            // Fetch Products from API
+            async function fetchProducts() {
+                const token = localStorage.getItem('adminToken');
+                try {
+                    const res = await fetch('/api/admin/products', {
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    });
+
+                    if (!res.ok) throw new Error('Failed to fetch products');
+
+                    loadedProducts = await res.json();
+                    renderProducts(loadedProducts);
+
+                } catch (err) {
+                    console.error(err);
+                    productList.innerHTML = `<div class="text-danger small p-2">Error loading products</div>`;
+                }
+            }
+
+            // Fetch Categories from API (NEW)
+            async function fetchCategories() {
+                const token = localStorage.getItem('adminToken');
+                try {
+                    const res = await fetch('/api/categories', { // Assuming public or admin route
+                        // Check route. Usually /api/categories is public. 
+                        // Let's check adminRoutes or categoryRoutes if needed.
+                        // Public /api/categories is fine.
+                    });
+
+                    if (!res.ok) throw new Error('Failed to fetch categories');
+
+                    loadedCategories = await res.json();
+                    renderCategories(loadedCategories);
+
+                } catch (err) {
+                    console.error(err);
+                    productList.innerHTML = `<div class="text-danger small p-2">Error loading categories</div>`;
+                }
+            }
+
+            // Render Products List
+            function renderProducts(products) {
+                if (products.length === 0) {
+                    productList.innerHTML = `<div class="text-muted small p-2 text-center">No products found</div>`;
+                    return;
+                }
+
+                productList.innerHTML = products.map(p => `
+                    <div class="d-flex align-items-center border-bottom py-2 px-3 hover-bg pointer-events-auto" onclick="document.getElementById('prod_${p._id}').click()">
+                        <input class="form-check-input product-checkbox m-0 me-3" type="checkbox" value="${p._id}" id="prod_${p._id}" onclick="event.stopPropagation()">
+                        <div class="flex-grow-1 d-flex justify-content-between align-items-center small">
+                            <span class="fw-medium text-truncate" style="max-width: 250px;">${p.name}</span>
+                            <span class="badge bg-light text-dark border">₹${p.finalPrice}</span>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Attach checkbox listeners to update count
+                document.querySelectorAll('.product-checkbox').forEach(cb => {
+                    cb.addEventListener('change', updateCount);
+                });
+            }
+
+            // Render Categories List (NEW)
+            function renderCategories(categories) {
+                if (categories.length === 0) {
+                    productList.innerHTML = `<div class="text-muted small p-2 text-center">No categories found</div>`;
+                    return;
+                }
+
+                productList.innerHTML = categories.map(c => `
+                    <div class="d-flex align-items-center border-bottom py-2 px-3 hover-bg pointer-events-auto" onclick="document.getElementById('cat_${c._id}').click()">
+                        <input class="form-check-input product-checkbox m-0 me-3" type="checkbox" value="${c._id}" id="cat_${c._id}" onclick="event.stopPropagation()">
+                        <div class="flex-grow-1 d-flex justify-content-between align-items-center small">
+                            <span class="fw-medium text-truncate" style="max-width: 250px;">${c.name}</span>
+                            <span class="badge bg-secondary bg-opacity-10 text-secondary">Category</span>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Re-attach listeners (using same class 'product-checkbox' is fine for generic selector, or reuse updateCount)
+                document.querySelectorAll('.product-checkbox').forEach(cb => {
+                    cb.addEventListener('change', updateCount);
+                });
+            }
+
+            // Filter Products/Categories on Search
+            productSearch.addEventListener('keyup', (e) => {
+                const term = e.target.value.toLowerCase();
+                const type = offerTarget.value;
+
+                if (type === 'product') {
+                    const filtered = loadedProducts.filter(p =>
+                        p.name.toLowerCase().includes(term) ||
+                        (p.sku && p.sku.toLowerCase().includes(term))
+                    );
+                    renderProducts(filtered);
+                } else if (type === 'category') {
+                    const filtered = loadedCategories.filter(c =>
+                        c.name.toLowerCase().includes(term)
+                    );
+                    renderCategories(filtered);
+                }
+            });
+
+            // Update Selected Count
+            function updateCount() {
+                const count = document.querySelectorAll('.product-checkbox:checked').length;
+                selectedCount.textContent = `${count} selected`;
+            }
+
+            // --- FETCH OFFERS LOGIC ---
+            async function fetchOffers() {
+                const token = localStorage.getItem('adminToken');
+                const tbody = document.querySelector('tbody');
+
+                try {
+                    const res = await fetch('/api/admin/offers', {
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    });
+
+                    if (!res.ok) throw new Error('Failed to fetch offers');
+
+                    const offers = await res.json();
+
+                    if (offers.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-muted">No offers found</td></tr>';
+                        return;
+                    }
+
+                    tbody.innerHTML = offers.map(offer => {
+                        const startDate = new Date(offer.startDate).toLocaleDateString('en-GB');
+                        const endDate = new Date(offer.endDate).toLocaleDateString('en-GB');
+
+                        // Status Logic
+                        const now = new Date();
+                        const start = new Date(offer.startDate);
+                        const end = new Date(offer.endDate);
+                        let statusBadges = '';
+
+                        if (!offer.isActive) {
+                            statusBadges = '<span class="badge bg-danger bg-opacity-10 text-danger px-3 py-2 rounded-pill fw-medium">Inactive</span>';
+                        } else if (now > end) {
+                            statusBadges = '<span class="badge bg-danger bg-opacity-10 text-danger px-3 py-2 rounded-pill fw-medium">Expired</span>';
+                        } else if (now < start) {
+                            statusBadges = '<span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2 rounded-pill fw-medium">Upcoming</span>';
+                        } else {
+                            statusBadges = '<span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill fw-medium">Active</span>';
+                        }
+
+                        // Offer Value Display
+                        const offerValue = offer.discountType === 'percentage' ? `${offer.discountValue}% Off` : `Flat ₹${offer.discountValue}`;
+
+                        // Target Display Logic (Static Label)
+                        let targetDisplay = 'All Products';
+                        if (offer.targetType === 'product') targetDisplay = 'Specific Product';
+                        else if (offer.targetType === 'category') targetDisplay = 'Specific Category';
+
+                        return `
+                        <tr>
+                            <td class="ps-4 py-3">
+                                <img src="${offer.bannerImage}" alt="Banner" style="height: 35px; width: 80px; object-fit: cover; border-radius: 6px;">
+                            </td>
+                            <td class="fw-bold text-dark">${offer.name}</td>
+                            <td class="text-primary fw-bold">${offerValue}</td>
+                            <td class="fw-medium text-dark">${targetDisplay}</td>
+                            <td class="text-secondary">${startDate}</td>
+                            <td class="text-secondary">${endDate}</td>
+                            <td>${statusBadges}</td>
+                            <td class="text-end pe-4">
+                                <button class="btn btn-sm" onclick="editOffer('${offer._id}')" style="background: #FFF8E1; color: #FFA000; border-radius: 8px; width: 32px; height: 32px;"><i class="bi bi-pencil-square"></i></button>
+                                <button class="btn btn-sm ms-1" onclick="deleteOffer('${offer._id}')" style="background: #FFEBEE; color: #EF5350; border-radius: 8px; width: 32px; height: 32px;"><i class="bi bi-trash"></i></button>
+                            </td>
+                        </tr>
+                        `;
+                    }).join('');
+
+                } catch (err) {
+                    console.error(err);
+                    tbody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-danger">Error loading offers</td></tr>';
+                }
+            }
+
+            // Initial Load
+            fetchOffers();
+
+            // --- GLOBAL HELPERS (Attached to Window for onClick) ---
+
+            // DELETE OFFER with SweetAlert2
+            window.deleteOffer = async (id) => {
+                const result = await Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                });
+
+                if (!result.isConfirmed) return;
+
+                try {
+                    const token = localStorage.getItem('adminToken');
+                    const res = await fetch(`/api/admin/offers/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    });
+
+                    if (res.ok) {
+                        Swal.fire('Deleted!', 'Offer has been deleted.', 'success');
+                        fetchOffers();
+                    } else {
+                        Swal.fire('Error', 'Failed to delete offer', 'error');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    Swal.fire('Error', 'Error deleting offer', 'error');
+                }
+            };
+
+            // EDIT OFFER
+            let isEditMode = false;
+            let currentOfferId = null;
+
+            window.editOffer = async (id) => {
+                try {
+                    const token = localStorage.getItem('adminToken');
+                    const res = await fetch(`/api/admin/offers/${id}`, {
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    });
+
+                    if (!res.ok) throw new Error('Failed to fetch offer details');
+                    const offer = await res.json();
+
+                    // 1. Populate Modal Fields
+                    const form = document.querySelector('#newSaleModal form');
+                    form.querySelector('input[placeholder="e.g. Monsoon Mega Sale"]').value = offer.name;
+
+                    const selects = form.querySelectorAll('select');
+                    const inputs = form.querySelectorAll('input');
+
+                    // Discount Type
+                    selects[0].value = offer.discountType === 'percentage' ? 'Percentage Discount' : 'Flat Discount';
+
+                    // Discount Value
+                    inputs[2].value = offer.discountValue;
+
+                    // Targeting
+                    const targetSelect = document.getElementById('offerTarget');
+                    targetSelect.value = offer.targetType;
+
+                    // Manually trigger fetch and wait
+                    const productSelectionContainer = document.getElementById('productSelectionContainer');
+                    const searchInput = document.getElementById('productSearch');
+                    const label = productSelectionContainer.querySelector('label');
+
+                    if (offer.targetType === 'product' || offer.targetType === 'category') {
+                        productSelectionContainer.style.display = 'block';
+
+                        // Set UI Labels
+                        if (offer.targetType === 'product') {
+                            label.textContent = 'Select Products';
+                            searchInput.placeholder = 'Search products...';
+                            if (loadedProducts.length === 0) await fetchProducts();
+                            else renderProducts(loadedProducts);
+                        } else {
+                            label.textContent = 'Select Category';
+                            searchInput.placeholder = 'Search categories...';
+                            if (loadedCategories.length === 0) await fetchCategories();
+                            else renderCategories(loadedCategories);
+                        }
+
+                        // Select the Target Checkbox
+                        if (offer.targetId) {
+                            // Find checkbox by ID (prod_ID or cat_ID)
+                            // Note: My render functions use prod_${id} and cat_${id}
+                            const prefix = offer.targetType === 'product' ? 'prod_' : 'cat_';
+                            const checkbox = document.getElementById(`${prefix}${offer.targetId}`);
+                            if (checkbox) {
+                                checkbox.checked = true;
+                                updateCount();
+
+                                // Scroll to it
+                                checkbox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                        }
+                    } else {
+                        productSelectionContainer.style.display = 'none';
+                    }
+
+                    // Dates
+                    const dateInputs = form.querySelectorAll('input[type="date"]');
+                    dateInputs[0].value = new Date(offer.startDate).toISOString().split('T')[0];
+                    dateInputs[1].value = new Date(offer.endDate).toISOString().split('T')[0];
+
+                    // Status
+                    selects[2].value = offer.isActive ? 'Active' : 'Inactive';
+
+                    // Image Handling
+                    finalPreview.src = offer.bannerImage;
+                    document.getElementById('uploadPlaceholder').classList.add('d-none');
+                    finalPreview.classList.remove('d-none');
+                    removeImageBtn.classList.remove('d-none');
+                    removeImageBtn.classList.add('d-flex');
+
+                    // Set Edit Mode State
+                    isEditMode = true;
+                    currentOfferId = offer._id;
+
+                    // Update Modal Title & Button
+                    document.querySelector('.modal-title').textContent = 'Edit Offer';
+                    document.querySelector('.modal-footer .btn-primary').textContent = 'Update Offer';
+
+                    // Show Modal
+                    const modal = new bootstrap.Modal(document.getElementById('newSaleModal'));
+                    modal.show();
+
+                } catch (err) {
+                    console.error(err);
+                    Swal.fire('Error', 'Failed to load offer details', 'error');
+                }
+            };
+
+            // Reset Modal on Close
+            document.getElementById('newSaleModal').addEventListener('hidden.bs.modal', () => {
+                document.querySelector('#newSaleModal form').reset();
+                isEditMode = false;
+                currentOfferId = null;
+                document.querySelector('.modal-title').textContent = 'Create Offer';
+                document.querySelector('.modal-footer .btn-primary').textContent = 'Save Offer';
+                document.getElementById('productSelectionContainer').style.display = 'none'; // Hide container
+                document.getElementById('selectedCount').textContent = '0 selected'; // Reset count
+
+                // Reset Image UI
+                removeImageBtn.click(); // Reuse remove logic
+            });
+
+            // --- CROPPER VARIABLES & LOGIC ---
+            let cropper;
+            let croppedBlob = null;
+
+            // Elements
+            const imageInput = document.getElementById('offerImageInput');
+            const uploadArea = document.getElementById('uploadArea');
+            // const finalPreviewContainer = document.getElementById('finalPreviewContainer'); // Removed
+            const finalPreview = document.getElementById('finalPreview');
+            const removeImageBtn = document.getElementById('removeImage');
+
+            // Modal Elements
+            const cropModalEl = document.getElementById('cropModal');
+            const cropModal = new bootstrap.Modal(cropModalEl);
+            const cropImage = document.getElementById('cropImage');
+            const cropBtn = document.getElementById('cropBtn');
+
+            // 1. File Selection -> Show Modal
+            imageInput.addEventListener('change', function (e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        cropImage.src = e.target.result;
+                        cropModal.show();
+                    };
+                    reader.readAsDataURL(file);
+                }
+                this.value = '';
+            });
+
+            // 2. Initialize Cropper when Modal opens
+            cropModalEl.addEventListener('shown.bs.modal', () => {
+                if (cropper) cropper.destroy();
+                cropper = new Cropper(cropImage, {
+                    aspectRatio: 2 / 1,
+                    viewMode: 1,
+                    autoCropArea: 0.9,
+                    background: false
+                });
+            });
+
+            // 3. Destroy Cropper when Modal closes
+            cropModalEl.addEventListener('hidden.bs.modal', () => {
+                if (cropper) {
+                    cropper.destroy();
+                    cropper = null;
+                }
+            });
+
+            // 4. Crop & Save
+            cropBtn.addEventListener('click', () => {
+                if (!cropper) return;
+
+                cropper.getCroppedCanvas({
+                    width: 800,
+                    height: 400
+                }).toBlob((blob) => {
+                    croppedBlob = blob;
+                    finalPreview.src = URL.createObjectURL(blob);
+
+                    // UI: Show Preview, Hide Placeholder
+                    document.getElementById('uploadPlaceholder').classList.add('d-none');
+                    finalPreview.classList.remove('d-none');
+
+                    // Show Remove Button
+                    removeImageBtn.classList.remove('d-none');
+                    removeImageBtn.classList.add('d-flex');
+
+                    cropModal.hide();
+                }, 'image/jpeg');
+            });
+
+            // 5. Remove Image
+            removeImageBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation(); // Stop click from triggering file input
+
+                finalPreview.src = '';
+                croppedBlob = null;
+                imageInput.value = '';
+
+                // UI: Hide Preview, Show Placeholder
+                document.getElementById('uploadPlaceholder').classList.remove('d-none');
+                finalPreview.classList.add('d-none');
+
+                // Hide Remove Button
+                removeImageBtn.classList.add('d-none');
+                removeImageBtn.classList.remove('d-flex');
+            });
+
+            // --- SAVE / UPDATE OFFER LOGIC ---
+            // Name Validation (Frontend)
+            const nameInput = document.querySelector('input[placeholder="e.g. Monsoon Mega Sale"]');
+            nameInput.addEventListener('input', function () {
+                // Allow only letters and single spaces (No numbers)
+                let val = this.value;
+                val = val.replace(/[^a-zA-Z ]/g, ''); // Remove special chars AND numbers
+                val = val.replace(/\s+/g, ' '); // Replace multiple spaces with single space
+                this.value = val;
+            });
+
+            // Discount Value Validation (No Negatives)
+            const discountInput = document.querySelector('input[placeholder="e.g. 50 or 500"]');
+            discountInput.addEventListener('input', function () {
+                let val = this.value;
+                // Remove any non-digit/dot (effectively prevents '-')
+                val = val.replace(/[^0-9.]/g, '');
+
+                // Prevent multiple dots
+                const parts = val.split('.');
+                if (parts.length > 2) {
+                    val = parts[0] + '.' + parts.slice(1).join('');
+                }
+                this.value = val;
+            });
+
+            const saveBtn = document.querySelector('.modal-footer .btn-primary');
+            saveBtn.addEventListener('click', async () => {
+                const form = document.querySelector('#newSaleModal form');
+
+                // Selectors (re-verified)
+                const name = form.querySelector('input[placeholder="e.g. Monsoon Mega Sale"]').value.trim();
+                const discountType = form.querySelectorAll('select')[0].value === 'Percentage Discount' ? 'percentage' : 'flat';
+                const discountValue = form.querySelector('input[placeholder="e.g. 50 or 500"]').value;
+                const targetType = document.getElementById('offerTarget').value;
+                const dateInputs = form.querySelectorAll('input[type="date"]');
+                const startDate = dateInputs[0].value;
+                const endDate = dateInputs[1].value;
+                const isActive = form.querySelectorAll('select')[2].value === 'Active';
+
+                // Validation
+                const hasImage = croppedBlob || (isEditMode && finalPreview.getAttribute('src') && finalPreview.getAttribute('src') !== '');
+
+                if (!name || !discountValue || !startDate || !endDate || !hasImage) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Missing Fields',
+                        text: 'Please fill all required fields and upload/crop an image.'
+                    });
+                    return;
+                }
+
+                if (name.length < 3) {
+                    Swal.fire('Invalid Name', 'Offer Name must be at least 3 characters long', 'warning');
+                    return;
+                }
+
+                // Date Validation
+                if (new Date(startDate) > new Date(endDate)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Date',
+                        text: 'End Date cannot be before Start Date'
+                    });
+                    return;
+                }
+
+                // Prepare Data
+                const formData = new FormData();
+                formData.append('name', name);
+                formData.append('discountType', discountType);
+                formData.append('discountValue', discountValue);
+                formData.append('targetType', targetType);
+                formData.append('startDate', startDate);
+                formData.append('endDate', endDate);
+                formData.append('isActive', isActive);
+
+                if (croppedBlob) {
+                    formData.append('bannerImage', croppedBlob, 'banner.jpg');
+                }
+
+                // Target ID logic
+                if (targetType === 'product' || targetType === 'category') {
+                    const selectedCheckboxes = document.querySelectorAll('.product-checkbox:checked');
+                    if (selectedCheckboxes.length === 0) {
+                        Swal.fire('Warning', `Please select a ${targetType}`, 'warning');
+                        return;
+                    }
+                    // Backend expects single targetId currently
+                    formData.append('targetId', selectedCheckboxes[0].value);
+                }
+
+                try {
+                    const token = localStorage.getItem('adminToken');
+                    let url = '/api/admin/offers';
+                    let method = 'POST';
+
+                    if (isEditMode && currentOfferId) {
+                        url = `/api/admin/offers/${currentOfferId}`;
+                        method = 'PUT';
+                    }
+
+                    const res = await fetch(url, {
+                        method: method,
+                        headers: { 'Authorization': 'Bearer ' + token },
+                        body: formData
+                    });
+
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.message || 'Failed to save offer');
+
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: isEditMode ? 'Offer updated successfully' : 'Offer created successfully',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                    location.reload();
+
+                } catch (err) {
+                    console.error(err);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: err.message
+                    });
+                }
+            });
+        });
+    </script>
+    <style>
+        .hover-bg:hover {
+            background-color: #f8f9fa;
+        }
+
+        .cursor-pointer {
+            cursor: pointer;
+        }
+    </style>
 </body>
 
 </html>

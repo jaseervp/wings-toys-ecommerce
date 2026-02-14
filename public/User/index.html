@@ -726,28 +726,41 @@
           return;
         }
 
-        container.innerHTML = products.map(p => `
+        container.innerHTML = products.map(p => {
+          const badge = p.hasDiscount
+            ? `<span class="badge bg-danger position-absolute top-0 start-0 m-2" style="z-index: 5">- ${p.discountPercentage}%</span>`
+            : '';
+
+          const price = p.hasDiscount
+            ? `<span class="fw-bold text-dark">Rs. ${p.finalPrice}</span> <del class="text-muted small ms-1">Rs. ${p.originalPrice}</del>`
+            : `<span class="fw-bold text-dark">Rs. ${p.finalPrice}</span>`;
+
+          return `
                 <div class="col-6 col-lg-3">
                     <div class="product-wrapper" onclick="window.location.href='single_product.html?id=${p._id}'">
-                        <div class="product-img-container">
+                        <div class="product-img-container position-relative">
+                            ${badge}
                             <button class="btn-circle" title="Add to Wishlist" 
-                                onclick="event.stopPropagation(); addToWishlist('${p._id}')">
+                                onclick="event.stopPropagation(); addToWishlist('${p._id}')"
+                                style="position: absolute; top: 15px; right: -50px;">
                                 <i class="bi bi-heart text-danger"></i>
                             </button>
                             <button class="btn-circle" title="Add to Cart"
-                                onclick="event.stopPropagation(); addToCart('${p._id}')">
+                                onclick="event.stopPropagation(); addToCart('${p._id}')"
+                                style="position: absolute; top: 65px; right: -50px;">
                                 <i class="bi bi-cart-plus text-dark"></i>
                             </button>
                             <img src="${p.images?.[0] || 'https://via.placeholder.com/200'}" alt="${p.name}">
                         </div>
-                        <div class="text-center">
+                        <div class="text-center ps-2 pe-2">
                             <p class="small text-muted mb-0" style="font-size: 0.7rem;">${p.category?.name || 'General'}</p>
                             <h6 class="fw-bold product-name text-truncate">${p.name}</h6>
-                            <p class="price-tag m-0">Rs. ${p.finalPrice}</p>
+                            <div class="mt-1">${price}</div>
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `;
+        }).join('');
 
       } catch (err) {
         console.error("Failed to load trending products", err);
