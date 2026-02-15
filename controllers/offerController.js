@@ -228,3 +228,25 @@ exports.updateOffer = async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 };
+
+/* =========================
+   GET PUBLIC ACTIVE OFFERS
+========================= */
+exports.getPublicOffers = async (req, res) => {
+    try {
+        const currentDate = new Date();
+
+        const offers = await Offer.find({
+            isActive: true,
+            startDate: { $lte: currentDate },
+            endDate: { $gte: currentDate }
+        })
+            .select('name bannerImage discountType discountValue targetType targetId targetTitle endDate')
+            .sort({ updatedAt: -1 });
+
+        res.status(200).json(offers);
+    } catch (error) {
+        console.error("GET PUBLIC OFFERS ERROR:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+};

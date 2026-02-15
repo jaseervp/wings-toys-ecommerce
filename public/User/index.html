@@ -7,6 +7,8 @@
   <title>ToyStore - Kids Toys</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <link rel="stylesheet" href="css/navbar.css"> <!-- Fixed Navbar Styles -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -309,12 +311,289 @@
       padding-top: 30px;
       font-size: 0.9rem;
     }
+
+    /* =========================
+       PREMIUM OFFER SLIDER
+    ========================= */
+    #offer-slider-section {
+      display: none;
+      padding: 60px 0;
+    }
+
+    .offer-slider-container {
+      border-radius: 40px;
+      position: relative;
+      /* Soft Premium Gradient Background */
+      background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      min-height: 500px;
+      /* Ensure height matches content */
+    }
+
+    .offer-wrapper {
+      display: flex;
+      transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+      will-change: transform;
+      height: 100%;
+    }
+
+    .offer-slide {
+      min-width: 100%;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 40px;
+    }
+
+    /* Glass Effect Card for Content */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      padding: 40px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .offer-img-container {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 400px;
+    }
+
+    .offer-img {
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.15));
+      transition: transform 0.5s ease;
+      animation: floatImage 4s ease-in-out infinite;
+      border-radius: 20px;
+    }
+
+    @keyframes floatImage {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-15px);
+      }
+    }
+
+    /* Hover Zoom Effect */
+    .offer-slide:hover .offer-img {
+      transform: scale(1.05) translateY(-15px);
+      /* Combine hover + float base */
+    }
+
+    .offer-badge-premium {
+      background: rgba(0, 0, 0, 0.05);
+      color: #333;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      display: inline-block;
+      margin-bottom: 20px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .offer-title {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      background: linear-gradient(45deg, #111, #444);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .offer-discount {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #e63946;
+      /* Stylish Red, NOT Blue */
+      margin-bottom: 30px;
+      display: inline-block;
+      animation: pulseText 2s infinite;
+    }
+
+    @keyframes pulseText {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Premium Button */
+    .btn-premium {
+      background: linear-gradient(90deg, #111 0%, #333 100%);
+      color: #fff;
+      border: none;
+      padding: 15px 40px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      text-transform: uppercase;
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    .btn-premium:hover {
+      background: linear-gradient(90deg, #000 0%, #222 100%);
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+      color: #fff;
+    }
+
+
+
+    /* Dots */
+    .offer-dots {
+      bottom: 30px;
+    }
+
+    .offer-dot {
+      background: rgba(0, 0, 0, 0.2);
+      transition: all 0.4s ease;
+    }
+
+    .offer-dot.active {
+      background: #111;
+      width: 40px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .offer-slide {
+        padding: 40px 20px;
+        flex-direction: column-reverse;
+        text-align: center;
+      }
+
+      .glass-card {
+        margin-top: -20px;
+        padding: 30px 20px;
+        z-index: 2;
+        border: none;
+        background: rgba(255, 255, 255, 0.8);
+      }
+
+      .offer-img-container {
+        height: 250px;
+        margin-bottom: 20px;
+      }
+
+      .offer-title {
+        font-size: 2rem;
+      }
+
+      .offer-discount {
+        font-size: 1.2rem;
+      }
+
+      .offer-control {
+        display: none;
+      }
+
+      /* Hide arrows on mobile */
+    }
+
+    /* =========================
+       ANNOUNCEMENT BAR
+    ========================= */
+    #announcement-bar {
+      background-color: #000;
+      color: #fff;
+      overflow: hidden;
+      height: 40px;
+      display: none;
+      /* Hidden by default */
+      align-items: center;
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .scrolling-content-wrapper {
+      display: flex;
+      width: fit-content;
+      animation: scrollText 30s linear infinite;
+    }
+
+    .scrolling-content {
+      display: flex;
+      align-items: center;
+      padding-right: 50px;
+      /* Space between duplicate sets */
+    }
+
+    .announcement-item {
+      display: inline-flex;
+      align-items: center;
+      margin-right: 60px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    .announcement-item i {
+      margin-right: 8px;
+      color: var(--accent-gold);
+    }
+
+    .highlight-discount {
+      color: #FFD700;
+      font-weight: 700;
+      margin: 0 5px;
+    }
+
+    @keyframes scrollText {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
+
+      /* Moves half width because content is duplicated 2x for seamless loop */
+    }
+
+    /* Pause on hover if desired */
+    #announcement-bar:hover .scrolling-content-wrapper {
+      animation-play-state: paused;
+    }
   </style>
 </head>
 
 <body>
 
-  <nav class="navbar navbar-light bg-white py-3">
+  <nav class="navbar navbar-light bg-white py-3 navbar-fixed">
     <div class="container">
 
       <!-- TOP ROW -->
@@ -400,6 +679,19 @@
     </div>
   </nav>
 
+  <!-- ANNOUNCEMENT BAR -->
+  <div id="announcement-bar">
+    <div class="scrolling-content-wrapper">
+      <div class="scrolling-content" id="announcement-text">
+        <!-- Dynamic Offers -->
+      </div>
+      <!-- Duplicate for seamless loop -->
+      <div class="scrolling-content" id="announcement-text-dup">
+        <!-- Dynamic Offers -->
+      </div>
+    </div>
+  </div>
+
   <section class="hero-section">
     <div class="container">
       <div class="row align-items-center">
@@ -443,23 +735,14 @@
     </div>
   </section>
 
-  <section class="container">
-    <div class="offer-banner">
-      <div class="row align-items-center">
-        <div class="col-md-7 text-center">
-          <img
-            src="/Images/Pop_Race_1_64_Darwin_PRO_66G_WBK_Supra__A90__-_1087X_LION_DANCE_Pink_-_PR64-0285-removebg-preview.png"
-            class="img-fluid" style="max-height: 300px;">
-        </div>
-        <div class="col-md-5 text-center text-md-start pe-md-5">
-          <span class="offer-badge">LIMITED TIME OFFER</span>
-          <h2 class="display-5 fw-bold mb-3">Flash Sale: <br> Pop Race Supra</h2>
-          <p class="text-muted mb-4">Get the exclusive 1/64 Darwin PRO Edition at 20% off. Only for the next
-            24 hours!</p>
-          <button class="btn btn-outline-dark rounded-0 px-5 py-3 fw-bold"
-            onclick="window.location.href='shop.html'">ORDER NOW</button>
-        </div>
+  <section class="container" id="offer-slider-section">
+    <div class="offer-slider-container">
+      <div class="offer-wrapper" id="offer-track">
+        <!-- Dynamic Slides -->
       </div>
+
+      <!-- Dots -->
+      <div class="offer-dots" id="offer-dots"></div>
     </div>
   </section>
 
@@ -770,6 +1053,172 @@
     document.addEventListener("DOMContentLoaded", () => {
       fetchHomeCategories();
       fetchTrendingProducts();
+      initOfferSlider();
+    });
+
+    /* =========================
+       OFFER SLIDER LOGIC
+    ========================= */
+    let currentSlide = 0;
+    let totalSlides = 0;
+    let autoSlideInterval;
+
+    async function initOfferSlider() {
+      try {
+        const res = await fetch("/api/offers");
+        const offers = await res.json();
+        const section = document.getElementById("offer-slider-section");
+        const track = document.getElementById("offer-track");
+        const dotsContainer = document.getElementById("offer-dots");
+
+        if (!offers || offers.length === 0) {
+          section.style.display = "none";
+          return;
+        }
+
+        section.style.display = "block";
+        totalSlides = offers.length;
+
+        // Render Slides
+        track.innerHTML = offers.map((offer, index) => {
+          // Calculate Target URL
+          let targetUrl = "shop.html";
+          if (offer.targetType === 'product') targetUrl = `single_product.html?id=${offer.targetId}`;
+          else if (offer.targetType === 'category') targetUrl = `shop.html?category=${offer.targetId}`;
+
+          const discountText = offer.discountType === 'percentage'
+            ? `${offer.discountValue}% OFF`
+            : `FLAT ₹${offer.discountValue} OFF`;
+
+          return `
+            <div class="offer-slide">
+              <div class="container h-100">
+                <div class="row align-items-center h-100">
+                  
+                  <!-- Image Side (Right on Desktop, Top on Mobile) -->
+                  <div class="col-md-6 order-md-2 mb-4 mb-md-0">
+                    <div class="offer-img-container">
+                       <img src="${offer.bannerImage}" class="offer-img" alt="${offer.name}">
+                    </div>
+                  </div>
+
+                  <!-- Text Side (Left on Desktop, Bottom on Mobile) -->
+                  <div class="col-md-6 order-md-1 text-center text-md-start">
+                    <div class="glass-card">
+                       <span class="offer-badge-premium">Limited Time</span>
+                       <h2 class="offer-title">${offer.name}</h2>
+                       <p class="offer-discount">${discountText}</p>
+                       <p class="mb-4 text-muted">Don't miss out on this exclusive deal. Offer valids until ${new Date(offer.endDate).toLocaleDateString()}.</p>
+                       <a href="${targetUrl}" class="btn-premium">Shop Now <i class="bi bi-arrow-right ms-2"></i></a>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // Render Dots
+        dotsContainer.innerHTML = offers.map((_, i) =>
+          `<div class="offer-dot ${i === 0 ? 'active' : ''}" onclick="goToSlide(${i})"></div>`
+        ).join('');
+
+        // Start Auto Slide
+        startAutoSlide();
+
+      } catch (err) {
+        console.error("Failed to load offers", err);
+      }
+    }
+
+    function updateSlider() {
+      const track = document.getElementById("offer-track");
+      track.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+      // Update Dots
+      document.querySelectorAll(".offer-dot").forEach((dot, index) => {
+        if (index === currentSlide) dot.classList.add("active");
+        else dot.classList.remove("active");
+      });
+    }
+
+    function moveSlider(direction) {
+      clearInterval(autoSlideInterval);
+      currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+      updateSlider();
+      startAutoSlide();
+    }
+
+    function goToSlide(index) {
+      clearInterval(autoSlideInterval);
+      currentSlide = index;
+      updateSlider();
+      startAutoSlide();
+    }
+
+    function startAutoSlide() {
+      clearInterval(autoSlideInterval); // Clear existing to prevent duplicates
+      autoSlideInterval = setInterval(() => {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        updateSlider();
+      }, 5000); // 5 Seconds
+    }
+
+    /* =========================
+       ANNOUNCEMENT BAR LOGIC
+    ========================= */
+    async function initAnnouncementBar() {
+      try {
+        const res = await fetch("/api/offers");
+        const offers = await res.json();
+        const bar = document.getElementById("announcement-bar");
+        const textContainer = document.getElementById("announcement-text");
+        const dupContainer = document.getElementById("announcement-text-dup");
+
+        if (!offers || offers.length === 0) {
+          bar.style.display = "none";
+          return;
+        }
+
+        bar.style.display = "flex";
+
+        // Create HTML Content
+        const content = offers.map(offer => {
+          const discount = offer.discountType === 'percentage'
+            ? `${offer.discountValue}% OFF`
+            : `₹${offer.discountValue} OFF`;
+
+          return `
+                <span class="announcement-item">
+                    <i class="bi bi-tag-fill"></i>
+                    ${offer.name}: <span class="highlight-discount">${discount}</span> 
+                    (Ends ${new Date(offer.endDate).toLocaleDateString()})
+                </span>
+            `;
+        }).join('');
+
+        textContainer.innerHTML = content;
+        dupContainer.innerHTML = content; // Duplicate for seamless infinite scroll
+
+      } catch (err) {
+        console.error("Failed to load announcement bar", err);
+      }
+    }
+
+    // Initialize
+    document.addEventListener("DOMContentLoaded", () => {
+      initAnnouncementBar();
+
+      // Navbar Scroll Effect
+      window.addEventListener("scroll", () => {
+        const nav = document.querySelector(".navbar-fixed");
+        if (window.scrollY > 10) {
+          nav.classList.add("scrolled");
+        } else {
+          nav.classList.remove("scrolled");
+        }
+      });
     });
   </script>
 

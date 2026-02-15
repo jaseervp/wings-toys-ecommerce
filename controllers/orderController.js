@@ -1,6 +1,7 @@
 const Coupon = require("../models/Coupon");
 const Order = require("../models/Order");
 const Cart = require("../models/Cart");
+const User = require("../models/User");
 
 /* ================= CREATE ORDER ================= */
 exports.createOrder = async (req, res) => {
@@ -74,7 +75,36 @@ exports.createOrder = async (req, res) => {
       }
     }
 
-    // 5️⃣ Create order
+    // 5️⃣ Wallet Payment Logic
+    let paymentStatus = "unpaid";
+    if (paymentMethod === "wallet") {
+      const finalAmount = subtotal - discount;
+
+      const user = await User.findById(req.user.id);
+
+      if (user.wallet.balance < finalAmount) {
+        return res.status(400).json({
+          message: "Insufficient wallet balance"
+        });
+      }
+
+      // Deduct from wallet & Add transaction
+      user.wallet.balance -= finalAmount;
+      user.wallet.transactions.push({
+        amount: finalAmount,
+        type: "debit",
+        reason: "Order Payment",
+        date: new Date()
+      });
+
+      await user.save();
+      paymentStatus = "paid";
+    } else if (paymentMethod === "upi") {
+      // UPI is handled separately or marked as unpaid initially
+      paymentStatus = "unpaid";
+    }
+
+    // 6️⃣ Create order
     const order = await Order.create({
       user: req.user.id,
       items,
@@ -83,7 +113,7 @@ exports.createOrder = async (req, res) => {
       totalAmount: subtotal - discount,
       couponCode: appliedCouponCode,
       paymentMethod,
-      paymentStatus: paymentMethod === "cod" ? "unpaid" : "paid",
+      paymentStatus, // Updated status
       orderStatus: "pending",
       shippingAddress
     });
@@ -255,15 +285,68 @@ exports.requestReturn = async (req, res) => {
 exports.updateReturnStatus = async (req, res) => {
   try {
     const { status } = req.body; // approved / rejected
-    const order = await Order.findById(req.params.id);
+    const order = await Order.findById(req.params.id).populate("user");
 
     if (!order) return res.status(404).json({ message: "Order not found" });
+
+    // Fix potential case sensitivity issues
+    const normalizedStatus = status.toLowerCase();
+
+    // REFUND LOGIC: Only processing if approved and not already refunded
+    if (normalizedStatus === "approved" && !order.isRefunded) {
+
+      // 1. Calculate Refund Amount (Defaults to Full Order Amount as per current schema)
+      const refundAmount = Number(order.totalAmount);
+      console.log(`[INFO] Processing refund of ₹${refundAmount} for Order #${order._id}`);
+
+      // 2. Credit Wallet
+      // Handle case where order.user might be an object or ID
+      const userId = order.user._id || order.user;
+
+      const user = await User.findById(userId);
+
+      if (user) {
+        // Initialize wallet if it doesn't exist (e.g. for existing users)
+        if (!user.wallet) {
+          user.wallet = { balance: 0, transactions: [] };
+        }
+
+        const oldBalance = user.wallet.balance || 0;
+        user.wallet.balance = oldBalance + refundAmount;
+
+        user.wallet.transactions.push({
+          amount: refundAmount,
+          type: "credit",
+          reason: `Refund for Order #${order._id.toString().slice(-6).toUpperCase()}`
+        });
+
+        // Force Mongoose to see the change for nested objects
+        user.markModified('wallet');
+
+        try {
+          await user.save();
+          console.log(`[INFO] Refund successful. New Wallet Balance: ₹${user.wallet.balance}`);
+
+          // 3. Mark as Refunded (only after wallet credit success)
+          order.isRefunded = true;
+        } catch (saveErr) {
+          console.error("[ERROR] Failed to save wallet update:", saveErr);
+          return res.status(500).json({ message: "Failed to process refund", error: saveErr.message });
+        }
+      } else {
+        console.error(`[ERROR] User not found for order ${order._id}`);
+        // Optionally return error or proceed if user is deleted
+      }
+    }
 
     order.returnStatus = status;
     await order.save();
 
     res.json({ message: "Return status updated", order });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };
+
+

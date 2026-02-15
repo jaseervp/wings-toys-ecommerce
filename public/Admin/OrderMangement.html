@@ -295,6 +295,25 @@
       background: #FEF2F2;
     }
 
+    /* Return Statuses */
+    .badge-return-requested {
+      color: #92400E;
+      border-color: #FCD34D;
+      background: #FFFBEB;
+    }
+
+    .badge-return-approved {
+      color: #065F46;
+      border-color: #A7F3D0;
+      background: #ECFDF5;
+    }
+
+    .badge-return-rejected {
+      color: #991B1B;
+      border-color: #FECACA;
+      background: #FEF2F2;
+    }
+
 
 
     /* Payment Badges */
@@ -559,40 +578,10 @@
         if (!res.ok) throw new Error("Unauthorized");
 
         const data = await res.json();
-        const orders = data.orders;   // âœ… FIX
+        const orders = data.orders || [];
 
         ALL_ORDERS = orders;
         renderOrders(ALL_ORDERS);
-
-        tableBody.innerHTML = orders.map((o, i) => `
-      <tr>
-        <td>${i + 1}</td>
-        <td class="fw-bold">#ORD-${o._id.slice(-6).toUpperCase()}</td>
-        <td>
-          <div class="fw-bold text-dark">${o.user?.fullName || "Guest"}</div>
-          <div class="small text-muted" style="font-size: 0.75rem;">${o.user?.email || ""}</div>
-        </td>
-        <td>${new Date(o.createdAt).toLocaleDateString()}</td>
-        <td>
-      <span class="order-status badge-${o.orderStatus}">
-  ${o.orderStatus}
-</span>
-
-
-        </td>
-
-        <td>${o.paymentMethod?.toUpperCase()}</td>
-        <td class="fw-bold">&#8377;${Number(o.totalAmount).toFixed(2)}</td>
-        <td>
-         <button class="btn btn-dark btn-sm"
-  onclick="viewOrderDetails('${o._id}')">
-  View
-</button>
-
-
-        </td>
-      </tr>
-    `).join("");
 
       } catch (err) {
         console.error("Order load failed:", err);
@@ -712,7 +701,7 @@
           return;
         }
 
-        // âœ… OK
+        // ✅ OK
         loadOrders();
 
       } catch {
@@ -748,8 +737,6 @@
         }"
   style="width:50px;height:50px;border-radius:8px;object-fit:cover"
 />
-
-
 
       <div>
         <p class="mb-0 fw-semibold">
@@ -792,28 +779,29 @@
           <span class="fw-bold">${order.paymentMethod}</span>
         </div>
         
-        ${order.returnStatus !== 'none' ? `
+        ${order.returnStatus && order.returnStatus !== 'none' ? `
         <div class="summary-item mt-3 pt-3 border-top">
            <span>Return Status</span>
-           <span class="fw-bold text-capitalize badge bg-secondary text-white">${order.returnStatus}</span>
+           ${order.returnStatus === 'requested'
+            ? `<span class="fw-bold text-dark badge bg-warning">Return Requested</span>`
+            : `<span class="fw-bold text-capitalize badge bg-${order.returnStatus === 'approved' ? 'success' : 'danger'} text-white">${order.returnStatus}</span>`
+          }
         </div>
         ${order.returnReason ? `
-        <div class="mt-2">
-           <p class="mb-1 fw-bold small">Return Reason:</p>
-           <p class="small text-muted bg-light p-2 rounded">${order.returnReason}</p>
+        <div class="summary-item">
+            <span>Reason</span>
+            <span class="text-muted small">${order.returnReason}</span>
         </div>` : ''}
-        
-        ${order.returnStatus === 'requested' ? `
-         <div class="d-flex gap-2 mt-3">
-             <button class="btn btn-success btn-sm w-100" onclick="updateReturnStatus('${order._id}', 'approved')">Approve Return</button>
-             <button class="btn btn-danger btn-sm w-100" onclick="updateReturnStatus('${order._id}', 'rejected')">Reject Return</button>
-         </div>
-        ` : ''}
-        ` : ''}
 
-      </div>
-    </div>
-  `;
+        ${order.returnStatus === 'requested' ? `
+          <div class="d-flex gap-2 mt-3 justify-content-end">
+             <button class="btn btn-secondary btn-sm" onclick="updateReturnStatus('${order._id}', 'rejected')">Reject Return</button>
+             <button class="btn btn-primary btn-sm" onclick="updateReturnStatus('${order._id}', 'approved')">Approve Return</button>
+          </div>
+        ` : ''}
+        
+        ` : ''}
+      `;
     }
 
     function viewOrderDetails(orderId) {
@@ -858,7 +846,7 @@
 
         // Order ID filter
         if (orderId) {
-          const oid = `ord-${o._id.slice(-6)}`.toLowerCase();
+          const oid = `ord - ${o._id.slice(-6)} `.toLowerCase();
           match = match && oid.includes(orderId);
         }
 
@@ -897,38 +885,42 @@
     }
 
     function renderOrders(orders) {
-      tableBody.innerHTML = orders.map((o, i) => `
-    <tr>
-      <td>${i + 1}</td>
-      <td class="fw-bold">#ORD-${o._id.slice(-6).toUpperCase()}</td>
-      <td>
-        ${o.user?.name || "Guest"}<br>
-        <small class="text-muted">${o.user?.email || ""}</small>
-      </td>
-      <td>${new Date(o.createdAt).toLocaleDateString()}</td>
-      <td>
-        <span class="order-status badge-${o.orderStatus}">
-          ${o.orderStatus}
-        </span>
-      </td>
-      <td>
-        <select class="form-select form-select-sm"
-          onchange="updateItemStatus('${o._id}', this.value)">
-          ${["pending", "shipped", "delivered", "canceled"]
-          .map(s => `<option value="${s}" ${s === o.orderStatus ? "selected" : ""}>${s}</option>`)
-          .join("")}
-        </select>
-      </td>
-      <td>${o.paymentMethod?.toUpperCase()}</td>
-      <td class="fw-bold">â‚¹${Number(o.totalAmount).toFixed(2)}</td>
-      <td>
-        <button class="btn btn-dark btn-sm"
+      tableBody.innerHTML = orders.map((o, i) => {
+        // Determine Status Display
+        let statusHtml = '';
+        if (o.returnStatus === 'requested') {
+          statusHtml = `<span class="order-status badge-return-requested">Return Requested</span>`;
+        } else if (o.returnStatus === 'approved') {
+          statusHtml = `<span class="order-status badge-return-approved">Return Approved</span>`;
+        } else if (o.returnStatus === 'rejected') {
+          statusHtml = `<span class="order-status badge-return-rejected">Return Rejected</span>`;
+        } else {
+          statusHtml = `<span class="order-status badge-${o.orderStatus}">${o.orderStatus}</span>`;
+        }
+
+        return `
+      <tr>
+        <td>${i + 1}</td>
+        <td class="fw-bold">#ORD-${o._id.slice(-6).toUpperCase()}</td>
+        <td>
+          <div class="fw-bold text-dark">${o.user?.fullName || "Guest"}</div>
+          <div class="small text-muted" style="font-size: 0.75rem;">${o.user?.email || ""}</div>
+        </td>
+        <td>${new Date(o.createdAt).toLocaleDateString()}</td>
+        <td>
+          ${statusHtml}
+        </td>
+
+        <td>${o.paymentMethod?.toUpperCase()}</td>
+        <td class="fw-bold">&#8377;${Number(o.totalAmount).toFixed(2)}</td>
+        <td>
+         <button class="btn btn-dark btn-sm"
           onclick="viewOrderDetails('${o._id}')">
           View
         </button>
-      </td>
-    </tr>
-  `).join("");
+        </td>
+      </tr>
+    `}).join("");
     }
 
   </script>

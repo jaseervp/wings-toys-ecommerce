@@ -9,6 +9,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/navbar.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <style>
         :root {
@@ -211,7 +214,7 @@
 
 <body>
 
-    <nav class="navbar navbar-light bg-white py-3">
+    <nav class="navbar navbar-light bg-white py-3 navbar-fixed">
         <div class="container">
 
             <!-- TOP ROW -->
@@ -353,7 +356,7 @@
 
                 <h5 class="fw-bold mb-3">Add Money</h5>
                 <div class="add-funds-container mb-5">
-                    <form class="input-group" style="max-width: 500px;">
+                    <form id="addFundsForm" class="input-group" style="max-width: 500px;">
                         <span class="input-group-text">₹</span>
                         <input type="number" class="form-control" placeholder="Enter amount (e.g. 500)" required>
                         <button type="submit" class="btn btn-add-funds">Add Funds</button>
@@ -474,12 +477,20 @@
             let isLoggedIn = false;
 
             try {
-                const res = await fetch("/api/check-auth", {
-                    credentials: "include"
+                // 1. Check Auth & Get Profile (which includes wallet)
+                const res = await fetch("/api/users/me", {
+                    headers: { "Content-Type": "application/json" }
                 });
-                const data = await res.json();
-                isLoggedIn = data.loggedIn === true;
-            } catch {
+
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success && data.user) {
+                        isLoggedIn = true;
+                        updateWalletUI(data.user);
+                    }
+                }
+            } catch (err) {
+                console.error("Failed to fetch profile:", err);
                 isLoggedIn = false;
             }
 
@@ -529,11 +540,144 @@
             }
         });
 
+        function updateWalletUI(user) {
+            // 1. Update Balance
+            const balanceEl = document.querySelector(".wallet-balance-card h2");
+            const wallet = user.wallet || { balance: 0, transactions: [] };
+
+            // Format currency
+            const formatter = new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR'
+            });
+
+            balanceEl.textContent = formatter.format(wallet.balance);
+
+            // 2. Update Transactions
+            const tbody = document.querySelector(".custom-table tbody");
+            tbody.innerHTML = ""; // Clear "No transactions" msg
+
+            if (wallet.transactions && wallet.transactions.length > 0) {
+                // Sort by newest first
+                const sortedTxns = [...wallet.transactions].reverse();
+
+                sortedTxns.forEach(txn => {
+                    const date = new Date(txn.date).toLocaleDateString("en-IN", {
+                        day: 'numeric', month: 'short', year: 'numeric'
+                    });
+
+                    const isCredit = txn.type === 'credit';
+                    const colorClass = isCredit ? 'text-success' : 'text-danger';
+                    const sign = isCredit ? '+' : '-';
+
+                    const row = `
+                        <tr>
+                            <td>${date}</td>
+                            <td>${txn.reason}</td>
+                            <td class="text-end fw-bold ${colorClass}">
+                                ${sign} ${formatter.format(txn.amount)}
+                            </td>
+                        </tr>
+                    `;
+                    tbody.insertAdjacentHTML("beforeend", row);
+                });
+            } else {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="3" class="text-center py-5 text-muted">
+                            No transactions yet.
+                        </td>
+                    </tr>
+                 `;
+            }
+        }
+
         function showLoginModal() {
             const modal = new bootstrap.Modal(
                 document.getElementById("loginRequiredModal")
             );
             modal.show();
+        }
+
+        // --- WALLET TOP-UP LOGIC ---
+        document.getElementById("addFundsForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const amountInput = this.querySelector("input");
+            const amount = amountInput.value;
+
+            if (!amount || amount <= 0) {
+                Swal.fire("Error", "Please enter a valid amount", "error");
+                return;
+            }
+
+            try {
+                // 1. Create Order
+                const res = await fetch("/api/wallet/add-funds", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ amount })
+                });
+
+                const data = await res.json();
+                if (!data.success) {
+                    throw new Error(data.message || "Failed to create order");
+                }
+
+                // 2. Open Razorpay
+                const options = {
+                    key: data.key_id, // Key from backend
+                    amount: data.order.amount,
+                    currency: "INR",
+                    name: "Wings Toy Store",
+                    description: "Wallet Top-up",
+                    image: "/Images/logo wings.png",
+                    order_id: data.order.id,
+                    handler: async function (response) {
+                        // 3. Verify Payment
+                        verifyPayment(response, amount);
+                    },
+                    prefill: {
+                        name: "User", // We could fetch user name if available
+                        email: "user@example.com",
+                        contact: "9999999999"
+                    },
+                    theme: {
+                        color: "#FBEBB5"
+                    }
+                };
+
+                const rzp1 = new Razorpay(options);
+                rzp1.open();
+
+            } catch (err) {
+                console.error(err);
+                Swal.fire("Error", err.message, "error");
+            }
+        });
+
+        async function verifyPayment(paymentDetails, amount) {
+            try {
+                const res = await fetch("/api/wallet/verify-funds", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        ...paymentDetails,
+                        amount
+                    })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    Swal.fire("Success", "Funds added to wallet successfully!", "success")
+                        .then(() => location.reload()); // Reload to update UI
+                } else {
+                    throw new Error(data.message || "Verification failed");
+                }
+            } catch (err) {
+                console.error(err);
+                Swal.fire("Error", "Payment verification failed. Please contact support.", "error");
+            }
         }
     </script>
 

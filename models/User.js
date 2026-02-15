@@ -48,9 +48,24 @@ const UserSchema = new mongoose.Schema({
   resetOtp: String,
   resetOtpExpiry: Date,
 
-  walletBalance: {
-    type: Number,
-    default: 0
+  wallet: {
+    balance: {
+      type: Number,
+      default: 0
+    },
+    transactions: [{
+      amount: { type: Number, required: true },
+      type: {
+        type: String,
+        enum: ["credit", "debit"],
+        required: true
+      },
+      reason: { type: String, required: true },
+      date: {
+        type: Date,
+        default: Date.now
+      }
+    }]
   },
 
   addresses: [{

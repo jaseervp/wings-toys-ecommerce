@@ -44,6 +44,8 @@ app.use("/api/users", userRoutes);
 app.use("/api/payment", require("./routes/paymentRoutes"));
 app.use("/api/wishlist", require("./routes/wishlistRoutes"));
 app.use("/api/admin/offers", require("./routes/offerRoutes"));
+app.use("/api/offers", require("./routes/publicOfferRoutes"));
+app.use("/api/wallet", require("./routes/walletRoutes"));
 
 
 

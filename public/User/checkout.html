@@ -7,7 +7,8 @@
   <title>Checkout | Wings Premium</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="css/navbar.css">
 
   <style>
     :root {
@@ -62,7 +63,7 @@
       background-color: #f5f3ff;
     }
 
-    .payment-input:checked+.payment-option::after {
+    /* .payment-input:checked+.payment-option::after {
       content: "\F272";
       font-family: "bootstrap-icons";
       position: absolute;
@@ -70,7 +71,7 @@
       right: 12px;
       color: var(--primary-color);
       font-size: 1.2rem;
-    }
+    } */
 
     /* --- Coupon Cards --- */
     .coupon-list-container {
@@ -117,41 +118,67 @@
     }
 
 
-    /* --- Footer Black --- */
-    .footer-black {
-      background-color: #000;
+    /* --- FOOTER --- */
+    footer {
+      background: #000;
       color: #fff;
       padding: 80px 0 30px;
     }
 
-    .footer-black a {
+    footer a {
       color: #fff;
+      display: block;
+      margin-bottom: 25px;
       text-decoration: none;
-      opacity: 0.7;
-      transition: 0.3s;
+      font-size: 0.9rem;
     }
 
-    .footer-black a:hover {
-      opacity: 1;
-      text-decoration: underline;
+    .footer-title {
+      color: #9F9F9F;
+      font-weight: 400;
+      margin-bottom: 45px;
+      display: block;
+      font-size: 1rem;
+    }
+
+    .footer-address {
+      color: #9F9F9F;
+      line-height: 2;
+      font-size: 0.9rem;
+      margin-bottom: 40px;
+    }
+
+    .newsletter-form {
+      display: flex;
+      border-bottom: 1px solid #fff;
+      padding-bottom: 8px;
+      width: 100%;
+      max-width: 350px;
     }
 
     .newsletter-input {
       background: transparent;
       border: none;
-      border-bottom: 2px solid #fff;
       color: #fff;
-      width: 100%;
-      padding: 8px 0;
+      font-size: 0.85rem;
       outline: none;
+      flex-grow: 1;
     }
 
-    .btn-subscribe {
-      background: none;
+    .newsletter-btn {
+      background: transparent;
       border: none;
       color: #fff;
-      font-weight: 700;
-      text-decoration: underline;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+    }
+
+    .copyright {
+      border-top: 1px solid #222;
+      margin-top: 60px;
+      padding-top: 30px;
+      font-size: 0.9rem;
     }
 
     /* --- Modal Custom --- */
@@ -210,7 +237,7 @@
 
 <body>
 
-  <nav class="navbar navbar-light bg-white py-3">
+  <nav class="navbar navbar-light bg-white py-3 navbar-fixed">
     <div class="container">
 
       <!-- TOP ROW -->
@@ -336,7 +363,9 @@
               <div class="col-md-4">
                 <input type="radio" name="p" id="pay-w" class="d-none payment-input" checked>
                 <label for="pay-w" class="payment-option text-center">
-                  <i class="bi bi-wallet2 h2 mb-2 d-block"></i> <span class="fw-bold">Wallet</span>
+                  <i class="bi bi-wallet2 h2 mb-2 d-block"></i>
+                  <span class="fw-bold">Wallet</span>
+                  <div class="small text-muted mt-1" id="walletBalanceDisplay">Loading...</div>
                 </label>
               </div>
               <div class="col-md-4">
@@ -842,6 +871,19 @@
 
         const totalAmount = subtotal - appliedDiscount;
 
+        // 🛑 Wallet Balance Check
+        if (paymentMethod === "wallet") {
+          if (walletBalance < totalAmount) {
+            Swal.fire({
+              icon: "error",
+              title: "Insufficient Balance",
+              text: `Your wallet balance is ₹${walletBalance}. Order total is ₹${totalAmount}`,
+              confirmButtonColor: "#ef4444"
+            });
+            return;
+          }
+        }
+
         // 🟢 UPI → Razorpay TEST
         if (paymentMethod === "upi") {
           await startRazorpay(totalAmount);
@@ -948,6 +990,7 @@
   <script>
     let savedAddresses = [];
     let selectedAddress = null;
+    let walletBalance = 0; // Global wallet balance
 
     async function loadUserAddresses() {
       try {
@@ -960,6 +1003,13 @@
         const data = await res.json();
         savedAddresses = data.user.addresses || [];
 
+        // ✅ Update Wallet Balance
+        if (data.user.wallet) {
+          walletBalance = data.user.wallet.balance;
+          const balanceEl = document.getElementById("walletBalanceDisplay");
+          if (balanceEl) balanceEl.innerText = `₹${walletBalance}`;
+        }
+
         if (savedAddresses.length === 0) return;
 
         // ✅ pick default address
@@ -969,7 +1019,7 @@
         showAddress(selectedAddress);
 
       } catch (err) {
-        console.error("Failed to load addresses", err);
+        console.error("Failed to load user data", err);
       }
     }
 

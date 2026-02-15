@@ -1,0 +1,38 @@
+/* FIXED NAVBAR STYLES */
+body {
+    padding-top: 80px;
+    /* Adjust based on navbar height to prevent overlap */
+}
+
+.navbar-fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    /* Slight transparency */
+    backdrop-filter: blur(10px);
+    /* Glassmorphism effect */
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.navbar-fixed.scrolled {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    /* Shadow on scroll */
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+}
+
+@media (max-width: 991px) {
+    body {
+        padding-top: 70px;
+        /* Smaller padding for mobile */
+    }
+
+    .navbar-fixed {
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+    }
+}

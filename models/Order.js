@@ -65,6 +65,11 @@ const orderSchema = new mongoose.Schema(
       default: ""
     },
 
+    isRefunded: {
+      type: Boolean,
+      default: false
+    },
+
     shippingAddress: {
       fullName: { type: String, required: true },
       phone: { type: String, required: true },
