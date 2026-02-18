@@ -3,7 +3,7 @@ const Offer = require("../models/Offer");
 const { calculateProductFinalPrice } = require("../utils/priceCalculator");
 
 /* =========================
-   ➕ ADD PRODUCT (ADMIN)
+    ADD PRODUCT (ADMIN)
 ========================= */
 exports.addProduct = async (req, res) => {
   try {
@@ -69,7 +69,7 @@ exports.addProduct = async (req, res) => {
 };
 
 /* =========================
-   📦 GET ALL PRODUCTS (ADMIN)
+    GET ALL PRODUCTS (ADMIN)
 ========================= */
 exports.getAllProductsAdmin = async (req, res) => {
   try {
@@ -77,7 +77,7 @@ exports.getAllProductsAdmin = async (req, res) => {
 
     let query = {};
 
-    // 🔍 Search (Name or SKU)
+    //  Search (Name or SKU)
     if (search) {
       query.$or = [
         { name: { $regex: search, $options: "i" } },
@@ -85,17 +85,17 @@ exports.getAllProductsAdmin = async (req, res) => {
       ];
     }
 
-    // 📂 Filter by Category
+    //  Filter by Category
     if (category) {
       query.category = category;
     }
 
-    // 📦 Filter by Stock Status
+    //  Filter by Stock Status
     if (stockStatus) {
       query.stockStatus = stockStatus;
     }
 
-    // 🔃 Sorting
+    //  Sorting
     let sortOption = { createdAt: -1 }; // Default: Newest
     if (sort === "price-asc") sortOption = { finalPrice: 1 };
     if (sort === "price-desc") sortOption = { finalPrice: -1 };
@@ -115,7 +115,7 @@ exports.getAllProductsAdmin = async (req, res) => {
 };
 
 /* =========================
-   ✏️ UPDATE PRODUCT (ADMIN)
+    UPDATE PRODUCT (ADMIN)
 ========================= */
 exports.updateProduct = async (req, res) => {
   try {
@@ -192,7 +192,7 @@ exports.updateProduct = async (req, res) => {
 };
 
 /* =========================
-   🛒 GET ACTIVE PRODUCTS (PUBLIC)
+    GET ACTIVE PRODUCTS (PUBLIC)
 ========================= */
 exports.getPublicProducts = async (req, res) => {
   try {
@@ -264,7 +264,7 @@ exports.toggleTrending = async (req, res) => {
 };
 
 /* =========================
-   🗑 DELETE PRODUCT (ADMIN)
+    DELETE PRODUCT (ADMIN)
 ========================= */
 exports.deleteProduct = async (req, res) => {
   try {
@@ -287,7 +287,7 @@ exports.deleteProduct = async (req, res) => {
 };
 
 /* =========================
-   🔍 GET SINGLE PRODUCT
+    GET SINGLE PRODUCT
 ========================= */
 exports.getSingleProduct = async (req, res) => {
   try {
@@ -317,7 +317,7 @@ exports.getSingleProduct = async (req, res) => {
 };
 
 /* =========================
-   🔁 GET RELATED PRODUCTS
+    GET RELATED PRODUCTS
 ========================= */
 exports.getRelatedProducts = async (req, res) => {
   try {

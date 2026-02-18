@@ -1,7 +1,7 @@
 const Coupon = require("../models/Coupon");
 
-/**
- * CREATE COUPON (ADMIN)
+/*
+  CREATE COUPON (ADMIN)
  */
 exports.createCoupon = async (req, res) => {
     try {
@@ -20,7 +20,7 @@ exports.createCoupon = async (req, res) => {
 
 
 
-        // ✅ Basic validation
+        //  Basic validation
         if (!code || !discountType || !expiryDate) {
             return res.status(400).json({
                 message: "Required fields missing"
@@ -39,7 +39,7 @@ exports.createCoupon = async (req, res) => {
         }
 
 
-        // ❌ Discount value required except free shipping
+        //  Discount value required except free shipping
         if (
             discountType !== "free_shipping" &&
             (discountValue === undefined || discountValue === null)
@@ -49,7 +49,7 @@ exports.createCoupon = async (req, res) => {
             });
         }
 
-        // ❌ Check duplicate coupon
+        //  Check duplicate coupon
         const existing = await Coupon.findOne({ code });
         if (existing) {
             return res.status(400).json({
@@ -57,12 +57,12 @@ exports.createCoupon = async (req, res) => {
             });
         }
 
-        // ❌ Negative Value Check
+        //  Negative Value Check
         if (Number(discountValue) < 0 || Number(minCartValue) < 0) {
             return res.status(400).json({ message: "Values cannot be negative" });
         }
 
-        // ✅ Create coupon
+        //  Create coupon
         const coupon = await Coupon.create({
             code: code.toUpperCase(),
             discountType,
@@ -71,7 +71,7 @@ exports.createCoupon = async (req, res) => {
             minCartValue: Number(minCartValue) || 0,
             maxDiscount: maxDiscount ? Number(maxDiscount) : null,
             usageLimit: usageLimit ? Number(usageLimit) : null,
-            startDate,              // ✅ SAVE
+            startDate,              // 
             expiryDate,
             isActive: true,
             limitPerUser: Boolean(limitPerUser)
@@ -125,7 +125,7 @@ exports.updateCoupon = async (req, res) => {
             return res.status(400).json({ message: "Coupon code already exists" });
         }
 
-        // ❌ Negative Value Check
+        //  Negative Value Check
         if (Number(discountValue) < 0 || Number(minCartValue) < 0) {
             return res.status(400).json({ message: "Values cannot be negative" });
         }
@@ -169,7 +169,7 @@ exports.getActiveCoupons = async (req, res) => {
 
         const coupons = await Coupon.find({
             isActive: true,
-            startDate: { $lte: today },   // ✅ EXCLUDE UPCOMING
+            startDate: { $lte: today },   //  EXCLUDE UPCOMING
             expiryDate: { $gte: today }
         }).select(
             "code discountType discountValue description minCartValue maxDiscount expiryDate limitPerUser"
@@ -231,7 +231,7 @@ exports.getCheckoutCoupons = async (req, res) => {
 
         const coupons = await Coupon.find({
             isActive: true,
-            expiryDate: { $gte: today } // ❌ only expired removed
+            expiryDate: { $gte: today } //  only expired removed
         }).select(
             "code discountType discountValue description minCartValue maxDiscount startDate expiryDate"
         );

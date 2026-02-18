@@ -1,54 +1,95 @@
-require('dotenv').config(); // MUST be at the very top
+require('dotenv').config(); // ✅ MUST be at the very top
+
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const authRoutes = require('./routes/auth');
 const cookieParser = require('cookie-parser');
+const session = require('express-session'); // ✅ NEW
+const passport = require('./config/passport'); // ✅ NEW
+
+// Routes
+const authRoutes = require('./routes/auth');
 const categoryRoutes = require("./routes/categoryRoutes");
 const productRoutes = require("./routes/productRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const userRoutes = require("./routes/userRoutes");
 
-
-
-
-
-
 const app = express();
-app.use(cookieParser());
-app.use(express.urlencoded({ extended: true })); // 🔴 IMPORTANT
 
-// Middleware
+
+// =============================
+// 🔹 BASIC MIDDLEWARE
+// =============================
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use("/uploads", express.static("uploads"));
 
 
+// =============================
+// 🔐 SESSION SETUP (Required for Google Auth)
+// =============================
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "mysupersecret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: false, // true only in production with HTTPS
+      maxAge: 24 * 60 * 60 * 1000 // 1 day
+    }
+  })
+);
 
-// 1. CONNECT TO DATABASE using ENV variable
+
+// =============================
+// 🔑 PASSPORT SETUP
+// =============================
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+// =============================
+// 🗄️ DATABASE CONNECTION
+// =============================
 const dbURI = process.env.MONGO_URI;
+
 mongoose.connect(dbURI)
-    .then(() => console.log("✅ MongoDB Connected"))
-    .catch(err => console.error("❌ Connection Error:", err));
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch(err => console.error("❌ Connection Error:", err));
 
-// 2. API ROUTES
+
+// =============================
+// 🚀 ROUTES
+// =============================
+
+// Google Auth Route
 app.use('/api', authRoutes);
-app.use("/api", categoryRoutes);
-app.use("/api", productRoutes);
-app.use("/api/admin", require("./routes/adminRoutes"));
-app.use("/api", require("./routes/cartRoutes"));
-app.use("/api", require("./routes/couponRoutes"));
-app.use("/api/orders", orderRoutes);
-
-app.use("/api/users", userRoutes);
-app.use("/api/payment", require("./routes/paymentRoutes"));
-app.use("/api/wishlist", require("./routes/wishlistRoutes"));
-app.use("/api/admin/offers", require("./routes/offerRoutes"));
-app.use("/api/offers", require("./routes/publicOfferRoutes"));
-app.use("/api/wallet", require("./routes/walletRoutes"));
 
 
 
-// 3. START SERVER using ENV variable
-const PORT = process.env.PORT || 5000; // Use port from .env or default to 5000
-app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
+// Other API Routes
+app.use('/api', categoryRoutes);
+app.use('/api', productRoutes);
+app.use('/api/admin', require("./routes/adminRoutes"));
+app.use('/api', require("./routes/cartRoutes"));
+app.use('/api', require("./routes/couponRoutes"));
+app.use('/api/orders', orderRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/payment', require("./routes/paymentRoutes"));
+app.use('/api/wishlist', require("./routes/wishlistRoutes"));
+app.use('/api/admin/offers', require("./routes/offerRoutes"));
+app.use('/api/offers', require("./routes/publicOfferRoutes"));
+app.use('/api/wallet', require("./routes/walletRoutes"));
+
+
+
+// =============================
+// 🖥️ START SERVER
+// =============================
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+});

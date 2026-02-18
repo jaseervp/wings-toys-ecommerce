@@ -13,13 +13,18 @@ const UserSchema = new mongoose.Schema({
     unique: true,
     lowercase: true
   },
+  googleId: {              // ✅ ADD THIS
+  type: String
+},
 
-  password: {
-    type: String,
-    required: true
-  },
 
-  // ✅ ADMIN PROFILE EXTRA FIELDS
+ password: {
+  type: String
+},
+
+
+
+  // ADMIN PROFILE EXTRA FIELDS
   phone: String,
   dob: Date,
   location: String,

@@ -8,7 +8,7 @@ exports.createOrder = async (req, res) => {
   try {
     const { paymentMethod, couponCode, shippingAddress } = req.body;
 
-    // 1️⃣ Get cart
+    //  Get cart
     const cart = await Cart.findOne({ user: req.user.id })
       .populate("items.product");
 
@@ -20,25 +20,34 @@ exports.createOrder = async (req, res) => {
       return res.status(400).json({ message: "Shipping address is required" });
     }
 
-    // 2️⃣ Validate payment
+    // Validate payment
     const allowedMethods = ["wallet", "upi", "cod"];
     if (!allowedMethods.includes(paymentMethod)) {
       return res.status(400).json({ message: "Invalid payment method" });
     }
 
-    // 3️⃣ Build items + calculate subtotal (DO NOT trust frontend)
+    //  Build items + calculate subtotal (DO NOT trust frontend)
+    //  Build items + Validate Stock (Atomicity handled below)
     let subtotal = 0;
-    const items = cart.items.map(item => {
+    const items = [];
+
+    // First pass: Validate Stock & Calculate Subtotal
+    for (const item of cart.items) {
+      if (!item.product.isUnlimited && item.product.stockQuantity < item.quantity) {
+        return res.status(400).json({
+          message: `Insufficient stock for ${item.product.name}. Available: ${item.product.stockQuantity}`
+        });
+      }
       subtotal += item.product.finalPrice * item.quantity;
-      return {
+      items.push({
         product: item.product._id,
         quantity: item.quantity,
         price: item.product.finalPrice,
         itemStatus: "pending"
-      };
-    });
+      });
+    }
 
-    // 4️⃣ Apply coupon
+    //  Apply coupon
     let discount = 0;
     let appliedCouponCode = null;
 
@@ -50,18 +59,18 @@ exports.createOrder = async (req, res) => {
 
       if (coupon) {
 
-        // ❌ Minimum cart check
+        //  Minimum cart check
         if (subtotal < coupon.minCartValue) {
           return res.status(400).json({
             message: `Minimum purchase ₹${coupon.minCartValue} required`
           });
         }
 
-        // ✅ Calculate discount
+        //  Calculate discount
         if (coupon.discountType === "percentage") {
           discount = Math.floor((subtotal * coupon.discountValue) / 100);
 
-          // 🔒 Max discount cap
+          //  Max discount cap
           if (coupon.maxDiscount && discount > coupon.maxDiscount) {
             discount = coupon.maxDiscount;
           }
@@ -75,7 +84,7 @@ exports.createOrder = async (req, res) => {
       }
     }
 
-    // 5️⃣ Wallet Payment Logic
+    // Wallet Payment Logic
     let paymentStatus = "unpaid";
     if (paymentMethod === "wallet") {
       const finalAmount = subtotal - discount;
@@ -104,7 +113,7 @@ exports.createOrder = async (req, res) => {
       paymentStatus = "unpaid";
     }
 
-    // 6️⃣ Create order
+    // Create order
     const order = await Order.create({
       user: req.user.id,
       items,
@@ -118,7 +127,19 @@ exports.createOrder = async (req, res) => {
       shippingAddress
     });
 
-    // 6️⃣ Clear cart
+    //  Deduct Stock
+    const Product = require("../models/Product");
+    for (const item of items) {
+      // We use $inc to be atomic. 
+      // Safety check: stockQuantity >= quantity (handled in query if strict, but we did pre-check)
+      // Ideally: findOneAndUpdate({ _id: item.product, stockQuantity: { $gte: item.quantity } }, ...)
+
+      await Product.findByIdAndUpdate(item.product, {
+        $inc: { stockQuantity: -item.quantity }
+      });
+    }
+
+    //  Clear cart
     cart.items = [];
     await cart.save();
 
@@ -246,11 +267,120 @@ exports.cancelOrder = async (req, res) => {
       return res.status(400).json({ message: "Order is already canceled" });
     }
 
+    //  REFUND LOGIC (Full Order)
+    if (
+      (order.paymentMethod === "upi" || order.paymentMethod === "wallet") &&
+      order.paymentStatus === "paid"
+    ) {
+      const refundAmount = order.totalAmount;
+      const user = await User.findById(req.user.id);
+
+      if (user) {
+        user.wallet.balance += refundAmount;
+        user.wallet.transactions.push({
+          amount: refundAmount,
+          type: "credit",
+          reason: `Refund for Order #${order._id.toString().slice(-6).toUpperCase()}`,
+          date: new Date()
+        });
+        await user.save();
+        order.isRefunded = true;
+      }
+    }
+
+    // Update Status
     order.orderStatus = "canceled";
+
+    // Mark all items as canceled
+    order.items.forEach(item => {
+      item.itemStatus = "canceled";
+    });
+
     await order.save();
 
-    res.json({ message: "Order canceled successfully", order });
+    //  RESTORE STOCK (Full Order)
+    const Product = require("../models/Product");
+    for (const item of order.items) {
+      await Product.findByIdAndUpdate(item.product, {
+        $inc: { stockQuantity: item.quantity }
+      });
+    }
+
+    res.json({ message: "Order canceled & refund processed (if eligible)", order });
   } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// User: Cancel Single Item
+exports.cancelOrderItem = async (req, res) => {
+  try {
+    const { orderId, itemId } = req.params;
+    const order = await Order.findOne({ _id: orderId, user: req.user.id });
+
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    if (order.orderStatus === "shipped" || order.orderStatus === "delivered") {
+      return res.status(400).json({ message: "Cannot cancel items in shipped/delivered order" });
+    }
+
+    const item = order.items.id(itemId);
+    if (!item) return res.status(404).json({ message: "Item not found" });
+
+    if (item.itemStatus === "canceled") {
+      return res.status(400).json({ message: "Item is already canceled" });
+    }
+
+    //  REFUND LOGIC (Item Only)
+    if (
+      (order.paymentMethod === "upi" || order.paymentMethod === "wallet") &&
+      order.paymentStatus === "paid"
+    ) {
+      // Logic: Refund = Item Price * Quantity
+      // NOTE: This does not prorate coupon discounts. It refunds the item's unit price.
+      const refundAmount = item.price * item.quantity;
+
+      const user = await User.findById(req.user.id);
+      if (user) {
+        user.wallet.balance += refundAmount;
+        user.wallet.transactions.push({
+          amount: refundAmount,
+          type: "credit",
+          reason: `Refund for Item (Order #${order._id.toString().slice(-6).toUpperCase()})`,
+          date: new Date()
+        });
+        await user.save();
+      }
+    }
+
+    // Update Item Status
+    item.itemStatus = "canceled";
+
+    //  RESTORE STOCK (Single Item)
+    const Product = require("../models/Product");
+    await Product.findByIdAndUpdate(item.product, {
+      $inc: { stockQuantity: item.quantity }
+    });
+
+    // Auto-update Order Status if all items canceled
+    const allCanceled = order.items.every(i => i.itemStatus === "canceled");
+    if (allCanceled) {
+      order.orderStatus = "canceled";
+      // If payment was paid, and we just canceled the last item, 
+      // strictly speaking we refunded piece-by-piece. 
+      // We can mark isRefunded = true if fully canceled.
+      if (order.paymentStatus === "paid") {
+        order.isRefunded = true;
+      }
+    }
+
+    await order.save();
+
+    res.json({ message: "Item canceled & refunded (if eligible)", order });
+
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };

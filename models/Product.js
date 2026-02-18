@@ -79,7 +79,11 @@ const productSchema = new mongoose.Schema(
       required: true
     }
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
+
+productSchema.virtual("isOutOfStock").get(function () {
+  return !this.isUnlimited && this.stockQuantity <= 0;
+});
 
 module.exports = mongoose.model("Product", productSchema);

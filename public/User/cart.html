@@ -736,13 +736,14 @@
           <div class="col-lg-2 py-lg-4">
             <div class="d-flex align-items-center justify-content-center gap-2">
               <button class="btn btn-sm btn-light"
-                onclick="changeQty('${item.product._id}', ${qty - 1})">−</button>
+                onclick="changeQty('${item.product._id}', ${qty - 1}, ${item.product.isUnlimited}, ${item.product.stockQuantity})">−</button>
 
               <span>${qty}</span>
 
               <button class="btn btn-sm btn-light"
-                onclick="changeQty('${item.product._id}', ${qty + 1})">+</button>
+                onclick="changeQty('${item.product._id}', ${qty + 1}, ${item.product.isUnlimited}, ${item.product.stockQuantity})">+</button>
             </div>
+            ${!item.product.isUnlimited && item.product.stockQuantity <= 5 ? `<div class="text-danger small mt-1">Only ${item.product.stockQuantity} left</div>` : ''}
           </div>
 
           <div class="col-lg-3 py-lg-4">
@@ -769,8 +770,13 @@
       document.querySelector(".total-price").innerText = `Rs. ${amount}`;
     }
 
-    async function changeQty(productId, quantity) {
+    async function changeQty(productId, quantity, isUnlimited, stockQuantity) {
       if (quantity < 1) return;
+
+      if (!isUnlimited && quantity > stockQuantity) {
+        alert(`Only ${stockQuantity} items available in stock`);
+        return;
+      }
 
       await fetch("/api/cart/update", {
         method: "PUT",

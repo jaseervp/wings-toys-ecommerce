@@ -520,7 +520,7 @@
         </div>
         <div class="modal-body">
           <div id="addCatResponse" class="alert d-none"></div>
-          <div class="mb-3"> 
+          <div class="mb-3">
             <label class="form-label">Category Name</label>
             <input type="text" id="addCatName" class="form-control" placeholder="E.g. New Born">
           </div>
@@ -700,6 +700,14 @@
         return;
       }
 
+      const nameRegex = /^[a-zA-Z0-9\s]+$/;
+      if (!nameRegex.test(name)) {
+        responseBox.innerText = "Category name cannot contain special characters";
+        responseBox.className = "alert alert-danger";
+        responseBox.classList.remove("d-none");
+        return;
+      }
+
       const fd = new FormData();
       fd.append("name", name);
       fd.append("image", imageFile);
@@ -746,6 +754,12 @@
       const id = document.getElementById("editCategoryId").value;
       const name = document.getElementById("editCategoryName").value;
       const imageFile = document.getElementById("editCategoryImage").files[0];
+
+      const nameRegex = /^[a-zA-Z0-9\s]+$/;
+      if (!nameRegex.test(name)) {
+        Swal.fire("Error", "Category name cannot contain special characters", "error");
+        return;
+      }
 
       const fd = new FormData();
       fd.append("name", name);

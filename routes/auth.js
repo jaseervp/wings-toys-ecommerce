@@ -1,7 +1,50 @@
 const express = require('express');
 const router = express.Router();
+const passport = require("passport");
 const authController = require('../controllers/authController');
 const { protect } = require('../middleware/authMiddleware');
+
+
+// ===============================
+// 🔵 GOOGLE AUTH
+// ===============================
+
+
+const generateToken = require("../utils/generateToken");
+
+// 1️⃣ Start Google login
+router.get(
+  "/google",
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    prompt: "select_account",   // 👈 ADD THIS
+  })
+);
+
+
+// 2️⃣ Google callback
+router.get(
+  "/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: "/User/login.html",
+  }),
+  (req, res) => {
+    const token = generateToken(req.user._id, req.user.role);
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: false,
+    });
+
+    res.redirect("/User/index.html");
+  }
+);
+
+
+
+
+
 
 // AUTH
 router.post('/signup', authController.registerUser);

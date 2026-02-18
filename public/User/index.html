@@ -820,8 +820,9 @@
 
       try {
         const res = await fetch("/api/check-auth", {
-          credentials: "include"
-        });
+  credentials: "include"
+});
+
         const data = await res.json();
         isLoggedIn = data.loggedIn === true;
       } catch {
@@ -1010,35 +1011,49 @@
         }
 
         container.innerHTML = products.map(p => {
-          const badge = p.hasDiscount
-            ? `<span class="badge bg-danger position-absolute top-0 start-0 m-2" style="z-index: 5">- ${p.discountPercentage}%</span>`
-            : '';
+          // Stock Check
+          const isOutOfStock = !p.isUnlimited && p.stockQuantity <= 0;
 
-          const price = p.hasDiscount
+          // Discount Badge Logic (Hide if OOS)
+          let badgeHtml = '';
+          if (isOutOfStock) {
+            badgeHtml = `<span class="badge bg-secondary position-absolute top-0 start-0 m-2" style="z-index: 5">Out of Stock</span>`;
+          } else if (p.hasDiscount) {
+            badgeHtml = `<span class="badge bg-danger position-absolute top-0 start-0 m-2" style="z-index: 5">- ${p.discountPercentage}%</span>`;
+          }
+
+          // Price Display Logic
+          const priceHtml = p.hasDiscount
             ? `<span class="fw-bold text-dark">Rs. ${p.finalPrice}</span> <del class="text-muted small ms-1">Rs. ${p.originalPrice}</del>`
             : `<span class="fw-bold text-dark">Rs. ${p.finalPrice}</span>`;
 
+          // Disable Button if OOS
+          const cartAction = isOutOfStock
+            ? `onclick="event.stopPropagation(); Swal.fire('Out of Stock', 'This item is currently unavailable', 'info')"`
+            : `onclick="event.stopPropagation(); addToCart('${p._id}')"`;
+
+          const cartBtnClass = isOutOfStock ? 'text-muted' : 'text-dark';
+          const opacityStyle = isOutOfStock ? 'opacity: 0.6;' : '';
+
           return `
                 <div class="col-6 col-lg-3">
-                    <div class="product-wrapper" onclick="window.location.href='single_product.html?id=${p._id}'">
+                    <div class="product-wrapper" style="${opacityStyle}" onclick="window.location.href='single_product.html?id=${p._id}'">
                         <div class="product-img-container position-relative">
-                            ${badge}
+                            ${badgeHtml}
                             <button class="btn-circle" title="Add to Wishlist" 
-                                onclick="event.stopPropagation(); addToWishlist('${p._id}')"
-                                style="position: absolute; top: 15px; right: -50px;">
+                                onclick="event.stopPropagation(); addToWishlist('${p._id}')">
                                 <i class="bi bi-heart text-danger"></i>
                             </button>
-                            <button class="btn-circle" title="Add to Cart"
-                                onclick="event.stopPropagation(); addToCart('${p._id}')"
-                                style="position: absolute; top: 65px; right: -50px;">
-                                <i class="bi bi-cart-plus text-dark"></i>
+                            <button class="btn-circle" title="${isOutOfStock ? 'Out of Stock' : 'Add to Cart'}"
+                                ${cartAction}>
+                                <i class="bi bi-cart-plus ${cartBtnClass}"></i>
                             </button>
                             <img src="${p.images?.[0] || 'https://via.placeholder.com/200'}" alt="${p.name}">
                         </div>
                         <div class="text-center ps-2 pe-2">
                             <p class="small text-muted mb-0" style="font-size: 0.7rem;">${p.category?.name || 'General'}</p>
                             <h6 class="fw-bold product-name text-truncate">${p.name}</h6>
-                            <div class="mt-1">${price}</div>
+                            <div class="mt-1">${priceHtml}</div>
                         </div>
                     </div>
                 </div>
@@ -1230,7 +1245,7 @@
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
-      const res = await fetch("/api/login", {
+      const res = await fetch("/api/login",{
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include", // 🔥 VERY IMPORTANT

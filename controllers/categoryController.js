@@ -1,7 +1,7 @@
 const Category = require("../models/Category");
 
 /**
- * ➕ ADD CATEGORY (ADMIN)
+ * ADD CATEGORY (ADMIN)
  * Supports image upload via Multer
  */
 function createSlug(name) {
@@ -23,8 +23,13 @@ exports.addCategory = async (req, res) => {
       return res.status(400).json({ message: "Category name is required" });
     }
 
-    if (name.length < 3 || name.length > 10) {
-      return res.status(400).json({ message: "Category name must be between 3 and 10 characters" });
+    const nameRegex = /^[a-zA-Z0-9\s]+$/;
+    if (!nameRegex.test(name)) {
+      return res.status(400).json({ message: "Category name cannot contain special characters" });
+    }
+
+    if (name.length < 3 || name.length > 20) {
+      return res.status(400).json({ message: "Category name must be between 3 and 20 characters" });
     }
 
     // Prevent duplicate categories (Case-insensitive)
@@ -70,7 +75,7 @@ exports.addCategory = async (req, res) => {
 };
 
 /**
- * 📋 GET ALL CATEGORIES
+ *  GET ALL CATEGORIES
  */
 exports.getCategories = async (req, res) => {
   try {
@@ -115,7 +120,7 @@ exports.getCategories = async (req, res) => {
 };
 
 /**
- * ✏️ UPDATE CATEGORY (ADMIN)
+ *  UPDATE CATEGORY (ADMIN)
  * Supports optional image replace
  */
 exports.updateCategory = async (req, res) => {
@@ -126,8 +131,13 @@ exports.updateCategory = async (req, res) => {
     const updateData = {};
 
     if (name) {
-      if (name.length < 3 || name.length > 10) {
-        return res.status(400).json({ message: "Category name must be between 3 and 10 characters" });
+      const nameRegex = /^[a-zA-Z0-9\s]+$/;
+      if (!nameRegex.test(name)) {
+        return res.status(400).json({ message: "Category name cannot contain special characters" });
+      }
+
+      if (name.length < 3 || name.length > 20) {
+        return res.status(400).json({ message: "Category name must be between 3 and 20 characters" });
       }
 
       // Check for duplicates (Case-insensitive regex), excluding current category
@@ -185,7 +195,7 @@ exports.updateCategory = async (req, res) => {
 };
 
 /**
- * 🗑️ DELETE CATEGORY (ADMIN)
+ *  DELETE CATEGORY (ADMIN)
  */
 exports.deleteCategory = async (req, res) => {
   try {

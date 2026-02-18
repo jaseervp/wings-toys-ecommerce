@@ -758,19 +758,33 @@
                     }
 
                     products.forEach(p => {
-                        // Discount Badge Logic
-                        const badgeHtml = p.hasDiscount
-                            ? `<span class="badge bg-danger position-absolute top-0 start-0 m-2" style="z-index: 5">- ${p.discountPercentage}%</span>`
-                            : '';
+                        // Stock Check
+                        const isOutOfStock = !p.isUnlimited && p.stockQuantity <= 0;
+
+                        // Discount Badge Logic (Hide if OOS)
+                        let badgeHtml = '';
+                        if (isOutOfStock) {
+                            badgeHtml = `<span class="badge bg-secondary position-absolute top-0 start-0 m-2" style="z-index: 5">Out of Stock</span>`;
+                        } else if (p.hasDiscount) {
+                            badgeHtml = `<span class="badge bg-danger position-absolute top-0 start-0 m-2" style="z-index: 5">- ${p.discountPercentage}%</span>`;
+                        }
 
                         // Price Display Logic
                         const priceHtml = p.hasDiscount
                             ? `<span class="fw-bold text-dark">Rs. ${p.finalPrice}</span> <del class="text-muted small ms-1">Rs. ${p.originalPrice}</del>`
                             : `<span class="fw-bold text-dark">Rs. ${p.finalPrice}</span>`;
 
+                        // Disable Button if OOS
+                        const cartAction = isOutOfStock
+                            ? `onclick="event.stopPropagation(); Swal.fire('Out of Stock', 'This item is currently unavailable', 'info')"`
+                            : `onclick="event.stopPropagation(); addToCart('${p._id}')"`;
+
+                        const cartBtnClass = isOutOfStock ? 'text-muted' : 'text-dark';
+                        const opacityStyle = isOutOfStock ? 'opacity: 0.6;' : '';
+
                         container.innerHTML += `
             <div class="col-6 col-md-4 col-lg-3">
-              <div class="product-wrapper"
+              <div class="product-wrapper" style="${opacityStyle}"
                    onclick="window.location.href='single_product.html?id=${p._id}'">
 
                 <div class="product-img-container position-relative">
@@ -781,9 +795,9 @@
                       <i class="bi bi-heart text-danger"></i>
                     </button>
 
-                    <button class="btn-circle" title="Add to Cart"
-                      onclick="event.stopPropagation(); addToCart('${p._id}')">
-                      <i class="bi bi-cart-plus text-dark"></i>
+                    <button class="btn-circle" title="${isOutOfStock ? 'Out of Stock' : 'Add to Cart'}"
+                      ${cartAction}>
+                      <i class="bi bi-cart-plus ${cartBtnClass}"></i>
                     </button>
                   </div>
                   <img src="${p.images?.[0] || 'https://via.placeholder.com/200'}"

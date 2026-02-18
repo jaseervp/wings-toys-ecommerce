@@ -22,6 +22,9 @@ router.post("/:id/cancel", protect, orderController.cancelOrder);
 // request return
 router.post("/:id/return", protect, orderController.requestReturn);
 
+// cancel single item
+router.post("/:orderId/item/:itemId/cancel", protect, orderController.cancelOrderItem);
+
 
 // ================= ADMIN =================
 
