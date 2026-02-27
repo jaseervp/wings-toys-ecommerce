@@ -396,7 +396,7 @@
         <div class="sidebar-scroll">
             <div class="sidebar-brand"><img src="logo wings.png" alt="Wings"></div>
             <p class="menu-label">Main menu</p>
-            <a href="Dashbord.html" class="nav-item "><i class="bi bi-grid"></i> Dashboard</a>
+            <a href="Dashboard.html" class="nav-item "><i class="bi bi-grid"></i> Dashboard</a>
             <a href="OrderMangement.html" class="nav-item"><i class="bi bi-cart"></i> Order Management</a>
             <a href="Customers.html" class="nav-item "><i class="bi bi-people"></i> Customers</a>
             <a href="Cuopon.html" class="nav-item active"><i class="bi bi-ticket-perforated"></i> Coupon Code</a>
@@ -631,6 +631,10 @@
                     <tbody id="couponTableBody"></tbody>
                 </table>
             </div>
+
+            <!-- Pagination -->
+            <div class="d-flex justify-content-end align-items-center mt-3" id="paginationControls"></div>
+
         </div>
     </main>
 
@@ -749,10 +753,10 @@
                         description,
                         minCartValue: Number(minCartValue || 0),
                         maxDiscount: maxDiscount ? Number(maxDiscount) : null,
-                        usageLimit: usageLimit ? Number(usageLimit) : null,
+                        totalUsageLimit: usageLimit ? Number(usageLimit) : null,
                         startDate,
                         expiryDate: endDate,
-                        limitPerUser
+                        usageLimitPerUser: limitPerUser ? 1 : 0
                     })
                 });
 
@@ -787,9 +791,9 @@
             document.getElementById("startDateInput").value = coupon.startDate ? coupon.startDate.split('T')[0] : "";
             document.getElementById("endDateInput").value = coupon.expiryDate ? coupon.expiryDate.split('T')[0] : "";
             document.getElementById("minCartInput").value = coupon.minCartValue || "";
-            document.getElementById("usageLimitInput").value = coupon.usageLimit || "";
+            document.getElementById("usageLimitInput").value = coupon.totalUsageLimit || "";
             document.getElementById("maxDiscountInput").value = coupon.maxDiscount || "";
-            document.getElementById("userLimit").checked = coupon.limitPerUser;
+            document.getElementById("userLimit").checked = coupon.usageLimitPerUser === 1;
 
             updatePreview();
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -874,7 +878,11 @@
     <script>
         const tableBody = document.getElementById("couponTableBody");
 
-        async function loadCoupons() {
+        let currentPage = 1;
+        const limit = 10;
+
+        async function loadCoupons(page = 1) {
+            currentPage = page;
             const token = localStorage.getItem("adminToken");
 
             const search = document.getElementById("searchInput").value;
@@ -882,7 +890,7 @@
             const sort = document.getElementById("sortFilter").value;
 
             const res = await fetch(
-                `/api/admin/coupons?search=${search}&status=${status}&sort=${sort}`,
+                `/api/admin/coupons?search=${search}&status=${status}&sort=${sort}&page=${page}&limit=${limit}`,
                 {
                     headers: { Authorization: "Bearer " + token }
                 }
@@ -893,14 +901,18 @@
                 return;
             }
 
-            const coupons = await res.json();
+            const data = await res.json();
+            const coupons = data.coupons || []; // New structure
             allCoupons = coupons; // Store for editing
             tableBody.innerHTML = "";
 
             if (coupons.length === 0) {
                 tableBody.innerHTML = `<tr><td colspan="9" class="text-center text-muted py-4">No coupons found</td></tr>`;
+                document.getElementById('paginationControls').innerHTML = ''; // Clear pagination
                 return;
             }
+
+            renderPagination(data.currentPage, data.totalPages);
 
             coupons.forEach((coupon, index) => {
                 const today = new Date();
@@ -931,7 +943,7 @@
                         <td>${discountDisplay}</td>
                         <td>${minPurchaseDisplay}</td>
                         <td>${maxDiscountDisplay}</td>
-                        <td>${coupon.usageCount || 0}/${coupon.usageLimit || '∞'}</td>
+                        <td>${coupon.usedCount || 0}/${coupon.totalUsageLimit || '∞'}</td>
                         <td>${statusBadge}</td>
                         <td>${new Date(coupon.expiryDate).toLocaleDateString()}</td>
                         <td>
@@ -962,11 +974,39 @@
             loadCoupons();
         }
 
+        function renderPagination(current, total) {
+            const container = document.getElementById('paginationControls');
+            if (total <= 1) { container.innerHTML = ''; return; }
+
+            let pagesHtml = '';
+            for (let i = 1; i <= total; i++) {
+                if (i === 1 || i === total || (i >= current - 1 && i <= current + 1)) {
+                    pagesHtml += `<button onclick="loadCoupons(${i})" class="btn btn-sm ${i === current ? 'btn-primary' : 'btn-light'} mx-1" style="min-width: 32px;">${i}</button>`;
+                } else if (i === current - 2 || i === current + 2) {
+                    pagesHtml += `<span class="mx-1 text-muted">...</span>`;
+                }
+            }
+
+            container.innerHTML = `
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item ${current === 1 ? 'disabled' : ''}">
+                            <button class="page-link border-0 text-secondary" onclick="loadCoupons(${current - 1})">Previous</button>
+                        </li>
+                        ${pagesHtml}
+                        <li class="page-item ${current === total ? 'disabled' : ''}">
+                            <button class="page-link border-0 text-secondary" onclick="loadCoupons(${current + 1})">Next</button>
+                        </li>
+                    </ul>
+                </nav>
+            `;
+        }
+
         function resetFilters() {
             searchInput.value = "";
             statusFilter.value = "all";
             sortFilter.value = "newest";
-            loadCoupons();
+            loadCoupons(1);
         }
     </script>
     <script>

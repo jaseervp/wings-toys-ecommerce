@@ -12,10 +12,10 @@ exports.createCoupon = async (req, res) => {
             description,
             minCartValue,
             maxDiscount,
-            usageLimit,
+            totalUsageLimit,
             startDate,
             expiryDate,
-            limitPerUser
+            usageLimitPerUser
         } = req.body;
 
 
@@ -70,11 +70,11 @@ exports.createCoupon = async (req, res) => {
             description: description || "",
             minCartValue: Number(minCartValue) || 0,
             maxDiscount: maxDiscount ? Number(maxDiscount) : null,
-            usageLimit: usageLimit ? Number(usageLimit) : null,
+            totalUsageLimit: totalUsageLimit ? Number(totalUsageLimit) : null,
             startDate,              // 
             expiryDate,
             isActive: true,
-            limitPerUser: Boolean(limitPerUser)
+            usageLimitPerUser: usageLimitPerUser ? Number(usageLimitPerUser) : 1
         });
 
 
@@ -104,10 +104,10 @@ exports.updateCoupon = async (req, res) => {
             description,
             minCartValue,
             maxDiscount,
-            usageLimit,
+            totalUsageLimit,
             startDate,
             expiryDate,
-            limitPerUser
+            usageLimitPerUser
         } = req.body;
 
         // Basic validation
@@ -140,10 +140,10 @@ exports.updateCoupon = async (req, res) => {
                 description: description || "",
                 minCartValue: Number(minCartValue) || 0,
                 maxDiscount: maxDiscount ? Number(maxDiscount) : null,
-                usageLimit: usageLimit ? Number(usageLimit) : null,
+                totalUsageLimit: totalUsageLimit ? Number(totalUsageLimit) : null,
                 startDate,
                 expiryDate,
-                limitPerUser: Boolean(limitPerUser)
+                usageLimitPerUser: usageLimitPerUser ? Number(usageLimitPerUser) : 1
             },
             { new: true }
         );
@@ -172,7 +172,7 @@ exports.getActiveCoupons = async (req, res) => {
             startDate: { $lte: today },   //  EXCLUDE UPCOMING
             expiryDate: { $gte: today }
         }).select(
-            "code discountType discountValue description minCartValue maxDiscount expiryDate limitPerUser"
+            "code discountType discountValue description minCartValue maxDiscount expiryDate usageLimitPerUser"
         );
 
 
@@ -188,7 +188,7 @@ exports.getActiveCoupons = async (req, res) => {
 // ADMIN: Get all coupons
 exports.getAllCoupons = async (req, res) => {
     try {
-        const { search = "", status = "all", sort = "newest" } = req.query;
+        const { search = "", status = "all", sort = "newest", page = 1, limit = 10 } = req.query;
 
         let filter = {};
 
@@ -215,10 +215,27 @@ exports.getAllCoupons = async (req, res) => {
         // Sorting
         let sortOption = sort === "oldest" ? { createdAt: 1 } : { createdAt: -1 };
 
-        const coupons = await Coupon.find(filter).sort(sortOption);
+        // Pagination
+        const pageNum = parseInt(page);
+        const limitNum = parseInt(limit);
+        const skip = (pageNum - 1) * limitNum;
 
-        res.json(coupons);
+        const totalCoupons = await Coupon.countDocuments(filter);
+        const totalPages = Math.ceil(totalCoupons / limitNum);
+
+        const coupons = await Coupon.find(filter)
+            .sort(sortOption)
+            .skip(skip)
+            .limit(limitNum);
+
+        res.json({
+            coupons,
+            currentPage: pageNum,
+            totalPages,
+            totalCoupons
+        });
     } catch (err) {
+        console.error("GET COUPONS ERROR:", err);
         res.status(500).json({ message: "Failed to fetch coupons" });
     }
 };
@@ -228,16 +245,34 @@ exports.getAllCoupons = async (req, res) => {
 exports.getCheckoutCoupons = async (req, res) => {
     try {
         const today = new Date();
+        const userId = req.user ? req.user.id : null;
 
         const coupons = await Coupon.find({
             isActive: true,
-            expiryDate: { $gte: today } //  only expired removed
-        }).select(
-            "code discountType discountValue description minCartValue maxDiscount startDate expiryDate"
-        );
+            expiryDate: { $gte: today }
+        });
 
-        res.status(200).json(coupons);
+        // Filter coupons based on usage limits
+        const availableCoupons = coupons.filter(coupon => {
+            // Check global limit
+            if (coupon.totalUsageLimit !== null && coupon.usedCount >= coupon.totalUsageLimit) {
+                return false;
+            }
+
+            // Check per-user limit (only if user matched)
+            if (userId) {
+                const userUsageCount = coupon.usedBy.filter(id => id.toString() === userId).length;
+                if (userUsageCount >= coupon.usageLimitPerUser) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+
+        res.status(200).json(availableCoupons);
     } catch (err) {
+        console.error("Get checkout coupons error:", err);
         res.status(500).json({ message: "Failed to fetch coupons" });
     }
 };

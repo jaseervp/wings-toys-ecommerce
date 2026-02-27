@@ -820,8 +820,8 @@
 
       try {
         const res = await fetch("/api/check-auth", {
-  credentials: "include"
-});
+          credentials: "include"
+        });
 
         const data = await res.json();
         isLoggedIn = data.loggedIn === true;
@@ -1002,7 +1002,8 @@
     async function fetchTrendingProducts() {
       try {
         const res = await fetch("/api/products?trending=true&limit=8");
-        const products = await res.json();
+        const data = await res.json();
+        const products = data.products || [];
         const container = document.getElementById("trendingContainer");
 
         if (products.length === 0) {
@@ -1245,7 +1246,7 @@
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
-      const res = await fetch("/api/login",{
+      const res = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include", // 🔥 VERY IMPORTANT

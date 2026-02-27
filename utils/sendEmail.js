@@ -1,20 +1,26 @@
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
 
-const sendEmail = async (to, subject, text) => {
+/**
+ * Sends an email using Nodemailer
+ * @param {Object} options - { to, subject, html }
+ */
+const sendEmail = async (options) => {
     const transporter = nodemailer.createTransport({
-        service: 'gmail',
+        service: "gmail",
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS
         }
     });
 
-    await transporter.sendMail({
+    const mailOptions = {
         from: `"Wings Toys" <${process.env.EMAIL_USER}>`,
-        to,
-        subject,
-        text
-    });
+        to: options.to,
+        subject: options.subject,
+        html: options.html
+    };
+
+    await transporter.sendMail(mailOptions);
 };
 
 module.exports = sendEmail;

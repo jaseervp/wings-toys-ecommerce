@@ -393,7 +393,7 @@
         <div class="sidebar-scroll">
             <div class="sidebar-brand"><img src="logo wings.png" alt="Wings"></div>
             <p class="menu-label">Main menu</p>
-            <a href="Dashbord.html" class="nav-item"><i class="bi bi-grid"></i> Dashboard</a>
+            <a href="Dashboard.html" class="nav-item"><i class="bi bi-grid"></i> Dashboard</a>
             <a href="OrderMangement.html" class="nav-item"><i class="bi bi-cart"></i> Order Management</a>
             <a href="Customers.html" class="nav-item"><i class="bi bi-people"></i> Customers</a>
             <a href="Cuopon.html" class="nav-item"><i class="bi bi-ticket-perforated"></i> Coupon Code</a>
@@ -426,6 +426,46 @@
     </aside>
 
     <main class="main-wrapper">
+        <div class="top-bar d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex align-items-center gap-3">
+                <i class="bi bi-list mobile-nav-btn" onclick="toggleSidebar()"></i>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <div class="theme-toggle" onclick="toggleTheme()"
+                    style="cursor: pointer; width: 40px; height: 40px; border-radius: 50%; background: var(--card-bg); border: 1px solid var(--card-border); display: flex; align-items: center; justify-content: center; color: var(--text-gray);">
+                    <i class="bi bi-moon-stars-fill" id="tIcon"></i>
+                </div>
+                <img src="profile-pic.png" class="rounded-circle border admin-avatar" width="38" height="38"
+                    style="object-fit: cover;">
+            </div>
+        </div>
+
+        <!-- Summary Cards (Dynamic) -->
+        <div class="summary-grid mb-4">
+            <div class="summary-card">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="summary-title text-muted">Total Credited</div>
+                        <div class="summary-value text-success" id="totalCreditDisplay">₹0.00</div>
+                    </div>
+                    <div class="p-2 rounded-circle bg-success bg-opacity-10 text-success">
+                        <i class="bi bi-arrow-down-left-circle fs-4"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="summary-title text-muted">Total Debited</div>
+                        <div class="summary-value text-danger" id="totalDebitDisplay">₹0.00</div>
+                    </div>
+                    <div class="p-2 rounded-circle bg-danger bg-opacity-10 text-danger">
+                        <i class="bi bi-arrow-up-right-circle fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="content-card border-0 shadow-sm" style="border-radius: 12px; min-height: 80vh;">
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
                 <h5 class="fw-bold mb-0">Transaction List</h5>
@@ -593,6 +633,11 @@
                 });
                 const data = await res.json();
                 allTransactions = data.transactions;
+
+                // Update Totals
+                document.getElementById('totalCreditDisplay').textContent = `₹${(data.totalCredit || 0).toLocaleString('en-IN')}`;
+                document.getElementById('totalDebitDisplay').textContent = `₹${(data.totalDebit || 0).toLocaleString('en-IN')}`;
+
                 renderTable(data.transactions);
                 renderPagination(data.currentPage, data.totalPages);
             } catch (err) {

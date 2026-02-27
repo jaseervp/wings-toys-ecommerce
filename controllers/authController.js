@@ -113,6 +113,11 @@ exports.loginUser = async (req, res) => {
     return res.status(401).json({ message: "Please verify your email first" });
   }
 
+  // Check if blocked
+  if (user.isBlocked) {
+    return res.status(403).json({ message: "Your account has been blocked. Please contact support." });
+  }
+
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
     return res.status(401).json({ message: "Invalid credentials" });

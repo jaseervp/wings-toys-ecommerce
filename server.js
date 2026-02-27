@@ -13,8 +13,10 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const productRoutes = require("./routes/productRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const userRoutes = require("./routes/userRoutes");
-
+const reviewRoutes = require("./routes/reviewRoutes");
 const app = express();
+
+
 
 
 // =============================
@@ -82,7 +84,8 @@ app.use('/api/wishlist', require("./routes/wishlistRoutes"));
 app.use('/api/admin/offers', require("./routes/offerRoutes"));
 app.use('/api/offers', require("./routes/publicOfferRoutes"));
 app.use('/api/wallet', require("./routes/walletRoutes"));
-
+app.use("/api", reviewRoutes);
+app.use("/api", require("./routes/contactRoutes"));
 
 
 // =============================

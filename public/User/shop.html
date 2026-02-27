@@ -419,7 +419,7 @@
                         <div class="d-flex align-items-center gap-3 mt-3 mt-md-0">
                             <span class="small">Sort by</span>
                             <select class="form-select form-select-sm" style="width: 150px;" id="sortSelect"
-                                onchange="loadShopProducts()">
+                                onchange="currentPage=1; loadShopProducts()">
                                 <option value="default">Default</option>
                                 <option value="price-asc">Price: Low to High</option>
                                 <option value="price-desc">Price: High to Low</option>
@@ -450,12 +450,8 @@
             </div>
 
 
-            <nav class="mt-5">
-                <ul class="pagination pagination-custom justify-content-center">
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                </ul>
+            <nav class="mt-5" id="paginationNav">
+                <!-- Dynamic Pagination -->
             </nav>
         </main>
 
@@ -669,6 +665,8 @@
 
         <script>
             let selectedCategory = 'all';
+            let currentPage = 1;
+            const limit = 12;
 
             /* =========================
                TOGGLE FILTER SECTION
@@ -715,6 +713,7 @@
             ========================= */
             function selectCategory(catId, element) {
                 selectedCategory = catId;
+                currentPage = 1; // Reset to page 1
 
                 // Update UI
                 document.querySelectorAll(".cat-pill").forEach(el => el.classList.remove("active"));
@@ -727,7 +726,8 @@
             /* =========================
                LOAD SHOP PRODUCTS
             ========================= */
-            async function loadShopProducts() {
+            async function loadShopProducts(page = currentPage) {
+                currentPage = page;
                 const sort = document.getElementById("sortSelect").value;
 
                 try {
@@ -735,17 +735,21 @@
                     const container = document.getElementById("shopProducts");
                     container.innerHTML = `<div class="text-center text-muted py-5 w-100">Loading products...</div>`;
 
-                    let url = `/api/products?sort=${sort}`;
+                    let url = `/api/products?sort=${sort}&page=${currentPage}&limit=${limit}`;
 
                     if (selectedCategory && selectedCategory !== 'all') {
                         url += `&category=${selectedCategory}`;
                     }
 
                     const res = await fetch(url);
-                    const products = await res.json();
+                    const data = await res.json();
 
-                    // Update showing results count if element exists (optional)
-                    // document.getElementById("resultCount").innerText = `Showing ${products.length} results`;
+                    const products = data.products || [];
+                    const totalPages = data.totalPages || 0;
+                    const totalProducts = data.totalProducts || 0;
+
+                    // Update showing results count
+                    document.getElementById("resultCount").innerText = `Showing ${products.length} of ${totalProducts} results`;
 
                     container.innerHTML = "";
 
@@ -754,6 +758,7 @@
               <div class="text-center text-muted py-5 w-100">
                 No products found
               </div>`;
+                        document.getElementById("paginationNav").innerHTML = "";
                         return;
                     }
 
@@ -815,12 +820,51 @@
             </div>`;
                     });
 
+                    renderPagination(totalPages);
+
                 } catch (err) {
-                    container.innerHTML = `
+                    console.error("LOAD_PRODUCTS_ERROR:", err);
+                    document.getElementById("shopProducts").innerHTML = `
           <div class="text-danger text-center py-5 w-100">
             Failed to load products
           </div>`;
                 }
+            }
+
+            /* =========================
+               RENDER PAGINATION
+            ========================= */
+            function renderPagination(totalPages) {
+                const nav = document.getElementById("paginationNav");
+                if (totalPages <= 1) {
+                    nav.innerHTML = "";
+                    return;
+                }
+
+                let html = `<ul class="pagination pagination-custom justify-content-center">`;
+
+                // Previous
+                html += `
+                <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="javascript:void(0)" onclick="loadShopProducts(${currentPage - 1})">Prev</a>
+                </li>`;
+
+                // Page Numbers
+                for (let i = 1; i <= totalPages; i++) {
+                    html += `
+                    <li class="page-item ${currentPage === i ? 'active' : ''}">
+                        <a class="page-link" href="javascript:void(0)" onclick="loadShopProducts(${i})">${i}</a>
+                    </li>`;
+                }
+
+                // Next
+                html += `
+                <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="javascript:void(0)" onclick="loadShopProducts(${currentPage + 1})">Next</a>
+                </li>`;
+
+                html += `</ul>`;
+                nav.innerHTML = html;
             }
 
             document.addEventListener("DOMContentLoaded", () => {

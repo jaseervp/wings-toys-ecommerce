@@ -10,7 +10,8 @@ const {
   getRelatedProducts,
   getPublicProducts,
   toggleTrending,
-  updateProduct
+  updateProduct,
+  getProductStock
 } = require("../controllers/productController");
 
 // Middlewares
@@ -75,5 +76,8 @@ router.get("/products/:id", getSingleProduct);
 
 // 🔁 Get Related Products
 router.get("/products/:id/related", getRelatedProducts);
+
+// 📡 Get Product Stock (Polling)
+router.get("/products/:id/stock", getProductStock);
 
 module.exports = router;

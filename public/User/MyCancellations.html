@@ -455,17 +455,42 @@
                 return;
             }
 
-            tbody.innerHTML = orders.map(order => `
+            tbody.innerHTML = orders.map(order => {
+                const canceledItems = order.items.filter(i => i.itemStatus === 'canceled');
+                const isFullyCanceled = order.orderStatus === 'canceled';
+                const canceledProductNames = canceledItems.map(i => i.product?.name || 'Unknown Product').join(', ');
+
+                let refundBadge = '';
+                if (order.paymentStatus === 'paid') {
+                    if (order.isRefunded || isFullyCanceled) {
+                        refundBadge = '<span class="badge bg-success text-white border border-success">Refunded</span>';
+                    } else if (canceledItems.length > 0) {
+                        refundBadge = '<span class="badge bg-info text-white border border-info">Item Refunded</span>';
+                    } else {
+                        refundBadge = '<span class="badge bg-warning text-dark border border-warning">Refund Pending</span>';
+                    }
+                } else {
+                    refundBadge = '<span class="badge bg-secondary text-white border">No Refund (Unpaid)</span>';
+                }
+
+                return `
                 <tr>
-                    <td class="fw-bold">#${order._id.slice(-6).toUpperCase()}</td>
+                    <td>
+                        <div class="fw-bold">#${order._id.slice(-6).toUpperCase()}</div>
+                        <div class="small text-muted text-truncate" style="max-width: 200px;">${canceledProductNames}</div>
+                    </td>
                     <td>${new Date(order.updatedAt).toLocaleDateString()}</td>
-                    <td><span class="badge bg-light text-dark border">To be refunded</span></td>
-                    <td><span class="status-badge status-cancelled">Cancelled</span></td>
+                    <td>${refundBadge}</td>
+                    <td>
+                        <span class="status-badge status-cancelled">
+                            ${isFullyCanceled ? 'Full Cancellation' : 'Partial Cancellation'}
+                        </span>
+                    </td>
                     <td class="text-end">
-                        <a href="order.html" class="btn-view">View Order</a>
+                        <a href="order.html?id=${order._id}" class="btn-view">View Details</a>
                     </td>
                 </tr>
-            `).join("");
+            `}).join("");
         }
     </script>
 

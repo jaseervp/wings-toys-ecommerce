@@ -647,7 +647,7 @@
     }
 
 
-    async function updateReturnStatus(orderId, status) {
+    async function updateReturnStatus(orderId, status, itemId) {
       if (!confirm("Are you sure you want to " + status + " this return?")) return;
 
       const token = localStorage.getItem("adminToken");
@@ -658,7 +658,7 @@
             "Content-Type": "application/json",
             Authorization: "Bearer " + token
           },
-          body: JSON.stringify({ status })
+          body: JSON.stringify({ status, itemId })
         });
 
         if (res.ok) {
@@ -713,94 +713,101 @@
     let orderDetailModal = null;
 
     function renderOrderDetails(order) {
+      const getImageUrl = (img) => {
+        if (!img) return "https://via.placeholder.com/60?text=No+Img";
+        if (img.startsWith("http")) return img;
+        if (img.startsWith("/")) return img;
+        return "/uploads/" + img;
+      };
+
       return `
-    <div class="mb-3">
-      <p class="fw-bold mb-1">Order ID</p>
-      <p>#ORD-${order._id.slice(-6).toUpperCase()}</p>
-    </div>
-
-    <div class="mb-3">
-      <p class="fw-bold mb-2">Products</p>
-      ${order.items.map(item => `
-  <div class="product-row">
-    <div class="d-flex align-items-center gap-3">
-     <img
-  src="${item.product?.images?.[0]
-          ? (() => {
-            const img = item.product.images[0];
-            if (img.startsWith("http")) return img;
-            if (img.startsWith("/")) return img;
-            if (img.startsWith("uploads/")) return "/" + img;
-            return "/uploads/" + img;
-          })()
-          : "https://via.placeholder.com/50?text=No+Img"
-        }"
-  style="width:50px;height:50px;border-radius:8px;object-fit:cover"
-/>
-
-      <div>
-        <p class="mb-0 fw-semibold">
-          ${item.product?.name || "Product removed"}
-        </p>
-        <small class="text-muted">
-          Qty: ${item.quantity} x— &#8377;${item.price}
-        </small>
-        <div class="mt-1">
-           <select class="form-select form-select-sm py-0" style="font-size: 0.75rem; width: auto;" 
-              onchange="updateOrderItemStatus('${order._id}', '${item._id}', this.value)">
-               ${["pending", "shipped", "delivered", "canceled", "returned"].map(s =>
-          `<option value="${s}" ${s === (item.itemStatus || 'pending') ? "selected" : ""}>${s}</option>`
-        ).join("")}
-           </select>
+        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+            <div>
+                <h5 class="fw-bold mb-1">Order #${order._id.slice(-6).toUpperCase()}</h5>
+                <small class="text-muted">Placed on ${new Date(order.createdAt).toLocaleDateString()}</small>
+            </div>
+            <div class="text-end">
+                 <span class="badge ${order.orderStatus === 'delivered' ? 'bg-success' :
+          order.orderStatus === 'canceled' ? 'bg-danger' :
+            order.orderStatus === 'shipped' ? 'bg-info text-white' : 'bg-warning text-dark'
+        } fs-6 px-3 py-2 rounded-pill">
+                    ${order.orderStatus.toUpperCase()}
+                </span>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <div class="fw-bold">
-      &#8377;${item.quantity * item.price}
-    </div>
-  </div>
-`).join("")}
+        <h6 class="fw-bold mb-3 text-muted">Products</h6>
+        <div class="d-flex flex-column gap-3 mb-4">
+            ${order.items.map(item => `
+                <div class="card border mb-0 shadow-sm" style="border-radius: 12px; overflow: hidden;">
+                    <div class="card-body p-3">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="${getImageUrl(item.product?.images?.[0])}" 
+                                 class="rounded-3 border me-3" 
+                                 style="width: 60px; height: 60px; object-fit: cover;">
+                            
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <h6 class="mb-0 fw-bold text-dark">${item.product?.name || 'Unknown Product'}</h6>
+                                    <span class="fw-bold">₹${item.price}</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">Qty: ${item.quantity}  <span class="mx-2">|</span>  Total: <span class="fw-semibold">₹${item.price * item.quantity}</span></small>
+                                    
+                                    <select class="form-select form-select-sm border-0 bg-light fw-medium" 
+                                            style="width: 140px; font-size: 0.85rem;"
+                                            onchange="updateOrderItemStatus('${order._id}', '${item._id}', this.value)"
+                                            ${(item.itemStatus === 'canceled' || item.itemStatus === 'returned') ? 'disabled' : ''}>
+                                        <option value="pending" ${item.itemStatus === 'pending' ? 'selected' : ''}>Pending</option>
+                                        <option value="shipped" ${item.itemStatus === 'shipped' ? 'selected' : ''}>Shipped</option>
+                                        <option value="delivered" ${item.itemStatus === 'delivered' ? 'selected' : ''}>Delivered</option>
+                                        <option value="canceled" ${item.itemStatus === 'canceled' ? 'selected' : ''}>Canceled</option>
+                                        <option value="returned" ${item.itemStatus === 'returned' ? 'selected' : ''}>Returned</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
-        <div class="summary-item align-items-center">
-          <span>Order Status</span>
-          <select class="form-select form-select-sm w-auto" onchange="updateOrderStatus('${order._id}', this.value)">
-             ${["pending", "shipped", "delivered", "canceled"].map(s =>
-          `<option value="${s}" ${s === order.orderStatus ? "selected" : ""}>${s}</option>`
-        ).join("")}
-          </select> 
+                        ${(item.returnStatus && item.returnStatus !== 'none') ? `
+                        <div class="border-top pt-2 mt-2">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="small fw-bold text-muted">Return Request</span>
+                                <span class="badge ${item.returnStatus === 'requested' ? 'bg-warning text-dark' : (item.returnStatus === 'approved' ? 'bg-success' : 'bg-danger')}">
+                                    ${item.returnStatus.toUpperCase()}
+                                </span>
+                            </div>
+                            <p class="small text-muted mb-2"><strong>Reason:</strong> ${item.returnReason || 'No reason provided'}</p>
+                            ${item.returnStatus === 'requested' ? `
+                            <div class="d-flex gap-2 justify-content-end">
+                                <button class="btn btn-outline-danger btn-sm py-1 px-3" onclick="updateReturnStatus('${order._id}', 'rejected', '${item._id}')">Reject</button>
+                                <button class="btn btn-success btn-sm py-1 px-3" onclick="updateReturnStatus('${order._id}', 'approved', '${item._id}')">Approve</button>
+                            </div>` : ''}
+                        </div>` : ''}
+                    </div>
+                </div>
+            `).join('')}
         </div>
-        <div class="summary-item">
-          <span>Total</span>
-          <span class="fw-bold">&#8377;${order.totalAmount}</span>
-        </div>
-        <div class="summary-item">
-          <span>Payment</span>
-          <span class="fw-bold">${order.paymentMethod}</span>
+
+        <div class="row g-3">
+            <div class="col-7">
+                <label class="small text-muted mb-1 fw-bold">Update Order Status</label>
+                <select class="form-select" onchange="updateOrderStatus('${order._id}', this.value)">
+                    <option value="pending" ${order.orderStatus === 'pending' ? 'selected' : ''}>Pending</option>
+                    <option value="shipped" ${order.orderStatus === 'shipped' ? 'selected' : ''}>Shipped</option>
+                    <option value="delivered" ${order.orderStatus === 'delivered' ? 'selected' : ''}>Delivered</option>
+                    <option value="canceled" ${order.orderStatus === 'canceled' ? 'selected' : ''}>Canceled</option>
+                </select>
+            </div>
+            <div class="col-5 text-end">
+                <p class="mb-1"><small class="text-muted">Payment: <span class="fw-bold text-dark text-uppercase">${order.paymentMethod}</span></small></p>
+                <div class="d-flex justify-content-end align-items-baseline gap-2">
+                    <span class="text-muted small">Total:</span>
+                    <h4 class="fw-bold text-primary mb-0">₹${order.totalAmount}</h4>
+                </div>
+            </div>
         </div>
         
-        ${order.returnStatus && order.returnStatus !== 'none' ? `
-        <div class="summary-item mt-3 pt-3 border-top">
-           <span>Return Status</span>
-           ${order.returnStatus === 'requested'
-            ? `<span class="fw-bold text-dark badge bg-warning">Return Requested</span>`
-            : `<span class="fw-bold text-capitalize badge bg-${order.returnStatus === 'approved' ? 'success' : 'danger'} text-white">${order.returnStatus}</span>`
-          }
         </div>
-        ${order.returnReason ? `
-        <div class="summary-item">
-            <span>Reason</span>
-            <span class="text-muted small">${order.returnReason}</span>
-        </div>` : ''}
-
-        ${order.returnStatus === 'requested' ? `
-          <div class="d-flex gap-2 mt-3 justify-content-end">
-             <button class="btn btn-secondary btn-sm" onclick="updateReturnStatus('${order._id}', 'rejected')">Reject Return</button>
-             <button class="btn btn-primary btn-sm" onclick="updateReturnStatus('${order._id}', 'approved')">Approve Return</button>
-          </div>
-        ` : ''}
-        
-        ` : ''}
       `;
     }
 
@@ -888,11 +895,15 @@
       tableBody.innerHTML = orders.map((o, i) => {
         // Determine Status Display
         let statusHtml = '';
-        if (o.returnStatus === 'requested') {
+        const hasRequestedItem = o.items.some(i => i.returnStatus === 'requested');
+        const hasApprovedItem = o.items.some(i => i.returnStatus === 'approved');
+        const hasRejectedItem = o.items.some(i => i.returnStatus === 'rejected');
+
+        if (hasRequestedItem) {
           statusHtml = `<span class="order-status badge-return-requested">Return Requested</span>`;
-        } else if (o.returnStatus === 'approved') {
+        } else if (hasApprovedItem) {
           statusHtml = `<span class="order-status badge-return-approved">Return Approved</span>`;
-        } else if (o.returnStatus === 'rejected') {
+        } else if (hasRejectedItem) {
           statusHtml = `<span class="order-status badge-return-rejected">Return Rejected</span>`;
         } else {
           statusHtml = `<span class="order-status badge-${o.orderStatus}">${o.orderStatus}</span>`;

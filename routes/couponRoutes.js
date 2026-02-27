@@ -12,6 +12,6 @@ router.delete("/admin/coupons/:id", protect, adminOnly, couponController.deleteC
 
 // User / Checkout
 router.get("/coupons/active", couponController.getActiveCoupons);
-router.get("/coupons/checkout", couponController.getCheckoutCoupons);
+router.get("/coupons/checkout", protect, couponController.getCheckoutCoupons);
 
 module.exports = router;

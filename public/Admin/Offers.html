@@ -287,7 +287,7 @@
         <div class="sidebar-scroll">
             <div class="sidebar-brand"><img src="logo wings.png" alt="Wings"></div>
             <p class="menu-label">Main menu</p>
-            <a href="Dashbord.html" class="nav-item "><i class="bi bi-grid"></i> Dashboard</a>
+            <a href="Dashboard.html" class="nav-item "><i class="bi bi-grid"></i> Dashboard</a>
             <a href="OrderMangement.html" class="nav-item"><i class="bi bi-cart"></i> Order Management</a>
             <a href="Customers.html" class="nav-item"><i class="bi bi-people"></i> Customers</a>
             <a href="Cuopon.html" class="nav-item"><i class="bi bi-ticket-perforated"></i> Coupon Code</a>
@@ -343,8 +343,8 @@
                     <div class="search-box bg-white border rounded ps-2"
                         style="max-width: 300px; display: flex; align-items: center;">
                         <i class="bi bi-search text-secondary me-2"></i>
-                        <input type="text" placeholder="Search offer name..." class="border-0 bg-transparent py-2"
-                            style="outline: none; width: 200px;">
+                        <input type="text" id="offerSearchInput" placeholder="Search offer name..."
+                            class="border-0 bg-transparent py-2" style="outline: none; width: 200px;">
                     </div>
                     <button class="btn btn-primary px-4 fw-medium" data-bs-toggle="modal"
                         data-bs-target="#newSaleModal">
@@ -675,13 +675,14 @@
             async function fetchProducts() {
                 const token = localStorage.getItem('adminToken');
                 try {
-                    const res = await fetch('/api/admin/products', {
+                    const res = await fetch('/api/admin/products?limit=100', {
                         headers: { 'Authorization': 'Bearer ' + token }
                     });
 
                     if (!res.ok) throw new Error('Failed to fetch products');
 
-                    loadedProducts = await res.json();
+                    const data = await res.json();
+                    loadedProducts = data.products || [];
                     renderProducts(loadedProducts);
 
                 } catch (err) {
@@ -783,12 +784,12 @@
             }
 
             // --- FETCH OFFERS LOGIC ---
-            async function fetchOffers() {
+            async function fetchOffers(searchTerm = '') {
                 const token = localStorage.getItem('adminToken');
                 const tbody = document.querySelector('tbody');
 
                 try {
-                    const res = await fetch('/api/admin/offers', {
+                    const res = await fetch(`/api/admin/offers?search=${searchTerm}`, {
                         headers: { 'Authorization': 'Bearer ' + token }
                     });
 
@@ -1229,6 +1230,18 @@
                     });
                 }
             });
+
+            // Initial Fetch
+            fetchOffers();
+
+            // Search Listener
+            const searchInput = document.getElementById('offerSearchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keyup', (e) => {
+                    fetchOffers(e.target.value);
+                });
+            }
+
         });
     </script>
     <style>

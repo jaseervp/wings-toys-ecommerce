@@ -4,73 +4,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact - ToyStore</title>
+    <title>Contact Us | Wings Kids Toys</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="css/navbar.css"> <!-- Fixed Navbar Styles -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/navbar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         :root {
-            --soft-bg: #FAF4F4;
-            --input-border: #9F9F9F;
+            --toy-yellow: #FBEBB5;
+            --toy-blue: #E3F2FD;
+            --toy-rose: #FCE4EC;
+            --toy-mint: #E0F2F1;
+            --toy-cream: #FFF9E5;
+            --accent-gold: #B88E2F;
+            --accent-blue: #6C8EEF;
+            --border-gray: #D9D9D9;
+            --text-gray: #9F9F9F;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
             color: #000;
             margin: 0;
-            -webkit-font-smoothing: antialiased;
+            background-color: #fff;
+            overflow-x: hidden;
         }
 
-
-        /* --- NAVIGATION --- */
-        .nav-link {
-            font-weight: 600;
-            color: #000 !important;
-            margin: 0 15px;
-        }
-
-        .search-input-desktop {
-            width: 0;
-            opacity: 0;
-            border: none;
-            border-bottom: 2px solid #000;
-            outline: none;
-            transition: all 0.4s ease;
-            padding: 0;
-            background: transparent;
-        }
-
-        .search-input-desktop.active {
-            width: 200px;
-            opacity: 1;
-            padding: 0 10px;
-            margin-right: 10px;
-        }
-
-        .search-input-mobile {
-            width: 100%;
-            height: 0;
-            opacity: 0;
-            padding: 0;
-            border: none;
-            border-bottom: 2px solid #000;
-            transition: all 0.3s ease;
-            outline: none;
-            overflow: hidden;
-        }
-
-        .search-input-mobile.active {
-            height: 40px;
-            opacity: 1;
-            padding: 10px 0;
-            margin-top: 15px;
-        }
-
-
-        /* NAV ICONS */
+        /* Nav Styles from index */
         .navbar-logo {
             height: 40px;
         }
@@ -107,134 +72,92 @@
             }
         }
 
-
-        /* --- HERO BANNER --- */
-        .page-header {
-            background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
-                url('https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?q=80&w=1200');
-            background-size: cover;
-            background-position: center;
-            padding: 80px 0;
-            text-align: center;
-        }
-
-        .page-header h1 {
-            font-size: 3rem;
-            font-weight: 500;
-            margin-bottom: 5px;
-        }
-
-        .page-header p {
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
         /* --- CONTACT CONTENT --- */
-        .contact-section {
-            padding: 100px 0;
+        .contact-wrapper {
+            padding: 120px 0 80px;
+            /* Increased top padding for fixed nav */
+            min-height: 80vh;
         }
 
-        .contact-intro {
-            text-align: center;
-            margin-bottom: 80px;
+        .contact-info-box {
+            background-color: #f8f9fd;
+            padding: 40px;
+            border-radius: 10px;
+            height: 100%;
         }
 
-        .contact-intro h2 {
-            font-size: 2.2rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-
-        .contact-intro p {
-            color: #9F9F9F;
-            max-width: 600px;
-            margin: 0 auto;
-            font-size: 0.95rem;
-            line-height: 1.6;
+        .contact-info-box h2 {
+            font-weight: 500;
+            margin-bottom: 30px;
         }
 
         .info-item {
             display: flex;
-            gap: 25px;
-            margin-bottom: 45px;
+            gap: 15px;
+            margin-bottom: 25px;
         }
 
-        .info-item i {
-            font-size: 1.6rem;
-            color: #000;
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-blue);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
-        .info-item h5 {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 5px;
+        .form-side {
+            padding-left: 50px;
         }
 
-        .info-item p {
-            color: #000;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            margin: 0;
-        }
-
-        /* --- FORM STYLING --- */
-        .contact-form label {
-            display: block;
+        .form-side h1 {
+            font-size: 2.3rem;
             font-weight: 500;
-            margin-bottom: 15px;
-            font-size: 1rem;
+            margin-bottom: 10px;
         }
 
-        .form-input {
+        .subtitle {
+            margin-bottom: 40px;
+            color: #666;
+        }
+
+        .underline-input {
             width: 100%;
-            border: 1px solid var(--input-border);
-            border-radius: 10px;
-            padding: 18px 25px;
-            margin-bottom: 35px;
+            border: none;
+            border-bottom: 1px solid var(--border-gray);
+            padding: 12px 0;
+            margin-bottom: 30px;
             outline: none;
             font-size: 0.95rem;
+            background: transparent;
+            transition: 0.3s;
         }
 
-        .form-input::placeholder {
-            color: #9F9F9F;
+        .underline-input:focus {
+            border-bottom: 1px solid #000;
         }
 
-        textarea.form-input {
-            min-height: 150px;
+        textarea.underline-input {
+            min-height: 120px;
             resize: none;
         }
 
         .btn-submit {
-            border: 1px solid #000;
-            background: transparent;
-            padding: 12px 60px;
-            border-radius: 10px;
-            font-size: 1rem;
+            background-color: var(--accent-blue);
+            color: #fff;
+            padding: 14px 50px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 500;
             transition: 0.3s;
         }
 
         .btn-submit:hover {
-            background: #000;
-            color: #fff;
-        }
-
-        /* --- FEATURES SECTION --- */
-        .features {
-            background: var(--soft-bg);
-            padding: 80px 0;
-        }
-
-        .feature-box h3 {
-            font-size: 1.6rem;
-            font-weight: 500;
-            margin-bottom: 8px;
-        }
-
-        .feature-box p {
-            color: #9F9F9F;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            margin: 0;
+            opacity: 0.9;
+            transform: translateY(-2px);
         }
 
         /* --- FOOTER --- */
@@ -249,12 +172,11 @@
             display: block;
             margin-bottom: 25px;
             text-decoration: none;
-            font-size: 0.95rem;
-            font-weight: 500;
+            font-size: 0.9rem;
         }
 
         .footer-title {
-            color: #9F9F9F;
+            color: var(--text-gray);
             font-weight: 400;
             margin-bottom: 45px;
             display: block;
@@ -262,9 +184,9 @@
         }
 
         .footer-address {
-            color: #9F9F9F;
-            line-height: 1.8;
-            font-size: 0.95rem;
+            color: var(--text-gray);
+            line-height: 2;
+            font-size: 0.9rem;
             margin-bottom: 40px;
         }
 
@@ -273,14 +195,14 @@
             border-bottom: 1px solid #fff;
             padding-bottom: 8px;
             width: 100%;
-            max-width: 300px;
+            max-width: 350px;
         }
 
         .newsletter-input {
             background: transparent;
             border: none;
             color: #fff;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             outline: none;
             flex-grow: 1;
         }
@@ -290,26 +212,21 @@
             border: none;
             color: #fff;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
-            padding-left: 15px;
         }
 
         .copyright {
-            border-top: 1px solid #333;
+            border-top: 1px solid #222;
             margin-top: 60px;
             padding-top: 30px;
-            font-size: 0.95rem;
-            color: #fff;
+            font-size: 0.9rem;
         }
 
-        @media (max-width: 992px) {
-            .contact-info {
-                margin-bottom: 60px;
-            }
-
-            .features .row>div {
-                margin-bottom: 40px;
+        @media (max-width: 991px) {
+            .form-side {
+                padding-left: 0;
+                margin-top: 40px;
             }
         }
     </style>
@@ -317,341 +234,348 @@
 
 <body>
 
-    <body>
+    <nav class="navbar navbar-light bg-white py-3 navbar-fixed">
+        <div class="container">
 
-        <nav class="navbar navbar-light bg-white py-3 navbar-fixed">
-            <div class="container">
+            <!-- TOP ROW -->
+            <div class="d-flex align-items-center w-100">
 
-                <!-- TOP ROW -->
-                <div class="d-flex align-items-center w-100">
+                <!-- LOGO -->
+                <a class="navbar-brand" href="index.html">
+                    <img src="/Images/logo wings.png" class="navbar-logo" alt="Logo">
+                </a>
 
-                    <!-- LOGO -->
-                    <a class="navbar-brand" href="index.html">
-                        <img src="/Images/logo wings.png" class="navbar-logo" alt="Logo">
+                <!-- DESKTOP MENU (CENTER) -->
+                <ul class="navbar-nav flex-row gap-4 mx-auto d-none d-lg-flex">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item signup-link">
+                        <a class="nav-link" href="signup.html">Sign Up</a>
+                    </li>
+                </ul>
+
+                <!-- DESKTOP RIGHT -->
+                <div class="d-none d-lg-flex align-items-center gap-3">
+                    <div class="nav-search">
+                        <input type="text" placeholder="Search..." />
+                        <i class="bi bi-search"></i>
+                    </div>
+
+                    <a href="wishlist.html" class="nav-icon auth-protected" data-target="wishlist.html">
+                        <i class="bi bi-heart"></i>
                     </a>
 
-                    <!-- DESKTOP MENU (CENTER) -->
-                    <ul class="navbar-nav flex-row gap-4 mx-auto d-none d-lg-flex">
-                        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
-                        <li class="nav-item"><a class="nav-link active" href="contact.html">Contact</a></li>
-                        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-                        <li class="nav-item signup-link">
-                            <a class="nav-link" href="signup.html">Sign Up</a>
-                        </li>
+                    <a href="cart.html" class="nav-icon auth-protected" data-target="cart.html">
+                        <i class="bi bi-cart"></i>
+                    </a>
 
-                    </ul>
+                    <div id="auth-nav"></div>
+                </div>
 
-                    <!-- DESKTOP RIGHT -->
-                    <div class="d-none d-lg-flex align-items-center gap-3">
+                <!-- MOBILE RIGHT -->
+                <div class="d-flex align-items-center gap-3 d-lg-none ms-auto">
+                    <a href="wishlist.html" class="nav-icon auth-protected" data-target="wishlist.html">
+                        <i class="bi bi-heart"></i>
+                    </a>
 
-                        <div class="nav-search">
-                            <input type="text" placeholder="Search..." />
-                            <i class="bi bi-search"></i>
+                    <a href="cart.html" class="nav-icon auth-protected" data-target="cart.html">
+                        <i class="bi bi-cart"></i>
+                    </a>
+
+                    <div id="auth-nav-mobile"></div>
+
+                    <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- MOBILE SEARCH -->
+            <div class="nav-search w-100 mt-3 d-lg-none">
+                <input type="text" placeholder="Search..." />
+                <i class="bi bi-search"></i>
+            </div>
+
+            <!-- MOBILE MENU -->
+            <div class="collapse navbar-collapse d-lg-none mt-3" id="navbarNav">
+                <ul class="navbar-nav gap-3">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item signup-link">
+                        <a class="nav-link" href="signup.html">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container contact-wrapper">
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="contact-info-box">
+                    <h2>Get in Touch</h2>
+                    <p class="mb-5">Have a question or feedback? We'd love to hear from you. Reach out to us using the
+                        form or the contact details below.</p>
+
+                    <div class="info-item">
+                        <div class="info-icon"><i class="bi bi-geo-alt"></i></div>
+                        <div>
+                            <h6 class="mb-1">Address</h6>
+                            <p class="text-muted small">400 University Drive Suite 200 Coral Gables, FL 33134 USA</p>
                         </div>
-
-                        <a href="wishlist.html" class="nav-icon auth-protected" data-target="wishlist.html">
-                            <i class="bi bi-heart"></i>
-                        </a>
-
-                        <a href="cart.html" class="nav-icon auth-protected" data-target="cart.html">
-                            <i class="bi bi-cart"></i>
-                        </a>
-
-                        <div id="auth-nav"></div>
-
                     </div>
 
-                    <!-- MOBILE RIGHT -->
-                    <div class="d-flex align-items-center gap-3 d-lg-none ms-auto">
-                        <a href="wishlist.html" class="nav-icon auth-protected" data-target="wishlist.html">
-                            <i class="bi bi-heart"></i>
-                        </a>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="bi bi-telephone"></i></div>
+                        <div>
+                            <h6 class="mb-1">Phone</h6>
+                            <p class="text-muted small">+1 234 567 890</p>
+                        </div>
+                    </div>
 
-                        <a href="cart.html" class="nav-icon auth-protected" data-target="cart.html">
-                            <i class="bi bi-cart"></i>
-                        </a>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="bi bi-envelope"></i></div>
+                        <div>
+                            <h6 class="mb-1">Email</h6>
+                            <p class="text-muted small">wingstoys7@gmail.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                        <div id="auth-nav-mobile"></div>
+            <div class="col-lg-7">
+                <div class="form-side">
+                    <h1>Contact Us</h1>
+                    <p class="subtitle">Fill out the form below and we'll reply as soon as possible.</p>
 
-                        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarNav">
-                            <span class="navbar-toggler-icon"></span>
+                    <form id="contactForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" id="name" name="name" class="underline-input" placeholder="Your Name"
+                                    required>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="email" id="email" name="email" class="underline-input"
+                                    placeholder="Your Email" required>
+                            </div>
+                        </div>
+
+                        <input type="text" id="subject" name="subject" class="underline-input" placeholder="Subject"
+                            required>
+
+                        <textarea id="message" name="message" class="underline-input" placeholder="Your Message"
+                            required></textarea>
+
+                        <button type="submit" id="submitBtn" class="btn-submit">
+                            <span id="btnText">Send Message</span>
+                            <span id="btnLoading" class="spinner-border spinner-border-sm d-none" role="status"></span>
                         </button>
-                    </div>
-
-                </div>
-
-                <!-- MOBILE SEARCH -->
-                <div class="nav-search w-100 mt-3 d-lg-none">
-                    <input type="text" placeholder="Search..." />
-                    <i class="bi bi-search"></i>
-                </div>
-
-                <!-- MOBILE MENU -->
-                <div class="collapse navbar-collapse d-lg-none mt-3" id="navbarNav">
-                    <ul class="navbar-nav gap-3">
-                        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
-                        <li class="nav-item"><a class="nav-link active" href="contact.html">Contact</a></li>
-                        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-                        <li class="nav-item signup-link">
-                            <a class="nav-link" href="signup.html">Sign Up</a>
-                        </li>
-
-                    </ul>
-                </div>
-
-            </div>
-        </nav>
-
-        <header class="page-header">
-            <div class="container">
-                <img src="https://cdn-icons-png.flaticon.com/512/3081/3081986.png" width="50" class="mb-2" alt="Logo">
-                <h1>Contact</h1>
-                <p>Home <i class="bi bi-chevron-right mx-1"></i> Contact</p>
-            </div>
-        </header>
-
-        <main class="container contact-section">
-            <div class="contact-intro">
-                <h2>Get In Touch With Us</h2>
-                <p>For More Information About Our Product & Services. Please Feel Free To Drop Us An Email. Our Staff
-                    Always
-                    Be There To Help You Out. Do Not Hesitate!</p>
-            </div>
-
-            <div class="row justify-content-center">
-                <div class="col-lg-4 contact-info pe-lg-5">
-                    <div class="info-item">
-                        <i class="bi bi-geo-alt-fill"></i>
-                        <div>
-                            <h5>Address</h5>
-                            <p>236 5th SE Avenue, New <br> York NY10000, United <br> States</p>
-                        </div>
-                    </div>
-
-                    <div class="info-item">
-                        <i class="bi bi-telephone-fill"></i>
-                        <div>
-                            <h5>Phone</h5>
-                            <p>Mobile: +(84) 546-6789 <br> Hotline: +(84) 456-6789</p>
-                        </div>
-                    </div>
-
-                    <div class="info-item">
-                        <i class="bi bi-clock-fill"></i>
-                        <div>
-                            <h5>Working Time</h5>
-                            <p>Monday-Friday: 9:00 - <br> 22:00 <br> Saturday-Sunday: 9:00 - <br> 21:00</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6">
-                    <form class="contact-form">
-                        <label>Your name</label>
-                        <input type="text" class="form-input" placeholder="Abc">
-
-                        <label>Email address</label>
-                        <input type="email" class="form-input" placeholder="Abc@def.com">
-
-                        <label>Subject</label>
-                        <input type="text" class="form-input" placeholder="This is an optional">
-
-                        <label>Message</label>
-                        <textarea class="form-input" placeholder="Hi! I'd like to ask about"></textarea>
-
-                        <button type="submit" class="btn-submit">Submit</button>
                     </form>
                 </div>
             </div>
-        </main>
+        </div>
+    </main>
 
-        <section class="features">
-            <div class="container">
-                <div class="row text-start">
-                    <div class="col-md-4 px-lg-4">
-                        <div class="feature-box">
-                            <h3>Free Delivery</h3>
-                            <p>For all orders over $50, consectetur adipim scing elit.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4 px-lg-4">
-                        <div class="feature-box">
-                            <h3>90 Days Return</h3>
-                            <p>If goods have problems, consectetur adipim scing elit.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4 px-lg-4">
-                        <div class="feature-box">
-                            <h3>Secure Payment</h3>
-                            <p>100% secure payment, consectetur adipim scing elit.</p>
-                        </div>
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <p class="footer-address">400 University Drive Suite 200 Coral Gables, <br>FL 33134 USA</p>
+                </div>
+                <div class="col-lg-2 col-6 mb-4">
+                    <span class="footer-title">Links</span>
+                    <a href="index.html">Home</a>
+                    <a href="shop.html">Shop</a>
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+                <div class="col-lg-2 col-6 mb-4">
+                    <span class="footer-title">Help</span>
+                    <a href="#">Payment Options</a>
+                    <a href="#">Returns</a>
+                    <a href="#">Privacy Policies</a>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <span class="footer-title">Newsletter</span>
+                    <div class="newsletter-form">
+                        <input type="email" class="newsletter-input" placeholder="Enter Your Email Address">
+                        <button class="newsletter-btn">SUBSCRIBE</button>
                     </div>
                 </div>
             </div>
-        </section>
-
-        <footer>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-4 mb-4">
-                        <p class="footer-address">400 University Drive Suite 200 Coral Gables, <br>FL 33134 USA</p>
-                    </div>
-                    <div class="col-lg-2 col-6 mb-4">
-                        <span class="footer-title">Links</span>
-                        <a href="index.html">Home</a>
-                        <a href="shop.html">Shop</a>
-                        <a href="about.html">About</a>
-                        <a href="contact.html">Contact</a>
-                    </div>
-                    <div class="col-lg-2 col-6 mb-4">
-                        <span class="footer-title">Help</span>
-                        <a href="#">Payment Options</a>
-                        <a href="#">Returns</a>
-                        <a href="#">Privacy Policies</a>
-                    </div>
-                    <div class="col-lg-4 mb-4">
-                        <span class="footer-title">Newsletter</span>
-                        <div class="newsletter-form">
-                            <input type="email" class="newsletter-input" placeholder="Enter Your Email Address">
-                            <button class="newsletter-btn">SUBSCRIBE</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="copyright">
-                    2026 ToyStore. All rights reserved
-                </div>
+            <div class="copyright">
+                2026 ToyStore. All rights reserved
             </div>
-        </footer>
+        </div>
+    </footer>
 
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- LOGIN REQUIRED MODAL -->
-        <div class="modal fade" id="loginRequiredModal" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content rounded-4">
-
-                    <div class="modal-header border-0">
-                        <h5 class="modal-title fw-bold">Login Required</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-
-                    <div class="modal-body text-center">
-                        <i class="bi bi-lock-fill fs-1 text-warning mb-3"></i>
-                        <p class="mb-3">
-                            You need to login to access your account.
-                        </p>
-                    </div>
-
-                    <div class="modal-footer border-0 justify-content-center gap-3">
-                        <a href="signup.html" class="btn btn-dark rounded-pill px-4">
-                            Login / Sign Up
-                        </a>
-                        <button class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
-                            Cancel
-                        </button>
-                    </div>
-
+    <!-- LOGIN REQUIRED MODAL -->
+    <div class="modal fade" id="loginRequiredModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Login Required</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <i class="bi bi-lock-fill fs-1 text-warning mb-3"></i>
+                    <p class="mb-3">You need to login to access your account.</p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center gap-3">
+                    <a href="signup.html" class="btn btn-dark rounded-pill px-4">Login / Sign Up</a>
+                    <button class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
+    </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            let isLoggedIn = false;
 
-        <script>
-
-            document.addEventListener("DOMContentLoaded", async () => {
-                let isLoggedIn = false;
-
-                try {
-                    const res = await fetch("/api/check-auth", {
-                        credentials: "include"
-                    });
-                    const data = await res.json();
-                    isLoggedIn = data.loggedIn === true;
-                } catch {
-                    isLoggedIn = false;
-                }
-
-                // 🔐 Protect Cart / Wishlist / Account
-                document.querySelectorAll(".auth-protected").forEach(link => {
-                    link.addEventListener("click", e => {
-                        if (!isLoggedIn) {
-                            e.preventDefault();
-                            showLoginModal();
-                        }
-                    });
-                });
-
-                // 👤 Account Icon Logic
-                const desktop = document.getElementById("auth-nav");
-                const mobile = document.getElementById("auth-nav-mobile");
-
-                if (isLoggedIn) {
-                    const html = `
-      <a href="my_account.html" class="nav-icon" title="My Account">
-        <i class="bi bi-person-circle"></i>
-      </a>
-      <a href="order.html" class="nav-icon ms-2" title="My Orders">
-        <i class="bi bi-bag-check"></i>
-      </a>
-    `;
-                    desktop.innerHTML = html;
-                    mobile.innerHTML = html;
-
-                    // ❌ REMOVE SIGNUP FROM NAV
-                    document.querySelectorAll(".signup-link").forEach(el => el.remove());
-                } else {
-                    const html = `
-      <a href="#" class="nav-icon login-required">
-        <i class="bi bi-person"></i>
-      </a>
-    `;
-                    desktop.innerHTML = html;
-                    mobile.innerHTML = html;
-
-                    document.querySelectorAll(".login-required").forEach(el => {
-                        el.addEventListener("click", e => {
-                            e.preventDefault();
-                            showLoginModal();
-                        });
-                    });
-                }
-            });
-
-            function showLoginModal() {
-                const modal = new bootstrap.Modal(
-                    document.getElementById("loginRequiredModal")
-                );
-                modal.show();
+            try {
+                const res = await fetch("/api/check-auth", { credentials: "include" });
+                const data = await res.json();
+                isLoggedIn = data.loggedIn === true;
+            } catch {
+                isLoggedIn = false;
             }
 
-            /* Navbar Scroll Effect */
+            // 🔐 Protect Cart / Wishlist / Account
+            document.querySelectorAll(".auth-protected").forEach(link => {
+                link.addEventListener("click", e => {
+                    if (!isLoggedIn) {
+                        e.preventDefault();
+                        showLoginModal();
+                    }
+                });
+            });
+
+            // 👤 Account Icon Logic
+            const desktop = document.getElementById("auth-nav");
+            const mobile = document.getElementById("auth-nav-mobile");
+
+            if (isLoggedIn) {
+                const html = `
+                    <a href="my_account.html" class="nav-icon" title="My Account">
+                        <i class="bi bi-person-circle"></i>
+                    </a>
+                    <a href="order.html" class="nav-icon ms-2" title="My Orders">
+                        <i class="bi bi-bag-check"></i>
+                    </a>
+                `;
+                desktop.innerHTML = html;
+                mobile.innerHTML = html;
+
+                // ❌ REMOVE SIGNUP FROM NAV
+                document.querySelectorAll(".signup-link").forEach(el => el.remove());
+            } else {
+                const html = `
+                    <a href="#" class="nav-icon login-required">
+                        <i class="bi bi-person"></i>
+                    </a>
+                `;
+                desktop.innerHTML = html;
+                mobile.innerHTML = html;
+
+                document.querySelectorAll(".login-required").forEach(el => {
+                    el.addEventListener("click", e => {
+                        e.preventDefault();
+                        showLoginModal();
+                    });
+                });
+            }
+
+            // Navbar Scroll Effect
             window.addEventListener("scroll", () => {
                 const nav = document.querySelector(".navbar-fixed");
-                if (nav) {
-                    if (window.scrollY > 10) {
-                        nav.classList.add("scrolled");
-                    } else {
-                        nav.classList.remove("scrolled");
-                    }
-                }
-            });
-        </script>
-        <script>
-            document.getElementById('search-trigger').addEventListener('click', function () {
-                if (window.innerWidth < 992) {
-                    const mobileInput = document.getElementById('search-input-mobile');
-                    mobileInput.classList.toggle('active');
-                    if (mobileInput.classList.contains('active')) mobileInput.focus();
+                if (window.scrollY > 10) {
+                    nav.classList.add("scrolled");
                 } else {
-                    const desktopInput = document.getElementById('search-desktop');
-                    desktopInput.classList.toggle('active');
-                    if (desktopInput.classList.contains('active')) desktopInput.focus();
+                    nav.classList.remove("scrolled");
                 }
             });
-        </script>
-    </body>
+        });
+
+        function showLoginModal() {
+            const modal = new bootstrap.Modal(document.getElementById("loginRequiredModal"));
+            modal.show();
+        }
+    </script>
+    <script>
+        document.getElementById("contactForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById("submitBtn");
+            const btnText = document.getElementById("btnText");
+            const btnLoading = document.getElementById("btnLoading");
+
+            // Get form data
+            const formData = {
+                name: document.getElementById("name").value.trim(),
+                email: document.getElementById("email").value.trim(),
+                subject: document.getElementById("subject").value.trim(),
+                message: document.getElementById("message").value.trim()
+            };
+
+            // Loading state
+            submitBtn.disabled = true;
+            btnText.textContent = "Sending...";
+            btnLoading.classList.remove("d-none");
+
+            try {
+                const res = await fetch("/api/contact", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: data.message,
+                        confirmButtonColor: '#6C8EEF'
+                    });
+                    document.getElementById("contactForm").reset();
+                } else {
+                    let errorMessage = data.message || "Failed to send message.";
+                    if (data.errors) {
+                        errorMessage = data.errors.map(err => err.msg).join("<br>");
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        html: errorMessage,
+                        confirmButtonColor: '#d33'
+                    });
+                }
+            } catch (err) {
+                console.error("CONTACT_ERROR:", err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An unexpected error occurred. Please try again later.',
+                    confirmButtonColor: '#d33'
+                });
+            } finally {
+                // Restore button state
+                submitBtn.disabled = false;
+                btnText.textContent = "Send Message";
+                btnLoading.classList.add("d-none");
+            }
+        });
+    </script>
+</body>
 
 </html>

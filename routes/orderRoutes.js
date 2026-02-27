@@ -25,6 +25,9 @@ router.post("/:id/return", protect, orderController.requestReturn);
 // cancel single item
 router.post("/:orderId/item/:itemId/cancel", protect, orderController.cancelOrderItem);
 
+// download invoice
+router.get("/:id/invoice", protect, orderController.downloadInvoice);
+
 
 // ================= ADMIN =================
 

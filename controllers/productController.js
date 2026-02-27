@@ -73,7 +73,7 @@ exports.addProduct = async (req, res) => {
 ========================= */
 exports.getAllProductsAdmin = async (req, res) => {
   try {
-    const { search, category, stockStatus, sort } = req.query;
+    const { search, category, stockStatus, sort, page = 1, limit = 10 } = req.query;
 
     let query = {};
 
@@ -102,11 +102,26 @@ exports.getAllProductsAdmin = async (req, res) => {
     if (sort === "oldest") sortOption = { createdAt: 1 };
     if (sort === "name-asc") sortOption = { name: 1 };
 
+    // Pagination
+    const pageNum = parseInt(page) || 1;
+    const limitNum = parseInt(limit) || 10;
+    const skip = (pageNum - 1) * limitNum;
+
+    const totalProducts = await Product.countDocuments(query);
+    const totalPages = Math.ceil(totalProducts / limitNum);
+
     const products = await Product.find(query)
       .populate("category", "name")
-      .sort(sortOption);
+      .sort(sortOption)
+      .skip(skip)
+      .limit(limitNum);
 
-    res.status(200).json(products);
+    res.status(200).json({
+      products,
+      currentPage: pageNum,
+      totalPages,
+      totalProducts
+    });
 
   } catch (error) {
     console.error("GET PRODUCTS ERROR:", error);
@@ -196,7 +211,7 @@ exports.updateProduct = async (req, res) => {
 ========================= */
 exports.getPublicProducts = async (req, res) => {
   try {
-    const { sort, category, trending } = req.query;
+    const { sort, category, trending, page = 1, limit = 12 } = req.query;
     let sortOption = { createdAt: -1 }; // Default: Newest
     let filter = { isActive: true };
 
@@ -216,9 +231,20 @@ exports.getPublicProducts = async (req, res) => {
       sortOption = { createdAt: 1 };
     }
 
+    // Pagination constants
+    const pageNum = parseInt(page) || 1;
+    const limitNum = parseInt(limit) || 12;
+    const skip = (pageNum - 1) * limitNum;
+
+    // Get total count for pagination metadata
+    const totalProducts = await Product.countDocuments(filter);
+    const totalPages = Math.ceil(totalProducts / limitNum);
+
     const products = await Product.find(filter)
       .populate("category", "name")
-      .sort(sortOption);
+      .sort(sortOption)
+      .skip(skip)
+      .limit(limitNum);
 
     // --- Dynamic Price Calculation ---
     const activeOffers = await Offer.find({
@@ -233,7 +259,12 @@ exports.getPublicProducts = async (req, res) => {
       return { ...productObj, ...priceDetails };
     });
 
-    res.status(200).json(productsWithOffers);
+    res.status(200).json({
+      products: productsWithOffers,
+      currentPage: pageNum,
+      totalPages,
+      totalProducts
+    });
 
   } catch (error) {
     console.error("FETCH PRODUCTS ERROR:", error);
@@ -353,6 +384,28 @@ exports.getRelatedProducts = async (req, res) => {
 
   } catch (error) {
     console.error("RELATED PRODUCTS ERROR:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+/* =========================
+    GET PRODUCT STOCK (POLLING)
+========================= */
+exports.getProductStock = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id).select("stockQuantity isUnlimited isActive");
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.json({
+      stockQuantity: product.stockQuantity,
+      isUnlimited: product.isUnlimited,
+      isActive: product.isActive
+    });
+  } catch (error) {
+    console.error("GET STOCK ERROR:", error);
     res.status(500).json({ message: "Server error" });
   }
 };

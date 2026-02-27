@@ -465,19 +465,31 @@
                 return;
             }
 
-            tbody.innerHTML = orders.map(order => `
+            tbody.innerHTML = orders.map(order => {
+                // Unified Item-Level Status Logic
+                const hasRequestedItem = order.items.some(i => i.returnStatus === 'requested');
+                const hasApprovedItem = order.items.some(i => i.returnStatus === 'approved');
+                const hasRejectedItem = order.items.some(i => i.returnStatus === 'rejected');
+
+                let finalStatus = 'none';
+                if (hasRequestedItem) finalStatus = 'requested';
+                else if (hasApprovedItem) finalStatus = 'approved';
+                else if (hasRejectedItem) finalStatus = 'rejected';
+
+                return `
                 <tr>
                     <td>#RET-${order._id.slice(-4).toUpperCase()}</td>
                     <td>#${order._id.slice(-6).toUpperCase()}</td>
                     <td>${new Date(order.updatedAt).toLocaleDateString()}</td>
                     <td>
-                        <span class="status-badge ${getReturnBadgeClass(order.returnStatus)}">${order.returnStatus}</span>
+                        <span class="status-badge ${getReturnBadgeClass(finalStatus)}">${finalStatus}</span>
                     </td>
                     <td class="text-end">
                          <a href="order.html" class="btn-view">View Order</a>
                     </td>
                 </tr>
-            `).join("");
+                `;
+            }).join("");
         }
 
         function getReturnBadgeClass(status) {

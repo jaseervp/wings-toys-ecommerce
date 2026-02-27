@@ -24,10 +24,23 @@ const orderSchema = new mongoose.Schema(
           type: Number,
           required: true
         },
+        discountShare: {
+          type: Number,
+          default: 0
+        },
         itemStatus: {
           type: String,
-          enum: ["pending", "shipped", "delivered", "canceled"],
+          enum: ["pending", "shipped", "delivered", "canceled", "returned"],
           default: "pending"
+        },
+        returnStatus: {
+          type: String,
+          enum: ["none", "requested", "approved", "rejected"],
+          default: "none"
+        },
+        returnReason: {
+          type: String,
+          default: ""
         }
       }
     ],
@@ -48,7 +61,7 @@ const orderSchema = new mongoose.Schema(
 
     orderStatus: {
       type: String,
-      enum: ["pending", "shipped", "delivered", "canceled"],
+      enum: ["pending", "shipped", "delivered", "canceled", "returned"],
       default: "pending"
     },
 

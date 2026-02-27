@@ -646,6 +646,11 @@
 
         <div class="product-price" id="productPrice"></div>
 
+        <div class="review-row mb-3 d-none" id="reviewSummary">
+          <div class="stars" id="summaryStars">⭐⭐⭐⭐⭐</div>
+          <div class="review-count text-muted small" id="summaryCount">(0 Reviews)</div>
+        </div>
+
         <p class="text-muted small mb-4" id="productDescription"></p>
 
         <!-- ADD TO CART AREA -->
@@ -683,26 +688,54 @@
 
   <div class="container mb-5">
     <ul class="nav nav-tabs">
-      <li class="nav-item"><a class="nav-link active" href="#">Description</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">Additional Information</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">Reviews [5]</a></li>
+      <li class="nav-item">
+        <a class="nav-link active" href="javascript:void(0)" onclick="switchTab(event, 'description')">Description</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="javascript:void(0)" onclick="switchTab(event, 'additional')">Additional General
+          Information</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="javascript:void(0)" onclick="switchTab(event, 'reviews')">Reviews [<span
+            id="reviewTabCount">0</span>]</a>
+      </li>
     </ul>
-    <div class="tab-desc">
-      <p>This toy sports car features a bold racing design with vibrant, eye-catching graphics that instantly grab
-        attention. Its sleek aerodynamic body, detailed exterior, and sporty wheels give it a realistic
-        racing-car feel. Built with a durable and sturdy structure, the car is made to withstand regular play
-        while providing smooth and effortless rolling action on different surfaces.</p>
-    </div>
 
-    <div class="row g-4" id="tabImages">
-      <div class="col-md-6">
-        <div class="tab-img-bg">
-          <img id="tabImg1" class="img-fluid" alt="Detail View 1">
+    <div id="tabContent_description" class="tab-pane-content">
+      <div class="tab-desc">
+        <p id="tabProductDescription">This product features a premium design with attention to detail...</p>
+      </div>
+
+      <div class="row g-4" id="tabImages">
+        <div class="col-md-6">
+          <div class="tab-img-bg">
+            <img id="tabImg1" class="img-fluid" alt="Detail View 1">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="tab-img-bg">
+            <img id="tabImg2" class="img-fluid" alt="Detail View 2">
+          </div>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="tab-img-bg">
-          <img id="tabImg2" class="img-fluid" alt="Detail View 2">
+    </div>
+
+    <div id="tabContent_additional" class="tab-pane-content d-none">
+      <div class="tab-desc">
+        <p>Wings Toy Store specializes in high-quality scale models and collectible toys. Our products are sourced from
+          reputable manufacturers and undergo quality checks to ensure customer satisfaction.</p>
+        <ul>
+          <li><strong>Material</strong>: High-quality plastic and die-cast metal parts where applicable.</li>
+          <li><strong>Recommended Age</strong>: 3+ years.</li>
+          <li><strong>Safety</strong>: Non-toxic materials and smooth edges for safe play.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="tabContent_reviews" class="tab-pane-content d-none">
+      <div class="tab-desc">
+        <div id="reviewsContainer">
+          <p class="text-muted">Loading reviews...</p>
         </div>
       </div>
     </div>
@@ -808,17 +841,28 @@
       let isLoggedIn = false;
 
       try {
-        const res = await fetch("/api/check-auth", {
-          credentials: "include"
-        });
+        const res = await fetch("/api/check-auth", { credentials: "include" });
         const data = await res.json();
         isLoggedIn = data.loggedIn === true;
       } catch {
         isLoggedIn = false;
       }
 
-      // 🔐 Protect Cart / Wishlist / Account
-      document.querySelectorAll(".auth-protected").forEach(link => {
+      // 🔐 Auth Icon Logic
+      const desktop = document.getElementById("auth-nav");
+      const mobile = document.getElementById("auth-nav-mobile");
+      const authHtml = isLoggedIn ? `
+        <a href="my_account.html" class="nav-icon" title="My Account"><i class="bi bi-person-circle"></i></a>
+        <a href="order.html" class="nav-icon ms-2" title="My Orders"><i class="bi bi-bag-check"></i></a>
+      ` : `
+        <a href="#" class="nav-icon login-required"><i class="bi bi-person"></i></a>
+      `;
+      if (desktop) desktop.innerHTML = authHtml;
+      if (mobile) mobile.innerHTML = authHtml;
+      if (isLoggedIn) document.querySelectorAll(".signup-link").forEach(el => el.remove());
+
+      // 🔐 Protected Links
+      document.querySelectorAll(".auth-protected, .login-required").forEach(link => {
         link.addEventListener("click", e => {
           if (!isLoggedIn) {
             e.preventDefault();
@@ -827,305 +871,202 @@
         });
       });
 
-      // 👤 Account Icon Logic
-      const desktop = document.getElementById("auth-nav");
-      const mobile = document.getElementById("auth-nav-mobile");
+      // Search Logic
+      document.getElementById('search-trigger')?.addEventListener('click', e => {
+        e.preventDefault();
+        const isMobile = window.innerWidth < 992;
+        const input = document.getElementById(isMobile ? 'search-input-mobile' : 'search-desktop');
+        input?.classList.toggle('active');
+        if (input?.classList.contains('active')) input.focus();
+      });
 
-      if (isLoggedIn) {
-        const html = `
-      <a href="my_account.html" class="nav-icon" title="My Account" style="display: inline-flex !important; opacity: 1 !important; visibility: visible !important;">
-        <i class="bi bi-person-circle"></i>
-      </a>
-      <a href="order.html" class="nav-icon ms-2" title="My Orders" style="display: inline-flex !important; opacity: 1 !important; visibility: visible !important;">
-        <i class="bi bi-bag-check"></i>
-      </a>
-    `;
-        desktop.innerHTML = html;
-        mobile.innerHTML = html;
-
-        // ❌ REMOVE SIGNUP FROM NAV
-        document.querySelectorAll(".signup-link").forEach(el => el.remove());
+      // Load Product Data
+      await loadSingleProduct();
+      if (currentProductId) {
+        fetchAndRenderReviews(currentProductId);
       } else {
-        const html = `
-      <a href="#" class="nav-icon login-required" style="display: inline-flex !important; opacity: 1 !important; visibility: visible !important;">
-        <i class="bi bi-person"></i>
-      </a>
-    `;
-        desktop.innerHTML = html;
-        mobile.innerHTML = html;
-
-        document.querySelectorAll(".login-required").forEach(el => {
-          el.addEventListener("click", e => {
-            e.preventDefault();
-            showLoginModal();
-          });
-        });
+        const urlId = new URLSearchParams(window.location.search).get("id");
+        if (urlId) fetchAndRenderReviews(urlId);
       }
+      loadRelatedProducts();
+      updateCartBadge();
     });
 
     function showLoginModal() {
-      const modal = new bootstrap.Modal(
-        document.getElementById("loginRequiredModal")
-      );
-      modal.show();
+      const modalElement = document.getElementById("loginRequiredModal");
+      if (modalElement) {
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+      }
     }
 
-    /* Navbar Scroll Effect */
     window.addEventListener("scroll", () => {
       const nav = document.querySelector(".navbar-fixed");
       if (nav) {
-        if (window.scrollY > 10) {
-          nav.classList.add("scrolled");
-        } else {
-          nav.classList.remove("scrolled");
-        }
+        if (window.scrollY > 10) nav.classList.add("scrolled");
+        else nav.classList.remove("scrolled");
       }
-    });
-
-    /* =========================
-       SEARCH TOGGLE
-    ========================= */
-    document.getElementById('search-trigger')?.addEventListener('click', function (e) {
-      e.preventDefault();
-      const isMobile = window.innerWidth < 992;
-      const input = document.getElementById(
-        isMobile ? 'search-input-mobile' : 'search-desktop'
-      );
-      input?.classList.toggle('active');
-      if (input?.classList.contains('active')) input.focus();
     });
   </script>
 
 </body>
 <script>
-
   /* =====================================================
      GLOBAL STATE
   ===================================================== */
   let currentProductId = null;
   let qty = 1;
-  let maxQty = Infinity; // Default to unlimited
+  let maxQty = Infinity;
+  let unitPrice = 0;
 
   /* =====================================================
-     TOAST (Bootstrap)
-  S
+     HELPERS
   ===================================================== */
   function showToast(message) {
     const toastEl = document.getElementById("cartToast");
     const toastMsg = document.getElementById("toastMsg");
-
-    if (!toastEl || !toastMsg || typeof bootstrap === "undefined") {
-      alert(message); // fallback safety
-      return;
-    }
-
+    if (!toastEl || !toastMsg) return;
     toastMsg.innerText = message;
     new bootstrap.Toast(toastEl, { delay: 2000 }).show();
   }
 
-  /* =====================================================
-     CART BADGE
-  ===================================================== */
   async function updateCartBadge() {
     try {
       const res = await fetch("/api/cart", { credentials: "include" });
       if (!res.ok) return;
-
       const data = await res.json();
       const count = data.items.reduce((sum, i) => sum + i.quantity, 0);
-
       const badge = document.getElementById("cartCount");
-      if (!badge) return;
-
-      badge.style.display = count > 0 ? "inline-block" : "none";
-      badge.innerText = count;
-    } catch (err) {
-      console.warn("Cart badge failed");
-    }
+      if (badge) {
+        badge.style.display = count > 0 ? "inline-block" : "none";
+        badge.innerText = count;
+      }
+    } catch (err) { console.warn("Cart badge failed"); }
   }
 
   /* =====================================================
-     SEARCH TOGGLE (DESKTOP + MOBILE)
+     TAB SWITCHING
   ===================================================== */
-  document.getElementById("search-trigger")?.addEventListener("click", e => {
-    e.preventDefault();
-    const isMobile = window.innerWidth < 992;
-    const input = document.getElementById(
-      isMobile ? "search-input-mobile" : "search-desktop"
-    );
-    input?.classList.toggle("active");
-    if (input?.classList.contains("active")) input.focus();
-  });
+  window.switchTab = function (event, tabId) {
+    document.querySelectorAll(".nav-tabs .nav-link").forEach(l => l.classList.remove("active"));
+    event.currentTarget.classList.add("active");
+    document.querySelectorAll(".tab-pane-content").forEach(c => c.classList.add("d-none"));
+    const target = document.getElementById(`tabContent_${tabId}`);
+    if (target) target.classList.remove("d-none");
+  };
 
   /* =====================================================
-     LOAD SINGLE PRODUCT
+     REVIEWS
   ===================================================== */
-  async function loadSingleProduct() {
-    const id = new URLSearchParams(window.location.search).get("id");
-    if (!id) return;
-
+  async function fetchAndRenderReviews(productId) {
+    if (!productId) return;
     try {
-      const res = await fetch(`/api/products/${id}`);
-      const product = await res.json();
+      const res = await fetch(`/api/reviews/${productId}`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed");
 
-      currentProductId = product._id;
+      const reviews = data.data || [];
+      const count = reviews.length;
 
-      document.getElementById("mainProductImage").src =
-        product.images?.[0] || "/placeholder.png";
+      document.getElementById("reviewTabCount").innerText = count;
 
-      const thumbContainer = document.getElementById("thumbContainer");
-      if (thumbContainer) {
-        thumbContainer.innerHTML = "";
-        (product.images || []).forEach(img => {
-          const t = document.createElement("img");
-          t.src = img;
-          t.onclick = () =>
-            (document.getElementById("mainProductImage").src = img);
-          thumbContainer.appendChild(t);
-        });
-      }
-
-      document.getElementById("productName").innerText = product.name;
-      // Store unit price globally
-      window.unitPrice = product.finalPrice;
-      document.getElementById("productPrice").innerText =
-        `Rs. ${product.finalPrice}.00`;
-      document.getElementById("productDescription").innerText =
-        product.description;
-      document.getElementById("productSKU").innerText = product.sku;
-      document.getElementById("productCategory").innerText =
-        product.category?.name || "Uncategorized";
-
-      document.getElementById("tabImg1")?.setAttribute(
-        "src",
-        product.images?.[0] || "/placeholder.png"
-      );
-      document.getElementById("tabImg2")?.setAttribute(
-        "src",
-        product.images?.[1] || product.images?.[0] || "/placeholder.png"
-      );
-
-      // SET MAX QTY
-      if (!product.isUnlimited) {
-        maxQty = product.stockQuantity;
-      } else {
-        maxQty = Infinity;
-      }
-
-      // STOCK MANAGEMENT UI
-      const isOutOfStock = !product.isUnlimited && product.stockQuantity <= 0;
-      const addBtn = document.querySelector(".btn-add");
-      const qtyBtns = document.querySelectorAll(".qty-group button");
-      const qtyInput = document.getElementById("productQty");
-
-      if (isOutOfStock) {
-        if (addBtn) {
-          addBtn.innerHTML = '<i class="bi bi-x-circle me-2"></i> Out of Stock';
-          addBtn.disabled = true;
-          addBtn.classList.replace("btn-add", "btn-secondary");
+      // Stars Summary
+      const summary = document.getElementById("reviewSummary");
+      if (summary) {
+        if (count > 0) {
+          summary.classList.remove("d-none");
+          const avg = (reviews.reduce((s, r) => s + r.rating, 0) / count).toFixed(1);
+          document.getElementById("summaryStars").innerText = "⭐".repeat(Math.round(avg));
+          document.getElementById("summaryCount").innerText = `(${count} Reviews)`;
+        } else {
+          summary.classList.add("d-none");
         }
-        // Disable Qty actions
-        qtyBtns.forEach(btn => btn.disabled = true);
-
-        // Show badge near title?
-        const title = document.getElementById("productName");
-        title.innerHTML += ` <span class="badge bg-secondary fs-6 ms-2">Out of Stock</span>`;
       }
 
-
-    } catch (err) {
-      console.error("Load product error", err);
-    }
-  }
-
-  /* =====================================================
-     LOAD RELATED / SHOP PRODUCTS
-  ===================================================== */
-  async function loadRelatedProducts() {
-    const id = new URLSearchParams(window.location.search).get("id");
-    if (!id) return;
-
-    try {
-      const res = await fetch(`/api/products/${id}/related`);
-      const products = await res.json();
-
-      const container = document.getElementById("relatedProducts");
+      // Container
+      const container = document.getElementById("reviewsContainer");
       if (!container) return;
-
-      container.innerHTML = "";
-
-      if (!products.length) {
-        container.innerHTML = `<div class="text-center text-muted w-100">
-        No related products
-      </div>`;
+      if (count === 0) {
+        container.innerHTML = `<p class="text-muted text-center py-4">No reviews yet. Be the first to review this product!</p>`;
         return;
       }
 
-      products.forEach(p => {
-        container.innerHTML += `
-      <div class="col-6 col-md-3">
-        <div class="product-card"
-          onclick="window.location.href='single_product.html?id=${p._id}'">
-          <div class="img-container">
-            <img src="${p.images?.[0] || 'https://via.placeholder.com/200'}">
-            <div class="card-actions">
-              <button class="action-btn"
-                onclick="event.stopPropagation(); addToCartShop('${p._id}', 1)">
-                <i class="bi bi-cart-plus"></i>
-              </button>
+      container.innerHTML = reviews.map(r => `
+        <div class="review-item mb-4 pb-3 border-bottom">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div>
+              <span class="fw-bold">${r.user?.fullName || 'Anonymous User'}</span>
+              <div style="color: #FFDA5B; font-size: 0.9rem;">${'⭐'.repeat(r.rating)}</div>
             </div>
+            <span class="text-muted small">${new Date(r.createdAt).toLocaleDateString()}</span>
           </div>
-          <div class="product-info text-center">
-            <p class="category">${p.category?.name || ""}</p>
-            <h6 class="product-name">${p.name}</h6>
-            <div class="price">Rs. ${p.finalPrice}</div>
-          </div>
+          <p class="text-muted small">${r.comment}</p>
         </div>
-      </div>`;
-      });
-
+      `).join("");
     } catch (err) {
-      console.error("Related products error", err);
+      console.error("Reviews Error:", err);
     }
   }
 
   /* =====================================================
-     QUANTITY CONTROL (SINGLE PRODUCT)
+     PRODUCT LOADING
   ===================================================== */
-  function changeQty(val) {
-    const newQty = qty + val;
-    if (newQty < 1) return;
+  window.loadSingleProduct = async function () {
+    const id = new URLSearchParams(window.location.search).get("id");
+    if (!id) return;
+    try {
+      const res = await fetch(`/api/products/${id}`);
+      if (!res.ok) return;
+      const product = await res.json();
+      currentProductId = product._id;
+      unitPrice = product.finalPrice;
 
-    if (newQty > maxQty) {
-      showToast(`Only ${maxQty} items available in stock`);
-      return;
-    }
+      document.getElementById("productName").innerText = product.name;
+      document.getElementById("productPrice").innerText = `Rs. ${product.finalPrice}.00`;
+      document.getElementById("productDescription").innerText = product.description;
+      document.getElementById("tabProductDescription").innerText = product.description;
+      document.getElementById("productSKU").innerText = product.sku;
+      document.getElementById("productCategory").innerText = product.category?.name || "Uncategorized";
+      document.getElementById("mainProductImage").src = product.images?.[0] || "/placeholder.png";
 
-    qty = newQty;
+      const thumbContainer = document.getElementById("thumbContainer");
+      if (thumbContainer) {
+        thumbContainer.innerHTML = (product.images || []).map(img => `<img src="${img}" onclick="document.getElementById('mainProductImage').src='${img}'">`).join("");
+      }
+
+      document.getElementById("tabImg1").src = product.images?.[0] || "/placeholder.png";
+      document.getElementById("tabImg2").src = product.images?.[1] || product.images?.[0] || "/placeholder.png";
+
+      maxQty = product.isUnlimited ? Infinity : product.stockQuantity;
+      if (!product.isUnlimited && product.stockQuantity <= 0) {
+        const btn = document.querySelector(".btn-add");
+        if (btn) {
+          btn.innerHTML = "Out of Stock";
+          btn.disabled = true;
+          btn.className = "btn btn-secondary w-100";
+        }
+      }
+    } catch (err) { console.error("Load Product Error:", err); }
+  };
+
+  /* =====================================================
+     SHOP ACTIONS
+  ===================================================== */
+  window.changeQty = function (val) {
+    const n = qty + val;
+    if (n < 1) return;
+    if (n > maxQty) return showToast(`Only ${maxQty} in stock`);
+    qty = n;
     document.getElementById("productQty").innerText = qty;
+    document.getElementById("productPrice").innerText = `Rs. ${(unitPrice * qty).toFixed(2)}`;
+  };
 
-    // Dynamic Price Update
-    if (window.unitPrice) {
-      document.getElementById("productPrice").innerText = `Rs. ${(window.unitPrice * qty).toFixed(2)}`;
-    }
-  }
-
-  /* =====================================================
-     ADD TO CART – SINGLE PRODUCT
-  ===================================================== */
-  async function addToCartFromProduct() {
-    if (!currentProductId) {
-      showToast("Product not loaded");
-      return;
-    }
+  window.addToCartFromProduct = async function () {
+    if (!currentProductId) return;
     await addToCartShop(currentProductId, qty);
-  }
+  };
 
-  /* =====================================================
-     ADD TO CART – SHOP / RELATED
-  ===================================================== */
-
-  async function addToCartShop(productId, quantity = 1) {
+  window.addToCartShop = async function (productId, quantity = 1) {
     try {
       const res = await fetch("/api/cart", {
         method: "POST",
@@ -1133,35 +1074,89 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ productId, quantity })
       });
-
-      if (!res.ok) {
-        showToast("🔒 Please login");
-        return;
+      if (res.ok) {
+        showToast("🛒 Added to cart");
+        updateCartBadge();
+        setTimeout(() => window.location.href = "cart.html", 1000);
+      } else {
+        const d = await res.json();
+        showToast(d.message || "Error");
       }
+    } catch { showToast("Error"); }
+  };
 
-      showToast("🛒 Added to cart");
-      updateCartBadge();
-
-      // ✅ Redirect to cart page after 1 second
-      setTimeout(() => {
-        window.location.href = "cart.html";
-      }, 1000);
-
-    } catch {
-      showToast("❌ Failed to add");
-    }
-  }
-
-
+  window.loadRelatedProducts = async function () {
+    const id = new URLSearchParams(window.location.search).get("id");
+    if (!id) return;
+    try {
+      const res = await fetch(`/api/products/${id}/related`);
+      const products = await res.json();
+      const container = document.getElementById("relatedProducts");
+      if (!container) return;
+      container.innerHTML = products.map(p => `
+        <div class="col-6 col-md-3">
+          <div class="product-card" onclick="window.location.href='single_product.html?id=${p._id}'">
+            <div class="img-container">
+              <img src="${p.images?.[0] || '/placeholder.png'}">
+              <div class="card-actions">
+                <button class="action-btn" onclick="event.stopPropagation(); addToCartShop('${p._id}', 1)"><i class="bi bi-cart-plus"></i></button>
+              </div>
+            </div>
+            <div class="product-info text-center">
+              <p class="category">${p.category?.name || ""}</p>
+              <h6 class="product-name">${p.name}</h6>
+              <div class="price">Rs. ${p.finalPrice}</div>
+            </div>
+          </div>
+        </div>`).join("");
+    } catch (err) { console.error(err); }
+  };
 
   /* =====================================================
-     INIT
+     REAL-TIME STOCK POLLING (5 Seconds)
   ===================================================== */
-  document.addEventListener("DOMContentLoaded", () => {
-    loadSingleProduct();
-    loadRelatedProducts();
-    updateCartBadge();
-  });
+  setInterval(async () => {
+    if (!currentProductId) return;
+    try {
+      const res = await fetch(`/api/products/${currentProductId}/stock`);
+      if (!res.ok) return;
+      const data = await res.json();
+      maxQty = data.isUnlimited ? Infinity : data.stockQuantity;
+
+      const addBtn = document.querySelector(".btn-add") || document.querySelector(".btn-secondary");
+      const qtyBtns = document.querySelectorAll(".qty-group button");
+      const title = document.getElementById("productName");
+
+      if (!data.isUnlimited && data.stockQuantity <= 0) {
+        if (addBtn && !addBtn.disabled) {
+          addBtn.innerHTML = "Out of Stock";
+          addBtn.disabled = true;
+          addBtn.className = "btn btn-secondary w-100";
+          qtyBtns.forEach(btn => btn.disabled = true);
+          if (title && !title.querySelector(".badge")) {
+            title.innerHTML += ` <span class="badge bg-secondary fs-6 ms-2">Out of Stock</span>`;
+          }
+          showToast("⚠️ This item just went out of stock");
+        }
+      } else {
+        if (addBtn && addBtn.disabled) {
+          addBtn.innerHTML = '<i class="bi bi-cart-plus me-2"></i> Add to Cart';
+          addBtn.disabled = false;
+          addBtn.className = "btn btn-add";
+          qtyBtns.forEach(btn => btn.disabled = false);
+          const badge = title?.querySelector(".badge");
+          if (badge) badge.remove();
+          showToast("✅ Item is back in stock!");
+        }
+      }
+
+      if (!data.isUnlimited && qty > maxQty && maxQty > 0) {
+        qty = maxQty;
+        document.getElementById("productQty").innerText = qty;
+        showToast(`⚠️ Quantity adjusted to available stock (${maxQty})`);
+      }
+    } catch (err) { console.warn("Polling failed", err); }
+  }, 5000);
 </script>
 
 

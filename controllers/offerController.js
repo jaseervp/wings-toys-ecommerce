@@ -83,7 +83,14 @@ exports.createOffer = async (req, res) => {
 ========================= */
 exports.getAllOffers = async (req, res) => {
     try {
-        const offers = await Offer.find().sort({ createdAt: -1 });
+        const { search } = req.query;
+        let query = {};
+
+        if (search) {
+            query.name = { $regex: search, $options: "i" };
+        }
+
+        const offers = await Offer.find(query).sort({ createdAt: -1 });
         res.status(200).json(offers);
     } catch (error) {
         console.error("GET OFFERS ERROR:", error);

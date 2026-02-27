@@ -2,6 +2,7 @@ const User = require("../models/User");
 const Order = require("../models/Order");
 const Transaction = require("../models/Transaction");
 const bcrypt = require("bcryptjs");
+const PDFDocument = require('pdfkit');
 
 /* ================= GET ADMIN PROFILE ================= */
 exports.getAdminProfile = async (req, res) => {
@@ -21,7 +22,7 @@ exports.updateAdminProfile = async (req, res) => {
       bio: req.body.bio
     };
 
-    // 📸 If file uploaded, add to updates
+    //  If file uploaded, add to updates
     if (req.file) {
       updates.avatar = `/uploads/profiles/${req.file.filename}`;
     }
@@ -273,7 +274,7 @@ exports.getDashboardStats = async (req, res) => {
     queryStartDate.setHours(0, 0, 0, 0);
     queryEndDate.setHours(23, 59, 59, 999);
 
-    // 🗓️ Calculate Date Range
+    //  Calculate Date Range
     switch (filter) {
       case 'today':
         break; // Already set to today
@@ -499,6 +500,15 @@ exports.getAllTransactions = async (req, res) => {
     // Sort by Date Descending
     transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
 
+    // Calculate Totals (Dynamic based on current filter)
+    const totalCredit = transactions
+      .filter(t => t.type === 'Credit' && t.status === 'Success')
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    const totalDebit = transactions
+      .filter(t => t.type === 'Debit') // Debits are usually refunds, so valid
+      .reduce((sum, t) => sum + t.amount, 0);
+
     // Pagination
     const totalTransactions = transactions.length;
     const totalPages = Math.ceil(totalTransactions / limit);
@@ -508,11 +518,193 @@ exports.getAllTransactions = async (req, res) => {
     res.json({
       transactions: paginatedTransactions,
       currentPage: parseInt(page),
-      totalPages: totalPages
+      totalPages: totalPages,
+      totalCredit,
+      totalDebit
     });
 
   } catch (err) {
     console.error("Transaction fetch error:", err);
     res.status(500).json({ message: "Server error" });
+  }
+};
+/* ================= GENERATE DASHBOARD PDF REPORT ================= */
+exports.getDashboardReport = async (req, res) => {
+  try {
+    const { filter, startDate, endDate } = req.query;
+
+    // Reuse Logic for Dates
+    let queryStartDate = new Date();
+    let queryEndDate = new Date();
+    queryStartDate.setHours(0, 0, 0, 0);
+    queryEndDate.setHours(23, 59, 59, 999);
+
+    let dateLabel = "Today";
+
+    switch (filter) {
+      case 'today': dateLabel = "Today"; break;
+      case 'last_7_days':
+        queryStartDate.setDate(queryStartDate.getDate() - 6);
+        dateLabel = "Last 7 Days";
+        break;
+      case 'last_1_month':
+        queryStartDate.setMonth(queryStartDate.getMonth() - 1);
+        dateLabel = "Last 1 Month";
+        break;
+      case 'last_6_months':
+        queryStartDate.setMonth(queryStartDate.getMonth() - 6);
+        dateLabel = "Last 6 Months";
+        break;
+      case 'last_1_year':
+        queryStartDate.setFullYear(queryStartDate.getFullYear() - 1);
+        dateLabel = "Last 1 Year";
+        break;
+      case 'specific_date':
+        if (startDate) {
+          queryStartDate = new Date(startDate);
+          queryEndDate = new Date(startDate);
+          queryStartDate.setHours(0, 0, 0, 0);
+          queryEndDate.setHours(23, 59, 59, 999);
+          dateLabel = `Date: ${startDate}`;
+        }
+        break;
+      case 'custom_range':
+        if (startDate && endDate) {
+          queryStartDate = new Date(startDate);
+          queryEndDate = new Date(endDate);
+          queryStartDate.setHours(0, 0, 0, 0);
+          queryEndDate.setHours(23, 59, 59, 999);
+          dateLabel = `${startDate} to ${endDate}`;
+        }
+        break;
+      case 'all_time':
+        queryStartDate = new Date(0);
+        dateLabel = "All Time";
+        break;
+      default:
+        queryStartDate.setDate(queryStartDate.getDate() - 6);
+        dateLabel = "Last 7 Days";
+    }
+
+    const dateQuery = { createdAt: { $gte: queryStartDate, $lte: queryEndDate } };
+
+    // --- FETCH DATA (Reusing Logic) ---
+    // 1. Gross Sales
+    const grossSalesAgg = await Order.aggregate([
+      {
+        $match: {
+          $and: [
+            dateQuery,
+            {
+              $or: [
+                { paymentStatus: "paid" },
+                { $and: [{ paymentMethod: "COD" }, { orderStatus: "Delivered" }] }
+              ]
+            }
+          ]
+        }
+      },
+      { $group: { _id: null, total: { $sum: "$totalAmount" } } }
+    ]);
+    const grossSales = grossSalesAgg.length > 0 ? grossSalesAgg[0].total : 0;
+
+    // 2. Refunds
+    const refundsAgg = await Order.aggregate([
+      { $match: { ...dateQuery, returnStatus: "approved" } },
+      { $group: { _id: null, total: { $sum: "$totalAmount" } } }
+    ]);
+    const refunds = refundsAgg.length > 0 ? refundsAgg[0].total : 0;
+    const netSales = grossSales - refunds;
+
+    // 3. New Orders & Customers
+    const newOrders = await Order.countDocuments(dateQuery);
+    const newCustomers = await User.countDocuments({
+      role: "user",
+      createdAt: { $gte: queryStartDate, $lte: queryEndDate }
+    });
+
+    // 4. Fetch Recent Orders for Table (Limit 20 for PDF to keep it short)
+    const reportOrders = await Order.find(dateQuery)
+      .populate("user", "fullName email")
+      .sort({ createdAt: -1 })
+      .limit(20);
+
+    // --- GENERATE PDF ---
+    const doc = new PDFDocument({ margin: 50 });
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=report_${Date.now()}.pdf`);
+
+    doc.pipe(res);
+
+    // HEADER
+    doc.fontSize(20).text('Wings Admin - Sales Report', { align: 'center' });
+    doc.moveDown();
+    doc.fontSize(12).text(`Generated On: ${new Date().toLocaleString()}`, { align: 'center', color: 'grey' });
+    doc.text(`Period: ${dateLabel}`, { align: 'center', color: 'grey' });
+    doc.moveDown(2);
+
+    // SUMMARY CARDS (Simple Text Representation)
+    doc.fontSize(14).text('Summary Statistics', { underline: true });
+    doc.moveDown(0.5);
+
+    const startX = 50;
+    let currentY = doc.y;
+
+    doc.fontSize(12).text(`Net Sales: Rs. ${netSales.toLocaleString()}`, startX, currentY);
+    doc.text(`Total Orders: ${newOrders}`, startX + 200, currentY);
+    doc.text(`New Customers: ${newCustomers}`, startX + 400, currentY);
+
+    doc.moveDown(3);
+
+    // ORDER TABLE
+    doc.fontSize(14).text(`Recent Orders (Top 20 in Period)`, { underline: true, x: 50 });
+    doc.moveDown(1);
+
+    // Table Header
+    const tableTop = doc.y;
+    const itemX = 50;
+    const dateX = 150;
+    const customerX = 280;
+    const amountX = 430;
+    const statusX = 500;
+
+    doc.fontSize(10).font('Helvetica-Bold');
+    doc.text('Order ID', itemX, tableTop);
+    doc.text('Date', dateX, tableTop);
+    doc.text('Customer', customerX, tableTop);
+    doc.text('Amount', amountX, tableTop);
+    doc.text('Status', statusX, tableTop);
+
+    doc.moveTo(itemX, tableTop + 15).lineTo(550, tableTop + 15).stroke();
+
+    let y = tableTop + 25;
+    doc.font('Helvetica').fontSize(9);
+
+    reportOrders.forEach(order => {
+      // Check page break
+      if (y > 700) {
+        doc.addPage();
+        y = 50;
+      }
+
+      doc.text(`#${order._id.toString().slice(-6).toUpperCase()}`, itemX, y);
+      doc.text(new Date(order.createdAt).toLocaleDateString(), dateX, y);
+      doc.text(order.user?.fullName || 'Guest', customerX, y, { width: 140, ellipsis: true });
+      doc.text(`Rs. ${order.totalAmount}`, amountX, y);
+      doc.text(order.orderStatus, statusX, y);
+
+      y += 20;
+    });
+
+    if (reportOrders.length === 0) {
+      doc.text("No orders found in this period.", itemX, y + 10);
+    }
+
+    doc.end();
+
+  } catch (err) {
+    console.error("PDF Report Error:", err);
+    res.status(500).send("Error generating report");
   }
 };

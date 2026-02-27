@@ -189,6 +189,192 @@
       width: 100%;
     }
 
+    .order-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .order-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
+    }
+
+    /* PREMIUM PROFESSIONAL BADGES (User Reference Style) */
+    .status-pill {
+      padding: 6px 12px;
+      border-radius: 6px;
+      /* Soft rounded corners as per image */
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: capitalize;
+      /* "Verified", not "VERIFIED" */
+      letter-spacing: 0.3px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    /* The Dot */
+    .status-pill i {
+      font-size: 0.5rem;
+      /* Small dot */
+      opacity: 0.9;
+    }
+
+    /* Soft Backgrounds + Strong Text */
+    .status-pill.pending {
+      background-color: #FEF3C7;
+      color: #D97706;
+    }
+
+    .status-pill.shipped {
+      background-color: #DBEAFE;
+      color: #2563EB;
+    }
+
+    .status-pill.delivered {
+      background-color: #D1FAE5;
+      color: #059669;
+    }
+
+    .status-pill.canceled {
+      background-color: #FEE2E2;
+      color: #DC2626;
+    }
+
+    /* RETURN STATUSES */
+    .status-pill.return-requested {
+      background-color: #FFEDD5;
+      color: #EA580C;
+    }
+
+    .status-pill.return-approved {
+      background-color: #E0E7FF;
+      color: #4F46E5;
+    }
+
+    .status-pill.return-rejected {
+      background-color: #F3F4F6;
+      color: #4B5563;
+    }
+
+    /* NEW ITEM VIEW STYLES (MATCHING SCREENSHOT) */
+    .order-item-card {
+      border: 1px solid #eee;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      background: #fff;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      position: relative;
+    }
+
+    .item-image-wrapper {
+      width: 100px;
+      height: 100px;
+      border: 1px solid #f0f0f0;
+      border-radius: 8px;
+      padding: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .item-image-wrapper img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .item-details-main {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .item-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .item-meta {
+      color: #777;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .status-delivered-badge {
+      background-color: #e0fcf2;
+      color: #1abc9c;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+
+    .item-price-col {
+      text-align: right;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .item-actions-row {
+      width: 100%;
+      display: flex;
+      gap: 10px;
+      margin-top: 1rem;
+      border-top: 1px solid #f0f0f0;
+      padding-top: 1rem;
+    }
+
+    .btn-action-outline {
+      border: 1px solid #333;
+      color: #333;
+      background: #fff;
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      flex: 1;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-action-outline:hover {
+      background: #f8f8f8;
+      color: #000;
+    }
+
+    .btn-action-primary {
+      background: #1a73e8;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      flex: 1;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-action-primary:hover {
+      background: #1557b0;
+      color: #fff;
+    }
+
+
     @media (max-width: 991px) {
       .navbar-logo {
         height: 28px;
@@ -338,30 +524,21 @@
         <!-- ORDER LIST VIEW -->
         <div id="orderListView">
           <h4 class="fw-bold mb-4">My Orders</h4>
-
-          <div class="table-responsive">
-            <table class="table order-table">
-              <thead>
-                <tr>
-                  <th>Order ID</th>
-                  <th>Order Date</th>
-                  <th>Amount</th>
-                  <th>Status</th>
-                  <th class="text-end">Action</th>
-                </tr>
-              </thead>
-
-              <tbody id="ordersTableBody">
-                <tr>
-                  <td colspan="5" class="text-center py-5 text-muted">
-                    <div class="spinner-border text-warning" role="status">
-                      <span class="visually-hidden">Loading...</span>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <div id="ordersContainer" class="d-flex flex-column gap-3">
+            <!-- Orders will be injected here -->
+            <div class="text-center py-5 text-muted bg-light rounded-4">
+              <div class="spinner-border text-warning" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
           </div>
+
+          <!-- Pagination -->
+          <nav class="mt-4" aria-label="Order pagination">
+            <ul class="pagination justify-content-center" id="paginationContainer">
+              <!-- Pagination buttons injected by JS -->
+            </ul>
+          </nav>
         </div>
 
         <!-- ORDER DETAILS VIEW (Hidden) -->
@@ -381,11 +558,61 @@
   <script>
     let ALL_ORDERS = [];
 
-    document.addEventListener("DOMContentLoaded", fetchOrders);
+    document.addEventListener("DOMContentLoaded", () => {
+      fetchOrders(1);
 
-    async function fetchOrders() {
+      // Review Form Submission Logic
+      const reviewForm = document.getElementById("reviewForm");
+      if (reviewForm) {
+        reviewForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const productId = document.getElementById("reviewProductId").value;
+          const rating = document.getElementById("reviewRating").value;
+          const comment = document.getElementById("reviewComment").value;
+
+          try {
+            const res = await fetch(`/api/review/${productId}`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ rating, comment }),
+              credentials: "include"
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+              Swal.fire({
+                title: "Review Submitted!",
+                text: "Thank you for your feedback. Would you like to view it on the product page?",
+                icon: "success",
+                showCancelButton: true,
+                confirmButtonText: "View Product",
+                cancelButtonText: "Close",
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#6c757d"
+              }).then((result) => {
+                const modalEl = document.getElementById("reviewModal");
+                const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                modal.hide();
+                if (result.isConfirmed) {
+                  window.location.href = `single_product.html?id=${productId}`;
+                }
+              });
+            } else {
+              Swal.fire("Error", data.message || "Failed to submit review", "error");
+            }
+          } catch (err) {
+            console.error(err);
+            Swal.fire("Error", "Something went wrong", "error");
+          }
+        });
+      }
+    });
+
+    async function fetchOrders(page = 1) {
       try {
-        const res = await fetch("/api/orders/my", { credentials: "include" });
+        const res = await fetch(`/api/orders/my?page=${page}&limit=5`, { credentials: "include" });
         if (!res.ok) {
           if (res.status === 401) window.location.href = "login.html";
           return;
@@ -394,36 +621,145 @@
         const data = await res.json();
         ALL_ORDERS = data.orders;
         renderOrders(ALL_ORDERS);
+        renderPagination(data.currentPage, data.totalPages);
 
       } catch (err) {
         console.error("Error fetching orders:", err);
-        document.getElementById("ordersTableBody").innerHTML = `
-        <tr><td colspan="5" class="text-center text-danger">Failed to load orders.</td></tr>
+        document.getElementById("ordersContainer").innerHTML = `
+        <div class="text-center text-danger py-5">Failed to load orders.</div>
       `;
       }
     }
 
+    function renderPagination(currentPage, totalPages) {
+      const container = document.getElementById("paginationContainer");
+      if (totalPages <= 1) {
+        container.innerHTML = '';
+        return;
+      }
+
+      let html = '';
+
+      // Previous
+      html += `
+            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                <button class="page-link" onclick="fetchOrders(${currentPage - 1})" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </button>
+            </li>
+        `;
+
+      // Page Numbers
+      for (let i = 1; i <= totalPages; i++) {
+        html += `
+                <li class="page-item ${i === currentPage ? 'active' : ''}">
+                    <button class="page-link" onclick="fetchOrders(${i})">${i}</button>
+                </li>
+            `;
+      }
+
+      // Next
+      html += `
+            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                <button class="page-link" onclick="fetchOrders(${currentPage + 1})" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </button>
+            </li>
+        `;
+
+      container.innerHTML = html;
+    }
+
     function renderOrders(orders) {
-      const tbody = document.getElementById("ordersTableBody");
+      const container = document.getElementById("ordersContainer");
 
       if (orders.length === 0) {
-        tbody.innerHTML = `
-        <tr><td colspan="5" class="text-center py-5 text-muted">No orders found.</td></tr>
+        container.innerHTML = `
+        <div class="text-center py-5 text-muted bg-light rounded-4">
+            <i class="bi bi-box-seam fs-1 d-block mb-3"></i>
+            <p>No orders found.</p>
+            <a href="shop.html" class="btn btn-primary rounded-pill px-4">Start Shopping</a>
+        </div>
       `;
         return;
       }
 
-      tbody.innerHTML = orders.map(order => `
-      <tr>
-        <td>#${order._id.slice(-6).toUpperCase()}</td>
-        <td>${new Date(order.createdAt).toLocaleDateString()}</td>
-        <td>₹${order.totalAmount}</td>
-        <td><span class="status-badge status-${order.orderStatus.toLowerCase()}">${order.orderStatus}</span></td>
-        <td class="text-end">
-          <a href="#" class="btn-view" onclick="event.preventDefault(); viewOrder('${order._id}')">View</a>
-        </td>
-      </tr>
-    `).join("");
+      container.innerHTML = orders.map(order => {
+        // Status Logic
+        let badgeClass = 'secondary';
+
+        switch (order.orderStatus) {
+          case 'pending': badgeClass = 'pending'; break;
+          case 'shipped': badgeClass = 'shipped'; break;
+          case 'delivered': badgeClass = 'delivered'; break;
+          case 'canceled': badgeClass = 'canceled'; break;
+        }
+
+        let statusLabel = order.orderStatus;
+
+        // Return Status Override (Unified Item-Level Logic)
+        const hasRequestedItem = order.items.some(i => i.returnStatus === 'requested');
+        const hasApprovedItem = order.items.some(i => i.returnStatus === 'approved');
+        const hasRejectedItem = order.items.some(i => i.returnStatus === 'rejected');
+
+        if (hasRequestedItem) {
+          badgeClass = 'return-requested';
+          statusLabel = 'Return Requested';
+        } else if (hasApprovedItem) {
+          badgeClass = 'return-approved';
+          statusLabel = 'Return Approved';
+        } else if (hasRejectedItem) {
+          badgeClass = 'return-rejected';
+          statusLabel = 'Return Rejected';
+        }
+
+        // Product Preview (First Item)
+        const firstItem = order.items[0];
+        const productImg = firstItem?.product?.images?.[0] || 'https://via.placeholder.com/80';
+        const productName = firstItem?.product?.name || 'Unknown Product';
+        const moreItemsCount = order.items.length - 1;
+
+        return `
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden order-card bg-white">
+            <div class="card-body p-4">
+                <div class="row align-items-center">
+                    <!-- Image -->
+                    <div class="col-md-2 mb-3 mb-md-0">
+                        <div class="position-relative d-inline-block">
+                            <img src="${productImg}" class="rounded-3 shadow-sm" style="width: 80px; height: 80px; object-fit: cover;">
+                            ${moreItemsCount > 0 ? `<span class="position-absolute bottom-0 end-0 translate-middle-x badge rounded-pill bg-dark border border-white">+${moreItemsCount}</span>` : ''}
+                        </div>
+                    </div>
+                    
+                    <!-- Details -->
+                    <div class="col-md-5 mb-3 mb-md-0">
+                        <h6 class="fw-bold mb-1">Order #${order._id.slice(-6).toUpperCase()}</h6>
+                        <p class="text-muted small mb-2"><i class="bi bi-calendar-event me-1"></i> ${new Date(order.createdAt).toLocaleDateString()}</p>
+                        <p class="mb-0 fw-medium small text-dark d-flex align-items-center">
+                            <i class="bi bi-box-seam me-2 text-primary"></i> ${productName} 
+                            ${moreItemsCount > 0 ? `<span class="text-muted ms-1">(+${moreItemsCount} more)</span>` : ''}
+                        </p>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="col-md-3 mb-3 mb-md-0">
+                         <span class="status-pill ${badgeClass}">
+                            <i class="bi bi-circle-fill"></i> ${statusLabel}
+                        </span>
+                    </div>
+
+                    <!-- Amount & Action -->
+                    <div class="col-md-2 text-md-end">
+                        <h6 class="fw-bold mb-3 text-dark">₹${order.totalAmount}</h6>
+                        <button class="btn btn-sm btn-dark rounded-pill px-4 hover-lift" onclick="viewOrder('${order._id}')">
+                            View <i class="bi bi-arrow-right ms-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+      `;
+      }).join("");
     }
 
     function viewOrder(orderId) {
@@ -433,30 +769,78 @@
       const content = document.getElementById("orderDetailContent");
 
       content.innerHTML = `
-      <div class="card border-0 shadow-sm rounded-4 p-4">
-        <div class="d-flex justify-content-between align-items-start mb-4">
-          <div>
-            <h5 class="fw-bold mb-1">Order #${order._id.slice(-6).toUpperCase()}</h5>
-            <p class="text-muted small mb-0">Placed on ${new Date(order.createdAt).toLocaleString()}</p>
-          </div>
-          <span class="status-badge status-${order.orderStatus.toLowerCase()} fs-6">${order.orderStatus}</span>
-        </div>
+      <div class="mb-4">
+        <h5 class="fw-bold mb-1">Order #${order._id.slice(-6).toUpperCase()}</h5>
+        <p class="text-muted small">Placed on ${new Date(order.createdAt).toLocaleString()}</p>
+      </div>
 
-        <div class="card bg-light border-0 p-3 mb-4 rounded-3">
-          <h6 class="fw-bold mb-3">Items</h6>
-          ${order.items.map(item => `
-            <div class="d-flex align-items-center mb-3 bg-white p-2 rounded shadow-sm">
-              <img src="${item.product?.images?.[0] || 'https://via.placeholder.com/60'}" 
-                   style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;" class="me-3">
-              <div class="flex-grow-1">
-                <p class="mb-0 fw-semibold">${item.product?.name || 'Product Deleted'}</p>
-                <small class="text-muted">Quantity: ${item.quantity}</small>
+      <div class="order-items-container">
+        ${order.items.map(item => {
+        const status = (item.itemStatus === 'pending') ? order.orderStatus : item.itemStatus;
+        const isDelivered = status === 'delivered';
+        const itemHasReturn = item.returnStatus && item.returnStatus !== 'none';
+        const isRestricted = status === 'canceled' || itemHasReturn;
+
+        return `
+            <div class="order-item-card shadow-sm">
+              <!-- Price at top right on mobile, inline on desktop -->
+              <div class="d-flex justify-content-between w-100 flex-wrap">
+                <div class="d-flex gap-3 flex-grow-1">
+                  <!-- Image -->
+                  <div class="item-image-wrapper">
+                    <img src="${item.product?.images?.[0] || 'https://via.placeholder.com/100'}" alt="${item.product?.name}">
+                  </div>
+                  
+                  <!-- Details -->
+                  <div class="item-details-main">
+                    <div class="item-title">
+                      <a href="single_product.html?id=${item.product?._id}" class="text-decoration-none text-dark hover-primary">${item.product?.name || 'Product Deleted'}</a>
+                    </div>
+                    <div class="item-meta">Qty: ${item.quantity}</div>
+                    
+                    ${(() => {
+            const itemReturnStatus = item.returnStatus && item.returnStatus !== 'none' ? item.returnStatus : null;
+            if (itemReturnStatus) {
+              if (itemReturnStatus === 'requested') return `<div class="status-pill return-requested">Return Requested</div>`;
+              if (itemReturnStatus === 'approved') return `<div class="status-pill return-approved">Return Approved</div>`;
+              if (itemReturnStatus === 'rejected') return `<div class="status-pill return-rejected">Return Rejected</div>`;
+            }
+            return isDelivered ? `<div class="status-delivered-badge">Delivered</div>` : `<div class="status-pill ${status}">${status}</div>`;
+          })()}
+                  </div>
+                </div>
+
+                <!-- Price -->
+                <div class="item-price-col">
+                  ₹${item.price * item.quantity}
+                </div>
               </div>
-              <div class="fw-bold">₹${item.price * item.quantity}</div>
-            </div>
-          `).join("")}
-        </div>
 
+              <!-- Actions -->
+              <div class="item-actions-row">
+                ${(status === 'canceled' || (item.returnStatus && item.returnStatus !== 'none'))
+            ? '<!-- No actions for restricted items -->'
+            : (() => {
+              if (status === 'pending') {
+                return `<button class="btn-action-outline" onclick="cancelItem('${order._id}', '${item._id}')">Cancel Item</button>`;
+              } else if (status === 'shipped') {
+                return `<a href="/api/orders/${order._id}/invoice" class="btn-action-outline"><i class="bi bi-download me-2"></i>Invoice</a>`;
+              } else if (status === 'delivered') {
+                return `
+                      <a href="/api/orders/${order._id}/invoice" class="btn-action-outline"><i class="bi bi-download me-2"></i>Invoice</a>
+                      <button class="btn-action-outline" onclick="returnItem('${order._id}', '${item._id}')">Return</button>
+                      <button class="btn-action-primary" onclick="openReviewModal('${item.product?._id}', '${item.product?.name.replace(/'/g, "\\'")}')">Review</button>
+                    `;
+              }
+              return '<!-- No actions -->';
+            })()}
+              </div>
+            </div>
+          `;
+      }).join("")}
+      </div>
+
+      <div class="card border-0 shadow-sm rounded-4 p-4 mt-4">
         <div class="row g-3">
           <div class="col-md-6">
             <h6 class="fw-bold">Payment Info</h6>
@@ -466,53 +850,13 @@
             </p>
           </div>
           <div class="col-md-6 text-md-end">
-            <div class="col-md-6 text-md-end">
-  <h6 class="fw-bold">Price Details</h6>
-
-  <p class="mb-1">
-    Actual Price:
-    <span class="fw-semibold">₹${order.subtotal}</span>
-  </p>
-
-  ${order.discount > 0
-          ? `
-        <p class="mb-1 text-success">
-          Coupon Applied ${order.couponCode ? `(${order.couponCode})` : ""} :
-          -₹${order.discount}
-        </p>
-      `
-          : `
-        <p class="mb-1 text-muted">
-          Coupon: Not Applied
-        </p>
-      `
-        }
-
-  <hr class="my-2">
-
-  <h5 class="fw-bold">
-    Final Amount: ₹${order.totalAmount}
-  </h5>
-</div>
-
+            <h6 class="fw-bold">Price Details</h6>
+            <p class="mb-1">Actual Price: <span class="fw-semibold">₹${order.subtotal}</span></p>
+            ${order.discount > 0 ? `<p class="mb-1 text-success">Discount: -₹${order.discount}</p>` : ''}
+            <hr class="my-2">
+            <h5 class="fw-bold">Final Amount: ₹${order.totalAmount}</h5>
           </div>
         </div>
-
-        <!-- ACTIONS -->
-        <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
-             ${(order.orderStatus === 'pending')
-          ? `<button class="btn btn-outline-danger" onclick="cancelOrder('${order._id}')">Cancel Order</button>`
-          : ''}
-
-             ${(order.orderStatus === 'delivered' && (!order.returnStatus || order.returnStatus === 'none'))
-          ? `<button class="btn btn-dark" onclick="returnOrder('${order._id}')">Return Order</button>`
-          : ''}
-
-             ${(order.returnStatus === 'requested') ? `<span class="badge bg-warning text-dark p-2">Return Requested</span>` : ''}
-             ${(order.returnStatus === 'approved') ? `<span class="badge bg-success p-2">Return Approved</span>` : ''}
-             ${(order.returnStatus === 'rejected') ? `<span class="badge bg-danger p-2">Return Rejected</span>` : ''}
-        </div>
-
       </div>
     `;
 
@@ -557,9 +901,44 @@
       }
     }
 
-    async function returnOrder(orderId) {
+    async function cancelItem(orderId, itemId) {
+      const result = await Swal.fire({
+        title: 'Cancel Item?',
+        text: "Are you sure you want to cancel this item?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, cancel item!'
+      });
+
+      if (result.isConfirmed) {
+        try {
+          const res = await fetch(`/api/orders/${orderId}/item/${itemId}/cancel`, {
+            method: 'POST',
+            credentials: "include"
+          });
+          const data = await res.json();
+
+          if (res.ok) {
+            Swal.fire('Cancelled!', 'Item cancellation successful.', 'success');
+
+            // Refresh logic: reload global list then re-render view
+            await fetchOrders();
+            viewOrder(orderId); // Re-open the current order view to show updated status
+          } else {
+            Swal.fire('Error', data.message, 'error');
+          }
+        } catch (err) {
+          console.error(err);
+          Swal.fire('Error', 'Something went wrong', 'error');
+        }
+      }
+    }
+
+    async function returnItem(orderId, itemId) {
       const { value: reason } = await Swal.fire({
-        title: 'Return Order',
+        title: 'Return Item',
         input: 'textarea',
         inputLabel: 'Reason for return',
         inputPlaceholder: 'Type your reason here...',
@@ -574,15 +953,15 @@
           const res = await fetch(`/api/orders/${orderId}/return`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ reason }),
+            body: JSON.stringify({ reason, itemId }),
             credentials: "include"
           });
           const data = await res.json();
 
           if (res.ok) {
-            Swal.fire('Requested!', 'Return request submitted.', 'success');
-            fetchOrders(); // Reload list
-            showListView(); // Go back to list
+            Swal.fire('Requested!', 'Return request submitted for the item.', 'success');
+            await fetchOrders(); // Reload list
+            viewOrder(orderId); // Refresh details
           } else {
             Swal.fire('Error', data.message, 'error');
           }
@@ -591,6 +970,7 @@
         }
       }
     }
+
 
     // Logout Logic
     document.getElementById("logoutBtn").addEventListener("click", async (e) => {
@@ -603,6 +983,17 @@
         alert("Logout failed. Please try again.");
       }
     });
+
+    // Review Logic
+    function openReviewModal(productId, productName) {
+      document.getElementById("reviewProductId").value = productId;
+      document.getElementById("reviewModalTitle").innerText = `Review: ${productName}`;
+      document.getElementById("reviewForm").reset();
+
+      const modal = new bootstrap.Modal(document.getElementById("reviewModal"));
+      modal.show();
+    }
+
   </script>
 
   <!-- FEATURES -->
@@ -758,6 +1149,46 @@
       modal.show();
     }
   </script>
+
+  <!-- REVIEW MODAL -->
+  <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold" id="reviewModalTitle">Review: Product Name</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <form id="reviewForm">
+            <input type="hidden" id="reviewProductId">
+
+            <div class="mb-4">
+              <label class="form-label fw-semibold text-muted small mb-2">Rating</label>
+              <select class="form-select border-0 bg-light rounded-3 py-2" id="reviewRating" required>
+                <option value="5">⭐⭐⭐⭐⭐ (Excellent)</option>
+                <option value="4">⭐⭐⭐⭐ (Good)</option>
+                <option value="3">⭐⭐⭐ (Average)</option>
+                <option value="2">⭐⭐ (Fair)</option>
+                <option value="1">⭐ (Poor)</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-semibold text-muted small mb-2">Your Comment</label>
+              <textarea class="form-control border-0 bg-light rounded-3 p-3" id="reviewComment" rows="4"
+                placeholder="Share your details about quality, delivery..." required></textarea>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary rounded-3 py-2 w-100 fw-bold">Submit Review</button>
+              <button type="button" class="btn btn-secondary rounded-3 py-2 w-100 fw-bold"
+                data-bs-dismiss="modal">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

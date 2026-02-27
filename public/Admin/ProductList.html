@@ -424,7 +424,7 @@
         <div class="sidebar-scroll">
             <div class="sidebar-brand"><img src="logo wings.png" alt="Wings"></div>
             <p class="menu-label">Main menu</p>
-            <a href="Dashbord.html" class="nav-item"><i class="bi bi-grid"></i> Dashboard</a>
+            <a href="Dashboard.html" class="nav-item"><i class="bi bi-grid"></i> Dashboard</a>
             <a href="OrderMangement.html" class="nav-item"><i class="bi bi-cart"></i> Order Management</a>
             <a href="Customers.html" class="nav-item"><i class="bi bi-people"></i> Customers</a>
             <a href="Cuopon.html" class="nav-item"><i class="bi bi-ticket-perforated"></i> Coupon Code</a>
@@ -517,6 +517,9 @@
 
                 </table>
             </div>
+
+            <!-- Pagination -->
+            <div class="d-flex justify-content-end align-items-center mt-3 p-3 pt-0" id="paginationControls"></div>
         </div>
     </main>
 
@@ -547,14 +550,18 @@
     </script>
 
     <script>
-        async function loadProducts() {
+        let currentPage = 1;
+        const limit = 10;
+
+        async function loadProducts(page = 1) {
+            currentPage = page;
             try {
                 const token = localStorage.getItem("adminToken");
                 const search = document.getElementById("searchInput").value;
                 const category = document.getElementById("categoryFilter").value;
                 const stockStatus = document.getElementById("stockFilter").value;
 
-                let query = `?search=${search}&category=${category}&stockStatus=${stockStatus}`;
+                let query = `?search=${search}&category=${category}&stockStatus=${stockStatus}&page=${page}&limit=${limit}`;
 
                 const res = await fetch(`/api/admin/products${query}`, {
                     headers: {
@@ -567,7 +574,8 @@
                     throw new Error("Failed to fetch products");
                 }
 
-                const products = await res.json();
+                const data = await res.json();
+                const products = data.products || []; // Pagination structure
                 const tbody = document.getElementById("productTableBody");
 
                 tbody.innerHTML = "";
@@ -575,12 +583,15 @@
                 if (products.length === 0) {
                     tbody.innerHTML = `
                 <tr>
-                    <td colspan="6" class="text-center text-muted py-4">
+                    <td colspan="7" class="text-center text-muted py-4">
                         No products found
                     </td>
                 </tr>`;
+                    document.getElementById('paginationControls').innerHTML = '';
                     return;
                 }
+
+                renderPagination(data.currentPage, data.totalPages);
 
                 products.forEach(product => {
                     const stockText = `${product.stockQuantity} Items`;
@@ -641,6 +652,34 @@
             }
         }
 
+        function renderPagination(current, total) {
+            const container = document.getElementById('paginationControls');
+            // if (total <= 1) { container.innerHTML = ''; return; }
+
+            let pagesHtml = '';
+            for (let i = 1; i <= total; i++) {
+                if (i === 1 || i === total || (i >= current - 1 && i <= current + 1)) {
+                    pagesHtml += `<button onclick="loadProducts(${i})" class="btn btn-sm ${i === current ? 'btn-primary' : 'btn-light'} mx-1" style="min-width: 32px;">${i}</button>`;
+                } else if (i === current - 2 || i === current + 2) {
+                    pagesHtml += `<span class="mx-1 text-muted">...</span>`;
+                }
+            }
+
+            container.innerHTML = `
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item ${current === 1 ? 'disabled' : ''}">
+                            <button class="page-link border-0 text-secondary" onclick="loadProducts(${current - 1})">Previous</button>
+                        </li>
+                        ${pagesHtml}
+                        <li class="page-item ${current === total ? 'disabled' : ''}">
+                            <button class="page-link border-0 text-secondary" onclick="loadProducts(${current + 1})">Next</button>
+                        </li>
+                    </ul>
+                </nav>
+            `;
+        }
+
 
         /* =========================
            SEARCH DEBOUNCE
@@ -648,7 +687,7 @@
         let timeout = null;
         function debounceSearch() {
             clearTimeout(timeout);
-            timeout = setTimeout(loadProducts, 500);
+            timeout = setTimeout(() => loadProducts(1), 500);
         }
 
         /* =========================
@@ -831,7 +870,6 @@
                     return;
                 }
 
-                // âœ… Admin verified â†’ load products
                 // ✅ Admin verified → load products
                 loadCategories(); // Load categories first
                 loadProducts();

@@ -407,7 +407,7 @@
         <div class="sidebar-scroll">
             <div class="sidebar-brand"><img src="logo wings.png" alt="Wings"></div>
             <p class="menu-label">Main menu</p>
-            <a href="Dashbord.html" class="nav-item "><i class="bi bi-grid"></i> Dashboard</a>
+            <a href="Dashboard.html" class="nav-item "><i class="bi bi-grid"></i> Dashboard</a>
             <a href="OrderMangement.html" class="nav-item"><i class="bi bi-cart"></i> Order Management</a>
             <a href="Customers.html" class="nav-item "><i class="bi bi-people"></i> Customers</a>
             <a href="Cuopon.html" class="nav-item"><i class="bi bi-ticket-perforated"></i> Coupon Code</a>
@@ -850,7 +850,7 @@
 
             // 1. Name
             const name = productName.value.trim();
-            const nameRegex = /^[a-z][a-zA-Z0-9]*$/; // camelCase, no spaces, no special chars
+            const nameRegex = /^[A-Za-z0-9]+( [A-Za-z0-9]+)*$/;// camelCase, no spaces, no special chars
 
             if (!name) {
                 setInvalid(productName, "Product Name is required");

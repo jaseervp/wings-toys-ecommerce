@@ -602,7 +602,38 @@
         }
 
         function fetchReport() {
-            alert("Report generation feature coming soon!");
+            const token = localStorage.getItem("adminToken");
+            const filter = filterSelect.value;
+            let query = `?filter=${filter}`;
+
+            if (filter === "specific_date" && customDate.value) {
+                query += `&startDate=${customDate.value}`;
+            } else if (filter === "custom_range" && startDateIn.value && endDateIn.value) {
+                query += `&startDate=${startDateIn.value}&endDate=${endDateIn.value}`;
+            }
+
+            // Trigger Download
+            fetch(`/api/admin/report${query}`, {
+                headers: { Authorization: "Bearer " + token }
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error("Failed to generate report");
+                    return res.blob();
+                })
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `Wings_Report_${new Date().toISOString().slice(0, 10)}.pdf`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Failed to download report.");
+                });
         }
 
         // Init

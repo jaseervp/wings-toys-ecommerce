@@ -27,5 +27,6 @@ router.delete("/customers/:id", protect, adminOnly, require("../controllers/admi
 // 📊 Dashboard Stats
 router.get("/dashboard", protect, adminOnly, require("../controllers/adminController").getDashboardStats);
 router.get("/transactions", protect, adminOnly, require("../controllers/adminController").getAllTransactions);
+router.get("/report", protect, adminOnly, require("../controllers/adminController").getDashboardReport);
 
 module.exports = router;
