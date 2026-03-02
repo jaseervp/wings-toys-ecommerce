@@ -73,9 +73,96 @@
     /* --- HERO --- */
     .hero-section {
       background-color: var(--toy-yellow);
-      border-radius: 0 0 50px 50px;
-      padding: 80px 0;
-      margin-bottom: 40px;
+      padding: 80px 0 140px;
+      position: relative;
+      overflow: hidden;
+      /* Prevent both horizontal and internal vertical scroll */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-section .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .hero-content-col {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      z-index: 5;
+    }
+
+    /* Desktop View */
+    @media (min-width: 1024px) {
+      .hero-section .row {
+        justify-content: center;
+        gap: 80px;
+      }
+
+      .hero-content-col {
+        text-align: left;
+        max-width: 500px;
+        align-items: flex-start;
+      }
+    }
+
+    /* Mobile / Tablet View */
+    @media (max-width: 1023px) {
+      .hero-section {
+        min-height: 100vh;
+        /* Full screen height */
+        padding: 40px 0 80px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .hero-section .row {
+        flex-direction: column !important;
+        text-align: center;
+        gap: 20px;
+        /* Tighter gap for centering */
+        align-items: center;
+        margin: 0;
+        width: 100%;
+      }
+
+      .hero-content-col {
+        align-items: center;
+        text-align: center;
+        margin-bottom: 20px;
+        width: 100%;
+      }
+
+      .hero-content-col h1 {
+        font-size: clamp(2rem, 8vw, 2.8rem);
+      }
+    }
+
+    .cloud-divider {
+      position: absolute;
+      bottom: -2px;
+      /* Fix for potential sub-pixel gap */
+      left: 0;
+      width: 100%;
+      line-height: 0;
+      z-index: 2;
+    }
+
+    .cloud-divider svg {
+      position: relative;
+      display: block;
+      width: calc(100% + 1.3px);
+      height: 100px;
+      /* Reduced height for a sleeker look */
+    }
+
+    .cloud-divider .shape-fill {
+      fill: #FFFFFF;
     }
 
     .floating-img {
@@ -94,44 +181,199 @@
       }
     }
 
-    /* --- BENTO CATEGORY --- */
+    /* --- HERO 3D IMAGE CAROUSEL (MINIMAL) --- */
+    .hero-carousel-container {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+      height: 450px;
+      perspective: 1200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      background: transparent;
+    }
+
+    @media (max-width: 768px) {
+      .hero-carousel-container {
+        width: 80% !important;
+        max-width: 320px !important;
+        height: 300px !important;
+        margin: 0 auto !important;
+      }
+    }
+
+    .carousel-item {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1;
+      will-change: transform, opacity;
+      /* Remove absolute offsets to prevent shifts */
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+    }
+
+    .carousel-item img {
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.12));
+    }
+
+    /* States */
+    .carousel-item.active {
+      opacity: 1;
+      transform: translateX(0) scale(1) translateZ(0);
+      z-index: 10;
+      pointer-events: auto;
+    }
+
+    .carousel-item.active img {
+      animation: centerFloat 4s ease-in-out infinite;
+    }
+
+    /* Mobile-Focused Transitions (Tighter to fit 320px) */
+    .carousel-item.prev {
+      opacity: 0.6;
+      transform: translateX(-70px) scale(0.8) translateZ(-100px);
+      z-index: 5;
+    }
+
+    .carousel-item.next {
+      opacity: 0.6;
+      transform: translateX(70px) scale(0.8) translateZ(-100px);
+      z-index: 5;
+    }
+
+    /* Desktop Transitions */
+    @media (min-width: 1024px) {
+      .carousel-item.prev {
+        transform: translateX(-150px) scale(0.85) translateZ(-100px);
+        opacity: 0.7;
+      }
+
+      .carousel-item.next {
+        transform: translateX(150px) scale(0.85) translateZ(-100px);
+        opacity: 0.7;
+      }
+    }
+
+
+
+    @keyframes centerFloat {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    /* --- MODERN CATEGORY CARDS --- */
     .category-card {
-      border-radius: 30px;
-      padding: 40px 20px;
-      transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      background-color: #f0f4f7;
+      /* Soft Blue/Grey */
+      border-radius: 12px;
+      padding: 15px 20px;
+      transition: 0.3s ease;
       text-decoration: none !important;
       color: #000 !important;
       display: flex;
-      flex-direction: column;
       align-items: center;
       height: 100%;
+      border: 1px solid transparent;
+      margin-bottom: 20px;
     }
 
     .category-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+      transform: translateY(-5px);
+      background-color: #fff;
+      border-color: #e0e0e0;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
     }
 
-    .category-card img {
-      height: 110px;
-      object-fit: contain;
+    /* --- OFFER ENHANCEMENTS --- */
+    .offer-section-heading {
+      margin-top: 80px;
+      margin-bottom: 50px;
+    }
+
+    .offer-end-date {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #dc3545;
+      background: rgba(220, 53, 69, 0.08);
+      padding: 4px 10px;
+      border-radius: 20px;
       margin-bottom: 15px;
     }
 
-    .bg-sky {
-      background-color: var(--toy-blue);
+    .offer-end-date i {
+      margin-right: 4px;
     }
 
-    .bg-rose {
-      background-color: var(--toy-rose);
+    .category-icon-circle {
+      width: 80px;
+      height: 80px;
+      background-color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 20px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.02);
     }
 
-    .bg-mint {
-      background-color: var(--toy-mint);
+    .category-icon-circle img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
     }
 
-    .bg-soft-yellow {
-      background-color: var(--toy-cream);
+    .category-info {
+      flex-grow: 1;
+    }
+
+    .discount-badge-mini {
+      font-size: 0.7rem;
+      color: #777;
+      border: 1px dashed #ccc;
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 8px;
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .category-name-modern {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin: 0;
+      color: #1a4d6e;
+      /* Dark Blue */
+    }
+
+    .item-count-text {
+      font-size: 0.85rem;
+      color: #888;
+      margin-top: 2px;
     }
 
     /* --- PRODUCT CARDS --- */
@@ -313,215 +555,158 @@
     }
 
     /* =========================
-       PREMIUM OFFER SLIDER
+       BENTO OFFER GRID
     ========================= */
-    #offer-slider-section {
+    #offer-grid-section {
+      padding: 80px 0;
       display: none;
-      padding: 60px 0;
+      /* Initially hidden, shown by JS */
     }
 
-    .offer-slider-container {
-      border-radius: 40px;
-      position: relative;
-      /* Soft Premium Gradient Background */
-      background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.05);
+    .offer-card {
+      border-radius: 24px;
       overflow: hidden;
-      min-height: 500px;
-      /* Ensure height matches content */
-    }
-
-    .offer-wrapper {
-      display: flex;
-      transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-      will-change: transform;
-      height: 100%;
-    }
-
-    .offer-slide {
-      min-width: 100%;
-      box-sizing: border-box;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 60px 40px;
-    }
-
-    /* Glass Effect Card for Content */
-    .glass-card {
-      background: rgba(255, 255, 255, 0.6);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-radius: 30px;
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      padding: 40px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
-      max-width: 600px;
-      width: 100%;
-    }
-
-    .offer-img-container {
       position: relative;
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      border: none;
+      height: 100%;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 400px;
+      flex-direction: column;
     }
 
-    .offer-img {
-      max-height: 100%;
-      max-width: 100%;
-      object-fit: contain;
-      filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.15));
-      transition: transform 0.5s ease;
-      animation: floatImage 4s ease-in-out infinite;
-      border-radius: 20px;
+    .offer-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
     }
 
-    @keyframes floatImage {
-
-      0%,
-      100% {
-        transform: translateY(0);
-      }
-
-      50% {
-        transform: translateY(-15px);
-      }
+    /* Big Card Style */
+    .offer-card-large {
+      background-color: #fdf6e3;
+      /* Soft Cream */
+      min-height: 500px;
+      padding: 60px 50px;
     }
 
-    /* Hover Zoom Effect */
-    .offer-slide:hover .offer-img {
-      transform: scale(1.05) translateY(-15px);
-      /* Combine hover + float base */
+    /* Small Card Style */
+    .offer-card-small {
+      min-height: 240px;
+      padding: 40px;
     }
 
-    .offer-badge-premium {
-      background: rgba(0, 0, 0, 0.05);
-      color: #333;
-      padding: 8px 16px;
-      border-radius: 30px;
+    .bg-light-blue {
+      background-color: #e3f2fd;
+    }
+
+    .bg-light-beige {
+      background-color: #f5efe6;
+    }
+
+    .offer-content {
+      position: relative;
+      z-index: 2;
+      max-width: 60%;
+    }
+
+    .offer-card-small .offer-content {
+      max-width: 55%;
+    }
+
+    .offer-mini-badge {
       font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      display: inline-block;
+      font-weight: 500;
+      color: #777;
+      text-decoration: underline;
+      text-underline-offset: 4px;
       margin-bottom: 20px;
-      border: 1px solid rgba(0, 0, 0, 0.05);
+      display: block;
     }
 
-    .offer-title {
-      font-size: 3rem;
-      font-weight: 800;
-      line-height: 1.1;
-      margin-bottom: 20px;
-      background: linear-gradient(45deg, #111, #444);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .offer-discount {
-      font-size: 1.5rem;
+    .offer-main-title {
+      font-size: 2.8rem;
       font-weight: 700;
-      color: #e63946;
-      /* Stylish Red, NOT Blue */
+      line-height: 1.2;
       margin-bottom: 30px;
-      display: inline-block;
-      animation: pulseText 2s infinite;
+      color: #222;
     }
 
-    @keyframes pulseText {
-      0% {
-        transform: scale(1);
-        opacity: 1;
-      }
-
-      50% {
-        transform: scale(1.05);
-        opacity: 0.8;
-      }
-
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
+    .offer-card-small .offer-main-title {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
     }
 
-    /* Premium Button */
-    .btn-premium {
-      background: linear-gradient(90deg, #111 0%, #333 100%);
+    .btn-shop-now {
+      background-color: #f15b43;
       color: #fff;
       border: none;
-      padding: 15px 40px;
-      border-radius: 50px;
-      font-size: 1rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      transition: all 0.3s ease;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      padding: 12px 32px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: 0.3s;
       display: inline-block;
       text-decoration: none;
     }
 
-    .btn-premium:hover {
-      background: linear-gradient(90deg, #000 0%, #222 100%);
-      transform: translateY(-3px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    .btn-shop-now:hover {
+      background-color: #d8432e;
       color: #fff;
+      transform: scale(1.05);
     }
 
-
-
-    /* Dots */
-    .offer-dots {
-      bottom: 30px;
+    .offer-image-abs {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      max-height: 90%;
+      max-width: 55%;
+      object-fit: contain;
+      z-index: 1;
+      transition: 0.5s ease;
     }
 
-    .offer-dot {
-      background: rgba(0, 0, 0, 0.2);
-      transition: all 0.4s ease;
+    .offer-card:hover .offer-image-abs {
+      transform: scale(1.05) translateX(-10px);
     }
 
-    .offer-dot.active {
-      background: #111;
-      width: 40px;
+    /* Decorations */
+    .decoration-circle {
+      position: absolute;
+      top: -20px;
+      right: 10%;
+      width: 120px;
+      height: 120px;
+      border: 2px solid rgba(0, 0, 0, 0.03);
+      border-radius: 50%;
     }
 
-    /* Responsive */
-    @media (max-width: 768px) {
-      .offer-slide {
-        padding: 40px 20px;
-        flex-direction: column-reverse;
-        text-align: center;
+    @media (max-width: 991px) {
+      .offer-card-large {
+        min-height: 400px;
+        padding: 40px;
       }
 
-      .glass-card {
-        margin-top: -20px;
-        padding: 30px 20px;
-        z-index: 2;
-        border: none;
-        background: rgba(255, 255, 255, 0.8);
-      }
-
-      .offer-img-container {
-        height: 250px;
-        margin-bottom: 20px;
-      }
-
-      .offer-title {
+      .offer-main-title {
         font-size: 2rem;
       }
 
-      .offer-discount {
-        font-size: 1.2rem;
+      .offer-content {
+        max-width: 100%;
+        text-align: center;
+        margin-bottom: 20px;
       }
 
-      .offer-control {
-        display: none;
+      .offer-image-abs {
+        position: static;
+        max-width: 80%;
+        margin: 0 auto;
+        display: block;
       }
 
-      /* Hide arrows on mobile */
+      .offer-card-small .offer-content {
+        max-width: 100%;
+      }
     }
 
     /* =========================
@@ -587,6 +772,75 @@
     /* Pause on hover if desired */
     #announcement-bar:hover .scrolling-content-wrapper {
       animation-play-state: paused;
+    }
+
+    .service-features {
+      background: #ffffff;
+      /* White background */
+    }
+
+    .feature-box {
+      padding: 35px 20px;
+      border-radius: 16px;
+      background: #f8fafc;
+      /* Premium soft card color */
+      transition: all 0.4s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-box h5 {
+      font-weight: 600;
+      margin-top: 18px;
+      font-size: 18px;
+    }
+
+    .feature-box p {
+      color: #6c757d;
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .icon-wrapper {
+      width: 75px;
+      height: 75px;
+      margin: 0 auto;
+      border-radius: 50%;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.4s ease;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .icon-wrapper i {
+      font-size: 30px;
+      color: #0d6efd;
+      transition: all 0.4s ease;
+    }
+
+    /* 🔥 Premium Hover Effect */
+    .feature-box:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 20px 40px rgba(13, 110, 253, 0.15);
+    }
+
+    .feature-box:hover .icon-wrapper {
+      background: #0d6efd;
+    }
+
+    .feature-box:hover .icon-wrapper i {
+      color: #ffffff;
+      transform: scale(1.2);
+    }
+
+    /* Smooth animation feel */
+    .feature-box,
+    .icon-wrapper,
+    .icon-wrapper i {
+      transition: all 0.4s cubic-bezier(.25, .8, .25, 1);
     }
   </style>
 </head>
@@ -695,18 +949,63 @@
   <section class="hero-section">
     <div class="container">
       <div class="row align-items-center">
-        <div class="col-md-6 text-center text-md-start">
-          <span class="badge bg-white text-dark rounded-pill px-3 py-2 mb-3 shadow-sm">✨ Pure Childhood
-            Joy</span>
-          <h1 class="display-2 fw-bold mb-4">Toys Made <br> With Love</h1>
-          <a href="shop.html" class="btn btn-dark rounded-pill px-5 py-3 shadow">Explore All Toys</a>
+        <div class="col-lg-5 hero-content-col">
+          <span class="badge bg-white text-dark rounded-pill px-3 py-2 mb-3 shadow-sm" style="width: fit-content;">✨
+            Pure Childhood Joy</span>
+          <h1 class="display-3 fw-bold mb-4">Toys Made <br> With Love</h1>
+          <a href="shop.html" class="btn btn-dark rounded-pill px-5 py-3 shadow" style="width: fit-content;">Explore All
+            Toys</a>
         </div>
-        <div class="col-md-6 text-center mt-5 mt-md-0">
-          <img
-            src="../Images/Kids_Playing_With_Toys_In_Kindergarten__Kids__Playing__Toys_PNG_Transparent_Image_and_Clipart_for_Free_Download-removebg-preview.png"
-            class="img-fluid floating-img" style="max-height: 450px;">
+        <div class="col-lg-6 d-flex justify-content-center mt-5 mt-lg-0">
+          <div class="hero-carousel-container" id="heroCarousel">
+            <!-- Carousel Images (No cards, no text) -->
+            <div class="carousel-item prev">
+              <img src="../Images/hero 1.png" alt="Toy 1">
+            </div>
+            <div class="carousel-item active">
+              <img src="../Images/hero 2.png" alt="Toy 2">
+            </div>
+            <div class="carousel-item next">
+              <img src="../Images/hero 3.png" alt="Toy 3">
+            </div>
+          </div>
         </div>
       </div>
+    </div>
+    <!-- Cloud Divider (Bumpy Design) -->
+    <div class="cloud-divider">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" preserveAspectRatio="none">
+        <!-- Layer 1 (Transparent) -->
+        <g opacity="0.2">
+          <circle fill="#FFFFFF" cx="0" cy="100" r="80"></circle>
+          <circle fill="#FFFFFF" cx="150" cy="100" r="100"></circle>
+          <circle fill="#FFFFFF" cx="350" cy="100" r="90"></circle>
+          <circle fill="#FFFFFF" cx="550" cy="100" r="110"></circle>
+          <circle fill="#FFFFFF" cx="750" cy="100" r="95"></circle>
+          <circle fill="#FFFFFF" cx="1000" cy="100" r="85"></circle>
+        </g>
+        <!-- Layer 2 (More opaque) -->
+        <g opacity="0.4">
+          <circle fill="#FFFFFF" cx="50" cy="110" r="70"></circle>
+          <circle fill="#FFFFFF" cx="250" cy="110" r="80"></circle>
+          <circle fill="#FFFFFF" cx="450" cy="110" r="90"></circle>
+          <circle fill="#FFFFFF" cx="650" cy="110" r="75"></circle>
+          <circle fill="#FFFFFF" cx="850" cy="110" r="85"></circle>
+        </g>
+        <!-- Layer 3 (Solid) -->
+        <g>
+          <rect fill="#FFFFFF" x="0" y="80" width="1000" height="20"></rect>
+          <circle fill="#FFFFFF" cx="0" cy="100" r="60"></circle>
+          <circle fill="#FFFFFF" cx="125" cy="100" r="75"></circle>
+          <circle fill="#FFFFFF" cx="250" cy="100" r="65"></circle>
+          <circle fill="#FFFFFF" cx="375" cy="100" r="80"></circle>
+          <circle fill="#FFFFFF" cx="500" cy="100" r="70"></circle>
+          <circle fill="#FFFFFF" cx="625" cy="100" r="75"></circle>
+          <circle fill="#FFFFFF" cx="750" cy="100" r="65"></circle>
+          <circle fill="#FFFFFF" cx="875" cy="100" r="80"></circle>
+          <circle fill="#FFFFFF" cx="1000" cy="100" r="60"></circle>
+        </g>
+      </svg>
     </div>
   </section>
 
@@ -735,14 +1034,68 @@
     </div>
   </section>
 
-  <section class="container" id="offer-slider-section">
-    <div class="offer-slider-container">
-      <div class="offer-wrapper" id="offer-track">
-        <!-- Dynamic Slides -->
-      </div>
+  <section class="container offer-section-heading">
+    <div class="text-center">
+      <h2 class="fw-bold">Exclusive Offers</h2>
+      <p class="text-muted">Limited-time deals for your little ones</p>
+    </div>
+  </section>
 
-      <!-- Dots -->
-      <div class="offer-dots" id="offer-dots"></div>
+  <section class="container" id="offer-grid-section">
+    <div class="row g-4" id="offer-grid-container">
+      <!-- Dynamic Bento Grid -->
+    </div>
+  </section>
+
+  <section class="service-features py-5">
+    <div class="container">
+      <div class="row text-center">
+
+        <!-- Free Delivery -->
+        <div class="col-lg-3 col-md-6 mb-4">
+          <div class="feature-box">
+            <div class="icon-wrapper">
+              <i class="bi bi-box"></i>
+            </div>
+            <h5>Free delivery</h5>
+            <p>Orders from all item</p>
+          </div>
+        </div>
+
+        <!-- Easy Returns -->
+        <div class="col-lg-3 col-md-6 mb-4">
+          <div class="feature-box">
+            <div class="icon-wrapper">
+              <i class="bi bi-arrow-repeat"></i>
+            </div>
+            <h5>Easy returns</h5>
+            <p>On all unused items</p>
+          </div>
+        </div>
+
+        <!-- Online Support -->
+        <div class="col-lg-3 col-md-6 mb-4">
+          <div class="feature-box">
+            <div class="icon-wrapper">
+              <i class="bi bi-headset"></i>
+            </div>
+            <h5>Online support</h5>
+            <p>Always online 24/7</p>
+          </div>
+        </div>
+
+        <!-- Secure Payment -->
+        <div class="col-lg-3 col-md-6 mb-4">
+          <div class="feature-box">
+            <div class="icon-wrapper">
+              <i class="bi bi-credit-card"></i>
+            </div>
+            <h5>Secure payment</h5>
+            <p>100% safe payment</p>
+          </div>
+        </div>
+
+      </div>
     </div>
   </section>
 
@@ -980,15 +1333,30 @@
         }
 
         container.innerHTML = categories.map((cat, index) => {
-          const colorClass = colors[index % colors.length];
-          // Use default image if none provided
-          const imgUrl = cat.image || 'https://via.placeholder.com/150';
+          const imgUrl = cat.image || 'https://via.placeholder.com/80';
+
+          // Dynamic Offer Badge
+          let discountText = "Special Deals";
+          if (cat.activeOffer) {
+            discountText = cat.activeOffer.discountType === 'percentage'
+              ? `${cat.activeOffer.discountValue}% OFF`
+              : `₹${cat.activeOffer.discountValue} OFF`;
+          }
+
+          // Dynamic Item Count
+          const countText = `${cat.productCount}+ Items`;
 
           return `
-                  <div class="col-6 col-lg-3">
-                    <a href="shop.html?category=${cat._id}" class="category-card ${colorClass}">
-                      <img src="${imgUrl}" alt="${cat.name}">
-                      <h5 class="fw-bold m-0">${cat.name}</h5>
+                  <div class="col-12 col-md-6 col-lg-3">
+                    <a href="shop.html?category=${cat._id}" class="category-card">
+                      <div class="category-icon-circle">
+                        <img src="${imgUrl}" alt="${cat.name}">
+                      </div>
+                      <div class="category-info">
+                        <span class="discount-badge-mini">${discountText}</span>
+                        <h5 class="category-name-modern">${cat.name}</h5>
+                        <p class="item-count-text">${countText}</p>
+                      </div>
                     </a>
                   </div>
                 `;
@@ -1069,23 +1437,64 @@
     document.addEventListener("DOMContentLoaded", () => {
       fetchHomeCategories();
       fetchTrendingProducts();
-      initOfferSlider();
+      initHeroCarousel(); // Updated function name
+      initOfferGrid();
+      initAnnouncementBar();
+
+      // Navbar Scroll Effect
+      window.addEventListener("scroll", () => {
+        const nav = document.querySelector(".navbar-fixed");
+        if (nav) {
+          if (window.scrollY > 10) nav.classList.add("scrolled");
+          else nav.classList.remove("scrolled");
+        }
+      });
     });
+
+    /* =========================
+       HERO 3D CAROUSEL LOGIC
+    ========================= */
+    function initHeroCarousel() {
+      const items = document.querySelectorAll('.carousel-item');
+      let currentIndex = 1; // Start with the second item as active
+
+      function updateCarousel() {
+        items.forEach((item, index) => {
+          item.classList.remove('active', 'prev', 'next', 'hidden');
+
+          if (index === currentIndex) {
+            item.classList.add('active');
+          } else if (index === (currentIndex - 1 + items.length) % items.length) {
+            item.classList.add('prev');
+          } else if (index === (currentIndex + 1) % items.length) {
+            item.classList.add('next');
+          } else {
+            item.classList.add('hidden');
+          }
+        });
+      }
+
+      function rotateCarousel() {
+        currentIndex = (currentIndex + 1) % items.length;
+        updateCarousel();
+      }
+
+      // Initial state
+      updateCarousel();
+
+      // Auto-rotate every 3 seconds
+      setInterval(rotateCarousel, 3000);
+    }
 
     /* =========================
        OFFER SLIDER LOGIC
     ========================= */
-    let currentSlide = 0;
-    let totalSlides = 0;
-    let autoSlideInterval;
-
-    async function initOfferSlider() {
+    async function initOfferGrid() {
       try {
         const res = await fetch("/api/offers");
         const offers = await res.json();
-        const section = document.getElementById("offer-slider-section");
-        const track = document.getElementById("offer-track");
-        const dotsContainer = document.getElementById("offer-dots");
+        const section = document.getElementById("offer-grid-section");
+        const container = document.getElementById("offer-grid-container");
 
         if (!offers || offers.length === 0) {
           section.style.display = "none";
@@ -1093,92 +1502,79 @@
         }
 
         section.style.display = "block";
-        totalSlides = offers.length;
 
-        // Render Slides
-        track.innerHTML = offers.map((offer, index) => {
-          // Calculate Target URL
-          let targetUrl = "shop.html";
-          if (offer.targetType === 'product') targetUrl = `single_product.html?id=${offer.targetId}`;
-          else if (offer.targetType === 'category') targetUrl = `shop.html?category=${offer.targetId}`;
+        // Take at most 3 offers for the bento grid
+        const relevantOffers = offers.slice(0, 3);
 
-          const discountText = offer.discountType === 'percentage'
-            ? `${offer.discountValue}% OFF`
-            : `FLAT ₹${offer.discountValue} OFF`;
+        // Helper to get target URL
+        const getUrl = (offer) => {
+          if (offer.targetType === 'product') return `single_product.html?id=${offer.targetId}`;
+          if (offer.targetType === 'category') return `shop.html?category=${offer.targetId}`;
+          return "shop.html";
+        };
 
-          return `
-            <div class="offer-slide">
-              <div class="container h-100">
-                <div class="row align-items-center h-100">
-                  
-                  <!-- Image Side (Right on Desktop, Top on Mobile) -->
-                  <div class="col-md-6 order-md-2 mb-4 mb-md-0">
-                    <div class="offer-img-container">
-                       <img src="${offer.bannerImage}" class="offer-img" alt="${offer.name}">
-                    </div>
-                  </div>
+        const discountLabel = (offer) => offer.discountType === 'percentage'
+          ? `Up to ${offer.discountValue}% discount`
+          : `FLAT ₹${offer.discountValue} OFF`;
 
-                  <!-- Text Side (Left on Desktop, Bottom on Mobile) -->
-                  <div class="col-md-6 order-md-1 text-center text-md-start">
-                    <div class="glass-card">
-                       <span class="offer-badge-premium">Limited Time</span>
-                       <h2 class="offer-title">${offer.name}</h2>
-                       <p class="offer-discount">${discountText}</p>
-                       <p class="mb-4 text-muted">Don't miss out on this exclusive deal. Offer valids until ${new Date(offer.endDate).toLocaleDateString()}.</p>
-                       <a href="${targetUrl}" class="btn-premium">Shop Now <i class="bi bi-arrow-right ms-2"></i></a>
-                    </div>
-                  </div>
+        let html = "";
 
+        // First Large Offer
+        if (relevantOffers[0]) {
+          const o = relevantOffers[0];
+          const endDate = new Date(o.endDate).toLocaleDateString(undefined, {
+            month: 'short', day: 'numeric', year: 'numeric'
+          });
+
+          html += `
+            <div class="col-lg-7">
+              <div class="offer-card offer-card-large">
+                <div class="decoration-circle"></div>
+                <div class="offer-content">
+                  <span class="offer-end-date"><i class="bi bi-clock"></i> Ends: ${endDate}</span>
+                  <span class="offer-mini-badge">${discountLabel(o)}</span>
+                  <h2 class="offer-main-title">${o.name}</h2>
+                  <a href="${getUrl(o)}" class="btn-shop-now">SHOP NOW</a>
                 </div>
+                <img src="${o.bannerImage}" class="offer-image-abs" alt="${o.name}">
               </div>
             </div>
           `;
-        }).join('');
+        }
 
-        // Render Dots
-        dotsContainer.innerHTML = offers.map((_, i) =>
-          `<div class="offer-dot ${i === 0 ? 'active' : ''}" onclick="goToSlide(${i})"></div>`
-        ).join('');
+        // Right side (2 stacked)
+        if (relevantOffers.length > 1) {
+          html += `<div class="col-lg-5"><div class="row g-4">`;
 
-        // Start Auto Slide
-        startAutoSlide();
+          relevantOffers.slice(1).forEach((o, i) => {
+            const bgClass = i === 0 ? 'bg-light-blue' : 'bg-light-beige';
+            const endDate = new Date(o.endDate).toLocaleDateString(undefined, {
+              month: 'short', day: 'numeric', year: 'numeric'
+            });
+
+            html += `
+              <div class="col-12">
+                <div class="offer-card offer-card-small ${bgClass}">
+                  <div class="offer-content">
+                    <span class="offer-end-date"><i class="bi bi-clock"></i> Ends: ${endDate}</span>
+                    <span class="offer-mini-badge">${discountLabel(o)}</span>
+                    <h2 class="offer-main-title">${o.name}</h2>
+                    <a href="${getUrl(o)}" class="btn-shop-now">SHOP NOW</a>
+                  </div>
+                  <img src="${o.bannerImage}" class="offer-image-abs" alt="${o.name}">
+                </div>
+              </div>
+            `;
+          });
+
+          html += `</div></div>`;
+        }
+
+        container.innerHTML = html;
 
       } catch (err) {
         console.error("Failed to load offers", err);
       }
-    }
-
-    function updateSlider() {
-      const track = document.getElementById("offer-track");
-      track.style.transform = `translateX(-${currentSlide * 100}%)`;
-
-      // Update Dots
-      document.querySelectorAll(".offer-dot").forEach((dot, index) => {
-        if (index === currentSlide) dot.classList.add("active");
-        else dot.classList.remove("active");
-      });
-    }
-
-    function moveSlider(direction) {
-      clearInterval(autoSlideInterval);
-      currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
-      updateSlider();
-      startAutoSlide();
-    }
-
-    function goToSlide(index) {
-      clearInterval(autoSlideInterval);
-      currentSlide = index;
-      updateSlider();
-      startAutoSlide();
-    }
-
-    function startAutoSlide() {
-      clearInterval(autoSlideInterval); // Clear existing to prevent duplicates
-      autoSlideInterval = setInterval(() => {
-        currentSlide = (currentSlide + 1) % totalSlides;
-        updateSlider();
-      }, 5000); // 5 Seconds
     }
 
     /* =========================
@@ -1222,20 +1618,6 @@
       }
     }
 
-    // Initialize
-    document.addEventListener("DOMContentLoaded", () => {
-      initAnnouncementBar();
-
-      // Navbar Scroll Effect
-      window.addEventListener("scroll", () => {
-        const nav = document.querySelector(".navbar-fixed");
-        if (window.scrollY > 10) {
-          nav.classList.add("scrolled");
-        } else {
-          nav.classList.remove("scrolled");
-        }
-      });
-    });
   </script>
 
 

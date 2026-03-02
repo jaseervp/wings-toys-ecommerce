@@ -87,7 +87,9 @@ exports.getCategories = async (req, res) => {
       matchStage.isActive = true;
     }
 
-    // Aggregation to get product count per category
+    const currentDate = new Date();
+
+    // Aggregation to get product count and active offers per category
     const categories = await Category.aggregate([
       { $match: matchStage },
       {
@@ -99,13 +101,42 @@ exports.getCategories = async (req, res) => {
         }
       },
       {
+        $lookup: {
+          from: "offers",
+          let: { catId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$isActive", true] },
+                    { $lte: ["$startDate", currentDate] },
+                    { $gte: ["$endDate", currentDate] },
+                    {
+                      $or: [
+                        { $eq: ["$targetType", "all"] },
+                        { $and: [{ $eq: ["$targetType", "category"] }, { $eq: ["$targetId", "$$catId"] }] }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            { $sort: { discountValue: -1 } }, // Pick best offer
+            { $limit: 1 }
+          ],
+          as: "activeOffer"
+        }
+      },
+      {
         $project: {
           name: 1,
           slug: 1,
           image: 1,
           isActive: 1,
           createdAt: 1,
-          productCount: { $size: "$products" }
+          productCount: { $size: "$products" },
+          activeOffer: { $arrayElemAt: ["$activeOffer", 0] }
         }
       },
       { $sort: { createdAt: -1 } }

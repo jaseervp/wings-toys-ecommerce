@@ -3,9 +3,6 @@ const router = express.Router();
 const { check } = require("express-validator");
 const contactController = require("../controllers/contactController");
 
-// @route   POST /api/contact
-// @desc    Submit contact form
-// @access  Public
 router.post(
     "/contact",
     [

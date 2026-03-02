@@ -109,7 +109,7 @@
     /* --- HERO BANNER --- */
     .cart-hero {
       background: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)),
-        url('https://images.unsplash.com/photo-1532330393533-443990a51d10?q=80&w=1500');
+        url('../Images/shop\ banner2.jpg');
       background-size: cover;
       background-position: center;
       height: 250px;
@@ -706,8 +706,15 @@
 
         if (cartItems.length === 0) {
           container.innerHTML = `
-        <div class="text-center text-muted py-4">
-          Your cart is empty
+        <div class="text-center py-5">
+          <div class="mb-4">
+            <i class="bi bi-cart-x text-muted" style="font-size: 4rem;"></i>
+          </div>
+          <h3 class="fw-bold mb-3">Your cart is empty</h3>
+          <p class="text-muted mb-4">Looks like you haven't added anything to your cart yet.</p>
+          <a href="shop.html" class="btn btn-dark rounded-pill px-5 py-3 shadow-sm">
+            Continue Shopping
+          </a>
         </div>`;
           updateTotals(0);
           return;

@@ -115,7 +115,7 @@
 
         .shop-banner {
             background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
-                url('https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=1200');
+                url('../Images/shop\ banner2.jpg');
             background-size: cover;
             background-position: center;
             height: 300px;
@@ -247,11 +247,74 @@
         }
 
         /* --- FOOTER SECTIONS --- */
-        .features {
-            background-color: var(--soft-bg);
-            padding: 60px 0;
-            margin-top: 50px;
-        }
+      .service-features {
+      background: #ffffff;
+      /* White background */
+    }
+
+    .feature-box {
+      padding: 35px 20px;
+      border-radius: 16px;
+      background: #f8fafc;
+      /* Premium soft card color */
+      transition: all 0.4s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-box h5 {
+      font-weight: 600;
+      margin-top: 18px;
+      font-size: 18px;
+    }
+
+    .feature-box p {
+      color: #6c757d;
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .icon-wrapper {
+      width: 75px;
+      height: 75px;
+      margin: 0 auto;
+      border-radius: 50%;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.4s ease;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .icon-wrapper i {
+      font-size: 30px;
+      color: #0d6efd;
+      transition: all 0.4s ease;
+    }
+
+    /* 🔥 Premium Hover Effect */
+    .feature-box:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 20px 40px rgba(13, 110, 253, 0.15);
+    }
+
+    .feature-box:hover .icon-wrapper {
+      background: #0d6efd;
+    }
+
+    .feature-box:hover .icon-wrapper i {
+      color: #ffffff;
+      transform: scale(1.2);
+    }
+
+    /* Smooth animation feel */
+    .feature-box,
+    .icon-wrapper,
+    .icon-wrapper i {
+      transition: all 0.4s cubic-bezier(.25, .8, .25, 1);
+    }
 
         footer {
             background: #000;
@@ -455,24 +518,57 @@
             </nav>
         </main>
 
-        <section class="features">
-            <div class="container">
-                <div class="row g-4 text-center text-md-start">
-                    <div class="col-md-4">
-                        <h4 class="fw-bold">Free Delivery</h4>
-                        <p class="text-secondary mb-0">For all orders over $50</p>
-                    </div>
-                    <div class="col-md-4">
-                        <h4 class="fw-bold">90 Days Return</h4>
-                        <p class="text-secondary mb-0">If goods have problems</p>
-                    </div>
-                    <div class="col-md-4">
-                        <h4 class="fw-bold">Secure Payment</h4>
-                        <p class="text-secondary mb-0">100% secure payment</p>
-                    </div>
-                </div>
+        <section class="service-features py-5">
+    <div class="container">
+      <div class="row text-center">
+
+        <!-- Free Delivery -->
+        <div class="col-lg-3 col-md-6 mb-4">
+          <div class="feature-box">
+            <div class="icon-wrapper">
+              <i class="bi bi-box"></i>
             </div>
-        </section>
+            <h5>Free delivery</h5>
+            <p>Orders from all item</p>
+          </div>
+        </div>
+
+        <!-- Easy Returns -->
+        <div class="col-lg-3 col-md-6 mb-4">
+          <div class="feature-box">
+            <div class="icon-wrapper">
+              <i class="bi bi-arrow-repeat"></i>
+            </div>
+            <h5>Easy returns</h5>
+            <p>On all unused items</p>
+          </div>
+        </div>
+
+        <!-- Online Support -->
+        <div class="col-lg-3 col-md-6 mb-4">
+          <div class="feature-box">
+            <div class="icon-wrapper">
+              <i class="bi bi-headset"></i>
+            </div>
+            <h5>Online support</h5>
+            <p>Always online 24/7</p>
+          </div>
+        </div>
+
+        <!-- Secure Payment -->
+        <div class="col-lg-3 col-md-6 mb-4">
+          <div class="feature-box">
+            <div class="icon-wrapper">
+              <i class="bi bi-credit-card"></i>
+            </div>
+            <h5>Secure payment</h5>
+            <p>100% safe payment</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
         <!-- CART TOAST -->
         <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:9999">
             <div id="cartToast" class="toast text-bg-dark border-0">

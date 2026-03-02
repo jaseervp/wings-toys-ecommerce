@@ -17,3 +17,4 @@ router.put("/cart/update", protect, updateCartQty);
 router.delete("/cart/:productId", protect, removeFromCart);
 
 module.exports = router;
+
