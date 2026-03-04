@@ -1082,29 +1082,48 @@
 
 
   <script>
+document.addEventListener("DOMContentLoaded", async () => {
+  let isLoggedIn = false;
 
-    document.addEventListener("DOMContentLoaded", async () => {
-      let isLoggedIn = false;
+  try {
+    const res = await fetch("/api/check-auth", {
+      credentials: "include"
+    });
 
-      try {
-        const res = await fetch("/api/check-auth", {
-          credentials: "include"
-        });
-        const data = await res.json();
-        isLoggedIn = data.loggedIn === true;
-      } catch {
-        isLoggedIn = false;
+    const data = await res.json();
+
+    // 🔴 blocked user
+    if (data.blocked) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    isLoggedIn = data.loggedIn === true;
+
+    // 🔴 not logged in
+    if (!isLoggedIn) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    // ✅ logged in → load orders
+    loadOrders();
+
+  } catch {
+    window.location.href = "login.html";
+  }
+
+  // 🔐 Protect Cart / Wishlist / Account links
+  document.querySelectorAll(".auth-protected").forEach(link => {
+    link.addEventListener("click", e => {
+      if (!isLoggedIn) {
+        e.preventDefault();
+        showLoginModal();
       }
+    });
+  });
 
-      // 🔐 Protect Cart / Wishlist / Account
-      document.querySelectorAll(".auth-protected").forEach(link => {
-        link.addEventListener("click", e => {
-          if (!isLoggedIn) {
-            e.preventDefault();
-            showLoginModal();
-          }
-        });
-      });
+
 
       // 👤 Account Icon Logic
       const desktop = document.getElementById("auth-nav");

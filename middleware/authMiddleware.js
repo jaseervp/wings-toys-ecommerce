@@ -1,56 +1,114 @@
-
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-exports.protect = async (req, res, next) => {
-  let token;
 
-  // 1️⃣ Check for session-based user first (as requested)
-  if (req.session && req.session.user) {
-    req.user = await User.findById(req.session.user.id || req.session.user._id).select("-password");
-    if (req.user) {
-      if (req.user.isBlocked) {
-        return res.status(403).json({ message: "Your account has been blocked. Please contact support." });
+// ================= PROTECT MIDDLEWARE =================
+const protect = async (req, res, next) => {
+  try {
+
+    // 1️⃣ SESSION CHECK
+    if (req.session && req.session.user) {
+
+      const user = await User.findById(req.session.user._id).select("-password");
+
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          message: "User not found",
+          redirect: "/login"
+        });
       }
+
+      // 🔴 BLOCK CHECK
+      if (user.isBlocked) {
+
+        req.session.destroy();
+
+        return res.status(403).json({
+          success: false,
+          message: "Your account is blocked",
+          redirect: "/login"
+        });
+      }
+
+      req.user = user;
       return next();
     }
-  }
 
-  // 2️⃣ Check for JWT in headers or cookies
-  if (req.headers.authorization?.startsWith("Bearer")) {
-    token = req.headers.authorization.split(" ")[1];
-  } else if (req.cookies?.token) {
-    token = req.cookies.token;
-  }
+    // 2️⃣ JWT CHECK
+    let token;
 
-  if (!token) {
-    return res.status(401).json({ message: "Not authorized - No Token Found" });
-  }
+    if (req.headers.authorization?.startsWith("Bearer")) {
+      token = req.headers.authorization.split(" ")[1];
+    } 
+    else if (req.cookies?.token) {
+      token = req.cookies.token;
+    }
 
-  try {
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: "Not authorized",
+        redirect: "/login"
+      });
+    }
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await User.findById(decoded.id).select("-password");
 
-    if (!req.user) {
-      return res.status(401).json({ message: "Not authorized - User not found" });
+    const user = await User.findById(decoded.id).select("-password");
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "User not found",
+        redirect: "/login"
+      });
     }
 
-    if (req.user.isBlocked) {
-      return res.status(403).json({ message: "Your account has been blocked. Please contact support." });
+    if (user.isBlocked) {
+      return res.status(403).json({
+        success: false,
+        message: "Account blocked",
+        redirect: "/login"
+      });
     }
+
+    req.user = user;
 
     next();
+
   } catch (error) {
-    res.status(401).json({ message: "Not authorized - Invalid token" });
+
+    console.log("AUTH ERROR:", error);
+
+    res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+      redirect: "/login"
+    });
+
   }
 };
 
-exports.adminOnly = (req, res, next) => {
-  if (req.user.role !== "admin") {
-    return res.status(403).json({ message: "Admin access only" });
+
+
+// ================= ADMIN CHECK =================
+const adminOnly = (req, res, next) => {
+
+  if (!req.user || req.user.role !== "admin") {
+    return res.status(403).json({
+      success: false,
+      message: "Admin access only"
+    });
   }
+
   next();
 };
 
 
 
+// ================= EXPORT =================
+module.exports = {
+  protect,
+  adminOnly
+};

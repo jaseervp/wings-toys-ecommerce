@@ -291,7 +291,34 @@
             window.location.href = "index.html";
         }
 
-        document.addEventListener("DOMContentLoaded", fetchWishlist);
+        document.addEventListener("DOMContentLoaded", async () => {
+  let isLoggedIn = false;
+
+  try {
+    const res = await fetch("/api/check-auth", {
+      credentials: "include"
+    });
+
+    const data = await res.json();
+
+    // 🔴 blocked user
+    if (data.blocked) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    isLoggedIn = data.loggedIn === true;
+
+    if (isLoggedIn) {
+      fetchWishlist(); // 👈 load wishlist
+    } else {
+      window.location.href = "login.html";
+    }
+
+  } catch {
+    window.location.href = "login.html";
+  }
+});
     </script>
 
 </body>

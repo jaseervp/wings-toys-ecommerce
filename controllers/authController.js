@@ -233,6 +233,7 @@ exports.resetPassword = async (req, res) => {
 };
 exports.checkAuth = async (req, res) => {
   try {
+
     let token;
 
     if (req.headers.authorization?.startsWith("Bearer ")) {
@@ -243,12 +244,29 @@ exports.checkAuth = async (req, res) => {
       token = req.cookies.token;
     }
 
-    if (!token) return res.status(401).json({ loggedIn: false });
+    if (!token) {
+      return res.status(401).json({ loggedIn: false });
+    }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     const user = await User.findById(decoded.id).select("-password");
 
-    if (!user) return res.status(401).json({ loggedIn: false });
+    if (!user) {
+      return res.status(401).json({ loggedIn: false });
+    }
+
+    // 🔴 BLOCK CHECK
+    if (user.isBlocked) {
+
+      res.clearCookie("token");
+
+      return res.json({
+        loggedIn: false,
+        blocked: true
+      });
+
+    }
 
     res.json({
       loggedIn: true,
@@ -258,8 +276,11 @@ exports.checkAuth = async (req, res) => {
         role: user.role
       }
     });
-  } catch {
-    res.status(401).json({ loggedIn: false });
+
+  } catch (error) {
+
+    return res.status(401).json({ loggedIn: false });
+
   }
 };
 

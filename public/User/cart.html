@@ -495,11 +495,11 @@
           <h2>Cart Totals</h2>
           <div class="subtotal-row">
             <strong>Subtotal</strong>
-            <span class="text-muted">Rs. 2,000.00</span>
+            <span class="text-muted">Rs. 000.00</span>
           </div>
           <div class="total-row">
             <strong>Total</strong>
-            <span class="total-price">Rs. 2,000.00</span>
+            <span class="total-price">Rs. 000.00</span>
           </div>
           <button class="btn-checkout" onclick="validateAndCheckout()">Check Out</button>
         </div>
@@ -592,28 +592,40 @@
 
   <script>
 
-    document.addEventListener("DOMContentLoaded", async () => {
-      let isLoggedIn = false;
+   document.addEventListener("DOMContentLoaded", async () => {
+  let isLoggedIn = false;
 
-      try {
-        const res = await fetch("/api/check-auth", {
-          credentials: "include"
-        });
-        const data = await res.json();
-        isLoggedIn = data.loggedIn === true;
-      } catch {
-        isLoggedIn = false;
+  try {
+    const res = await fetch("/api/check-auth", {
+      credentials: "include"
+    });
+
+    const data = await res.json();
+
+    if (data.blocked) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    isLoggedIn = data.loggedIn === true;
+
+    if (isLoggedIn) {
+      loadCart(); // 👈 cart load here
+    }
+
+  } catch {
+    isLoggedIn = false;
+  }
+
+  // 🔐 Protect Cart / Wishlist / Account
+  document.querySelectorAll(".auth-protected").forEach(link => {
+    link.addEventListener("click", e => {
+      if (!isLoggedIn) {
+        e.preventDefault();
+        showLoginModal();
       }
-
-      // 🔐 Protect Cart / Wishlist / Account
-      document.querySelectorAll(".auth-protected").forEach(link => {
-        link.addEventListener("click", e => {
-          if (!isLoggedIn) {
-            e.preventDefault();
-            showLoginModal();
-          }
-        });
-      });
+    });
+  });
 
       // 👤 Account Icon Logic
       const desktop = document.getElementById("auth-nav");
@@ -901,32 +913,7 @@
 
 
   </script>
-  <script>
-    /* ================= USER AUTH (CART PAGE) ================= */
-    (async function checkUserAuth() {
-      try {
-        const res = await fetch("/api/check-auth", {
-          credentials: "include"
-        });
-
-        if (!res.ok) throw new Error("Not logged in");
-
-        const data = await res.json();
-
-        if (!data.loggedIn || data.user.role !== "user") {
-          window.location.href = "login.html";
-          return;
-        }
-
-        // ✅ user verified
-        loadCart();
-
-      } catch (err) {
-        console.error("Auth failed:", err);
-        window.location.href = "login.html";
-      }
-    })();
-  </script>
+  
 
 
 </body>
