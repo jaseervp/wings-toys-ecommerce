@@ -1082,7 +1082,26 @@
 
 
   <script>
-document.addEventListener("DOMContentLoaded", async () => {
+    
+async function loadOrders() {
+  try {
+    const res = await fetch("/api/orders/my", {
+      credentials: "include"
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch orders");
+    }
+
+    const data = await res.json();
+
+    console.log(data); // ivide orders render cheyyanam
+
+  } catch (error) {
+    console.error("Order fetch error:", error);
+  }
+}
+  document.addEventListener("DOMContentLoaded", async () => {
   let isLoggedIn = false;
 
   try {
@@ -1100,18 +1119,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     isLoggedIn = data.loggedIn === true;
 
-    // 🔴 not logged in
-    if (!isLoggedIn) {
+    if (isLoggedIn) {
+      loadOrders(); // 👈 load wishlist
+    } else {
       window.location.href = "login.html";
-      return;
     }
-
-    // ✅ logged in → load orders
-    loadOrders();
 
   } catch {
     window.location.href = "login.html";
   }
+
 
   // 🔐 Protect Cart / Wishlist / Account links
   document.querySelectorAll(".auth-protected").forEach(link => {
@@ -1122,7 +1139,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
   });
-
 
 
       // 👤 Account Icon Logic

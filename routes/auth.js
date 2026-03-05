@@ -46,8 +46,10 @@ router.get(
 
 
 
+const { validateSignup } = require('../middleware/signupValidation');
+
 // AUTH
-router.post('/signup', authController.registerUser);
+router.post('/signup', validateSignup, authController.registerUser);
 router.post('/verify-signup-otp', authController.verifySignupOtp);
 router.post('/login', authController.loginUser);
 router.post('/logout', authController.logoutUser);

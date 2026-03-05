@@ -31,11 +31,11 @@ exports.registerUser = async (req, res) => {
 
         await userExists.save();
 
-        await sendEmail(
-          email,
-          "Verify your email - Wings Toys",
-          `Your verification OTP is ${otp}`
-        );
+        await sendEmail({
+          to: email,
+          subject: "Verify your email - Wings Toys",
+          html: `Your verification OTP is ${otp}`
+        });
 
         return res.status(200).json({
           message: "OTP sent to email (Previous Unverified Account Updated)",
@@ -56,11 +56,11 @@ exports.registerUser = async (req, res) => {
       emailOtpExpiry: Date.now() + 10 * 60 * 1000
     });
 
-    await sendEmail(
-      email,
-      "Verify your email - Wings Toys",
-      `Your verification OTP is ${otp}`
-    );
+    await sendEmail({
+      to: email,
+      subject: "Verify your email - Wings Toys",
+      html: `Your verification OTP is ${otp}`
+    });
 
     res.status(201).json({
       message: "OTP sent to email",
@@ -169,11 +169,11 @@ exports.forgotPassword = async (req, res) => {
     user.resetOtpExpiry = Date.now() + 10 * 60 * 1000; // 10 mins
     await user.save();
 
-    await sendEmail(
-      email,
-      "Wings Toys - Password Reset OTP",
-      `Your OTP is ${otp}. It is valid for 10 minutes.`
-    );
+    await sendEmail({
+      to: email,
+      subject: "Wings Toys - Password Reset OTP",
+      html: `Your OTP is ${otp}. It is valid for 10 minutes.`
+    });
 
     res.status(200).json({ message: "OTP sent to email" });
 
