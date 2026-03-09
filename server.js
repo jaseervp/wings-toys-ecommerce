@@ -25,9 +25,11 @@ const app = express();
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public/User')));
 app.use("/uploads", express.static("uploads"));
-
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public/User/index.html"));
+});
 
 // =============================
 // 🔐 SESSION SETUP (Required for Google Auth)
