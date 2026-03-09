@@ -29,14 +29,12 @@ app.use(express.json());
 // 🔹 STATIC FILES
 // =============================
 
-app.use('/user', express.static(path.join(__dirname, 'public/User')));
+app.use(express.static(path.join(__dirname, 'public/User')));
 app.use('/admin', express.static(path.join(__dirname, 'public/Admin')));
 app.use('/images', express.static(path.join(__dirname, 'public/Images')));
 app.use("/uploads", express.static("uploads"));
 
-app.get("/", (req, res) => {
-  res.redirect("/user/index.html");
-});
+
 // =============================
 // 🔐 SESSION SETUP (Required for Google Auth)
 // =============================
