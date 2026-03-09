@@ -25,12 +25,18 @@ const app = express();
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use("/uploads", express.static("uploads"));
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public/User/index.html"));
-});
+// =============================
+// 🔹 STATIC FILES
+// =============================
 
+app.use('/user', express.static(path.join(__dirname, 'public/User')));
+app.use('/admin', express.static(path.join(__dirname, 'public/Admin')));
+app.use('/images', express.static(path.join(__dirname, 'public/Images')));
+app.use("/uploads", express.static("uploads"));
+
+app.get("/", (req, res) => {
+  res.redirect("/user/index.html");
+});
 // =============================
 // 🔐 SESSION SETUP (Required for Google Auth)
 // =============================
