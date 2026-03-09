@@ -36,6 +36,53 @@
       --table-header: #212936;
     }
 
+    /* --- BOOTSTRAP OVERRIDES --- */
+    .card {
+      background-color: var(--card-bg) !important;
+      color: var(--text-dark) !important;
+      border-color: var(--card-border) !important;
+    }
+
+    .form-select,
+    .form-control {
+      background-color: var(--card-bg) !important;
+      color: var(--text-dark) !important;
+      border-color: var(--card-border) !important;
+    }
+
+    .btn-white {
+      background-color: var(--card-bg) !important;
+      color: var(--text-dark) !important;
+      border: 1px solid var(--card-border) !important;
+    }
+
+    [data-theme="dark"] .btn-light {
+      background-color: #2D3748 !important;
+      color: #E2E8F0 !important;
+      border: none;
+    }
+
+    [data-theme="dark"] .text-secondary,
+    [data-theme="dark"] .text-muted {
+      color: var(--text-gray) !important;
+    }
+
+    .table {
+      color: var(--text-dark) !important;
+    }
+
+    .table thead th {
+      background-color: var(--table-header) !important;
+      color: var(--text-gray) !important;
+      border-color: var(--card-border) !important;
+    }
+
+    .table tbody td {
+      background-color: var(--card-bg) !important;
+      color: var(--text-dark) !important;
+      border-bottom: 1px solid var(--card-border) !important;
+    }
+
     body {
       font-family: 'Poppins', sans-serif;
       background-color: var(--main-bg);
@@ -566,16 +613,34 @@
 
   <script>
     function toggleTheme() {
-      const html = document.getElementById('html-root');
+      const html = document.documentElement;
       const icon = document.getElementById('tIcon');
-      if (html.getAttribute('data-theme') === 'dark') {
-        html.removeAttribute('data-theme');
-        icon.classList.replace('bi-sun-fill', 'bi-moon-stars-fill');
-      } else {
-        html.setAttribute('data-theme', 'dark');
-        icon.classList.replace('bi-moon-stars-fill', 'bi-sun-fill');
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      const newTheme = isDark ? 'light' : 'dark';
+
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('adminTheme', newTheme);
+
+      if (icon) {
+        icon.className = newTheme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
       }
     }
+
+    // Immediate theme application to prevent flicker
+    (function () {
+      const savedTheme = localStorage.getItem('adminTheme') || 'light';
+      if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('adminTheme') || 'light';
+      const icon = document.getElementById('tIcon');
+      if (icon && savedTheme === 'dark') {
+        icon.className = 'bi bi-sun-fill';
+      }
+    });
 
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('active');

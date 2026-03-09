@@ -157,13 +157,13 @@ exports.updateAddress = async (req, res) => {
         }
 
         // Update fields safely
-        address.fullName = req.body.fullName;
-        address.phone = req.body.phone;
-        address.addressLine = req.body.addressLine;
-        address.city = req.body.city;
-        address.state = req.body.state;
-        address.pincode = req.body.pincode;
-        address.isDefault = req.body.isDefault;
+        if (req.body.fullName !== undefined) address.fullName = req.body.fullName;
+        if (req.body.phone !== undefined) address.phone = req.body.phone;
+        if (req.body.addressLine !== undefined) address.addressLine = req.body.addressLine;
+        if (req.body.city !== undefined) address.city = req.body.city;
+        if (req.body.state !== undefined) address.state = req.body.state;
+        if (req.body.pincode !== undefined) address.pincode = req.body.pincode;
+        if (req.body.isDefault !== undefined) address.isDefault = req.body.isDefault;
 
         // OPTIONAL: allow only one default
         if (req.body.isDefault) {
@@ -184,5 +184,35 @@ exports.updateAddress = async (req, res) => {
     }
 };
 
+exports.getTransactions = async (req, res) => {
+    try {
+        const { page = 1, limit = 10 } = req.query;
+        const pageNum = parseInt(page);
+        const limitNum = parseInt(limit);
 
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ message: "User not found" });
 
+        const transactions = user.wallet.transactions || [];
+        // Sort by date descending
+        const sortedTransactions = [...transactions].sort((a, b) => b.date - a.date);
+
+        const totalTransactions = sortedTransactions.length;
+        const totalPages = Math.ceil(totalTransactions / limitNum);
+        const skip = (pageNum - 1) * limitNum;
+
+        const paginatedTransactions = sortedTransactions.slice(skip, skip + limitNum);
+
+        res.json({
+            success: true,
+            transactions: paginatedTransactions,
+            totalTransactions,
+            totalPages,
+            currentPage: pageNum,
+            balance: user.wallet.balance
+        });
+    } catch (error) {
+        console.error("GET TRANSACTIONS ERROR:", error);
+        res.status(500).json({ message: "Failed to fetch transactions" });
+    }
+};

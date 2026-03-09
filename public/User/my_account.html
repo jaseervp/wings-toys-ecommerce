@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/navbar.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         :root {
@@ -25,12 +26,39 @@
             background-color: #fff;
         }
 
+        .navbar-fixed {
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            z-index: 1050;
+        }
+
+        .navbar-fixed.sticky-navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98) !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            animation: navbarSlideDown 0.5s ease;
+            padding-top: 12px !important;
+            padding-bottom: 12px !important;
+        }
+
+        @keyframes navbarSlideDown {
+            from {
+                transform: translateY(-100%);
+            }
+
+            to {
+                transform: translateY(0);
+            }
+        }
+
 
         /* --- NAVIGATION --- */
         .nav-link {
-            font-weight: 600;
+            font-weight: 500;
             color: #000 !important;
             margin: 0 15px;
+            font-size: 1rem;
         }
 
         .search-input-desktop {
@@ -72,18 +100,23 @@
 
         /* --- HEADER BANNER --- */
         .page-header {
-            background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
-                url('https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=1200');
+            background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
+                url('../Images/shop\ banner2.jpg');
             background-size: cover;
             background-position: center;
             padding: 70px 0;
             text-align: center;
+            margin-bottom: 2px;
         }
 
         .page-header h1 {
             font-size: 3rem;
             font-weight: 600;
             margin-bottom: 5px;
+        }
+
+        .page-header p {
+            font-weight: 600;
         }
 
         /* --- MY ACCOUNT LAYOUT --- */
@@ -162,14 +195,70 @@
             background: transparent;
             border: none;
             color: #000;
-            margin-right: 20px;
         }
 
-        /* --- FEATURES --- */
-        .features {
-            background: var(--soft-bg);
-            padding: 80px 0;
-            margin-top: 60px;
+        /* --- SERVICE FEATURES --- */
+        .service-features {
+            background: #ffffff;
+            padding: 60px 0;
+        }
+
+        .feature-card {
+            padding: 30px 20px;
+            border-radius: 20px;
+            background: #f8fafc;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: default;
+            height: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.02);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            background: #fff;
+            border-color: #e2e8f0;
+        }
+
+        .feature-icon-wrapper {
+            width: 65px;
+            height: 65px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover .feature-icon-wrapper {
+            background: #0d6efd;
+            transform: scale(1.1);
+        }
+
+        .feature-icon-wrapper i {
+            font-size: 28px;
+            color: #0d6efd;
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover .feature-icon-wrapper i {
+            color: #fff;
+        }
+
+        .feature-card h5 {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin: 0;
         }
 
         /* Custom Logout Styling */
@@ -234,6 +323,11 @@
             font-size: 1.4rem;
             color: #000;
             text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-icon:hover {
+            color: #7091E6;
         }
 
         .nav-search {
@@ -252,6 +346,52 @@
             width: 100%;
         }
 
+        /* Search Suggestions Styles */
+        .search-suggestions-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+            z-index: 1100;
+            overflow: hidden;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .suggestion-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #f8f8f8;
+            text-align: left;
+        }
+
+        .suggestion-item:hover {
+            background: #f5f5f5;
+        }
+
+        .suggestion-item i {
+            color: #999;
+        }
+
+        .suggestion-item .prod-name {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .suggestion-item .prod-cat {
+            font-size: 0.75rem;
+            color: #999;
+            margin-left: auto;
+        }
+
         @media (max-width: 991px) {
             .navbar-logo {
                 height: 28px;
@@ -260,6 +400,87 @@
             .nav-search {
                 width: 100%;
             }
+        }
+
+        /* --- MOBILE SLIDE DRAWER --- */
+        @media (max-width: 768px) {
+            .sidebar-menu {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 80%;
+                height: 100%;
+                background: #fff;
+                z-index: 1050;
+                padding: 20px;
+                transition: all 0.4s ease;
+                overflow-y: auto;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .sidebar-menu.active {
+                left: 0;
+            }
+
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1040;
+            }
+
+            .sidebar-overlay.active {
+                display: block;
+            }
+
+            .account-menu-toggle {
+                display: flex !important;
+                align-items: center;
+                gap: 10px;
+                background: var(--menu-hover);
+                padding: 12px 20px;
+                border-radius: 8px;
+                cursor: pointer;
+                margin-bottom: 20px;
+                font-weight: 600;
+                color: #B88E2F;
+            }
+
+            .sidebar-close {
+                display: block !important;
+                text-align: right;
+                font-size: 1.5rem;
+                cursor: pointer;
+                margin-bottom: 20px;
+            }
+
+            .col-lg-3 {
+                padding: 0;
+            }
+        }
+
+        .account-menu-toggle,
+        .sidebar-close {
+            display: none;
+        }
+
+        /* Validation Styles */
+        .is-invalid {
+            border-color: #dc3545 !important;
+            background-color: #fff8f8 !important;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.8rem;
+            margin-top: -15px;
+            margin-bottom: 15px;
+            display: block;
+            font-weight: 500;
         }
     </style>
 </head>
@@ -292,9 +513,10 @@
                 <!-- DESKTOP RIGHT -->
                 <div class="d-none d-lg-flex align-items-center gap-3">
 
-                    <div class="nav-search">
-                        <input type="text" placeholder="Search..." />
-                        <i class="bi bi-search"></i>
+                    <div class="nav-search d-none d-lg-flex position-relative">
+                        <input type="text" id="globalSearchInput" placeholder="Search toys..." autocomplete="off" />
+                        <i class="bi bi-search" style="cursor: pointer;" onclick="handleSearch()"></i>
+                        <div id="searchSuggestions" class="search-suggestions-dropdown d-none"></div>
                     </div>
 
                     <a href="wishlist.html" class="nav-icon auth-protected" data-target="wishlist.html">
@@ -330,9 +552,10 @@
             </div>
 
             <!-- MOBILE SEARCH -->
-            <div class="nav-search w-100 mt-3 d-lg-none">
-                <input type="text" placeholder="Search..." />
-                <i class="bi bi-search"></i>
+            <div class="nav-search w-100 mt-3 d-lg-none position-relative">
+                <input type="text" id="mobileSearchInput" placeholder="Search toys..." autocomplete="off" />
+                <i class="bi bi-search" style="cursor: pointer;" onclick="handleMobileSearch()"></i>
+                <div id="mobileSearchSuggestions" class="search-suggestions-dropdown d-none"></div>
             </div>
 
             <!-- MOBILE MENU -->
@@ -360,9 +583,16 @@
     </header>
 
     <main class="container py-5">
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
         <div class="row">
             <div class="col-lg-3">
-                <div class="sidebar-menu">
+                <div class="account-menu-toggle" id="sidebarToggle">
+                    <i class="bi bi-list"></i> Account Menu
+                </div>
+                <div class="sidebar-menu" id="sidebarMenu">
+                    <div class="sidebar-close" id="sidebarClose">
+                        <i class="bi bi-x-lg"></i>
+                    </div>
                     <p class="text-muted small">Account Details</p>
 
                     <div class="menu-section-title">Manage My Account</div>
@@ -405,11 +635,12 @@
                                 <div class="col-md-6 form-group">
                                     <label>First Name</label>
                                     <input type="text" id="firstName" class="form-control-custom">
-
+                                    <div id="firstNameError" class="error-message"></div>
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label>Last Name</label>
                                     <input type="text" id="lastName" class="form-control-custom">
+                                    <div id="lastNameError" class="error-message"></div>
                                 </div>
                             </div>
 
@@ -417,29 +648,49 @@
                                 <div class="col-md-12 form-group">
                                     <label>Email</label>
                                     <input type="email" id="email" class="form-control-custom">
-
+                                    <div id="emailError" class="error-message"></div>
                                 </div>
 
                             </div>
 
                             <h5 class="mt-4 mb-3 fw-bold">Change Password</h5>
 
-                            <div class="form-group">
+                            <div class="form-group mb-3">
+                                <label>Current Password</label>
                                 <input type="password" id="currentPassword" class="form-control-custom"
-                                    placeholder="Current Password">
-                                <input type="password" id="newPassword" class="form-control-custom"
-                                    placeholder="New Password">
-                                <input type="password" id="confirmPassword" class="form-control-custom"
-                                    placeholder="Confirm New Password">
+                                    placeholder="Current Password" autocomplete="new-password">
+                                <div id="currentPasswordError" class="error-message"></div>
                             </div>
-                            <button type="button" id="changePasswordBtn" class="btn-save mt-2">
-                                Change Password
-                            </button>
+                            <div class="form-group mb-3">
+                                <label>New Password</label>
+                                <input type="password" id="newPassword" class="form-control-custom"
+                                    placeholder="New Password" autocomplete="new-password">
+                                <div id="newPasswordError" class="error-message"></div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Confirm New Password</label>
+                                <input type="password" id="confirmPassword" class="form-control-custom"
+                                    placeholder="Confirm New Password" autocomplete="new-password">
+                                <div id="confirmPasswordError" class="error-message"></div>
+                            </div>
 
-                            <div class="d-flex justify-content-end align-items-center mt-4">
-                                <button type="button" class="btn-cancel">Cancel</button>
-                                <button type="submit" id="saveProfileBtn" class="btn-save"> Save Changes</button>
-
+                            <!-- Action Buttons -->
+                            <div class="mt-5 pt-4 border-top">
+                                <div
+                                    class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                                    <div class="w-100 w-md-auto">
+                                        <button type="button" id="changePasswordBtn" class="btn-save w-100">
+                                            Change Password
+                                        </button>
+                                    </div>
+                                    <div
+                                        class="d-flex align-items-center justify-content-center justify-content-md-end gap-3 w-100 w-md-auto">
+                                        <button type="button" class="btn-cancel">Cancel</button>
+                                        <button type="submit" id="saveProfileBtn" class="btn-save px-4 px-md-5">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -472,20 +723,45 @@
         </div>
     </main>
 
-    <section class="features">
+    <!-- Service Features Section -->
+    <section class="service-features">
         <div class="container">
-            <div class="row text-center text-md-start">
-                <div class="col-md-4 mb-4">
-                    <h3 class="fw-bold">Free Delivery</h3>
-                    <p class="text-muted mb-0">For all orders over $50, consectetur adipim scing elit.</p>
+            <div class="row g-4 text-center">
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-truck"></i>
+                        </div>
+                        <h5>Free Delivery</h5>
+                        <p>Orders from all items</p>
+                    </div>
                 </div>
-                <div class="col-md-4 mb-4">
-                    <h3 class="fw-bold">90 Days Return</h3>
-                    <p class="text-muted mb-0">If goods have problems, consectetur adipim scing elit.</p>
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-arrow-repeat"></i>
+                        </div>
+                        <h5>Easy Returns</h5>
+                        <p>On all unused items</p>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <h3 class="fw-bold">Secure Payment</h3>
-                    <p class="text-muted mb-0">100% secure payment, consectetur adipim scing elit.</p>
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-headset"></i>
+                        </div>
+                        <h5>Online Support</h5>
+                        <p>Always online 24/7</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <h5>Secure Payment</h5>
+                        <p>100% safe payment</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -623,17 +899,51 @@
             modal.show();
         }
 
-        /* Navbar Scroll Effect */
+        // Professional Sticky Navbar Logic
+        const nav = document.querySelector(".navbar-fixed");
+        const navHeight = nav ? nav.offsetHeight : 80;
+
         window.addEventListener("scroll", () => {
-            const nav = document.querySelector(".navbar-fixed");
-            if (nav) {
-                if (window.scrollY > 10) {
-                    nav.classList.add("scrolled");
-                } else {
-                    nav.classList.remove("scrolled");
+            if (window.scrollY > navHeight + 50) {
+                if (!nav.classList.contains("sticky-navbar")) {
+                    nav.classList.add("sticky-navbar");
+                    document.body.style.paddingTop = navHeight + "px";
                 }
+            } else if (window.scrollY <= 10) {
+                nav.classList.remove("sticky-navbar");
+                document.body.style.paddingTop = "0";
             }
         });
+
+        /* --- SIDEBAR TOGGLE LOGIC --- */
+        const sidebarMenu = document.getElementById('sidebarMenu');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarClose = document.getElementById('sidebarClose');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', () => {
+                sidebarMenu.classList.add('active');
+                sidebarOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        }
+
+        if (sidebarClose) {
+            sidebarClose.addEventListener('click', () => {
+                sidebarMenu.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        }
+
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', () => {
+                sidebarMenu.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -690,10 +1000,50 @@
         });
     </script>
 
-    <!-- ================= UPDATE PROFILE ================= -->
+    <!-- ================= PROFILE VALIDATION & UPDATE ================= -->
     <script>
+        const profileValidators = {
+            firstName: {
+                regex: /^[A-Za-z]+$/,
+                error: "Enter a valid first name (letters only)."
+            },
+            lastName: {
+                regex: /^[A-Za-z]+$/,
+                error: "Enter a valid last name (letters only)."
+            },
+            email: {
+                regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                error: "Enter a valid email address."
+            }
+        };
+
+        function validateProfileField(id) {
+            const input = document.getElementById(id);
+            const errorDiv = document.getElementById(id + 'Error');
+            const config = profileValidators[id];
+            let isValid = config.regex.test(input.value.trim());
+
+            if (!isValid) {
+                input.classList.add('is-invalid');
+                errorDiv.textContent = config.error;
+            } else {
+                input.classList.remove('is-invalid');
+                errorDiv.textContent = '';
+            }
+            return isValid;
+        }
+
+        ['firstName', 'lastName', 'email'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => validateProfileField(id));
+        });
+
         document.querySelector("form").addEventListener("submit", async (e) => {
             e.preventDefault();
+
+            const isAllValid = ['firstName', 'lastName', 'email']
+                .every(id => validateProfileField(id));
+
+            if (!isAllValid) return;
 
             const body = {
                 firstName: firstName.value.trim(),
@@ -710,45 +1060,129 @@
                 });
 
                 const data = await res.json();
-                if (!res.ok) return alert(data.message || "Update failed");
+                if (!res.ok) {
+                    return Swal.fire({
+                        icon: 'error',
+                        title: 'Update Failed',
+                        text: data.message || "Update failed"
+                    });
+                }
 
                 userName.innerText = data.user.fullName;
                 localStorage.setItem("userName", data.user.fullName);
-                alert("✅ Profile updated successfully!");
-            } catch {
-                alert("Something went wrong. Try again.");
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Profile Updated',
+                    text: '✅ Your profile has been updated successfully!',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+
+            } catch (err) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: "Something went wrong. Try again."
+                });
             }
         });
     </script>
 
-    <!-- ================= CHANGE PASSWORD ================= -->
+    <!-- ================= CHANGE PASSWORD (PROFESSIONAL VALIDATION) ================= -->
     <script>
+        const passwordValidators = {
+            currentPassword: {
+                validate: (val) => val.trim().length >= 6,
+                error: "Current password must be at least 6 characters."
+            },
+            newPassword: {
+                validate: (val) => val.trim().length >= 6,
+                error: "New password must be at least 6 characters."
+            },
+            confirmPassword: {
+                validate: (val) => {
+                    const newPass = document.getElementById('newPassword').value;
+                    return val.trim() === newPass.trim() && val.trim().length > 0;
+                },
+                error: "Passwords do not match."
+            }
+        };
+
+        function validatePasswordFeedback(id) {
+            const input = document.getElementById(id);
+            const errorDiv = document.getElementById(id + 'Error');
+            const config = passwordValidators[id];
+            let isValid = config.validate(input.value);
+
+            if (!isValid) {
+                input.classList.add('is-invalid');
+                errorDiv.textContent = config.error;
+            } else {
+                input.classList.remove('is-invalid');
+                errorDiv.textContent = '';
+            }
+            return isValid;
+        }
+
+        ['currentPassword', 'newPassword', 'confirmPassword'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => validatePasswordFeedback(id));
+        });
+
         document.getElementById("changePasswordBtn").addEventListener("click", async () => {
-            const currentPassword = currentPassword.value.trim();
-            const newPassword = newPassword.value.trim();
-            const confirmPassword = confirmPassword.value.trim();
+            const isAllValid = ['currentPassword', 'newPassword', 'confirmPassword']
+                .every(id => validatePasswordFeedback(id));
 
-            if (!currentPassword || !newPassword || !confirmPassword)
-                return alert("Please fill all password fields");
+            if (!isAllValid) return;
 
-            if (newPassword !== confirmPassword)
-                return alert("Passwords do not match");
+            const currentPassEl = document.getElementById("currentPassword");
+            const newPassEl = document.getElementById("newPassword");
+            const confirmPassEl = document.getElementById("confirmPassword");
 
             try {
                 const res = await fetch("/api/users/change-password", {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     credentials: "include",
-                    body: JSON.stringify({ currentPassword, newPassword, confirmPassword })
+                    body: JSON.stringify({
+                        currentPassword: currentPassEl.value,
+                        newPassword: newPassEl.value,
+                        confirmPassword: confirmPassEl.value
+                    })
                 });
 
                 const data = await res.json();
-                if (!res.ok) return alert(data.message);
+                if (!res.ok) {
+                    return Swal.fire({
+                        icon: 'error',
+                        title: 'Update Failed',
+                        text: data.message || "Failed to change password"
+                    });
+                }
 
-                alert("🔐 Password changed successfully");
-                currentPassword.value = newPassword.value = confirmPassword.value = "";
-            } catch {
-                alert("Something went wrong. Try again.");
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: '🔐 Password changed successfully',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+
+                currentPassEl.value = "";
+                newPassEl.value = "";
+                confirmPassEl.value = "";
+
+                // Clear any leftover invalid classes
+                ['currentPassword', 'newPassword', 'confirmPassword'].forEach(id => {
+                    document.getElementById(id).classList.remove('is-invalid');
+                });
+
+            } catch (err) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: "Something went wrong. Try again."
+                });
             }
         });
     </script>
@@ -858,6 +1292,77 @@
     </script>
 
 
+
+    <!-- SEARCH LOGIC (Standardized) -->
+    <script>
+        function handleSearch() {
+            const query = document.getElementById("globalSearchInput").value.trim();
+            if (query) {
+                window.location.href = `/search?query=${encodeURIComponent(query)}`;
+            }
+        }
+
+        function handleMobileSearch() {
+            const query = document.getElementById("mobileSearchInput").value.trim();
+            if (query) {
+                window.location.href = `/search?query=${encodeURIComponent(query)}`;
+            }
+        }
+
+        const searchInput = document.getElementById("globalSearchInput");
+        const mobileSearchInput = document.getElementById("mobileSearchInput");
+        const suggestionsBox = document.getElementById("searchSuggestions");
+        const mobileSuggestionsBox = document.getElementById("mobileSearchSuggestions");
+
+        async function fetchSuggestions(q, box) {
+            if (q.length < 2) {
+                box.classList.add("d-none");
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/search/api?query=${encodeURIComponent(q)}`);
+                const data = await res.json();
+                const products = (data.products || []).slice(0, 5);
+
+                if (products.length > 0) {
+                    box.innerHTML = products.map(p => `
+                        <div class="suggestion-item" onclick="window.location.href='single_product.html?id=${p._id}'">
+                            <i class="bi bi-search"></i>
+                            <span class="prod-name">${p.name}</span>
+                            <span class="prod-cat">${p.category?.name || p.category || ''}</span>
+                        </div>
+                    `).join('');
+                    box.classList.remove("d-none");
+                } else {
+                    box.classList.add("d-none");
+                }
+            } catch (err) {
+                console.error("Suggestion error:", err);
+            }
+        }
+
+        if (searchInput) {
+            searchInput.addEventListener("input", (e) => fetchSuggestions(e.target.value, suggestionsBox));
+            searchInput.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") handleSearch();
+            });
+        }
+
+        if (mobileSearchInput) {
+            mobileSearchInput.addEventListener("input", (e) => fetchSuggestions(e.target.value, mobileSuggestionsBox));
+            mobileSearchInput.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") handleMobileSearch();
+            });
+        }
+
+        document.addEventListener("click", (e) => {
+            if (!e.target.closest(".nav-search")) {
+                if (suggestionsBox) suggestionsBox.classList.add("d-none");
+                if (mobileSuggestionsBox) mobileSuggestionsBox.classList.add("d-none");
+            }
+        });
+    </script>
 
 </body>
 

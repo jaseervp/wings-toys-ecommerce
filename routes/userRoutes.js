@@ -8,10 +8,10 @@ const { changePassword } = require("../controllers/userController");
 const {
     addAddress,
     getAddresses,
-    deleteAddress
+    deleteAddress,
+    updateAddress,
+    getTransactions
 } = require("../controllers/userController");
-
-const { updateAddress } = require("../controllers/userController");
 
 
 // GET logged-in user profile
@@ -24,5 +24,7 @@ router.post("/addresses", protect, addAddress);
 router.delete("/addresses/:id", protect, deleteAddress);
 router.put("/addresses/:id", protect, updateAddress);
 
+
+router.get("/transactions", protect, getTransactions);
 
 module.exports = router;

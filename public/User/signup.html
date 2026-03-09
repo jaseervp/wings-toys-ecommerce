@@ -22,9 +22,10 @@
 
         /* --- NAVIGATION --- */
         .nav-link {
-            font-weight: 600;
+            font-weight: 500;
             color: #000 !important;
             margin: 0 15px;
+            font-size: 1rem;
         }
 
         .search-input-desktop {
@@ -374,17 +375,82 @@
             animation: fadeIn 0.5s ease-out;
         }
 
+
+        /* --- SERVICE FEATURES --- */
+        .service-features {
+            background: #ffffff;
+            padding: 60px 0;
+        }
+
+        .feature-card {
+            padding: 30px 20px;
+            border-radius: 20px;
+            background: #f8fafc;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: default;
+            height: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.02);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            background: #fff;
+            border-color: #e2e8f0;
+        }
+
+        .feature-icon-wrapper {
+            width: 65px;
+            height: 65px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover .feature-icon-wrapper {
+            background: #0d6efd;
+            transform: scale(1.1);
+        }
+
+        .feature-icon-wrapper i {
+            font-size: 28px;
+            color: #0d6efd;
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover .feature-icon-wrapper i {
+            color: #fff;
+        }
+
+        .feature-card h5 {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin: 0;
+        }
+
         /* --- FOOTER --- */
         footer {
             background: #000;
             color: #fff;
-            padding: 80px 0 30px;
+            padding: 80px 0 20px;
         }
 
         footer a {
-            color: #fff;
+            color: #9F9F9F;
             display: block;
-            margin-bottom: 25px;
+            margin-bottom: 12px;
             text-decoration: none;
             font-size: 0.9rem;
         }
@@ -588,6 +654,51 @@
 
 
 
+
+    <!-- Service Features Section -->
+    <section class="service-features">
+        <div class="container">
+            <div class="row g-4 text-center">
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-truck"></i>
+                        </div>
+                        <h5>Free Delivery</h5>
+                        <p>Orders from all items</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-arrow-repeat"></i>
+                        </div>
+                        <h5>Easy Returns</h5>
+                        <p>On all unused items</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-headset"></i>
+                        </div>
+                        <h5>Online Support</h5>
+                        <p>Always online 24/7</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <h5>Secure Payment</h5>
+                        <p>100% safe payment</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <footer>
         <div class="container">
             <div class="row">
@@ -596,10 +707,10 @@
                 </div>
                 <div class="col-lg-2 col-6 mb-4">
                     <span class="footer-title">Links</span>
-                    <a href="#">Home</a>
-                    <a href="#">Shop</a>
-                    <a href="#">About</a>
-                    <a href="#">Contact</a>
+                    <a href="index.html">Home</a>
+                    <a href="shop.html">Shop</a>
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
                 </div>
                 <div class="col-lg-2 col-6 mb-4">
                     <span class="footer-title">Help</span>
@@ -616,7 +727,7 @@
                 </div>
             </div>
             <div class="copyright">
-                2022 Meubel House. All rights reserved
+                2026 ToyStore. All rights reserved
             </div>
         </div>
     </footer>

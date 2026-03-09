@@ -23,9 +23,10 @@
 
         /* --- NAVIGATION (Original Style) --- */
         .nav-link {
-            font-weight: 600;
+            font-weight: 500;
             color: #000 !important;
             margin: 0 15px;
+            font-size: 1rem;
         }
 
         .search-input-desktop {
@@ -259,53 +260,132 @@
             color: #6C8EEF;
         }
 
-        /* --- FOOTER (Original Style) --- */
+
+        /* --- SERVICE FEATURES --- */
+        .service-features {
+            background: #ffffff;
+            padding: 60px 0;
+        }
+
+        .feature-card {
+            padding: 30px 20px;
+            border-radius: 20px;
+            background: #f8fafc;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: default;
+            height: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.02);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            background: #fff;
+            border-color: #e2e8f0;
+        }
+
+        .feature-icon-wrapper {
+            width: 65px;
+            height: 65px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover .feature-icon-wrapper {
+            background: #0d6efd;
+            transform: scale(1.1);
+        }
+
+        .feature-icon-wrapper i {
+            font-size: 28px;
+            color: #0d6efd;
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover .feature-icon-wrapper i {
+            color: #fff;
+        }
+
+        .feature-card h5 {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin: 0;
+        }
+
+        /* --- FOOTER --- */
         footer {
             background: #000;
             color: #fff;
-            padding: 80px 0 30px;
+            padding: 80px 0 20px;
+        }
+
+        footer a {
+            color: #9F9F9F;
+            display: block;
+            margin-bottom: 12px;
+            text-decoration: none;
+            font-size: 0.9rem;
         }
 
         .footer-title {
             color: #9F9F9F;
             font-weight: 400;
-            margin-bottom: 35px;
+            margin-bottom: 45px;
             display: block;
+            font-size: 1rem;
         }
 
-        .footer-link {
-            color: #fff;
-            text-decoration: none;
-            display: block;
-            margin-bottom: 15px;
-            font-size: 0.95rem;
-        }
-
-        .footer-text {
+        .footer-address {
             color: #9F9F9F;
-            font-size: 0.95rem;
-            line-height: 1.8;
+            line-height: 2;
+            font-size: 0.9rem;
+            margin-bottom: 40px;
+        }
+
+        .newsletter-form {
+            display: flex;
+            border-bottom: 1px solid #fff;
+            padding-bottom: 8px;
+            width: 100%;
+            max-width: 350px;
         }
 
         .newsletter-input {
             background: transparent;
             border: none;
-            border-bottom: 1px solid #fff;
             color: #fff;
-            outline: none;
-            padding-bottom: 5px;
-            width: 200px;
             font-size: 0.85rem;
+            outline: none;
+            flex-grow: 1;
         }
 
-        .subscribe-btn {
+        .newsletter-btn {
             background: transparent;
             border: none;
             color: #fff;
             font-weight: 600;
-            text-transform: uppercase;
             font-size: 0.85rem;
-            margin-left: 15px;
+            text-transform: uppercase;
+        }
+
+        .copyright {
+            border-top: 1px solid #222;
+            margin-top: 60px;
+            padding-top: 30px;
+            font-size: 0.9rem;
         }
 
         /* --- RESPONSIVE --- */
@@ -408,29 +488,80 @@
         </div>
     </main>
 
+
+    <!-- Service Features Section -->
+    <section class="service-features">
+        <div class="container">
+            <div class="row g-4 text-center">
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-truck"></i>
+                        </div>
+                        <h5>Free Delivery</h5>
+                        <p>Orders from all items</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-arrow-repeat"></i>
+                        </div>
+                        <h5>Easy Returns</h5>
+                        <p>On all unused items</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-headset"></i>
+                        </div>
+                        <h5>Online Support</h5>
+                        <p>Always online 24/7</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <h5>Secure Payment</h5>
+                        <p>100% safe payment</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <footer>
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 mb-4">
-                    <p class="footer-text">400 University Drive Suite 200 Coral Gables, <br>FL 33134 USA</p>
+                    <p class="footer-address">400 University Drive Suite 200 Coral Gables, <br>FL 33134 USA</p>
                 </div>
                 <div class="col-lg-2 col-6 mb-4">
                     <span class="footer-title">Links</span>
-                    <a href="index.html" class="footer-link">Home</a>
-                    <a href="shop.html" class="footer-link">Shop</a>
+                    <a href="index.html">Home</a>
+                    <a href="shop.html">Shop</a>
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
                 </div>
                 <div class="col-lg-2 col-6 mb-4">
                     <span class="footer-title">Help</span>
-                    <a href="#" class="footer-link">Returns</a>
-                    <a href="#" class="footer-link">Privacy Policies</a>
+                    <a href="#">Payment Options</a>
+                    <a href="#">Returns</a>
+                    <a href="#">Privacy Policies</a>
                 </div>
                 <div class="col-lg-4 mb-4">
                     <span class="footer-title">Newsletter</span>
-                    <div class="d-flex align-items-end border-bottom pb-1" style="max-width: 300px;">
+                    <div class="newsletter-form">
                         <input type="email" class="newsletter-input" placeholder="Enter Your Email Address">
-                        <button class="subscribe-btn">SUBSCRIBE</button>
+                        <button class="newsletter-btn">SUBSCRIBE</button>
                     </div>
                 </div>
+            </div>
+            <div class="copyright">
+                2026 ToyStore. All rights reserved
             </div>
         </div>
     </footer>

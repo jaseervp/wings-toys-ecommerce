@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/navbar.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         :root {
@@ -25,11 +26,38 @@
             background-color: #fff;
         }
 
+        .navbar-fixed {
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            z-index: 1050;
+        }
+
+        .navbar-fixed.sticky-navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98) !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            animation: navbarSlideDown 0.5s ease;
+            padding-top: 12px !important;
+            padding-bottom: 12px !important;
+        }
+
+        @keyframes navbarSlideDown {
+            from {
+                transform: translateY(-100%);
+            }
+
+            to {
+                transform: translateY(0);
+            }
+        }
+
         /* --- NAVIGATION --- */
         .nav-link {
-            font-weight: 600;
+            font-weight: 500;
             color: #000 !important;
             margin: 0 15px;
+            font-size: 1rem;
         }
 
         .search-input-desktop {
@@ -71,18 +99,23 @@
 
         /* --- HEADER BANNER --- */
         .page-header {
-            background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+            background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
                 url('../Images/shop\ banner2.jpg');
             background-size: cover;
             background-position: center;
             padding: 70px 0;
             text-align: center;
+            margin-bottom: 2px;
         }
 
         .page-header h1 {
             font-size: 3rem;
             font-weight: 600;
             margin-bottom: 5px;
+        }
+
+        .page-header p {
+            font-weight: 600;
         }
 
         /* --- SIDEBAR MENU --- */
@@ -177,6 +210,72 @@
             margin-top: 60px;
         }
 
+
+        /* --- SERVICE FEATURES --- */
+        .service-features {
+            background: #ffffff;
+            padding: 60px 0;
+        }
+
+        .feature-card {
+            padding: 30px 20px;
+            border-radius: 20px;
+            background: #f8fafc;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: default;
+            height: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.02);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            background: #fff;
+            border-color: #e2e8f0;
+        }
+
+        .feature-icon-wrapper {
+            width: 65px;
+            height: 65px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover .feature-icon-wrapper {
+            background: #0d6efd;
+            transform: scale(1.1);
+        }
+
+        .feature-icon-wrapper i {
+            font-size: 28px;
+            color: #0d6efd;
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover .feature-icon-wrapper i {
+            color: #fff;
+        }
+
+        .feature-card h5 {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin: 0;
+        }
+
+        /* --- FOOTER --- */
         footer {
             background: #000;
             color: #fff;
@@ -191,14 +290,52 @@
             font-size: 0.9rem;
         }
 
-        .footer-input {
+        .footer-title {
+            color: #9F9F9F;
+            font-weight: 400;
+            margin-bottom: 45px;
+            display: block;
+            font-size: 1rem;
+        }
+
+        .footer-address {
+            color: #9F9F9F;
+            line-height: 2;
+            font-size: 0.9rem;
+            margin-bottom: 40px;
+        }
+
+        .newsletter-form {
+            display: flex;
+            border-bottom: 1px solid #fff;
+            padding-bottom: 8px;
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .newsletter-input {
             background: transparent;
             border: none;
-            border-bottom: 1px solid #fff;
             color: #fff;
-            width: 100%;
-            padding-bottom: 5px;
+            font-size: 0.85rem;
             outline: none;
+            flex-grow: 1;
+        }
+
+        .newsletter-btn {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .copyright {
+            border-top: 1px solid #222;
+            margin-top: 60px;
+            padding-top: 30px;
+            font-size: 0.9rem;
         }
 
         /* --- ENHANCED ADDRESS CARDS --- */
@@ -376,6 +513,89 @@
                 width: 100%;
             }
         }
+
+        /* --- MOBILE SLIDE DRAWER --- */
+        @media (max-width: 768px) {
+            .sidebar-menu {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 80%;
+                height: 100%;
+                background: #fff;
+                z-index: 1050;
+                padding: 20px;
+                transition: all 0.4s ease;
+                overflow-y: auto;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .sidebar-menu.active {
+                left: 0;
+            }
+
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1040;
+            }
+
+            .sidebar-overlay.active {
+                display: block;
+            }
+
+            .account-menu-toggle {
+                display: flex !important;
+                align-items: center;
+                gap: 10px;
+                background: var(--menu-hover);
+                padding: 12px 20px;
+                border-radius: 8px;
+                cursor: pointer;
+                margin-bottom: 20px;
+                font-weight: 600;
+                color: #B88E2F;
+            }
+
+            .sidebar-close {
+                display: block !important;
+                text-align: right;
+                font-size: 1.5rem;
+                cursor: pointer;
+                margin-bottom: 20px;
+            }
+
+            .col-lg-3 {
+                padding: 0;
+            }
+        }
+
+        .account-menu-toggle,
+        .sidebar-close {
+            display: none;
+        }
+
+        /* Validation Styles */
+        .is-invalid {
+            border-color: #dc3545 !important;
+            background-image: none !important;
+        }
+
+        .is-invalid:focus {
+            box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25) !important;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.75rem;
+            margin-top: 4px;
+            font-weight: 500;
+        }
     </style>
 </head>
 
@@ -467,17 +687,22 @@
         </div>
     </nav>
 
-    <header class="page-header">
-        <div class="container">
-            <h1>Address Book</h1>
-            <p class="text-muted">Home <i class="bi bi-chevron-right mx-2"></i> Address Book</p>
-        </div>
+    <header class="page-header animate__animated animate__fadeIn">
+        <h1 class="display-4 fw-bold">Address Book</h1>
+        <p>Home <i class="bi bi-chevron-right mx-2"></i> <span class="fw-normal text-muted">Address Book</span></p>
     </header>
 
     <main class="container py-5">
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
         <div class="row">
             <div class="col-lg-3">
-                <div class="sidebar-menu">
+                <div class="account-menu-toggle" id="sidebarToggle">
+                    <i class="bi bi-list"></i> Account Menu
+                </div>
+                <div class="sidebar-menu" id="sidebarMenu">
+                    <div class="sidebar-close" id="sidebarClose">
+                        <i class="bi bi-x-lg"></i>
+                    </div>
                     <p class="text-muted small">Account Details</p>
 
                     <div class="menu-section-title">Manage My Account</div>
@@ -540,10 +765,12 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label small fw-bold">Full Name</label>
                                 <input id="fullName" class="form-control py-2" required style="border-color: #D9D9D9;">
+                                <div id="fullNameError" class="error-message"></div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label small fw-bold">Phone Number</label>
                                 <input id="phone" class="form-control py-2" required style="border-color: #D9D9D9;">
+                                <div id="phoneError" class="error-message"></div>
                             </div>
                         </div>
 
@@ -551,6 +778,7 @@
                             <label class="form-label small fw-bold">Street Address</label>
                             <input id="addressLine" class="form-control py-2 mb-2" required
                                 style="border-color: #D9D9D9;">
+                            <div id="addressLineError" class="error-message"></div>
                             <input id="addressLine2" class="form-control py-2"
                                 placeholder="Apartment, suite, unit, etc. (optional)" style="border-color: #D9D9D9;">
                         </div>
@@ -559,6 +787,7 @@
                             <div class="col-md-4 mb-3">
                                 <label class="form-label small fw-bold">City</label>
                                 <input id="city" class="form-control py-2" required style="border-color: #D9D9D9;">
+                                <div id="cityError" class="error-message"></div>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label small fw-bold">Region / State</label>
@@ -571,6 +800,7 @@
                             <div class="col-md-4 mb-3">
                                 <label class="form-label small fw-bold">Postcode / ZIP</label>
                                 <input id="pincode" class="form-control py-2" required style="border-color: #D9D9D9;">
+                                <div id="pincodeError" class="error-message"></div>
                             </div>
                         </div>
 
@@ -593,20 +823,46 @@
         </div>
     </div>
 
-    <section class="features">
+
+    <!-- Service Features Section -->
+    <section class="service-features">
         <div class="container">
-            <div class="row text-center text-md-start">
-                <div class="col-md-4 mb-4">
-                    <h3 class="fw-bold">Free Delivery</h3>
-                    <p class="text-muted mb-0">For all orders over $50, consectetur adipim scing elit.</p>
+            <div class="row g-4 text-center">
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-truck"></i>
+                        </div>
+                        <h5>Free Delivery</h5>
+                        <p>Orders from all items</p>
+                    </div>
                 </div>
-                <div class="col-md-4 mb-4">
-                    <h3 class="fw-bold">90 Days Return</h3>
-                    <p class="text-muted mb-0">If goods have problems, consectetur adipim scing elit.</p>
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-arrow-repeat"></i>
+                        </div>
+                        <h5>Easy Returns</h5>
+                        <p>On all unused items</p>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <h3 class="fw-bold">Secure Payment</h3>
-                    <p class="text-muted mb-0">100% secure payment, consectetur adipim scing elit.</p>
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-headset"></i>
+                        </div>
+                        <h5>Online Support</h5>
+                        <p>Always online 24/7</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <h5>Secure Payment</h5>
+                        <p>100% safe payment</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -614,14 +870,34 @@
 
     <footer>
         <div class="container">
-            <button class="btn btn-link text-white fw-bold p-0 border-bottom border-white rounded-0">SUBSCRIBE</button>
-        </div>
-        </div>
-        </div>
-        <hr class="mt-5 border-secondary">
-        <div class="pt-2 small text-center text-md-start" style="color: #9F9F9F;">
-            2022 Meubel House. All rights reserved
-        </div>
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <p class="footer-address">400 University Drive Suite 200 Coral Gables, <br>FL 33134 USA</p>
+                </div>
+                <div class="col-lg-2 col-6 mb-4">
+                    <span class="footer-title">Links</span>
+                    <a href="index.html">Home</a>
+                    <a href="shop.html">Shop</a>
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+                <div class="col-lg-2 col-6 mb-4">
+                    <span class="footer-title">Help</span>
+                    <a href="#">Payment Options</a>
+                    <a href="#">Returns</a>
+                    <a href="#">Privacy Policies</a>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <span class="footer-title">Newsletter</span>
+                    <div class="newsletter-form">
+                        <input type="email" class="newsletter-input" placeholder="Enter Your Email Address">
+                        <button class="newsletter-btn">SUBSCRIBE</button>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                2026 ToyStore. All rights reserved
+            </div>
         </div>
     </footer>
 
@@ -723,6 +999,38 @@
             );
             modal.show();
         }
+
+        /* --- SIDEBAR TOGGLE LOGIC --- */
+        document.addEventListener("DOMContentLoaded", () => {
+            const sidebarMenu = document.getElementById('sidebarMenu');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebarClose = document.getElementById('sidebarClose');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', () => {
+                    sidebarMenu.classList.add('active');
+                    sidebarOverlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            }
+
+            if (sidebarClose) {
+                sidebarClose.addEventListener('click', () => {
+                    sidebarMenu.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            }
+
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', () => {
+                    sidebarMenu.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            }
+        });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -745,130 +1053,240 @@
         });
     </script>
     <script>
+        const addressForm = document.getElementById('addressForm');
+        const fullName = document.getElementById('fullName');
+        const phone = document.getElementById('phone');
+        const addressLine = document.getElementById('addressLine');
+        const city = document.getElementById('city');
+        const pincode = document.getElementById('pincode');
+
+        const validators = {
+            fullName: {
+                regex: /^[A-Za-z]+( [A-Za-z]+)*$/,
+                error: "Enter a valid name (letters and single spaces only)."
+            },
+            phone: {
+                regex: /^[6-9]\d{9}$/,
+                error: "Enter a valid 10-digit Indian phone number."
+            },
+            addressLine: {
+                validate: (val) => val.trim().length >= 5,
+                error: "Address must be at least 5 characters long."
+            },
+            city: {
+                regex: /^[A-Za-z\s]+$/,
+                error: "City can only contain letters."
+            },
+            pincode: {
+                regex: /^\d{6}$/,
+                error: "Pincode must be exactly 6 digits."
+            }
+        };
+
+        function validateField(id) {
+            const input = document.getElementById(id);
+            const errorDiv = document.getElementById(id + 'Error');
+            const config = validators[id];
+            let isValid = true;
+
+            if (config.regex) {
+                isValid = config.regex.test(input.value);
+            } else if (config.validate) {
+                isValid = config.validate(input.value);
+            }
+
+            if (!isValid) {
+                input.classList.add('is-invalid');
+                errorDiv.textContent = config.error;
+            } else {
+                input.classList.remove('is-invalid');
+                errorDiv.textContent = '';
+            }
+            return isValid;
+        }
+
+        [fullName, phone, addressLine, city, pincode].forEach(input => {
+            input.addEventListener('input', () => validateField(input.id));
+        });
+
+        addressForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const isFormValid = ['fullName', 'phone', 'addressLine', 'city', 'pincode']
+                .every(id => validateField(id));
+
+            if (!isFormValid) return;
+
+            const modalElement = document.getElementById('addressModal');
+            const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+
+            const data = {
+                fullName: fullName.value,
+                phone: phone.value,
+                addressLine: addressLine.value + (document.getElementById('addressLine2').value ? ' ' + document.getElementById('addressLine2').value : ''),
+                city: city.value,
+                state: document.getElementById('state').value,
+                pincode: pincode.value,
+                isDefault: document.getElementById('defaultAddress').checked
+            };
+
+            const addressId = addressForm.dataset.addressId;
+            const url = addressId ? `/api/users/addresses/${addressId}` : '/api/users/addresses';
+            const method = addressId ? 'PUT' : 'POST';
+
+            try {
+                const res = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                });
+
+                if (res.ok) {
+                    modal.hide();
+                    loadAddresses();
+                    Toastify({ text: addressId ? "Address updated" : "Address added", backgroundColor: "green" }).showToast();
+                } else {
+                    const err = await res.json();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: err.message || "Save failed"
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        });
+
         async function loadAddresses() {
             try {
-                const res = await fetch("/api/users/addresses", {
-                    credentials: "include"
-                });
-
-                addresses = await res.json(); // GLOBAL
-                const container = document.getElementById("addressList");
-                container.innerHTML = "";
-
-                addresses.forEach(addr => {
-                    container.innerHTML += `
-            <div class="col-md-6">
-                <div class="address-card">
-                    <div class="d-flex justify-content-between mb-3">
-                        <h6 class="fw-bold mb-0">${addr.fullName}</h6>
-                        ${addr.isDefault ? `<span class="badge-default">Default</span>` : ""}
-                    </div>
-
-                    <p class="text-muted small mb-1">${addr.addressLine}</p>
-                    <p class="text-muted small mb-1">${addr.city}, ${addr.state} - ${addr.pincode}</p>
-                    <p class="text-muted small mb-2">${addr.phone}</p>
-
-                    <div class="address-actions">
-                        <a href="#" onclick="openEditAddress('${addr._id}')">Edit Address</a>
-                    </div>
-                </div>
-            </div>`;
-                });
-
-
-
+                const res = await fetch('/api/users/addresses');
+                addresses = await res.json();
+                renderAddresses(addresses);
             } catch (err) {
-                console.error("LOAD ADDRESS ERROR:", err);
+                console.error(err);
             }
         }
 
-        loadAddresses();
-    </script>
+        function renderAddresses(addrArray) {
+            const list = document.getElementById('addressList');
+            list.innerHTML = addrArray.map(addr => `
+                <div class="col-md-6">
+                    <div class="address-card">
+                        ${addr.isDefault ? '<span class="badge-default mb-2 d-inline-block">Default</span>' : ''}
+                        <h6 class="fw-bold">${addr.fullName}</h6>
+                        <p class="text-muted small mb-1">${addr.addressLine}</p>
+                        <p class="text-muted small mb-1">${addr.city}, ${addr.state} - ${addr.pincode}</p>
+                        <p class="text-muted small mb-0">Phone: ${addr.phone}</p>
+                        <div class="address-actions">
+                            <a href="#" onclick="editAddress('${addr._id}')">Edit</a>
+                            <a href="#" class="delete" onclick="deleteAddress('${addr._id}')">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
 
-
-    <script>
-        document.getElementById("addressForm").addEventListener("submit", async (e) => {
-            const stateVal = document.getElementById("state").value;
-            const pincodeVal = document.getElementById("pincode").value;
-            const isDefaultVal = document.getElementById("defaultAddress").checked;
-
-            const fullNameVal = document.getElementById("fullName").value;
-            const phoneVal = document.getElementById("phone").value;
-            const addressLineVal = document.getElementById("addressLine").value;
-            const addressLine2Val = document.getElementById("addressLine2").value;
-            const cityVal = document.getElementById("city").value;
-
-            const payload = {
-                fullName: fullNameVal,
-                phone: phoneVal,
-                addressLine: addressLineVal + (addressLine2Val ? " " + addressLine2Val : ""),
-                city: cityVal,
-                state: stateVal,
-                pincode: pincodeVal,
-                isDefault: isDefaultVal
-            };
-
-            try {
-                const res = await fetch(
-                    editingAddressId
-                        ? `/api/users/addresses/${editingAddressId}`
-                        : `/api/users/addresses`,
-                    {
-                        method: editingAddressId ? "PUT" : "POST",
-                        headers: { "Content-Type": "application/json" },
-                        credentials: "include",
-                        body: JSON.stringify(payload)
-                    }
-                );
-
-                const data = await res.json();
-
-                if (!res.ok) {
-                    throw new Error(data.message || "Request failed");
-                }
-
-                editingAddressId = null;
-                e.target.reset();
-
-                bootstrap.Modal.getInstance(
-                    document.getElementById("addressModal")
-                ).hide();
-
-                document.getElementById("addressModalLabel").innerText = "Add New Address";
-
-                loadAddresses();
-
-            } catch (err) {
-                console.error("SAVE ADDRESS ERROR:", err);
-                alert("Error: " + err.message);
-            }
-        });
-    </script>
-
-
-    <script>
-        function openEditAddress(id) {
-            editingAddressId = id;
-
+        function editAddress(id) {
             const addr = addresses.find(a => a._id === id);
             if (!addr) return;
 
+            addressForm.dataset.addressId = id;
+            document.getElementById('addressModalLabel').textContent = 'Edit Address';
             fullName.value = addr.fullName;
             phone.value = addr.phone;
             addressLine.value = addr.addressLine;
+            document.getElementById('addressLine2').value = '';
             city.value = addr.city;
-            state.value = addr.state;
+            document.getElementById('state').value = addr.state;
             pincode.value = addr.pincode;
-            defaultAddress.checked = addr.isDefault;
+            document.getElementById('defaultAddress').checked = addr.isDefault;
 
-            document.getElementById("addressModalLabel").innerText = "Edit Address";
+            // Clear previous validation errors
+            ['fullName', 'phone', 'addressLine', 'city', 'pincode'].forEach(fieldId => {
+                document.getElementById(fieldId).classList.remove('is-invalid');
+                document.getElementById(fieldId + 'Error').textContent = '';
+            });
 
-            new bootstrap.Modal(
-                document.getElementById("addressModal")
-            ).show();
+            new bootstrap.Modal(document.getElementById('addressModal')).show();
         }
-    </script>
 
+        async function deleteAddress(id) {
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to delete this address?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            });
+
+            if (!result.isConfirmed) return;
+
+            try {
+                const res = await fetch(`/api/users/addresses/${id}`, { method: 'DELETE' });
+                if (res.ok) {
+                    loadAddresses();
+                    Toastify({ text: "Address deleted", backgroundColor: "red" }).showToast();
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        document.getElementById('addressModal').addEventListener('hidden.bs.modal', () => {
+            addressForm.reset();
+            delete addressForm.dataset.addressId;
+            document.getElementById('addressModalLabel').textContent = 'Add New Address';
+            ['fullName', 'phone', 'addressLine', 'city', 'pincode'].forEach(fieldId => {
+                document.getElementById(fieldId).classList.remove('is-invalid');
+                document.getElementById(fieldId + 'Error').textContent = '';
+            });
+        });
+
+        loadAddresses();
+
+        // Responsive Sidebar Drawer
+        const sidebarMenu = document.getElementById('sidebarMenu');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarClose = document.getElementById('sidebarClose');
+
+        function toggleSidebar() {
+            sidebarMenu.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+        }
+
+        sidebarToggle.addEventListener('click', toggleSidebar);
+        sidebarClose.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        // Standard Session/Logout logic
+        document.getElementById("logoutBtn")?.addEventListener("click", async (e) => {
+            e.preventDefault();
+            const res = await fetch("/api/logout", { method: "POST" });
+            if (res.ok) window.location.href = "index.html";
+        });
+
+        // Professional Sticky Navbar Logic
+        document.addEventListener("DOMContentLoaded", () => {
+            const nav = document.querySelector(".navbar-fixed");
+            const navHeight = nav ? nav.offsetHeight : 80;
+
+            window.addEventListener("scroll", () => {
+                if (window.scrollY > navHeight + 50) {
+                    if (!nav.classList.contains("sticky-navbar")) {
+                        nav.classList.add("sticky-navbar");
+                        document.body.style.paddingTop = navHeight + "px";
+                    }
+                } else if (window.scrollY <= 10) {
+                    nav.classList.remove("sticky-navbar");
+                    document.body.style.paddingTop = "0";
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

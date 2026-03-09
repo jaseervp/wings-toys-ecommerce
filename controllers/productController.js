@@ -11,6 +11,7 @@ exports.addProduct = async (req, res) => {
       name,
       sku,
       description,
+      brand,
       price,
       discountPrice,
       stockQuantity,
@@ -37,6 +38,7 @@ exports.addProduct = async (req, res) => {
       name,
       sku,
       description,
+      brand,
       price,
       discountPrice,
       finalPrice,
@@ -406,6 +408,56 @@ exports.getProductStock = async (req, res) => {
     });
   } catch (error) {
     console.error("GET STOCK ERROR:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+// 🔍 Search Products
+exports.searchProducts = async (req, res) => {
+  try {
+    const { query } = req.query;
+    if (!query) {
+      return res.status(200).json({ products: [] });
+    }
+
+    const regex = new RegExp(query, "i");
+
+    const filter = {
+      isActive: true,
+      $or: [
+        { name: regex },
+        { brand: regex },
+        { description: regex }
+      ]
+    };
+
+    // To search by category name, we need to find categories first or use aggregation
+    // For simplicity and performance, we'll find matching categories first
+    const Category = require("../models/Category");
+    const matchingCategories = await Category.find({ name: regex }).select("_id");
+    if (matchingCategories.length > 0) {
+      filter.$or.push({ category: { $in: matchingCategories.map(c => c._id) } });
+    }
+
+    const products = await Product.find(filter)
+      .populate("category", "name")
+      .limit(20);
+
+    // --- Dynamic Price Calculation ---
+    const activeOffers = await Offer.find({
+      isActive: true,
+      startDate: { $lte: new Date() },
+      endDate: { $gte: new Date() }
+    });
+
+    const productsWithOffers = products.map(product => {
+      const productObj = product.toObject();
+      const priceDetails = calculateProductFinalPrice(productObj, activeOffers);
+      return { ...productObj, ...priceDetails };
+    });
+
+    res.status(200).json({ products: productsWithOffers });
+  } catch (error) {
+    console.error("SEARCH PRODUCTS ERROR:", error);
     res.status(500).json({ message: "Server error" });
   }
 };

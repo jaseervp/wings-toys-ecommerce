@@ -13,6 +13,51 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
+    /* Search Suggestions Styles */
+    .search-suggestions-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      margin-top: 10px;
+      z-index: 1100;
+      overflow: hidden;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .suggestion-item {
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid #f8f8f8;
+    }
+
+    .suggestion-item:hover {
+      background: #f5f5f5;
+    }
+
+    .suggestion-item i {
+      color: #999;
+    }
+
+    .suggestion-item .prod-name {
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .suggestion-item .prod-cat {
+      font-size: 0.75rem;
+      color: #999;
+      margin-left: auto;
+    }
+
     body {
       font-family: 'Poppins', sans-serif;
       color: #000;
@@ -29,6 +74,40 @@
       --accent-gold: #B88E2F;
     }
 
+
+    .navbar-fixed {
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      z-index: 1050;
+    }
+
+    .navbar-fixed.sticky-navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.98) !important;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      animation: navbarSlideDown 0.5s ease;
+      padding-top: 12px !important;
+      padding-bottom: 12px !important;
+    }
+
+    @keyframes navbarSlideDown {
+      from {
+        transform: translateY(-100%);
+      }
+
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    /* --- NAVIGATION --- */
+    .nav-link {
+      font-weight: 500;
+      color: #000 !important;
+      margin: 0 15px;
+      font-size: 1rem;
+    }
 
     /* NAV ICONS */
     .navbar-logo {
@@ -57,26 +136,16 @@
       width: 100%;
     }
 
-    @media (max-width: 991px) {
-      .navbar-logo {
-        height: 28px;
-      }
-
-      .nav-search {
-        width: 100%;
-      }
-    }
-
 
 
 
     /* --- HERO --- */
     .hero-section {
-      background-color: var(--toy-yellow);
-      padding: 80px 0 140px;
+      background: radial-gradient(circle at top right, #FBEBBA 0%, #FFF9E5 100%);
+      padding: 120px 0 180px;
+      /* Increased top padding to push content lower, more bottom space for wave */
       position: relative;
       overflow: hidden;
-      /* Prevent both horizontal and internal vertical scroll */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -157,8 +226,8 @@
       position: relative;
       display: block;
       width: calc(100% + 1.3px);
-      height: 100px;
-      /* Reduced height for a sleeker look */
+      height: 150px;
+      /* Increased height for prominent clouds */
     }
 
     .cloud-divider .shape-fill {
@@ -774,73 +843,68 @@
       animation-play-state: paused;
     }
 
+    /* --- SERVICE FEATURES --- */
     .service-features {
       background: #ffffff;
-      /* White background */
+      padding: 60px 0;
     }
 
-    .feature-box {
-      padding: 35px 20px;
-      border-radius: 16px;
+    .feature-card {
+      padding: 30px 20px;
+      border-radius: 20px;
       background: #f8fafc;
-      /* Premium soft card color */
-      transition: all 0.4s ease;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: default;
+      height: 100%;
+      border: 1px solid rgba(0, 0, 0, 0.02);
     }
 
-    .feature-box h5 {
-      font-weight: 600;
-      margin-top: 18px;
-      font-size: 18px;
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+      background: #fff;
+      border-color: #e2e8f0;
     }
 
-    .feature-box p {
-      color: #6c757d;
-      font-size: 14px;
-      margin: 0;
-    }
-
-    .icon-wrapper {
-      width: 75px;
-      height: 75px;
-      margin: 0 auto;
+    .feature-icon-wrapper {
+      width: 65px;
+      height: 65px;
+      background: #fff;
       border-radius: 50%;
-      background: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
       transition: all 0.4s ease;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     }
 
-    .icon-wrapper i {
-      font-size: 30px;
+    .feature-card:hover .feature-icon-wrapper {
+      background: #0d6efd;
+      transform: scale(1.1);
+    }
+
+    .feature-icon-wrapper i {
+      font-size: 28px;
       color: #0d6efd;
       transition: all 0.4s ease;
     }
 
-    /* 🔥 Premium Hover Effect */
-    .feature-box:hover {
-      transform: translateY(-12px);
-      box-shadow: 0 20px 40px rgba(13, 110, 253, 0.15);
+    .feature-card:hover .feature-icon-wrapper i {
+      color: #fff;
     }
 
-    .feature-box:hover .icon-wrapper {
-      background: #0d6efd;
+    .feature-card h5 {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      color: #1e293b;
     }
 
-    .feature-box:hover .icon-wrapper i {
-      color: #ffffff;
-      transform: scale(1.2);
-    }
-
-    /* Smooth animation feel */
-    .feature-box,
-    .icon-wrapper,
-    .icon-wrapper i {
-      transition: all 0.4s cubic-bezier(.25, .8, .25, 1);
+    .feature-card p {
+      font-size: 0.9rem;
+      color: #64748b;
+      margin: 0;
     }
   </style>
 </head>
@@ -873,9 +937,10 @@
         <!-- DESKTOP RIGHT -->
         <div class="d-none d-lg-flex align-items-center gap-3">
 
-          <div class="nav-search">
-            <input type="text" placeholder="Search..." />
-            <i class="bi bi-search"></i>
+          <div class="nav-search d-none d-lg-flex position-relative">
+            <input type="text" id="globalSearchInput" placeholder="Search toys..." autocomplete="off" />
+            <i class="bi bi-search" style="cursor: pointer;" onclick="handleSearch()"></i>
+            <div id="searchSuggestions" class="search-suggestions-dropdown d-none"></div>
           </div>
 
           <a href="wishlist.html" class="nav-icon auth-protected" data-target="wishlist.html">
@@ -911,9 +976,10 @@
       </div>
 
       <!-- MOBILE SEARCH -->
-      <div class="nav-search w-100 mt-3 d-lg-none">
-        <input type="text" placeholder="Search..." />
-        <i class="bi bi-search"></i>
+      <div class="nav-search w-100 mt-3 d-lg-none position-relative">
+        <input type="text" id="mobileSearchInput" placeholder="Search toys..." autocomplete="off" />
+        <i class="bi bi-search" style="cursor: pointer;" onclick="handleMobileSearch()"></i>
+        <div id="mobileSearchSuggestions" class="search-suggestions-dropdown d-none"></div>
       </div>
 
       <!-- MOBILE MENU -->
@@ -950,7 +1016,8 @@
     <div class="container">
       <div class="row align-items-center">
         <div class="col-lg-5 hero-content-col">
-          <span class="badge bg-white text-dark rounded-pill px-3 py-2 mb-3 shadow-sm" style="width: fit-content;">✨
+          <span class="badge rounded-pill px-3 py-2 mb-3 shadow-sm"
+            style="width: fit-content; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); color: #000; border: 1px solid rgba(255, 255, 255, 0.3);">✨
             Pure Childhood Joy</span>
           <h1 class="display-3 fw-bold mb-4">Toys Made <br> With Love</h1>
           <a href="shop.html" class="btn btn-dark rounded-pill px-5 py-3 shadow" style="width: fit-content;">Explore All
@@ -972,39 +1039,12 @@
         </div>
       </div>
     </div>
-    <!-- Cloud Divider (Bumpy Design) -->
+    <!-- Modern Wave Divider -->
     <div class="cloud-divider">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" preserveAspectRatio="none">
-        <!-- Layer 1 (Transparent) -->
-        <g opacity="0.2">
-          <circle fill="#FFFFFF" cx="0" cy="100" r="80"></circle>
-          <circle fill="#FFFFFF" cx="150" cy="100" r="100"></circle>
-          <circle fill="#FFFFFF" cx="350" cy="100" r="90"></circle>
-          <circle fill="#FFFFFF" cx="550" cy="100" r="110"></circle>
-          <circle fill="#FFFFFF" cx="750" cy="100" r="95"></circle>
-          <circle fill="#FFFFFF" cx="1000" cy="100" r="85"></circle>
-        </g>
-        <!-- Layer 2 (More opaque) -->
-        <g opacity="0.4">
-          <circle fill="#FFFFFF" cx="50" cy="110" r="70"></circle>
-          <circle fill="#FFFFFF" cx="250" cy="110" r="80"></circle>
-          <circle fill="#FFFFFF" cx="450" cy="110" r="90"></circle>
-          <circle fill="#FFFFFF" cx="650" cy="110" r="75"></circle>
-          <circle fill="#FFFFFF" cx="850" cy="110" r="85"></circle>
-        </g>
-        <!-- Layer 3 (Solid) -->
-        <g>
-          <rect fill="#FFFFFF" x="0" y="80" width="1000" height="20"></rect>
-          <circle fill="#FFFFFF" cx="0" cy="100" r="60"></circle>
-          <circle fill="#FFFFFF" cx="125" cy="100" r="75"></circle>
-          <circle fill="#FFFFFF" cx="250" cy="100" r="65"></circle>
-          <circle fill="#FFFFFF" cx="375" cy="100" r="80"></circle>
-          <circle fill="#FFFFFF" cx="500" cy="100" r="70"></circle>
-          <circle fill="#FFFFFF" cx="625" cy="100" r="75"></circle>
-          <circle fill="#FFFFFF" cx="750" cy="100" r="65"></circle>
-          <circle fill="#FFFFFF" cx="875" cy="100" r="80"></circle>
-          <circle fill="#FFFFFF" cx="1000" cy="100" r="60"></circle>
-        </g>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
+        <path fill="#ffffff" fill-opacity="1"
+          d="M0,160L48,176C96,192,192,224,288,224C384,224,480,192,576,165.3C672,139,768,117,864,128C960,139,1056,181,1152,197.3C1248,213,1344,203,1392,197.3L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
+        </path>
       </svg>
     </div>
   </section>
@@ -1034,7 +1074,7 @@
     </div>
   </section>
 
-  <section class="container offer-section-heading">
+  <section class="container offer-section-heading" id="offer-header">
     <div class="text-center">
       <h2 class="fw-bold">Exclusive Offers</h2>
       <p class="text-muted">Limited-time deals for your little ones</p>
@@ -1047,54 +1087,46 @@
     </div>
   </section>
 
-  <section class="service-features py-5">
+  <!-- Service Features Section -->
+  <section class="service-features">
     <div class="container">
-      <div class="row text-center">
-
-        <!-- Free Delivery -->
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="feature-box">
-            <div class="icon-wrapper">
-              <i class="bi bi-box"></i>
+      <div class="row g-4 text-center">
+        <div class="col-lg-3 col-md-6">
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <i class="bi bi-truck"></i>
             </div>
-            <h5>Free delivery</h5>
-            <p>Orders from all item</p>
+            <h5>Free Delivery</h5>
+            <p>Orders from all items</p>
           </div>
         </div>
-
-        <!-- Easy Returns -->
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="feature-box">
-            <div class="icon-wrapper">
+        <div class="col-lg-3 col-md-6">
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
               <i class="bi bi-arrow-repeat"></i>
             </div>
-            <h5>Easy returns</h5>
+            <h5>Easy Returns</h5>
             <p>On all unused items</p>
           </div>
         </div>
-
-        <!-- Online Support -->
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="feature-box">
-            <div class="icon-wrapper">
+        <div class="col-lg-3 col-md-6">
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
               <i class="bi bi-headset"></i>
             </div>
-            <h5>Online support</h5>
+            <h5>Online Support</h5>
             <p>Always online 24/7</p>
           </div>
         </div>
-
-        <!-- Secure Payment -->
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="feature-box">
-            <div class="icon-wrapper">
-              <i class="bi bi-credit-card"></i>
+        <div class="col-lg-3 col-md-6">
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <i class="bi bi-shield-check"></i>
             </div>
-            <h5>Secure payment</h5>
+            <h5>Secure Payment</h5>
             <p>100% safe payment</p>
           </div>
         </div>
-
       </div>
     </div>
   </section>
@@ -1441,12 +1473,19 @@
       initOfferGrid();
       initAnnouncementBar();
 
-      // Navbar Scroll Effect
+      // Professional Sticky Navbar Logic
+      const nav = document.querySelector(".navbar-fixed");
+      const navHeight = nav ? nav.offsetHeight : 80;
+
       window.addEventListener("scroll", () => {
-        const nav = document.querySelector(".navbar-fixed");
-        if (nav) {
-          if (window.scrollY > 10) nav.classList.add("scrolled");
-          else nav.classList.remove("scrolled");
+        if (window.scrollY > navHeight + 50) {
+          if (!nav.classList.contains("sticky-navbar")) {
+            nav.classList.add("sticky-navbar");
+            document.body.style.paddingTop = navHeight + "px";
+          }
+        } else if (window.scrollY <= 10) {
+          nav.classList.remove("sticky-navbar");
+          document.body.style.paddingTop = "0";
         }
       });
     });
@@ -1494,14 +1533,17 @@
         const res = await fetch("/api/offers");
         const offers = await res.json();
         const section = document.getElementById("offer-grid-section");
+        const header = document.getElementById("offer-header");
         const container = document.getElementById("offer-grid-container");
 
         if (!offers || offers.length === 0) {
-          section.style.display = "none";
+          if (section) section.style.display = "none";
+          if (header) header.style.display = "none";
           return;
         }
 
-        section.style.display = "block";
+        if (section) section.style.display = "block";
+        if (header) header.style.display = "block";
 
         // Take at most 3 offers for the bento grid
         const relevantOffers = offers.slice(0, 3);
@@ -1646,6 +1688,79 @@
         alert(data.message);
       }
     }
+  </script>
+
+  <script>
+    /* =========================
+       SEARCH LOGIC
+    ========================= */
+    function handleSearch() {
+      const query = document.getElementById("globalSearchInput").value.trim();
+      if (query) {
+        window.location.href = `/search?query=${encodeURIComponent(query)}`;
+      }
+    }
+
+    function handleMobileSearch() {
+      const query = document.getElementById("mobileSearchInput").value.trim();
+      if (query) {
+        window.location.href = `/search?query=${encodeURIComponent(query)}`;
+      }
+    }
+
+    const searchInput = document.getElementById("globalSearchInput");
+    const mobileSearchInput = document.getElementById("mobileSearchInput");
+    const suggestionsBox = document.getElementById("searchSuggestions");
+    const mobileSuggestionsBox = document.getElementById("mobileSearchSuggestions");
+
+    async function fetchSuggestions(q, box) {
+      if (q.length < 2) {
+        box.classList.add("d-none");
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/search/api?query=${encodeURIComponent(q)}`);
+        const data = await res.json();
+        const products = data.products.slice(0, 5);
+
+        if (products.length > 0) {
+          box.innerHTML = products.map(p => `
+            <div class="suggestion-item" onclick="window.location.href='single_product.html?id=${p._id}'">
+              <i class="bi bi-search"></i>
+              <span class="prod-name">${p.name}</span>
+              <span class="prod-cat">${p.category?.name || p.category || ''}</span>
+            </div>
+          `).join('');
+          box.classList.remove("d-none");
+        } else {
+          box.classList.add("d-none");
+        }
+      } catch (err) {
+        console.error("Suggestion error:", err);
+      }
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener("input", (e) => fetchSuggestions(e.target.value, suggestionsBox));
+      searchInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") handleSearch();
+      });
+    }
+
+    if (mobileSearchInput) {
+      mobileSearchInput.addEventListener("input", (e) => fetchSuggestions(e.target.value, mobileSuggestionsBox));
+      mobileSearchInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") handleMobileSearch();
+      });
+    }
+
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".nav-search")) {
+        if (suggestionsBox) suggestionsBox.classList.add("d-none");
+        if (mobileSuggestionsBox) mobileSuggestionsBox.classList.add("d-none");
+      }
+    });
   </script>
 
 </body>

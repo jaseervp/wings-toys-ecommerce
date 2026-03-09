@@ -11,7 +11,8 @@ const {
   getPublicProducts,
   toggleTrending,
   updateProduct,
-  getProductStock
+  getProductStock,
+  searchProducts
 } = require("../controllers/productController");
 
 // Middlewares
@@ -79,5 +80,13 @@ router.get("/products/:id/related", getRelatedProducts);
 
 // 📡 Get Product Stock (Polling)
 router.get("/products/:id/stock", getProductStock);
+
+// 🔍 Search Route (API)
+router.get("/search/api", searchProducts);
+
+// 🔍 Search Route (Serve Page)
+router.get("/search", (req, res) => {
+  res.sendFile(require("path").join(__dirname, "../public/User/search.html"));
+});
 
 module.exports = router;

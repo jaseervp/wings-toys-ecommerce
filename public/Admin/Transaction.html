@@ -36,6 +36,90 @@
             --table-header: #212936;
         }
 
+        /* --- BOOTSTRAP OVERRIDES --- */
+        .card {
+            background-color: var(--card-bg) !important;
+            color: var(--text-dark) !important;
+            border-color: var(--card-border) !important;
+        }
+
+        .form-select,
+        .form-control {
+            background-color: var(--card-bg) !important;
+            color: var(--text-dark) !important;
+            border-color: var(--card-border) !important;
+        }
+
+        .btn-white {
+            background-color: var(--card-bg) !important;
+            color: var(--text-dark) !important;
+            border: 1px solid var(--card-border) !important;
+        }
+
+        [data-theme="dark"] .btn-light {
+            background-color: #2D3748 !important;
+            color: #E2E8F0 !important;
+            border: none;
+        }
+
+        [data-theme="dark"] .text-secondary,
+        [data-theme="dark"] .text-muted {
+            color: var(--text-gray) !important;
+        }
+
+        .table {
+            color: var(--text-dark) !important;
+        }
+
+        .table thead th {
+            background-color: var(--table-header) !important;
+            color: var(--text-gray) !important;
+            border-color: var(--card-border) !important;
+        }
+
+        .table tbody td {
+            background-color: var(--card-bg) !important;
+            color: var(--text-dark) !important;
+            border-color: var(--card-border) !important;
+        }
+
+        [data-theme="dark"] .modal-content {
+            background-color: var(--card-bg) !important;
+            color: var(--text-dark) !important;
+            border-color: var(--card-border) !important;
+        }
+
+        [data-theme="dark"] .modal-header .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+
+        [data-theme="dark"] #receiptAmount {
+            color: #10B981 !important;
+        }
+
+        [data-theme="dark"] .content-card {
+            background-color: var(--card-bg) !important;
+            border: 1px solid var(--card-border) !important;
+        }
+
+        [data-theme="dark"] #receiptAmount.text-danger {
+            color: var(--danger-red) !important;
+        }
+
+        /* Status-specific bar visibility in dark mode */
+        [data-theme="dark"] .order-table tr td:first-child,
+        [data-theme="dark"] #transactionList tr td:first-child {
+            border-left-width: 5px !important;
+        }
+
+        [data-theme="dark"] .text-dark {
+            color: var(--text-dark) !important;
+        }
+
+        [data-theme="dark"] span[style*="color: #374151"] {
+            color: var(--text-dark) !important;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--main-bg);
@@ -466,13 +550,14 @@
             </div>
         </div>
 
-        <div class="content-card border-0 shadow-sm" style="border-radius: 12px; min-height: 80vh;">
+        <div class="content-card border-0 shadow-sm p-4"
+            style="border-radius: 12px; min-height: 80vh; background-color: var(--card-bg);">
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
                 <h5 class="fw-bold mb-0">Transaction List</h5>
 
                 <div class="d-flex gap-2 align-items-center flex-wrap">
                     <!-- Date Filter -->
-                    <select id="dateFilter" class="form-select bg-white border shadow-sm text-secondary"
+                    <select id="dateFilter" class="form-select border shadow-sm text-secondary"
                         style="width: auto; font-size: 0.9rem; border-radius: 8px;">
                         <option value="all_time">Date: All Time</option>
                         <option value="today">Today</option>
@@ -481,14 +566,14 @@
                     </select>
 
                     <!-- Type Filter -->
-                    <select id="typeFilter" class="form-select bg-white border shadow-sm text-secondary"
+                    <select id="typeFilter" class="form-select border shadow-sm text-secondary"
                         style="width: auto; font-size: 0.9rem; border-radius: 8px;">
                         <option value="all">Type: All</option>
                         <option value="credit">Credit</option>
                         <option value="debit">Debit</option>
                     </select>
 
-                    <button class="btn btn-white bg-white border shadow-sm text-dark fw-medium px-3"
+                    <button class="btn btn-white border shadow-sm text-dark fw-medium px-3"
                         style="border-radius: 8px; font-size: 0.9rem;">
                         <i class="bi bi-box-arrow-up-right me-2"></i> Export
                     </button>
@@ -503,7 +588,7 @@
 
             <div class="table-responsive">
                 <table class="table table-hover align-middle" style="border-collapse: separate; border-spacing: 0;">
-                    <thead class="bg-white">
+                    <thead>
                         <tr>
                             <th class="border-0 text-secondary fw-bold small py-3 ps-3">Trx ID</th>
                             <th class="border-0 text-secondary fw-bold small py-3">Date</th>
@@ -540,7 +625,7 @@
                 <div class="modal-body px-4 pt-2 pb-4">
                     <!-- Hero Section -->
                     <div class="text-center p-4 mb-4"
-                        style="background-color: #F8FAFC; border-radius: 12px; margin-top: 10px;">
+                        style="background-color: var(--table-header); border-radius: 12px; margin-top: 10px;">
                         <h2 class="fw-bold mb-1" id="receiptAmount" style="color: #10B981; font-size: 2rem;">+ ₹0.00
                         </h2>
                         <span class="text-uppercase fw-bold" id="receiptStatus"
@@ -594,16 +679,34 @@
 
     <script>
         function toggleTheme() {
-            const html = document.getElementById('html-root');
+            const html = document.documentElement;
             const icon = document.getElementById('tIcon');
-            if (html.getAttribute('data-theme') === 'dark') {
-                html.removeAttribute('data-theme');
-                icon.classList.replace('bi-sun-fill', 'bi-moon-stars-fill');
-            } else {
-                html.setAttribute('data-theme', 'dark');
-                icon.classList.replace('bi-moon-stars-fill', 'bi-sun-fill');
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            const newTheme = isDark ? 'light' : 'dark';
+
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('adminTheme', newTheme);
+
+            if (icon) {
+                icon.className = newTheme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
             }
         }
+
+        // Immediate theme application to prevent flicker
+        (function () {
+            const savedTheme = localStorage.getItem('adminTheme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('adminTheme') || 'light';
+            const icon = document.getElementById('tIcon');
+            if (icon && savedTheme === 'dark') {
+                icon.className = 'bi bi-sun-fill';
+            }
+        });
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -678,8 +781,10 @@
 
                 return `
                     <tr style="cursor: pointer;" onclick="showReceipt(${index})">
-                        <td class="ps-3 py-3" style="border-left: 5px solid ${barColor};">
-                            <a href="#" class="text-decoration-none fw-medium" style="color: ${idColor}; margin-left:8px;">${t.trxId}</a>
+                        <td class="ps-3 py-3" style="border-left: 5px solid ${barColor} !important;">
+                            <a href="#" class="text-decoration-none fw-medium" style="color: ${idColor}; margin-left:8px; filter: saturate(1.5);">
+                                ${t.trxId}
+                            </a>
                         </td>
                         <td class="py-3">
                             <div class="d-flex flex-column">

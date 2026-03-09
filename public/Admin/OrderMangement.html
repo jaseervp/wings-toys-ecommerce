@@ -47,6 +47,53 @@
       --table-header: #2D3748;
     }
 
+    /* --- BOOTSTRAP OVERRIDES --- */
+    .card {
+      background-color: var(--card-bg) !important;
+      color: var(--text-dark) !important;
+      border-color: var(--card-border) !important;
+    }
+
+    .form-select,
+    .form-control {
+      background-color: var(--card-bg) !important;
+      color: var(--text-dark) !important;
+      border-color: var(--card-border) !important;
+    }
+
+    .btn-white {
+      background-color: var(--card-bg) !important;
+      color: var(--text-dark) !important;
+      border: 1px solid var(--card-border) !important;
+    }
+
+    [data-theme="dark"] .btn-light {
+      background-color: #2D3748 !important;
+      color: #E2E8F0 !important;
+      border: none;
+    }
+
+    [data-theme="dark"] .text-secondary,
+    [data-theme="dark"] .text-muted {
+      color: var(--text-gray) !important;
+    }
+
+    .table {
+      color: var(--text-dark) !important;
+    }
+
+    .table thead th {
+      background-color: var(--table-header) !important;
+      color: var(--text-gray) !important;
+      border-color: var(--card-border) !important;
+    }
+
+    .table tbody td {
+      background-color: var(--card-bg) !important;
+      color: var(--text-dark) !important;
+      border-bottom: 1px solid var(--card-border) !important;
+    }
+
     body {
       font-family: 'Poppins', sans-serif;
       background-color: var(--main-bg);
@@ -389,6 +436,42 @@
         display: block;
       }
     }
+
+    .pagination-container {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 5px;
+      margin-top: 25px;
+    }
+
+    .pagination-item {
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: #EDF2F7;
+      color: var(--text-dark);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: 0.2s;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    .pagination-item:hover:not(.disabled) {
+      background: #E2E8F0;
+    }
+
+    .pagination-item.active {
+      background: var(--accent-blue);
+      color: #fff;
+    }
+
+    .pagination-item.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      color: var(--text-gray);
+    }
   </style>
 </head>
 
@@ -502,7 +585,7 @@
     </div>
 
     <div class="order-section">
-      <div class="p-3 d-flex justify-content-between align-items-center bg-white border-bottom">
+      <div class="p-3 d-flex justify-content-between align-items-center border-bottom">
         <h5 class="m-0 fw-bold">Orders List</h5>
         <button class="btn btn-primary btn-sm rounded-pill px-3"><i class="bi bi-download"></i> Export</button>
       </div>
@@ -525,6 +608,10 @@
           </tbody>
         </table>
       </div>
+      <div class="px-3 pb-3">
+        <div id="paginationContainer" class="pagination-container"></div>
+      </div>
+    </div>
     </div>
   </main>
 
@@ -549,14 +636,32 @@
     function toggleTheme() {
       const html = document.documentElement;
       const icon = document.getElementById('tIcon');
-      if (html.getAttribute('data-theme') === 'dark') {
-        html.removeAttribute('data-theme');
-        icon.classList.replace('bi-sun-fill', 'bi-moon-stars-fill');
-      } else {
-        html.setAttribute('data-theme', 'dark');
-        icon.classList.replace('bi-moon-stars-fill', 'bi-sun-fill');
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      const newTheme = isDark ? 'light' : 'dark';
+
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('adminTheme', newTheme);
+
+      if (icon) {
+        icon.className = newTheme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
       }
     }
+
+    // Immediate theme application to prevent flicker
+    (function () {
+      const savedTheme = localStorage.getItem('adminTheme') || 'light';
+      if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('adminTheme') || 'light';
+      const icon = document.getElementById('tIcon');
+      if (icon && savedTheme === 'dark') {
+        icon.className = 'bi bi-sun-fill';
+      }
+    });
   </script>
   <script>
     /* ================= LOAD ORDERS ================= */
@@ -564,12 +669,22 @@
     const tableBody = document.getElementById("orderTableBody");
     let ALL_ORDERS = [];
 
-    async function loadOrders() {
+    async function loadOrders(page = 1) {
       try {
         const token = localStorage.getItem("adminToken");
         const sortBy = document.getElementById("sortBy")?.value || "newest";
+        const orderId = document.getElementById("filterOrderId")?.value || "";
+        const status = document.getElementById("filterStatus")?.value || "";
+        const method = document.getElementById("filterMethod")?.value || "";
+        const date = document.getElementById("filterDate")?.value || "";
 
-        const res = await fetch(`/api/orders/admin?sortBy=${sortBy}`, {
+        let url = `/api/orders/admin?page=${page}&limit=10&sortBy=${sortBy}`;
+        if (orderId) url += `&orderId=${encodeURIComponent(orderId)}`;
+        if (status) url += `&status=${encodeURIComponent(status)}`;
+        if (method) url += `&method=${encodeURIComponent(method)}`;
+        if (date) url += `&date=${encodeURIComponent(date)}`;
+
+        const res = await fetch(url, {
           headers: {
             Authorization: "Bearer " + token
           }
@@ -580,8 +695,9 @@
         const data = await res.json();
         const orders = data.orders || [];
 
-        ALL_ORDERS = orders;
-        renderOrders(ALL_ORDERS);
+        ALL_ORDERS = orders; // For detail view lookups
+        renderOrders(orders, page);
+        renderPagination(data);
 
       } catch (err) {
         console.error("Order load failed:", err);
@@ -843,43 +959,7 @@
   </script>
   <script>
     function applyFilters() {
-      const orderId = document.getElementById("filterOrderId").value.toLowerCase();
-      const status = document.getElementById("filterStatus").value;
-      const method = document.getElementById("filterMethod").value;
-      const date = document.getElementById("filterDate").value;
-
-      let filtered = ALL_ORDERS.filter(o => {
-        let match = true;
-
-        // Order ID filter
-        if (orderId) {
-          const oid = `ord - ${o._id.slice(-6)} `.toLowerCase();
-          match = match && oid.includes(orderId);
-        }
-
-        // Status filter
-        if (status) {
-          match = match && o.orderStatus === status;
-        }
-
-        // Payment method filter
-        if (method) {
-          match =
-            match &&
-            o.paymentMethod?.toLowerCase() === method.toLowerCase();
-        }
-
-
-        // Date filter
-        if (date) {
-          const orderDate = new Date(o.createdAt).toISOString().split("T")[0];
-          match = match && orderDate === date;
-        }
-
-        return match;
-      });
-
-      renderOrders(filtered);
+      loadOrders(1);
     }
 
     function resetFilters() {
@@ -887,17 +967,54 @@
       document.getElementById("filterStatus").value = "";
       document.getElementById("filterMethod").value = "";
       document.getElementById("filterDate").value = "";
+      document.getElementById("sortBy").value = "newest";
 
-      renderOrders(ALL_ORDERS);
+      loadOrders(1);
     }
 
-    function renderOrders(orders) {
+    function renderPagination(data) {
+      const { currentPage, totalPages } = data;
+      const container = document.getElementById("paginationContainer");
+      if (!container) return;
+
+      let html = "";
+
+      // Previous Button
+      html += `<div class="pagination-item ${currentPage === 1 ? 'disabled' : ''}" 
+                   onclick="${currentPage === 1 ? '' : `loadOrders(${currentPage - 1})`}">
+                   Previous
+               </div>`;
+
+      // Page Numbers
+      for (let i = 1; i <= totalPages; i++) {
+        if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+          html += `<div class="pagination-item ${i === currentPage ? 'active' : ''}" 
+                       onclick="loadOrders(${i})">
+                       ${i}
+                   </div>`;
+        } else if (i === currentPage - 2 || i === currentPage + 2) {
+          html += `<div class="pagination-item disabled">...</div>`;
+        }
+      }
+
+      // Next Button
+      html += `<div class="pagination-item ${currentPage === totalPages ? 'disabled' : ''}" 
+                   onclick="${currentPage === totalPages ? '' : `loadOrders(${currentPage + 1})`}">
+                   Next
+               </div>`;
+
+      container.innerHTML = html;
+    }
+
+    function renderOrders(orders, page = 1) {
+      const limit = 10;
       tableBody.innerHTML = orders.map((o, i) => {
+        const globalIndex = (page - 1) * limit + i + 1;
         // Determine Status Display
         let statusHtml = '';
-        const hasRequestedItem = o.items.some(i => i.returnStatus === 'requested');
-        const hasApprovedItem = o.items.some(i => i.returnStatus === 'approved');
-        const hasRejectedItem = o.items.some(i => i.returnStatus === 'rejected');
+        const hasRequestedItem = o.items.some(it => it.returnStatus === 'requested');
+        const hasApprovedItem = o.items.some(it => it.returnStatus === 'approved');
+        const hasRejectedItem = o.items.some(it => it.returnStatus === 'rejected');
 
         if (hasRequestedItem) {
           statusHtml = `<span class="order-status badge-return-requested">Return Requested</span>`;
@@ -911,7 +1028,7 @@
 
         return `
       <tr>
-        <td>${i + 1}</td>
+        <td>${globalIndex}</td>
         <td class="fw-bold">#ORD-${o._id.slice(-6).toUpperCase()}</td>
         <td>
           <div class="fw-bold text-dark">${o.user?.fullName || "Guest"}</div>

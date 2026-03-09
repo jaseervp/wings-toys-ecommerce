@@ -258,10 +258,45 @@
             justify-content: center;
             color: var(--text-gray);
         }
+
+        /* --- BOOTSTRAP OVERRIDES --- */
+        .card {
+            background-color: var(--card-bg) !important;
+            color: var(--text-dark) !important;
+            border-color: var(--card-border) !important;
+        }
+
+        .form-select,
+        .form-control {
+            background-color: var(--card-bg) !important;
+            color: var(--text-dark) !important;
+            border-color: var(--card-border) !important;
+        }
+
+        .btn-white {
+            background-color: var(--card-bg) !important;
+            color: var(--text-dark) !important;
+            border: 1px solid var(--card-border) !important;
+        }
+
+        .badge.bg-opacity-10 {
+            background-color: rgba(var(--bs-primary-rgb), 0.2) !important;
+        }
+
+        [data-theme="dark"] .btn-light {
+            background-color: #2D3748 !important;
+            color: #E2E8F0 !important;
+            border: none;
+        }
+
+        [data-theme="dark"] .text-secondary,
+        [data-theme="dark"] .text-muted {
+            color: var(--text-gray) !important;
+        }
     </style>
 </head>
 
-<body data-theme="light">
+<body>
 
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-scroll">
@@ -334,6 +369,7 @@
                         style="width: auto; cursor: pointer;" title="End Date">
                 </div>
 
+                <div class="theme-toggle" onclick="toggleTheme()"><i class="bi bi-moon-stars-fill" id="tIcon"></i></div>
                 <button onclick="fetchReport()"
                     class="btn btn-white bg-white border-0 shadow-sm text-primary fw-medium px-3 ms-2">
                     <i class="bi bi-download me-2"></i>Report
@@ -433,11 +469,39 @@
 
     <script>
         function toggleTheme() {
-            const b = document.body; const i = document.getElementById('tIcon');
-            const isDark = b.getAttribute('data-theme') === 'dark';
-            b.setAttribute('data-theme', isDark ? 'light' : 'dark');
-            i.classList.toggle('bi-moon-stars-fill'); i.classList.toggle('bi-sun-fill');
+            const html = document.documentElement;
+            const icon = document.getElementById('tIcon');
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            const newTheme = isDark ? 'light' : 'dark';
+
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('adminTheme', newTheme);
+
+            if (icon) {
+                icon.className = newTheme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+            }
+
+            // Update chart theme if it exists
+            if (typeof updateChartTheme === 'function') {
+                updateChartTheme(newTheme);
+            }
         }
+
+        // Immediate theme application to prevent flicker
+        (function () {
+            const savedTheme = localStorage.getItem('adminTheme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('adminTheme') || 'light';
+            const icon = document.getElementById('tIcon');
+            if (icon && savedTheme === 'dark') {
+                icon.className = 'bi bi-sun-fill';
+            }
+        });
 
         // Initial Chart
         const ctx = document.getElementById('itemStatusChart').getContext('2d');
@@ -477,15 +541,42 @@
                 scales: {
                     y: {
                         beginAtZero: true,
-                        grid: { borderDash: [5, 5], drawBorder: false },
-                        ticks: { stepSize: 1 }
+                        grid: {
+                            borderDash: [5, 5],
+                            drawBorder: false,
+                            color: 'rgba(0,0,0,0.1)' // Default light
+                        },
+                        ticks: {
+                            stepSize: 1,
+                            color: '#A0AEC0' // Default light
+                        }
                     },
                     x: {
-                        grid: { display: false, drawBorder: false }
+                        grid: { display: false, drawBorder: false },
+                        ticks: {
+                            color: '#A0AEC0' // Default light
+                        }
                     }
                 }
             }
         });
+
+        // Initialize theme on start
+        updateChartTheme(localStorage.getItem('adminTheme') || 'light');
+
+        function updateChartTheme(theme) {
+            if (!itemChart) return;
+
+            const isDark = theme === 'dark';
+            const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0,0,0,0.1)';
+            const textColor = isDark ? '#718096' : '#A0AEC0';
+
+            itemChart.options.scales.y.grid.color = gridColor;
+            itemChart.options.scales.y.ticks.color = textColor;
+            itemChart.options.scales.x.ticks.color = textColor;
+
+            itemChart.update();
+        }
 
         // Filter Elements
         const filterSelect = document.getElementById("dateFilter");

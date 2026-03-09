@@ -412,7 +412,7 @@ exports.getAllTransactions = async (req, res) => {
 
     let query = {};
 
-    // Date Filter Logic (Same as Dashboard)
+    // 1. Date Filter Logic
     let queryStartDate = new Date(0);
     let queryEndDate = new Date();
     queryEndDate.setHours(23, 59, 59, 999);
@@ -431,94 +431,75 @@ exports.getAllTransactions = async (req, res) => {
       queryEndDate = new Date(endDate); queryEndDate.setHours(23, 59, 59, 999);
     }
 
-    query.createdAt = { $gte: queryStartDate, $lte: queryEndDate };
+    query.date = { $gte: queryStartDate, $lte: queryEndDate };
 
-    // Fetch Orders
-    const orders = await Order.find(query)
-      .populate("user", "fullName email")
-      .sort({ createdAt: -1 });
-
-    let transactions = [];
-
-    // Transform Orders to Transactions
-    orders.forEach(order => {
-      // 1. Credit (Sale)
-      if (type !== 'debit') {
-        let shouldInclude = false;
-
-        // COD: Only if Delivered (and paid)
-        if (order.paymentMethod === 'COD') {
-          if (order.orderStatus === 'Delivered' && order.paymentStatus === 'paid') {
-            shouldInclude = true;
-          }
-        }
-        // Online/Wallet: Only if Paid
-        else {
-          if (order.paymentStatus === 'paid') {
-            shouldInclude = true;
-          }
-        }
-
-        if (shouldInclude) {
-          transactions.push({
-            trxId: `TRX-${order._id.toString().slice(-8).toUpperCase()}`,
-            date: order.createdAt,
-            customer: order.user,
-            items: order.items.map(i => `${i.product?.name || 'Item'} (x${i.quantity})`).join(", "),
-            method: order.paymentMethod,
-            type: "Credit",
-            amount: order.totalAmount,
-            status: 'Success'
-          });
-        }
-      }
-
-      // 2. Debit (Refund) - only if approved return
-      if (order.returnStatus === 'approved' && type !== 'credit') {
-        transactions.push({
-          trxId: `REF-${order._id.toString().slice(-8).toUpperCase()}`,
-          date: order.updatedAt,
-          customer: order.user,
-          items: `Refund: Order #${order._id.toString().slice(-6).toUpperCase()}`,
-          method: "Wallet",
-          type: "Debit",
-          amount: order.totalAmount,
-          status: "Refunded"
-        });
-      }
-    });
-
-    // Search Filter (Client-side logic since we transformed data)
-    if (search) {
-      const searchLower = search.toLowerCase();
-      transactions = transactions.filter(t =>
-        t.trxId.toLowerCase().includes(searchLower) ||
-        (t.customer?.fullName || "").toLowerCase().includes(searchLower)
-      );
+    // 2. Type Filter
+    if (type && type !== 'all') {
+      query.type = type.toLowerCase();
     }
 
-    // Sort by Date Descending
-    transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+    // 3. Search Filter (TrxID or User Name/Email)
+    if (search) {
+      const users = await User.find({
+        $or: [
+          { fullName: { $regex: search, $options: 'i' } },
+          { email: { $regex: search, $options: 'i' } }
+        ]
+      }).select('_id');
 
-    // Calculate Totals (Dynamic based on current filter)
-    const totalCredit = transactions
-      .filter(t => t.type === 'Credit' && t.status === 'Success')
-      .reduce((sum, t) => sum + t.amount, 0);
+      const userIds = users.map(u => u._id);
 
-    const totalDebit = transactions
-      .filter(t => t.type === 'Debit') // Debits are usually refunds, so valid
-      .reduce((sum, t) => sum + t.amount, 0);
+      query.$or = [
+        { transactionId: { $regex: search, $options: 'i' } },
+        { user: { $in: userIds } }
+      ];
+    }
 
-    // Pagination
-    const totalTransactions = transactions.length;
-    const totalPages = Math.ceil(totalTransactions / limit);
-    const startIndex = (page - 1) * limit;
-    const paginatedTransactions = transactions.slice(startIndex, startIndex + parseInt(limit));
+    // 4. Fetch Results from Transaction Model
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const skip = (pageNum - 1) * limitNum;
+
+    const [transactions, totalTransactions] = await Promise.all([
+      Transaction.find(query)
+        .populate("user", "fullName email")
+        .populate("orderId")
+        .sort({ date: -1 })
+        .skip(skip)
+        .limit(limitNum),
+      Transaction.countDocuments(query)
+    ]);
+
+    // 5. Calculate Totals (on all matching results, not just paginated)
+    const totals = await Transaction.aggregate([
+      { $match: query },
+      {
+        $group: {
+          _id: "$type",
+          total: { $sum: "$amount" }
+        }
+      }
+    ]);
+
+    const totalCredit = (totals.find(t => t._id === 'credit')?.total || 0);
+    const totalDebit = (totals.find(t => t._id === 'debit')?.total || 0);
+
+    // Transform for Frontend compatibility
+    const formattedTransactions = transactions.map(t => ({
+      trxId: t.transactionId,
+      date: t.date,
+      customer: t.user,
+      items: t.description,
+      method: t.paymentMethod || "N/A",
+      type: t.type === 'credit' ? 'Credit' : 'Debit',
+      amount: t.amount,
+      status: t.status
+    }));
 
     res.json({
-      transactions: paginatedTransactions,
-      currentPage: parseInt(page),
-      totalPages: totalPages,
+      transactions: formattedTransactions,
+      currentPage: pageNum,
+      totalPages: Math.ceil(totalTransactions / limitNum),
       totalCredit,
       totalDebit
     });

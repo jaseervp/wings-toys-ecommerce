@@ -27,25 +27,58 @@
       color: #000;
     }
 
-    /* NAV */
-    .nav-link {
-      font-weight: 600;
-      color: #000 !important;
-      margin: 0 15px;
+    .navbar-fixed {
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      z-index: 1050;
     }
 
-    /* HEADER */
+    .navbar-fixed.sticky-navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.98) !important;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      animation: navbarSlideDown 0.5s ease;
+      padding-top: 12px !important;
+      padding-bottom: 12px !important;
+    }
+
+    @keyframes navbarSlideDown {
+      from {
+        transform: translateY(-100%);
+      }
+
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    /* NAV */
+    .nav-link {
+      font-weight: 500;
+      color: #000 !important;
+      margin: 0 15px;
+      font-size: 1rem;
+    }
+
+    /* --- HEADER BANNER --- */
     .page-header {
-      background: linear-gradient(rgba(255, 255, 255, .5), rgba(255, 255, 255, .5)),
-        url('https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=1200');
+      background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
+        url('../Images/shop\ banner2.jpg');
       background-size: cover;
       background-position: center;
       padding: 70px 0;
       text-align: center;
+      margin-bottom: 2px;
     }
 
     .page-header h1 {
       font-size: 3rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .page-header p {
       font-weight: 600;
     }
 
@@ -171,6 +204,11 @@
       font-size: 1.4rem;
       color: #000;
       text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .nav-icon:hover {
+      color: #7091E6;
     }
 
     .nav-search {
@@ -187,6 +225,52 @@
       outline: none;
       background: transparent;
       width: 100%;
+    }
+
+    /* Search Suggestions Styles */
+    .search-suggestions-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      margin-top: 10px;
+      z-index: 1100;
+      overflow: hidden;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .suggestion-item {
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid #f8f8f8;
+      text-align: left;
+    }
+
+    .suggestion-item:hover {
+      background: #f5f5f5;
+    }
+
+    .suggestion-item i {
+      color: #999;
+    }
+
+    .suggestion-item .prod-name {
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .suggestion-item .prod-cat {
+      font-size: 0.75rem;
+      color: #999;
+      margin-left: auto;
     }
 
     .order-card {
@@ -384,6 +468,136 @@
         width: 100%;
       }
     }
+
+    /* --- MOBILE SLIDE DRAWER --- */
+    @media (max-width: 768px) {
+      .sidebar-menu {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 80%;
+        height: 100%;
+        background: #fff;
+        z-index: 1050;
+        padding: 20px;
+        transition: all 0.4s ease;
+        overflow-y: auto;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .sidebar-menu.active {
+        left: 0;
+      }
+
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1040;
+      }
+
+      .sidebar-overlay.active {
+        display: block;
+      }
+
+      .account-menu-toggle {
+        display: flex !important;
+        align-items: center;
+        gap: 10px;
+        background: var(--menu-hover);
+        padding: 12px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-bottom: 20px;
+        font-weight: 600;
+        color: #B88E2F;
+      }
+
+      .sidebar-close {
+        display: block !important;
+        text-align: right;
+        font-size: 1.5rem;
+        cursor: pointer;
+        margin-bottom: 20px;
+      }
+
+      .col-lg-3 {
+        padding: 0;
+      }
+    }
+
+    .account-menu-toggle,
+    .sidebar-close {
+      display: none;
+    }
+
+    /* --- SERVICE FEATURES --- */
+    .service-features {
+      background: #ffffff;
+      padding: 60px 0;
+    }
+
+    .feature-card {
+      padding: 30px 20px;
+      border-radius: 20px;
+      background: #f8fafc;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: default;
+      height: 100%;
+      border: 1px solid rgba(0, 0, 0, 0.02);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+      background: #fff;
+      border-color: #e2e8f0;
+    }
+
+    .feature-icon-wrapper {
+      width: 65px;
+      height: 65px;
+      background: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      transition: all 0.4s ease;
+    }
+
+    .feature-card:hover .feature-icon-wrapper {
+      background: #0d6efd;
+      transform: scale(1.1);
+    }
+
+    .feature-icon-wrapper i {
+      font-size: 28px;
+      color: #0d6efd;
+      transition: all 0.4s ease;
+    }
+
+    .feature-card:hover .feature-icon-wrapper i {
+      color: #fff;
+    }
+
+    .feature-card h5 {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      color: #1e293b;
+    }
+
+    .feature-card p {
+      font-size: 0.9rem;
+      color: #64748b;
+      margin: 0;
+    }
   </style>
 </head>
 
@@ -415,9 +629,10 @@
         <!-- DESKTOP RIGHT -->
         <div class="d-none d-lg-flex align-items-center gap-3">
 
-          <div class="nav-search">
-            <input type="text" placeholder="Search..." />
-            <i class="bi bi-search"></i>
+          <div class="nav-search d-none d-lg-flex position-relative">
+            <input type="text" id="globalSearchInput" placeholder="Search toys..." autocomplete="off" />
+            <i class="bi bi-search" style="cursor: pointer;" onclick="handleSearch()"></i>
+            <div id="searchSuggestions" class="search-suggestions-dropdown d-none"></div>
           </div>
 
           <a href="wishlist.html" class="nav-icon auth-protected" data-target="wishlist.html">
@@ -453,9 +668,10 @@
       </div>
 
       <!-- MOBILE SEARCH -->
-      <div class="nav-search w-100 mt-3 d-lg-none">
-        <input type="text" placeholder="Search..." />
-        <i class="bi bi-search"></i>
+      <div class="nav-search w-100 mt-3 d-lg-none position-relative">
+        <input type="text" id="mobileSearchInput" placeholder="Search toys..." autocomplete="off" />
+        <i class="bi bi-search" style="cursor: pointer;" onclick="handleMobileSearch()"></i>
+        <div id="mobileSearchSuggestions" class="search-suggestions-dropdown d-none"></div>
       </div>
 
       <!-- MOBILE MENU -->
@@ -476,22 +692,27 @@
   </nav>
 
   <!-- HEADER -->
-  <header class="page-header">
+  <header class="page-header animate__animated animate__fadeIn">
     <div class="container">
-      <h1>My Orders</h1>
-      <p class="text-muted">
-        Home <i class="bi bi-chevron-right mx-2"></i> My Orders
-      </p>
+      <h1 class="display-4 fw-bold">My Orders</h1>
+      <p>Home <i class="bi bi-chevron-right mx-2"></i> <span class="fw-normal text-muted">My Orders</span></p>
     </div>
   </header>
 
   <!-- MAIN -->
   <main class="container py-5">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <div class="row">
 
       <!-- SIDEBAR -->
       <div class="col-lg-3">
-        <div class="sidebar-menu">
+        <div class="account-menu-toggle" id="sidebarToggle">
+          <i class="bi bi-list"></i> Account Menu
+        </div>
+        <div class="sidebar-menu" id="sidebarMenu">
+          <div class="sidebar-close" id="sidebarClose">
+            <i class="bi bi-x-lg"></i>
+          </div>
 
           <p class="text-muted small">Account Details</p>
 
@@ -559,6 +780,51 @@
     let ALL_ORDERS = [];
 
     document.addEventListener("DOMContentLoaded", () => {
+      // Professional Sticky Navbar Logic
+      const nav = document.querySelector(".navbar-fixed");
+      const navHeight = nav ? nav.offsetHeight : 80;
+
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > navHeight + 50) {
+          if (!nav.classList.contains("sticky-navbar")) {
+            nav.classList.add("sticky-navbar");
+            document.body.style.paddingTop = navHeight + "px";
+          }
+        } else if (window.scrollY <= 10) {
+          nav.classList.remove("sticky-navbar");
+          document.body.style.paddingTop = "0";
+        }
+      });
+      /* --- SIDEBAR TOGGLE LOGIC --- */
+      const sidebarMenu = document.getElementById('sidebarMenu');
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      const sidebarClose = document.getElementById('sidebarClose');
+      const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+      if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', () => {
+          sidebarMenu.classList.add('active');
+          sidebarOverlay.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        });
+      }
+
+      if (sidebarClose) {
+        sidebarClose.addEventListener('click', () => {
+          sidebarMenu.classList.remove('active');
+          sidebarOverlay.classList.remove('active');
+          document.body.style.overflow = '';
+        });
+      }
+
+      if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', () => {
+          sidebarMenu.classList.remove('active');
+          sidebarOverlay.classList.remove('active');
+          document.body.style.overflow = '';
+        });
+      }
+
       fetchOrders(1);
 
       // Review Form Submission Logic
@@ -996,21 +1262,45 @@
 
   </script>
 
-  <!-- FEATURES -->
-  <section class="features">
+  <!-- Service Features Section -->
+  <section class="service-features">
     <div class="container">
-      <div class="row text-center text-md-start">
-        <div class="col-md-4">
-          <h3 class="fw-bold">Free Delivery</h3>
-          <p class="text-muted">For all orders over $50.</p>
+      <div class="row g-4 text-center">
+        <div class="col-lg-3 col-md-6">
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <i class="bi bi-truck"></i>
+            </div>
+            <h5>Free Delivery</h5>
+            <p>Orders from all items</p>
+          </div>
         </div>
-        <div class="col-md-4">
-          <h3 class="fw-bold">90 Days Return</h3>
-          <p class="text-muted">If goods have problems.</p>
+        <div class="col-lg-3 col-md-6">
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <i class="bi bi-arrow-repeat"></i>
+            </div>
+            <h5>Easy Returns</h5>
+            <p>On all unused items</p>
+          </div>
         </div>
-        <div class="col-md-4">
-          <h3 class="fw-bold">Secure Payment</h3>
-          <p class="text-muted">100% secure payment.</p>
+        <div class="col-lg-3 col-md-6">
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <i class="bi bi-headset"></i>
+            </div>
+            <h5>Online Support</h5>
+            <p>Always online 24/7</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <i class="bi bi-shield-check"></i>
+            </div>
+            <h5>Secure Payment</h5>
+            <p>100% safe payment</p>
+          </div>
         </div>
       </div>
     </div>
@@ -1082,63 +1372,63 @@
 
 
   <script>
-    
-async function loadOrders() {
-  try {
-    const res = await fetch("/api/orders/my", {
-      credentials: "include"
-    });
 
-    if (!res.ok) {
-      throw new Error("Failed to fetch orders");
-    }
+    async function loadOrders() {
+      try {
+        const res = await fetch("/api/orders/my", {
+          credentials: "include"
+        });
 
-    const data = await res.json();
+        if (!res.ok) {
+          throw new Error("Failed to fetch orders");
+        }
 
-    console.log(data); // ivide orders render cheyyanam
+        const data = await res.json();
 
-  } catch (error) {
-    console.error("Order fetch error:", error);
-  }
-}
-  document.addEventListener("DOMContentLoaded", async () => {
-  let isLoggedIn = false;
+        console.log(data); // ivide orders render cheyyanam
 
-  try {
-    const res = await fetch("/api/check-auth", {
-      credentials: "include"
-    });
-
-    const data = await res.json();
-
-    // 🔴 blocked user
-    if (data.blocked) {
-      window.location.href = "login.html";
-      return;
-    }
-
-    isLoggedIn = data.loggedIn === true;
-
-    if (isLoggedIn) {
-      loadOrders(); // 👈 load wishlist
-    } else {
-      window.location.href = "login.html";
-    }
-
-  } catch {
-    window.location.href = "login.html";
-  }
-
-
-  // 🔐 Protect Cart / Wishlist / Account links
-  document.querySelectorAll(".auth-protected").forEach(link => {
-    link.addEventListener("click", e => {
-      if (!isLoggedIn) {
-        e.preventDefault();
-        showLoginModal();
+      } catch (error) {
+        console.error("Order fetch error:", error);
       }
-    });
-  });
+    }
+    document.addEventListener("DOMContentLoaded", async () => {
+      let isLoggedIn = false;
+
+      try {
+        const res = await fetch("/api/check-auth", {
+          credentials: "include"
+        });
+
+        const data = await res.json();
+
+        // 🔴 blocked user
+        if (data.blocked) {
+          window.location.href = "login.html";
+          return;
+        }
+
+        isLoggedIn = data.loggedIn === true;
+
+        if (isLoggedIn) {
+          loadOrders(); // 👈 load wishlist
+        } else {
+          window.location.href = "login.html";
+        }
+
+      } catch {
+        window.location.href = "login.html";
+      }
+
+
+      // 🔐 Protect Cart / Wishlist / Account links
+      document.querySelectorAll(".auth-protected").forEach(link => {
+        link.addEventListener("click", e => {
+          if (!isLoggedIn) {
+            e.preventDefault();
+            showLoginModal();
+          }
+        });
+      });
 
 
       // 👤 Account Icon Logic
@@ -1226,6 +1516,77 @@ async function loadOrders() {
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- SEARCH LOGIC (Standardized) -->
+  <script>
+    function handleSearch() {
+      const query = document.getElementById("globalSearchInput").value.trim();
+      if (query) {
+        window.location.href = `/search?query=${encodeURIComponent(query)}`;
+      }
+    }
+
+    function handleMobileSearch() {
+      const query = document.getElementById("mobileSearchInput").value.trim();
+      if (query) {
+        window.location.href = `/search?query=${encodeURIComponent(query)}`;
+      }
+    }
+
+    const searchInput = document.getElementById("globalSearchInput");
+    const mobileSearchInput = document.getElementById("mobileSearchInput");
+    const suggestionsBox = document.getElementById("searchSuggestions");
+    const mobileSuggestionsBox = document.getElementById("mobileSearchSuggestions");
+
+    async function fetchSuggestions(q, box) {
+      if (q.length < 2) {
+        box.classList.add("d-none");
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/search/api?query=${encodeURIComponent(q)}`);
+        const data = await res.json();
+        const products = (data.products || []).slice(0, 5);
+
+        if (products.length > 0) {
+          box.innerHTML = products.map(p => `
+                        <div class="suggestion-item" onclick="window.location.href='single_product.html?id=${p._id}'">
+                            <i class="bi bi-search"></i>
+                            <span class="prod-name">${p.name}</span>
+                            <span class="prod-cat">${p.category?.name || p.category || ''}</span>
+                        </div>
+                    `).join('');
+          box.classList.remove("d-none");
+        } else {
+          box.classList.add("d-none");
+        }
+      } catch (err) {
+        console.error("Suggestion error:", err);
+      }
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener("input", (e) => fetchSuggestions(e.target.value, suggestionsBox));
+      searchInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") handleSearch();
+      });
+    }
+
+    if (mobileSearchInput) {
+      mobileSearchInput.addEventListener("input", (e) => fetchSuggestions(e.target.value, mobileSuggestionsBox));
+      mobileSearchInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") handleMobileSearch();
+      });
+    }
+
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".nav-search")) {
+        if (suggestionsBox) suggestionsBox.classList.add("d-none");
+        if (mobileSuggestionsBox) mobileSuggestionsBox.classList.add("d-none");
+      }
+    });
+  </script>
+
 </body>
 
 </html>

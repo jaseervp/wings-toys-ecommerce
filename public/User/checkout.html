@@ -9,6 +9,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
   <link rel="stylesheet" href="css/navbar.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
     :root {
@@ -23,6 +24,40 @@
       color: #111;
     }
 
+    .navbar-fixed {
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      z-index: 1050;
+    }
+
+    .navbar-fixed.sticky-navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.98) !important;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      animation: navbarSlideDown 0.5s ease;
+      padding-top: 12px !important;
+      padding-bottom: 12px !important;
+    }
+
+    @keyframes navbarSlideDown {
+      from {
+        transform: translateY(-100%);
+      }
+
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    /* --- NAVIGATION --- */
+    .nav-link {
+      font-weight: 500;
+      color: #000 !important;
+      margin: 0 15px;
+      font-size: 1rem;
+    }
+
     /* --- Global Components --- */
     .card-custom {
       border: none;
@@ -31,14 +66,25 @@
       background: #fff;
     }
 
-    /* --- Hero Section --- */
-    .hero-section {
-      background: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)),
-        url('https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=2043&auto=format&fit=crop');
+    /* --- HEADER BANNER --- */
+    .page-header {
+      background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
+        url('../Images/shop\ banner2.jpg');
       background-size: cover;
       background-position: center;
-      padding: 100px 0;
+      padding: 70px 0;
       text-align: center;
+      margin-bottom: 2px;
+    }
+
+    .page-header h1 {
+      font-size: 3rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .page-header p {
+      font-weight: 600;
     }
 
     /* --- Checkout Layout --- */
@@ -232,6 +278,87 @@
         width: 100%;
       }
     }
+
+    /* --- SERVICE FEATURES --- */
+    .service-features {
+      background: #ffffff;
+      padding: 60px 0;
+    }
+
+    .feature-card {
+      padding: 30px 20px;
+      border-radius: 20px;
+      background: #f8fafc;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: default;
+      height: 100%;
+      border: 1px solid rgba(0, 0, 0, 0.02);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+      background: #fff;
+      border-color: #e2e8f0;
+    }
+
+    .feature-icon-wrapper {
+      width: 65px;
+      height: 65px;
+      background: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      transition: all 0.4s ease;
+    }
+
+    .feature-card:hover .feature-icon-wrapper {
+      background: #0d6efd;
+      transform: scale(1.1);
+    }
+
+    .feature-icon-wrapper i {
+      font-size: 28px;
+      color: #0d6efd;
+      transition: all 0.4s ease;
+    }
+
+    .feature-card:hover .feature-icon-wrapper i {
+      color: #fff;
+    }
+
+    .feature-card h5 {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      color: #1e293b;
+    }
+
+    .feature-card p {
+      font-size: 0.9rem;
+      color: #64748b;
+      margin: 0;
+    }
+
+    /* Validation Styles */
+    .is-invalid {
+      border-color: #dc3545 !important;
+      background-image: none !important;
+    }
+
+    .is-invalid:focus {
+      box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25) !important;
+    }
+
+    .error-message {
+      color: #dc3545;
+      font-size: 0.75rem;
+      margin-top: 4px;
+      font-weight: 500;
+    }
   </style>
 </head>
 
@@ -327,13 +454,10 @@
     </div>
   </nav>
 
-  <section class="hero-section">
-    <div class="container">
-      <i class="bi bi-cart-check-fill fs-1 text-primary"></i>
-      <h1 class="display-5 fw-bold mt-2">Checkout</h1>
-      <p class="text-muted fw-medium">Home <i class="bi bi-chevron-right mx-2 small"></i> Checkout</p>
-    </div>
-  </section>
+  <header class="page-header animate__animated animate__fadeIn">
+    <h1 class="display-4 fw-bold">Checkout</h1>
+    <p>Home <i class="bi bi-chevron-right mx-2"></i> <span class="fw-normal text-muted">Checkout</span></p>
+  </header>
 
   <section class="checkout-container">
     <div class="container">
@@ -420,6 +544,51 @@
 
 
 
+
+  <!-- Service Features Section -->
+  <section class="service-features">
+    <div class="container">
+      <div class="row g-4 text-center">
+        <div class="col-lg-3 col-md-6">
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <i class="bi bi-truck"></i>
+            </div>
+            <h5>Free Delivery</h5>
+            <p>Orders from all items</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <i class="bi bi-arrow-repeat"></i>
+            </div>
+            <h5>Easy Returns</h5>
+            <p>On all unused items</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <i class="bi bi-headset"></i>
+            </div>
+            <h5>Online Support</h5>
+            <p>Always online 24/7</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <i class="bi bi-shield-check"></i>
+            </div>
+            <h5>Secure Payment</h5>
+            <p>100% safe payment</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <footer>
     <div class="container">
       <div class="row">
@@ -492,16 +661,19 @@
               <div class="col-md-6 mb-3">
                 <label class="form-label small fw-bold">Full Name</label>
                 <input id="newFullName" class="form-control py-2" required style="border-color: #D9D9D9;">
+                <div id="newFullNameError" class="error-message"></div>
               </div>
               <div class="col-md-6 mb-3">
                 <label class="form-label small fw-bold">Phone Number</label>
                 <input id="newPhone" class="form-control py-2" required style="border-color: #D9D9D9;">
+                <div id="newPhoneError" class="error-message"></div>
               </div>
             </div>
 
             <div class="mb-3">
               <label class="form-label small fw-bold">Street Address</label>
               <input id="newAddressLine" class="form-control py-2 mb-2" required style="border-color: #D9D9D9;">
+              <div id="newAddressLineError" class="error-message"></div>
               <input id="newAddressLine2" class="form-control py-2"
                 placeholder="Apartment, suite, unit, etc. (optional)" style="border-color: #D9D9D9;">
             </div>
@@ -510,6 +682,7 @@
               <div class="col-md-4 mb-3">
                 <label class="form-label small fw-bold">City</label>
                 <input id="newCity" class="form-control py-2" required style="border-color: #D9D9D9;">
+                <div id="newCityError" class="error-message"></div>
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label small fw-bold">Region / State</label>
@@ -522,6 +695,7 @@
               <div class="col-md-4 mb-3">
                 <label class="form-label small fw-bold">Postcode / ZIP</label>
                 <input id="newPincode" class="form-control py-2" required style="border-color: #D9D9D9;">
+                <div id="newPincodeError" class="error-message"></div>
               </div>
             </div>
 
@@ -656,30 +830,171 @@
     });
   </script>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
+    const addAddressForm = document.getElementById('addAddressForm');
+    const newFullName = document.getElementById('newFullName');
+    const newPhone = document.getElementById('newPhone');
+    const newAddressLine = document.getElementById('newAddressLine');
+    const newCity = document.getElementById('newCity');
+    const newPincode = document.getElementById('newPincode');
 
-
-    function saveAddress() {
-      const name = document.getElementById('in-name').value;
-      const street = document.getElementById('in-street').value;
-      const city = document.getElementById('in-city').value;
-
-      if (name && street) {
-        document.getElementById('displayUser').innerText = name;
-        document.getElementById('displayAddr').innerText = street + ", " + city;
-        bootstrap.Modal.getInstance(document.getElementById('addressPopup')).hide();
-      } else {
-        alert("Please fill name and address");
+    const validators = {
+      newFullName: {
+        regex: /^[A-Za-z]+( [A-Za-z]+)*$/,
+        error: "Enter a valid name (letters and single spaces only)."
+      },
+      newPhone: {
+        regex: /^[6-9]\d{9}$/,
+        error: "Enter a valid 10-digit Indian phone number."
+      },
+      newAddressLine: {
+        validate: (val) => val.trim().length >= 5,
+        error: "Address must be at least 5 characters long."
+      },
+      newCity: {
+        regex: /^[A-Za-z\s]+$/,
+        error: "City can only contain letters."
+      },
+      newPincode: {
+        regex: /^\d{6}$/,
+        error: "Pincode must be exactly 6 digits."
       }
+    };
+
+    function validateField(id) {
+      const input = document.getElementById(id);
+      const errorDiv = document.getElementById(id + 'Error');
+      const config = validators[id];
+      let isValid = true;
+
+      if (config.regex) {
+        isValid = config.regex.test(input.value);
+      } else if (config.validate) {
+        isValid = config.validate(input.value);
+      }
+
+      if (!isValid) {
+        input.classList.add('is-invalid');
+        errorDiv.textContent = config.error;
+      } else {
+        input.classList.remove('is-invalid');
+        errorDiv.textContent = '';
+      }
+      return isValid;
     }
 
+    [newFullName, newPhone, newAddressLine, newCity, newPincode].forEach(input => {
+      input.addEventListener('input', () => validateField(input.id));
+    });
 
+    addAddressForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const isFormValid = ['newFullName', 'newPhone', 'newAddressLine', 'newCity', 'newPincode']
+        .every(id => validateField(id));
+
+      if (!isFormValid) return;
+
+      const data = {
+        fullName: newFullName.value,
+        phone: newPhone.value,
+        addressLine: newAddressLine.value + (document.getElementById('newAddressLine2').value ? ' ' + document.getElementById('newAddressLine2').value : ''),
+        city: newCity.value,
+        state: document.getElementById('newState').value,
+        pincode: newPincode.value,
+        isDefault: document.getElementById('newDefaultAddress').checked
+      };
+
+      try {
+        const res = await fetch('/api/users/addresses', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        if (res.ok) {
+          bootstrap.Modal.getInstance(document.getElementById('addAddressModal')).hide();
+          openAddressPopup(); // Refresh the list in the selection popup
+          Swal.fire({
+            icon: "success",
+            title: "Address added",
+            timer: 2000,
+            showConfirmButton: false
+          });
+          addAddressForm.reset();
+        } else {
+          const err = await res.json();
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: err.message || "Save failed"
+          });
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    });
+
+    document.getElementById('addAddressModal').addEventListener('hidden.bs.modal', () => {
+      addAddressForm.reset();
+      ['newFullName', 'newPhone', 'newAddressLine', 'newCity', 'newPincode'].forEach(id => {
+        const input = document.getElementById(id);
+        input.classList.remove('is-invalid');
+        document.getElementById(id + 'Error').textContent = '';
+      });
+    });
   </script>
   <script>
     let subtotal = 0;
     let appliedDiscount = 0;
     let appliedCoupon = null;
+
+    async function loadAddressPopup() {
+      try {
+        const res = await fetch("/api/users/addresses");
+        const addresses = await res.json();
+        const container = document.getElementById("addressList");
+        container.innerHTML = "";
+
+        if (addresses.length === 0) {
+          container.innerHTML = '<p class="text-center text-muted py-3">No saved addresses found.</p>';
+        }
+
+        addresses.forEach(addr => {
+          container.innerHTML += `
+            <div class="border rounded-4 p-3 cursor-pointer address-item ${addr.isDefault ? 'border-primary bg-light' : ''}" 
+                 onclick="selectAddress('${addr._id}')">
+              <div class="d-flex justify-content-between">
+                <span class="fw-bold">${addr.fullName}</span>
+                ${addr.isDefault ? '<span class="badge bg-primary">Default</span>' : ''}
+              </div>
+              <small class="text-muted d-block">${addr.addressLine}</small>
+              <small class="text-muted d-block">${addr.city}, ${addr.state} - ${addr.pincode}</small>
+              <small class="text-muted d-block">Phone: ${addr.phone}</small>
+            </div>
+          `;
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function selectAddress(id) {
+      try {
+        const res = await fetch(`/api/users/addresses/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ isDefault: true }) // Set chosen address as default for session/future use
+        });
+        if (res.ok) {
+          location.reload();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    window.openAddressPopup = loadAddressPopup;
 
     async function loadCheckoutCart() {
       try {
@@ -688,8 +1003,13 @@
         });
 
         if (!res.ok) {
-          alert("Please login to continue checkout");
-          window.location.href = "/login.html";
+          Swal.fire({
+            icon: "warning",
+            title: "Authentication Required",
+            text: "Please login to continue checkout",
+          }).then(() => {
+            window.location.href = "/login.html";
+          });
           return;
         }
 
@@ -1225,6 +1545,24 @@
           text: err.message
         });
       }
+    });
+
+    // Professional Sticky Navbar Logic
+    document.addEventListener("DOMContentLoaded", () => {
+      const nav = document.querySelector(".navbar-fixed");
+      const navHeight = nav ? nav.offsetHeight : 80;
+
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > navHeight + 50) {
+          if (!nav.classList.contains("sticky-navbar")) {
+            nav.classList.add("sticky-navbar");
+            document.body.style.paddingTop = navHeight + "px";
+          }
+        } else if (window.scrollY <= 10) {
+          nav.classList.remove("sticky-navbar");
+          document.body.style.paddingTop = "0";
+        }
+      });
     });
   </script>
 

@@ -25,27 +25,59 @@
             background-color: #fff;
         }
 
+        .navbar-fixed {
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            z-index: 1050;
+        }
+
+        .navbar-fixed.sticky-navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98) !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            animation: navbarSlideDown 0.5s ease;
+            padding-top: 12px !important;
+            padding-bottom: 12px !important;
+        }
+
+        @keyframes navbarSlideDown {
+            from {
+                transform: translateY(-100%);
+            }
+
+            to {
+                transform: translateY(0);
+            }
+        }
+
         /* --- NAVIGATION --- */
         .nav-link {
-            font-weight: 600;
+            font-weight: 500;
             color: #000 !important;
             margin: 0 15px;
+            font-size: 1rem;
         }
 
         /* --- HEADER BANNER --- */
         .page-header {
-            background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
-                url('https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=1200');
+            background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
+                url('../Images/shop\ banner2.jpg');
             background-size: cover;
             background-position: center;
             padding: 70px 0;
             text-align: center;
+            margin-bottom: 2px;
         }
 
         .page-header h1 {
             font-size: 3rem;
             font-weight: 600;
             margin-bottom: 5px;
+        }
+
+        .page-header p {
+            font-weight: 600;
         }
 
         /* --- SIDEBAR MENU --- */
@@ -135,13 +167,72 @@
             vertical-align: middle;
         }
 
-        /* --- FEATURES & FOOTER --- */
-        .features {
-            background: var(--soft-bg);
-            padding: 80px 0;
-            margin-top: 60px;
+
+        /* --- SERVICE FEATURES --- */
+        .service-features {
+            background: #ffffff;
+            padding: 60px 0;
         }
 
+        .feature-card {
+            padding: 30px 20px;
+            border-radius: 20px;
+            background: #f8fafc;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: default;
+            height: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.02);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            background: #fff;
+            border-color: #e2e8f0;
+        }
+
+        .feature-icon-wrapper {
+            width: 65px;
+            height: 65px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover .feature-icon-wrapper {
+            background: #0d6efd;
+            transform: scale(1.1);
+        }
+
+        .feature-icon-wrapper i {
+            font-size: 28px;
+            color: #0d6efd;
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover .feature-icon-wrapper i {
+            color: #fff;
+        }
+
+        .feature-card h5 {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin: 0;
+        }
+
+        /* --- FOOTER --- */
         footer {
             background: #000;
             color: #fff;
@@ -153,6 +244,54 @@
             display: block;
             margin-bottom: 12px;
             text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .footer-title {
+            color: #9F9F9F;
+            font-weight: 400;
+            margin-bottom: 45px;
+            display: block;
+            font-size: 1rem;
+        }
+
+        .footer-address {
+            color: #9F9F9F;
+            line-height: 2;
+            font-size: 0.9rem;
+            margin-bottom: 40px;
+        }
+
+        .newsletter-form {
+            display: flex;
+            border-bottom: 1px solid #fff;
+            padding-bottom: 8px;
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .newsletter-input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 0.85rem;
+            outline: none;
+            flex-grow: 1;
+        }
+
+        .newsletter-btn {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .copyright {
+            border-top: 1px solid #222;
+            margin-top: 60px;
+            padding-top: 30px;
             font-size: 0.9rem;
         }
 
@@ -191,6 +330,108 @@
             .nav-search {
                 width: 100%;
             }
+        }
+
+        /* --- MOBILE SLIDE DRAWER --- */
+        @media (max-width: 768px) {
+            .sidebar-menu {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 80%;
+                height: 100%;
+                background: #fff;
+                z-index: 1050;
+                padding: 20px;
+                transition: all 0.4s ease;
+                overflow-y: auto;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .sidebar-menu.active {
+                left: 0;
+            }
+
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1040;
+            }
+
+            .sidebar-overlay.active {
+                display: block;
+            }
+
+            .account-menu-toggle {
+                display: flex !important;
+                align-items: center;
+                gap: 10px;
+                background: var(--menu-hover);
+                padding: 12px 20px;
+                border-radius: 8px;
+                cursor: pointer;
+                margin-bottom: 20px;
+                font-weight: 600;
+                color: #B88E2F;
+            }
+
+            .sidebar-close {
+                display: block !important;
+                text-align: right;
+                font-size: 1.5rem;
+                cursor: pointer;
+                margin-bottom: 20px;
+            }
+
+            .col-lg-3 {
+                padding: 0;
+            }
+        }
+
+        .account-menu-toggle,
+        .sidebar-close {
+            display: none;
+        }
+
+        .pagination-container {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 5px;
+            margin-top: 25px;
+        }
+
+        .pagination-item {
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: #EDF2F7;
+            color: #1e293b;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: 0.2s;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+
+        .pagination-item:hover:not(.disabled) {
+            background: #E2E8F0;
+        }
+
+        .pagination-item.active {
+            background: #0d6efd;
+            color: #fff;
+        }
+
+        .pagination-item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            color: #64748b;
         }
     </style>
 </head>
@@ -283,17 +524,22 @@
         </div>
     </nav>
 
-    <header class="page-header">
-        <div class="container">
-            <h1>My Cancellations</h1>
-            <p class="text-muted">Home <i class="bi bi-chevron-right mx-2"></i> My Cancellations</p>
-        </div>
+    <header class="page-header animate__animated animate__fadeIn">
+        <h1 class="display-4 fw-bold">My Cancellations</h1>
+        <p>Home <i class="bi bi-chevron-right mx-2"></i> <span class="fw-normal text-muted">My Cancellations</span></p>
     </header>
 
     <main class="container py-5">
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
         <div class="row">
             <div class="col-lg-3">
-                <div class="sidebar-menu">
+                <div class="account-menu-toggle" id="sidebarToggle">
+                    <i class="bi bi-list"></i> Account Menu
+                </div>
+                <div class="sidebar-menu" id="sidebarMenu">
+                    <div class="sidebar-close" id="sidebarClose">
+                        <i class="bi bi-x-lg"></i>
+                    </div>
                     <p class="text-muted small">Account Details</p>
 
                     <div class="menu-section-title">Manage My Account</div>
@@ -345,24 +591,51 @@
                         </tbody>
                     </table>
                 </div>
+                <div id="paginationContainer" class="pagination-container"></div>
             </div>
         </div>
     </main>
 
-    <section class="features">
-        <div class="container text-center text-md-start">
-            <div class="row">
-                <div class="col-md-4 mb-4 mb-md-0">
-                    <h3 class="fw-bold">Free Delivery</h3>
-                    <p class="text-muted mb-0">For all orders over $50.</p>
+
+    <!-- Service Features Section -->
+    <section class="service-features">
+        <div class="container">
+            <div class="row g-4 text-center">
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-truck"></i>
+                        </div>
+                        <h5>Free Delivery</h5>
+                        <p>Orders from all items</p>
+                    </div>
                 </div>
-                <div class="col-md-4 mb-4 mb-md-0">
-                    <h3 class="fw-bold">90 Days Return</h3>
-                    <p class="text-muted mb-0">If goods have problems.</p>
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-arrow-repeat"></i>
+                        </div>
+                        <h5>Easy Returns</h5>
+                        <p>On all unused items</p>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <h3 class="fw-bold">Secure Payment</h3>
-                    <p class="text-muted mb-0">100% secure payment.</p>
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-headset"></i>
+                        </div>
+                        <h5>Online Support</h5>
+                        <p>Always online 24/7</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <h5>Secure Payment</h5>
+                        <p>100% safe payment</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -433,15 +706,16 @@
 
 
     <script>
-        document.addEventListener("DOMContentLoaded", fetchCancellations);
+        document.addEventListener("DOMContentLoaded", () => fetchCancellations(1));
 
-        async function fetchCancellations() {
+        async function fetchCancellations(page = 1) {
             try {
-                const res = await fetch("/api/orders/my?status=canceled", { credentials: "include" });
-                if (!res.ok) return; // Auth logic handled by common script
+                const res = await fetch(`/api/orders/my?status=canceled&page=${page}&limit=10`, { credentials: "include" });
+                if (!res.ok) return;
 
                 const data = await res.json();
                 renderCancellations(data.orders);
+                renderPagination(data);
             } catch (err) {
                 console.error("Failed to load cancellations", err);
             }
@@ -492,10 +766,60 @@
                 </tr>
             `}).join("");
         }
+
+        function renderPagination(data) {
+            const { currentPage, totalPages } = data;
+            const container = document.getElementById("paginationContainer");
+            if (!container || totalPages <= 1) {
+                if (container) container.innerHTML = "";
+                return;
+            }
+
+            let html = "";
+            html += `<div class="pagination-item ${currentPage === 1 ? 'disabled' : ''}" 
+                         onclick="${currentPage === 1 ? '' : `fetchCancellations(${currentPage - 1})`}">
+                         Previous
+                     </div>`;
+
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                    html += `<div class="pagination-item ${i === currentPage ? 'active' : ''}" 
+                                 onclick="fetchCancellations(${i})">
+                                 ${i}
+                             </div>`;
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    html += `<div class="pagination-item disabled">...</div>`;
+                }
+            }
+
+            html += `<div class="pagination-item ${currentPage === totalPages ? 'disabled' : ''}" 
+                         onclick="${currentPage === totalPages ? '' : `fetchCancellations(${currentPage + 1})`}">
+                         Next
+                     </div>`;
+
+            container.innerHTML = html;
+        }
     </script>
 
 
     <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Professional Sticky Navbar Logic
+            const nav = document.querySelector(".navbar-fixed");
+            const navHeight = nav ? nav.offsetHeight : 80;
+
+            window.addEventListener("scroll", () => {
+                if (window.scrollY > navHeight + 50) {
+                    if (!nav.classList.contains("sticky-navbar")) {
+                        nav.classList.add("sticky-navbar");
+                        document.body.style.paddingTop = navHeight + "px";
+                    }
+                } else if (window.scrollY <= 10) {
+                    nav.classList.remove("sticky-navbar");
+                    document.body.style.paddingTop = "0";
+                }
+            });
+        });
 
         document.addEventListener("DOMContentLoaded", async () => {
             let isLoggedIn = false;
@@ -562,6 +886,38 @@
             );
             modal.show();
         }
+
+        /* --- SIDEBAR TOGGLE LOGIC --- */
+        document.addEventListener("DOMContentLoaded", () => {
+            const sidebarMenu = document.getElementById('sidebarMenu');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebarClose = document.getElementById('sidebarClose');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', () => {
+                    sidebarMenu.classList.add('active');
+                    sidebarOverlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            }
+
+            if (sidebarClose) {
+                sidebarClose.addEventListener('click', () => {
+                    sidebarMenu.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            }
+
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', () => {
+                    sidebarMenu.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            }
+        });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

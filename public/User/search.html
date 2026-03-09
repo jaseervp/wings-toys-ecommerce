@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToyStore | Search Results</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="css/navbar.css">
+
+    <style>
+        :root {
+            --primary-bg: #FBEBB5;
+            --soft-bg: #FAF4F4;
+            --light-accent: #FFF9E5;
+            --accent-gold: #B88E2F;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #000;
+            background-color: #fff;
+        }
+
+        .navbar-logo {
+            height: 40px;
+        }
+
+        .nav-icon {
+            font-size: 1.4rem;
+            color: #000;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-icon:hover {
+            color: #7091E6;
+        }
+
+        .nav-search {
+            display: flex;
+            align-items: center;
+            background: #f5f5f5;
+            border-radius: 30px;
+            padding: 8px 16px;
+            width: 260px;
+        }
+
+        .nav-search input {
+            border: none;
+            outline: none;
+            background: transparent;
+            width: 100%;
+        }
+
+        .search-header {
+            background-color: var(--soft-bg);
+            padding: 60px 0;
+            margin-bottom: 50px;
+        }
+
+        .product-wrapper {
+            background: #fff;
+            border-radius: 20px;
+            padding: 15px;
+            transition: 0.3s;
+            height: 100%;
+            border: 1px solid #f2f2f2;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-wrapper:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+        }
+
+        .product-img-container {
+            background-color: #F9F9F9;
+            border-radius: 15px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .product-img-container img {
+            max-width: 80%;
+            max-height: 80%;
+            transition: 0.5s;
+        }
+
+        .product-wrapper:hover img {
+            transform: scale(1.1);
+        }
+
+        .price-tag {
+            color: var(--accent-gold);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+
+        .product-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #1a1a1a;
+        }
+
+        .btn-add-cart {
+            background-color: #000;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 15px;
+            transition: 0.3s;
+        }
+
+        .btn-add-cart:hover {
+            background-color: #333;
+        }
+
+        .rating {
+            color: #ffc107;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .no-results {
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        footer {
+            background: #000;
+            color: #fff;
+            padding: 60px 0 20px;
+            margin-top: 80px;
+        }
+
+        footer a {
+            color: #9F9F9F;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+        }
+
+        .footer-title {
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR (Simplified for now, will update all navbars later) -->
+    <nav class="navbar navbar-light bg-white py-3 border-bottom sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="/Images/logo wings.png" class="navbar-logo" alt="Logo">
+            </a>
+
+            <div class="d-flex align-items-center gap-3">
+                <div class="nav-search d-none d-lg-flex">
+                    <input type="text" id="globalSearchInput" placeholder="Search toys..." />
+                    <i class="bi bi-search" style="cursor: pointer;" onclick="handleSearch()"></i>
+                </div>
+
+                <a href="wishlist.html" class="nav-icon"><i class="bi bi-heart"></i></a>
+                <a href="cart.html" class="nav-icon"><i class="bi bi-cart"></i></a>
+                <a href="my_account.html" class="nav-icon"><i class="bi bi-person"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="search-header">
+        <div class="container">
+            <h1 class="fw-bold mb-2">Search Results</h1>
+            <p class="text-muted m-0" id="searchCount">Showing results for "<span id="searchQueryText"></span>"</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="row g-4" id="searchResults">
+            <div class="text-center py-5 w-100">
+                <div class="spinner-border text-dark" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="noResults" class="no-results d-none">
+            <i class="bi bi-search fs-1 text-muted mb-4 d-block"></i>
+            <h2 class="fw-bold">No products found for your search</h2>
+            <p class="text-muted">Try checking your spelling or use more general terms.</p>
+            <a href="shop.html" class="btn btn-dark mt-3 rounded-pill px-4">Continue Shopping</a>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <p class="footer-address">400 University Drive Suite 200 Coral Gables, <br>FL 33134 USA</p>
+                </div>
+                <div class="col-lg-2 col-6 mb-4">
+                    <span class="footer-title">Links</span>
+                    <a href="index.html">Home</a>
+                    <a href="shop.html">Shop</a>
+                    <a href="about.html">About</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+                <div class="col-lg-2 col-6 mb-4">
+                    <span class="footer-title">Help</span>
+                    <a href="#">Payment Options</a>
+                    <a href="#">Returns</a>
+                    <a href="#">Privacy Policies</a>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <span class="footer-title">Newsletter</span>
+                    <input type="email"
+                        class="form-control bg-transparent text-white border-0 border-bottom rounded-0 mb-3"
+                        placeholder="Enter Your Email">
+                    <button class="btn btn-light w-100 fw-bold">SUBSCRIBE</button>
+                </div>
+            </div>
+            <div class="copyright text-center border-top pt-4 mt-4 text-muted">
+                2026 ToyStore. All rights reserved
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const query = urlParams.get('query');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (query) {
+                document.getElementById('searchQueryText').textContent = query;
+                document.getElementById('globalSearchInput').value = query;
+                fetchResults(query);
+            } else {
+                document.getElementById('searchResults').innerHTML = '';
+                document.getElementById('noResults').classList.remove('d-none');
+                document.getElementById('searchCount').classList.add('d-none');
+            }
+        });
+
+        async function fetchResults(q) {
+            try {
+                const response = await fetch(`/api/search/api?query=${encodeURIComponent(q)}`);
+                const data = await response.json();
+
+                displayResults(data.products);
+            } catch (error) {
+                console.error('Error fetching search results:', error);
+                document.getElementById('searchResults').innerHTML = '<p class="text-danger text-center">Failed to load results. Please try again.</p>';
+            }
+        }
+
+        function displayResults(products) {
+            const container = document.getElementById('searchResults');
+            const noResults = document.getElementById('noResults');
+            const searchCount = document.getElementById('searchCount');
+
+            container.innerHTML = '';
+
+            if (!products || products.length === 0) {
+                noResults.classList.remove('d-none');
+                searchCount.classList.add('d-none');
+                return;
+            }
+
+            noResults.classList.add('d-none');
+            searchCount.classList.remove('d-none');
+
+            products.forEach(product => {
+                const discountHtml = product.discountPrice > 0
+                    ? `<span class="old-price">₹${product.price}</span>`
+                    : '';
+
+                const card = `
+                    <div class="col-lg-3 col-md-6 animate__animated animate__fadeInUp">
+                        <div class="product-wrapper">
+                            <div class="product-img-container" onclick="window.location.href='single_product.html?id=${product._id}'" style="cursor:pointer">
+                                <img src="${product.images[0] || '/Images/placeholder.png'}" alt="${product.name}">
+                            </div>
+                            <div class="product-info">
+                                <div class="rating">
+                                    ${generateStars(product.averageRating || 5)}
+                                    <span class="text-muted small">(${product.numReviews || 0})</span>
+                                </div>
+                                <h3 class="product-name" onclick="window.location.href='single_product.html?id=${product._id}'" style="cursor:pointer">${product.name}</h3>
+                                <p class="text-muted small mb-2">${product.brand || ''}</p>
+                                <div class="price-tag">
+                                    ₹${product.finalPrice}
+                                    ${discountHtml}
+                                </div>
+                                <button class="btn-add-cart" onclick="addToCart('${product._id}')">
+                                    <i class="bi bi-cart-plus me-2"></i>Add to Cart
+                                </button>
+                                <a href="single_product.html?id=${product._id}" class="btn btn-link text-dark w-100 mt-2 text-decoration-none small">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', card);
+            });
+        }
+
+        function generateStars(rating) {
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= rating) {
+                    stars += '<i class="bi bi-star-fill"></i>';
+                } else {
+                    stars += '<i class="bi bi-star"></i>';
+                }
+            }
+            return stars;
+        }
+
+        function handleSearch() {
+            const q = document.getElementById('globalSearchInput').value.trim();
+            if (q) {
+                window.location.href = `/search?query=${encodeURIComponent(q)}`;
+            }
+        }
+
+        document.getElementById('globalSearchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSearch();
+        });
+
+        async function addToCart(productId) {
+            // Reusing existing cart logic pattern
+            try {
+                const response = await fetch('/api/cart', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ productId, quantity: 1 })
+                });
+
+                if (response.ok) {
+                    alert('Added to cart!');
+                } else {
+                    const data = await response.json();
+                    alert(data.message || 'Login required to add items to cart');
+                }
+            } catch (error) {
+                console.error('Error adding to cart:', error);
+            }
+        }
+    </script>
+    <!-- SEARCH LOGIC (Standardized) -->
+    <script>
+        function handleSearch() {
+            const query = document.getElementById("globalSearchInput").value.trim();
+            if (query) {
+                window.location.href = `/search?query=${encodeURIComponent(query)}`;
+            }
+        }
+
+        function handleMobileSearch() {
+            const query = document.getElementById("mobileSearchInput").value.trim();
+            if (query) {
+                window.location.href = `/search?query=${encodeURIComponent(query)}`;
+            }
+        }
+
+        const searchInput = document.getElementById("globalSearchInput");
+        const mobileSearchInput = document.getElementById("mobileSearchInput");
+        const suggestionsBox = document.getElementById("searchSuggestions");
+        const mobileSuggestionsBox = document.getElementById("mobileSearchSuggestions");
+
+        async function fetchSuggestions(q, box) {
+            if (q.length < 2) {
+                box.classList.add("d-none");
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/search/api?query=${encodeURIComponent(q)}`);
+                const data = await res.json();
+                const products = (data.products || []).slice(0, 5);
+
+                if (products.length > 0) {
+                    box.innerHTML = products.map(p => `
+                        <div class="suggestion-item" onclick="window.location.href='single_product.html?id=${p._id}'">
+                            <i class="bi bi-search"></i>
+                            <span class="prod-name">${p.name}</span>
+                            <span class="prod-cat">${p.category?.name || p.category || ''}</span>
+                        </div>
+                    `).join('');
+                    box.classList.remove("d-none");
+                } else {
+                    box.classList.add("d-none");
+                }
+            } catch (err) {
+                console.error("Suggestion error:", err);
+            }
+        }
+
+        if (searchInput) {
+            searchInput.addEventListener("input", (e) => fetchSuggestions(e.target.value, suggestionsBox));
+            searchInput.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") handleSearch();
+            });
+        }
+
+        if (mobileSearchInput) {
+            mobileSearchInput.addEventListener("input", (e) => fetchSuggestions(e.target.value, mobileSuggestionsBox));
+            mobileSearchInput.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") handleMobileSearch();
+            });
+        }
+
+        document.addEventListener("click", (e) => {
+            if (!e.target.closest(".nav-search")) {
+                if (suggestionsBox) suggestionsBox.classList.add("d-none");
+                if (mobileSuggestionsBox) mobileSuggestionsBox.classList.add("d-none");
+            }
+        });
+    </script>
+
+</body>
+
+</html>

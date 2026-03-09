@@ -24,6 +24,62 @@
             --card-border: #EDF2F7;
         }
 
+        [data-theme="dark"] {
+            --sidebar-bg: #1A202C !important;
+            --main-bg: #11141D;
+            --card-bg: #1A202C;
+            --text-dark: #E2E8F0;
+            --text-gray: #718096;
+            --card-border: #2D3748;
+            --primary-bg: rgba(108, 142, 239, 0.2);
+        }
+
+        /* --- BOOTSTRAP OVERRIDES --- */
+        .card {
+            background-color: var(--card-bg) !important;
+            color: var(--text-dark) !important;
+            border-color: var(--card-border) !important;
+        }
+
+        .form-select,
+        .form-control {
+            background-color: var(--card-bg) !important;
+            color: var(--text-dark) !important;
+            border-color: var(--card-border) !important;
+        }
+
+        .btn-white {
+            background-color: var(--card-bg) !important;
+            color: var(--text-dark) !important;
+            border: 1px solid var(--card-border) !important;
+        }
+
+        [data-theme="dark"] .btn-light {
+            background-color: #2D3748 !important;
+            color: #E2E8F0 !important;
+            border: none;
+        }
+
+        [data-theme="dark"] .text-secondary,
+        [data-theme="dark"] .text-muted {
+            color: var(--text-gray) !important;
+        }
+
+        [data-theme="dark"] .modal-content {
+            background-color: var(--card-bg) !important;
+            color: var(--text-dark) !important;
+            border-color: var(--card-border) !important;
+        }
+
+        [data-theme="dark"] .sidebar {
+            background-color: var(--sidebar-bg) !important;
+        }
+
+        [data-theme="dark"] .profile-avatar-wrapper,
+        [data-theme="dark"] .wallet-icon {
+            background-color: var(--card-bg) !important;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--main-bg);
@@ -365,6 +421,12 @@
         <div class="page-header">
             <div class="breadcrumb mb-1"><a href="Customers.html" class="text-decoration-none text-muted">Customers</a>
                 / Customer Details</div>
+            <div class="header-actions d-flex align-items-center gap-3">
+                <div class="theme-toggle" onclick="toggleTheme()"
+                    style="cursor: pointer; width: 40px; height: 40px; border-radius: 50%; background: var(--card-bg); border: 1px solid var(--card-border); display: flex; align-items: center; justify-content: center; color: var(--text-gray);">
+                    <i id="tIcon" class="bi bi-moon-stars-fill"></i>
+                </div>
+            </div>
         </div>
 
         <div class="details-grid" id="mainContent" style="display:none">
@@ -507,6 +569,34 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('tIcon');
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            const newTheme = isDark ? 'light' : 'dark';
+
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('adminTheme', newTheme);
+
+            if (icon) {
+                icon.className = newTheme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+            }
+        }
+
+        // Apply theme immediately
+        (function () {
+            const savedTheme = localStorage.getItem('adminTheme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('adminTheme') || 'light';
+            const icon = document.getElementById('tIcon');
+            if (icon && savedTheme === 'dark') {
+                icon.className = 'bi bi-sun-fill';
+            }
+        });
+
         // Get ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const customerId = urlParams.get('id');

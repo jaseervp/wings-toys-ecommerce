@@ -81,16 +81,19 @@ exports.updateCartQty = async (req, res) => {
       return res.status(404).json({ message: "Item not found" });
     }
 
-    //  STOCK VALIDATION
-    // Retrieve product to check stock
+    // 🔒 DIRECTIONAL STOCK VALIDATION
     const product = await Product.findById(productId);
+    const currentQty = cart.items[itemIndex].quantity;
 
-    if (product && !product.isUnlimited) {
-      if (quantity > product.stockQuantity) {
-        return res.status(400).json({
-          message: `Only ${product.stockQuantity} items available in stock.`,
-          availableStock: product.stockQuantity
-        });
+    // Only validate if user is INCREASING quantity
+    if (quantity > currentQty) {
+      if (product && !product.isUnlimited) {
+        if (quantity > product.stockQuantity) {
+          return res.status(400).json({
+            message: `Only ${product.stockQuantity} items available in stock.`,
+            availableStock: product.stockQuantity
+          });
+        }
       }
     }
 
@@ -136,14 +139,30 @@ exports.getCart = async (req, res) => {
       await cart.save();
     }
 
+    let needsSave = false;
     const itemsWithOffers = validItems.map(item => {
       const itemObj = item.toObject();
       if (itemObj.product) {
+        // 🔄 AUTO-ADJUST: If cart quantity exceeds available stock (due to admin changes)
+        if (!itemObj.product.isUnlimited && itemObj.quantity > itemObj.product.stockQuantity) {
+          itemObj.quantity = itemObj.product.stockQuantity;
+          // Persistent update
+          const dbItem = cart.items.find(i => i.product.toString() === itemObj.product._id.toString());
+          if (dbItem) {
+            dbItem.quantity = itemObj.product.stockQuantity;
+            needsSave = true;
+          }
+        }
+
         const priceDetails = calculateProductFinalPrice(itemObj.product, activeOffers);
         itemObj.product = { ...itemObj.product, ...priceDetails };
       }
       return itemObj;
     });
+
+    if (needsSave) {
+      await cart.save();
+    }
 
     res.json({ ...cart.toObject(), items: itemsWithOffers });
 

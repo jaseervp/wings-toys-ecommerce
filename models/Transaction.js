@@ -19,6 +19,22 @@ const transactionSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    orderId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Order"
+    },
+    transactionId: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    status: {
+        type: String,
+        default: "Success"
+    },
+    paymentMethod: {
+        type: String
+    },
     date: {
         type: Date,
         default: Date.now

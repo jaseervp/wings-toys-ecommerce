@@ -4,6 +4,7 @@ const Cart = require("../models/Cart");
 const User = require("../models/User");
 const Product = require("../models/Product");
 const Offer = require("../models/Offer");
+const Transaction = require("../models/Transaction");
 const { calculateProductFinalPrice } = require("../utils/priceCalculator");
 const mongoose = require("mongoose");
 const crypto = require("crypto");
@@ -211,6 +212,21 @@ exports.createOrder = async (req, res) => {
       shippingAddress
     }], { session });
 
+    // 6.5 Record Transaction (Credit) if paid
+    if (paymentStatus === "paid" || paymentMethod === "cod") {
+      await Transaction.create([{
+        user: req.user.id,
+        amount: totalAmount,
+        type: "credit",
+        description: `Payment for Order #${order._id.toString().slice(-6).toUpperCase()}`,
+        orderId: order._id,
+        transactionId: `TRX-${order._id.toString().slice(-8).toUpperCase()}`,
+        status: "Success",
+        paymentMethod: paymentMethod.toUpperCase(),
+        date: new Date()
+      }], { session });
+    }
+
     // 7. Mark Coupon as Used (Only on success)
     if (validatedCoupon) {
       validatedCoupon.usedBy.push(req.user.id);
@@ -311,19 +327,65 @@ exports.getMyOrderById = async (req, res) => {
 
 /* ================= ADMIN ================= */
 exports.getOrders = async (req, res) => {
-  const { sortBy } = req.query;
-  let sort = { createdAt: -1 }; // Default: Newest
+  try {
+    const {
+      page = 1,
+      limit = 10,
+      sortBy = "newest",
+      orderId,
+      status,
+      method,
+      date
+    } = req.query;
 
-  if (sortBy === 'oldest') sort = { createdAt: 1 };
-  if (sortBy === 'amount_high') sort = { totalAmount: -1 };
-  if (sortBy === 'amount_low') sort = { totalAmount: 1 };
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const skip = (pageNum - 1) * limitNum;
 
-  const orders = await Order.find()
-    .populate("user", "fullName email")
-    .populate("items.product", "name images")
-    .sort(sort);
+    // Build Filter
+    let filter = {};
+    if (orderId) {
+      // Handle partial order ID search (last 6 chars or full)
+      filter.$or = [
+        { _id: orderId.length === 24 ? orderId : { $regex: orderId.replace("#ORD-", ""), $options: "i" } }
+      ];
+    }
+    if (status) filter.orderStatus = status;
+    if (method) filter.paymentMethod = method.toLowerCase();
+    if (date) {
+      const start = new Date(date);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(date);
+      end.setHours(23, 59, 59, 999);
+      filter.createdAt = { $gte: start, $lte: end };
+    }
 
-  res.json({ orders });
+    // Sort Logic
+    let sort = { createdAt: -1 };
+    if (sortBy === 'oldest') sort = { createdAt: 1 };
+    if (sortBy === 'amount_high') sort = { totalAmount: -1 };
+    if (sortBy === 'amount_low') sort = { totalAmount: 1 };
+
+    const totalOrders = await Order.countDocuments(filter);
+    const totalPages = Math.ceil(totalOrders / limitNum);
+
+    const orders = await Order.find(filter)
+      .populate("user", "fullName email")
+      .populate("items.product", "name images")
+      .sort(sort)
+      .skip(skip)
+      .limit(limitNum);
+
+    res.json({
+      orders,
+      totalOrders,
+      totalPages,
+      currentPage: pageNum
+    });
+  } catch (error) {
+    console.error("ADMIN GET ORDERS ERROR:", error);
+    res.status(500).json({ message: "Failed to fetch orders" });
+  }
 };
 
 exports.updateOrderStatus = async (req, res) => {
@@ -411,6 +473,20 @@ exports.cancelOrder = async (req, res) => {
           date: new Date()
         });
         await user.save();
+
+        // PERSISTENT TRANSACTION: Debit Entry
+        await Transaction.create({
+          user: req.user.id,
+          amount: refundAmount,
+          type: "debit",
+          description: `Refund for Order #${order._id.toString().slice(-6).toUpperCase()}`,
+          orderId: order._id,
+          transactionId: `REF-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
+          status: "Refunded",
+          paymentMethod: "WALLET",
+          date: new Date()
+        });
+
         order.isRefunded = true;
       }
     }
@@ -481,20 +557,27 @@ exports.cancelOrderItem = async (req, res) => {
           date: new Date()
         });
         await user.save();
+
+        // PERSISTENT TRANSACTION: Debit Entry
+        await Transaction.create({
+          user: req.user.id,
+          amount: refundAmount,
+          type: "debit",
+          description: `Refund for Cancelled Item (Order #${order._id.toString().slice(-6).toUpperCase()})`,
+          orderId: order._id,
+          transactionId: `REF-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
+          status: "Refunded",
+          paymentMethod: "WALLET",
+          date: new Date()
+        });
       }
     }
 
     // Update Item Status
     item.itemStatus = "canceled";
 
-    // Update Totals accurately
-    const itemFullPrice = item.price * item.quantity;
-    const itemDiscountShare = item.discountShare || 0;
-    const itemEffectivePaid = itemFullPrice - itemDiscountShare;
-
-    if (order.subtotal >= itemFullPrice) order.subtotal -= itemFullPrice;
-    if (order.discount >= itemDiscountShare) order.discount -= itemDiscountShare;
-    if (order.totalAmount >= itemEffectivePaid) order.totalAmount -= itemEffectivePaid;
+    // NO LONGER MODIFYING order.subtotal, order.discount, or order.totalAmount
+    // This ensures original amount is preserved in admin view.
 
     //  RESTORE STOCK (Single Item)
     const Product = require("../models/Product");
@@ -591,15 +674,21 @@ exports.updateReturnStatus = async (req, res) => {
 
         // Universal Transaction Description
         const paymentContext = order.paymentMethod.toUpperCase();
-        user.wallet.transactions.push({
-          amount: refundAmount,
-          type: "credit",
-          reason: `Refund for Item (Returned product from ${paymentContext} order #${order._id.toString().slice(-6).toUpperCase()})`,
-          date: new Date()
-        });
-
         user.markModified('wallet');
         await user.save();
+
+        // PERSISTENT TRANSACTION: Debit Entry
+        await Transaction.create({
+          user: userId,
+          amount: refundAmount,
+          type: "debit",
+          description: `Refund for Returned Item (Order #${order._id.toString().slice(-6).toUpperCase()})`,
+          orderId: order._id,
+          transactionId: `REF-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
+          status: "Refunded",
+          paymentMethod: "WALLET",
+          date: new Date()
+        });
 
         // Update item status to returned
         item.itemStatus = "returned";
