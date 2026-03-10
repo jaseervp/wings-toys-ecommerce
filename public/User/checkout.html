@@ -467,7 +467,7 @@
           <div class="card card-custom p-4 mb-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
               <h5 class="fw-bold m-0"><i class="bi bi-geo-alt me-2"></i>Shipping Details</h5>
-              <button class="btn btn-outline-primary btn-sm fw-bold rounded-pill px-4" onclick="openAddressPopup()"
+              <button id="changeAddressBtn" class="btn btn-outline-primary btn-sm fw-bold rounded-pill px-4"
                 data-bs-toggle="modal" data-bs-target="#addressPopup">
                 Change Address
               </button>
@@ -479,8 +479,8 @@
                 <i class="bi bi-house-door-fill text-primary h4 mb-0"></i>
               </div>
               <div>
-                <p class="mb-0 fw-bold" id="displayUser">John Doe</p>
-                <small class="text-muted" id="displayAddr">123 Tech Avenue, Silicon Valley, CA 94043</small>
+                <p class="mb-0 fw-bold" id="displayUser">No address selected</p>
+                <small class="text-muted" id="displayAddr">Please add or select a shipping address</small>
               </div>
             </div>
           </div>
@@ -912,22 +912,35 @@
           body: JSON.stringify(data)
         });
 
+        const resData = await res.json();
+
         if (res.ok) {
           bootstrap.Modal.getInstance(document.getElementById('addAddressModal')).hide();
-          openAddressPopup(); // Refresh the list in the selection popup
+
           Swal.fire({
             icon: "success",
             title: "Address added",
             timer: 2000,
             showConfirmButton: false
           });
+
           addAddressForm.reset();
+
+          // Refresh lists
+          if (window.openAddressPopup) openAddressPopup();
+          if (window.loadUserAddresses) await loadUserAddresses();
+
+          // Auto-select new address
+          if (resData.addresses && resData.addresses.length > 0) {
+            const latest = resData.addresses[resData.addresses.length - 1];
+            selectedAddress = latest;
+            if (window.showAddress) showAddress(selectedAddress);
+          }
         } else {
-          const err = await res.json();
           Swal.fire({
             icon: "error",
             title: "Error",
-            text: err.message || "Save failed"
+            text: resData.message || "Save failed"
           });
         }
       } catch (err) {
@@ -1060,7 +1073,6 @@
         `₹${subtotal - appliedDiscount}`;
     }
 
-    document.addEventListener("DOMContentLoaded", loadCheckoutCart);
   </script>
 
   <script>
@@ -1312,6 +1324,8 @@
 
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
   <script>
     async function startRazorpay(amount) {
@@ -1360,14 +1374,7 @@
         });
       }
     }
-  </script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      // loadCoupons is now called inside loadCheckoutCart
-    });
-  </script>
 
-  <script>
     let savedAddresses = [];
     let selectedAddress = null;
     let walletBalance = 0; // Global wallet balance
@@ -1390,7 +1397,10 @@
           if (balanceEl) balanceEl.innerText = `₹${walletBalance}`;
         }
 
-        if (savedAddresses.length === 0) return;
+        if (savedAddresses.length === 0) {
+          showAddress(null);
+          return;
+        }
 
         // ✅ pick default address
         selectedAddress =
@@ -1404,17 +1414,14 @@
     }
 
     function showAddress(addr) {
-      document.getElementById("displayUser").innerText =
-        addr.fullName || "—";
-
-      document.getElementById("displayAddr").innerText =
-        `${addr.addressLine} - ${addr.pincode}`;
+      if (addr) {
+        document.getElementById("displayUser").innerText = addr.fullName || "—";
+        document.getElementById("displayAddr").innerText = `${addr.addressLine} - ${addr.pincode}`;
+      } else {
+        document.getElementById("displayUser").innerText = "No address selected";
+        document.getElementById("displayAddr").innerText = "Please add or select a shipping address";
+      }
     }
-
-
-
-
-    document.addEventListener("DOMContentLoaded", loadUserAddresses);
 
     function openAddressPopup() {
       const list = document.getElementById("addressList");
@@ -1443,8 +1450,6 @@
       });
     }
 
-  </script>
-  <script>
     async function savePaidOrder(payment) {
       try {
         const res = await fetch("/api/orders", {
@@ -1480,75 +1485,20 @@
         });
       }
     }
-  </script>
 
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-  <script>
-    document.getElementById("addAddressForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const payload = {
-        fullName: document.getElementById("newFullName").value,
-        phone: document.getElementById("newPhone").value,
-        addressLine: document.getElementById("newAddressLine").value +
-          (document.getElementById("newAddressLine2").value ? " " + document.getElementById("newAddressLine2").value : ""),
-        city: document.getElementById("newCity").value,
-        state: document.getElementById("newState").value,
-        pincode: document.getElementById("newPincode").value,
-        isDefault: document.getElementById("newDefaultAddress").checked
-      };
-
-      try {
-        const res = await fetch("/api/users/addresses", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(payload)
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) throw new Error(data.message || "Failed to add address");
-
-        // 1. Close modal
-        bootstrap.Modal.getInstance(document.getElementById("addAddressModal")).hide();
-
-        // 2. Clear form
-        e.target.reset();
-
-        // 3. Reload addresses & Select new one
-        await loadUserAddresses();
-
-        // 4. Find the new address and select it
-        if (data.addresses && data.addresses.length > 0) {
-          // The API returns the full list, the last one might be the new one, 
-          // or we can find by matching fields if needed. 
-          // For now, let's assume if we reload, we can just select the last one or the default one.
-          const latest = data.addresses[data.addresses.length - 1];
-          selectedAddress = latest;
-          showAddress(selectedAddress);
-        }
-
-        Swal.fire({
-          icon: "success",
-          title: "Address Added",
-          text: "Your new address has been added successfully",
-          timer: 2000,
-          showConfirmButton: false
-        });
-
-      } catch (err) {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: err.message
-        });
-      }
-    });
 
     // Professional Sticky Navbar Logic
     document.addEventListener("DOMContentLoaded", () => {
+      loadUserAddresses();
+      loadCheckoutCart();
+
+      const btn = document.getElementById("changeAddressBtn");
+      if (btn) {
+        btn.addEventListener("click", () => {
+          openAddressPopup();
+        });
+      }
+
       const nav = document.querySelector(".navbar-fixed");
       const navHeight = nav ? nav.offsetHeight : 80;
 
