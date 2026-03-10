@@ -1,11 +1,11 @@
-require('dotenv').config(); // ✅ MUST be at the very top
+require('dotenv').config(); 
 
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const session = require('express-session'); // ✅ NEW
-const passport = require('./config/passport'); // ✅ NEW
+const session = require('express-session'); 
+const passport = require('./config/passport'); 
 
 // Routes
 const authRoutes = require('./routes/auth');
@@ -18,15 +18,13 @@ const app = express();
 
 
 
+//  BASIC MIDDLEWARE
 
-// =============================
-// 🔹 BASIC MIDDLEWARE
-// =============================
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // =============================
-// 🔹 STATIC FILES
+// STATIC FILES
 // =============================
 
 app.use(express.static(path.join(__dirname, 'public/User')));
@@ -36,7 +34,7 @@ app.use("/uploads", express.static("uploads"));
 
 
 // =============================
-// 🔐 SESSION SETUP (Required for Google Auth)
+//  SESSION SETUP (Required for Google Auth)
 // =============================
 app.use(
   session({
@@ -52,14 +50,14 @@ app.use(
 
 
 // =============================
-// 🔑 PASSPORT SETUP
+//  PASSPORT SETUP
 // =============================
 app.use(passport.initialize());
 app.use(passport.session());
 
 
 // =============================
-// 🗄️ DATABASE CONNECTION
+//  DATABASE CONNECTION
 // =============================
 const dbURI = process.env.MONGO_URI;
 
@@ -69,7 +67,7 @@ mongoose.connect(dbURI)
 
 
 // =============================
-// 🚀 ROUTES
+//  ROUTES
 // =============================
 
 // Google Auth Route
@@ -95,7 +93,7 @@ app.use("/api", require("./routes/contactRoutes"));
 
 
 // =============================
-// 🖥️ START SERVER
+//  START SERVER
 // =============================
 const PORT = process.env.PORT || 5000;
 
