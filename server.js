@@ -44,7 +44,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: false, // true only in production with HTTPS
+      secure: process.env.NODE_ENV === "production", // true only in production with HTTPS
       maxAge: 24 * 60 * 60 * 1000 // 1 day
     }
   })
