@@ -1,11 +1,11 @@
-require('dotenv').config(); 
+require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const session = require('express-session'); 
-const passport = require('./config/passport'); 
+const session = require('express-session');
+const passport = require('./config/passport');
 
 // Routes
 const authRoutes = require('./routes/auth');
@@ -15,6 +15,8 @@ const orderRoutes = require("./routes/orderRoutes");
 const userRoutes = require("./routes/userRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 const app = express();
+app.set('trust proxy', 1);
+
 
 
 

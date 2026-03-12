@@ -34,7 +34,7 @@ router.get(
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "lax",
-      secure: false,
+      secure: process.env.NODE_ENV === "production",
     });
 
     res.redirect("/User/index.html");
