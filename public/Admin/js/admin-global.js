@@ -48,9 +48,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                         if (result.isConfirmed) {
                             localStorage.removeItem("adminToken");
                             localStorage.removeItem("adminRole");
-                            // Determine path to login (handle subfolders vs root)
-                            const path = window.location.pathname.includes("/Admin/") ? "../User/login.html" : "User/login.html";
-                            window.location.href = path;
+                            // Redirect to root login
+                            window.location.href = "/login.html";
                         }
                     });
                 });

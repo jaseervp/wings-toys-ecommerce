@@ -26,7 +26,7 @@ router.get(
 router.get(
   "/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "/User/login.html",
+    failureRedirect: "/login.html",
   }),
   (req, res) => {
     const token = generateToken(req.user._id, req.user.role);
@@ -37,7 +37,7 @@ router.get(
       secure: process.env.NODE_ENV === "production",
     });
 
-    res.redirect("/User/index.html");
+    res.redirect("/");
   }
 );
 
