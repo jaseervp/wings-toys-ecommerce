@@ -15,7 +15,7 @@ const orderRoutes = require("./routes/orderRoutes");
 const userRoutes = require("./routes/userRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 const app = express();
-app.set('trust proxy', 1);
+app.set('trust proxy', true);
 
 
 
