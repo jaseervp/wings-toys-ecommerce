@@ -433,6 +433,9 @@
             cursor: not-allowed;
             color: #64748b;
         }
+        .signup-link {
+            display: none;
+        }
     </style>
 </head>
 
@@ -870,6 +873,9 @@
     `;
                 desktop.innerHTML = html;
                 mobile.innerHTML = html;
+
+                // ✅ SHOW SIGNUP FOR GUESTS
+                document.querySelectorAll(".signup-link").forEach(el => el.style.display = "block");
 
                 document.querySelectorAll(".login-required").forEach(el => {
                     el.addEventListener("click", e => {

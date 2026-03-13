@@ -398,8 +398,9 @@
 
         .feature-card p {
             font-size: 0.9rem;
-            color: #64748b;
-            margin: 0;
+        }
+        .signup-link {
+            display: none;
         }
     </style>
 </head>
@@ -706,6 +707,9 @@
                 `;
                 desktop.innerHTML = html;
                 mobile.innerHTML = html;
+
+                // ✅ SHOW SIGNUP FOR GUESTS
+                document.querySelectorAll(".signup-link").forEach(el => el.style.display = "block");
 
                 document.querySelectorAll(".login-required").forEach(el => {
                     el.addEventListener("click", e => {

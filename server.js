@@ -29,6 +29,7 @@ app.use(express.json());
 // STATIC FILES
 // =============================
 
+
 app.use(express.static(path.join(__dirname, 'public/User')));
 app.use('/admin', express.static(path.join(__dirname, 'public/Admin')));
 app.use('/images', express.static(path.join(__dirname, 'public/Images')));

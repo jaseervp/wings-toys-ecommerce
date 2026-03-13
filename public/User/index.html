@@ -140,6 +140,9 @@
 
 
     /* --- HERO --- */
+    .signup-link {
+      display: none;
+    }
     .hero-section {
       background: radial-gradient(circle at top right, #FBEBBA 0%, #FFF9E5 100%);
       padding: 120px 0 180px;
@@ -1250,6 +1253,9 @@
     `;
         desktop.innerHTML = html;
         mobile.innerHTML = html;
+
+        // ✅ SHOW SIGNUP FOR GUESTS
+        document.querySelectorAll(".signup-link").forEach(el => el.style.display = "block");
 
         document.querySelectorAll(".login-required").forEach(el => {
           el.addEventListener("click", e => {

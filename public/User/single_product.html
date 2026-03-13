@@ -682,8 +682,9 @@
 
     .feature-card p {
       font-size: 0.9rem;
-      color: #64748b;
-      margin: 0;
+      }
+    .signup-link {
+      display: none;
     }
   </style>
 </head>
@@ -1064,7 +1065,11 @@
       `;
       if (desktop) desktop.innerHTML = authHtml;
       if (mobile) mobile.innerHTML = authHtml;
-      if (isLoggedIn) document.querySelectorAll(".signup-link").forEach(el => el.remove());
+      if (isLoggedIn) {
+        document.querySelectorAll(".signup-link").forEach(el => el.remove());
+      } else {
+        document.querySelectorAll(".signup-link").forEach(el => el.style.display = "block");
+      }
 
       // 🔐 Protected Links
       document.querySelectorAll(".auth-protected, .login-required").forEach(link => {

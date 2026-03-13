@@ -483,6 +483,9 @@
             border-color: #000;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
+        .signup-link {
+            display: none;
+        }
     </style>
 </head>
 
@@ -805,6 +808,9 @@
     `;
                 desktop.innerHTML = html;
                 mobile.innerHTML = html;
+
+                // ✅ SHOW SIGNUP FOR GUESTS
+                document.querySelectorAll(".signup-link").forEach(el => el.style.display = "block");
 
                 document.querySelectorAll(".login-required").forEach(el => {
                     el.addEventListener("click", e => {
