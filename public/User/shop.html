@@ -1153,31 +1153,17 @@
                         });
                         return;
                     }
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Failed to add to cart',
-                        confirmButtonColor: '#000'
-                    });
+                    const data = await res.json();
+                    showToast(data.message || 'Failed to add to cart');
                     return;
                 }
 
                 updateCartBadge();
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Product added to cart',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
+                showToast("🛒 Added to cart");
 
             } catch (err) {
                 console.error(err);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Something went wrong',
-                    confirmButtonColor: '#000'
-                });
+                showToast('Something went wrong');
             }
         }
 
