@@ -25,10 +25,10 @@ app.set('trust proxy', true);
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-// =============================
-// STATIC FILES
-// =============================
 
+
+
+// STATIC FILES
 
 app.use(express.static(path.join(__dirname, 'public/User')));
 app.use('/admin', express.static(path.join(__dirname, 'public/Admin')));
@@ -36,7 +36,7 @@ app.use('/images', express.static(path.join(__dirname, 'public/Images')));
 app.use("/uploads", express.static("uploads"));
 
 
-// =============================
+
 //  SESSION SETUP (Required for Google Auth)
 // =============================
 app.use(
@@ -52,16 +52,12 @@ app.use(
 );
 
 
-// =============================
 //  PASSPORT SETUP
-// =============================
 app.use(passport.initialize());
 app.use(passport.session());
 
 
-// =============================
 //  DATABASE CONNECTION
-// =============================
 const dbURI = process.env.MONGO_URI;
 
 mongoose.connect(dbURI)
@@ -69,9 +65,7 @@ mongoose.connect(dbURI)
   .catch(err => console.error("❌ Connection Error:", err));
 
 
-// =============================
 //  ROUTES
-// =============================
 
 // Google Auth Route
 app.use('/api', authRoutes);
@@ -95,9 +89,7 @@ app.use("/api", reviewRoutes);
 app.use("/api", require("./routes/contactRoutes"));
 
 
-// =============================
 //  START SERVER
-// =============================
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
